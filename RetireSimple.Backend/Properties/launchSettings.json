@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -11,10 +11,8 @@
   "profiles": {
     "RetireSimple.Backend": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7068;http://localhost:5068",
+      "applicationUrl": "http://localhost:28246",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
