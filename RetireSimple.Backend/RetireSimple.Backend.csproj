@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <ProjectReference Include="..\RetireSimple.Frontend\retiresimple.frontend.esproj" >
+	  <ProjectReference Include="..\RetireSimple.Frontend\RetireSimple.Frontend.esproj">
 		  <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 	  </ProjectReference>
   </ItemGroup>

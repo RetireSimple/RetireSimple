@@ -1,4 +1,4 @@
-import React, { Component, ComponentProps, ComponentPropsWithoutRef } from 'react';
+import React from 'react';
 
 
 export interface Forecast {
@@ -9,7 +9,6 @@ export interface Forecast {
 }
 
 export default function App() {
-    const displayName = App.name;
     const [forecasts, setForecasts] = React.useState<Forecast[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
 
