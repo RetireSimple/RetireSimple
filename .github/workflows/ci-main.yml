@@ -33,5 +33,7 @@ jobs:
 
     - name: Build
       run: |
+        cd RetireSimple.Frontend
         npm install
         npm run build
+        cd ..
