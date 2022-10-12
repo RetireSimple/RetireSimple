@@ -10,4 +10,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+	  <ProjectReference Include="..\RetireSimple.Frontend\retiresimple.frontend.esproj" >
+		  <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+	  </ProjectReference>
+  </ItemGroup>
+
 </Project>
