@@ -1,4 +1,7 @@
-﻿namespace RetireSimple.Backend.DomainModel.Data {
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace RetireSimple.Backend.DomainModel.Data {
     public abstract class InvestmentVehicleBase {
         protected List<InvestmentBase> investments;
 
@@ -6,6 +9,7 @@
             investments = new List<InvestmentBase>();
         }
 
-        public abstract void generateAggregateAnalysis();
+        public abstract void GenerateAggregateAnalysis();
     }
+
 }

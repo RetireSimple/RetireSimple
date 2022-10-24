@@ -9,7 +9,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
         }
 
 
-        public override InvestmentModel generateAnalysis() {
+        public override InvestmentModel GenerateAnalysis() {
             throw new NotImplementedException();
         }
     }
