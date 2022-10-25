@@ -1,16 +1,7 @@
-﻿using RetireSimple.Backend.DomainModel.Analysis.Strategy;
+﻿using RetireSimple.Backend.DomainModel.Analysis;
 
 namespace RetireSimple.Backend.DomainModel.Data.Investment {
-    public class BondInvestment : InvestmentBase {
-        public BondAS BondAS {
-            get => default;
-            set {
-            }
-        }
+	public abstract class BondInvestment : InvestmentBase {
 
-
-        public override InvestmentModel GenerateAnalysis() {
-            throw new NotImplementedException();
-        }
     }
 }

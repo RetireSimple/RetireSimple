@@ -20,8 +20,4 @@
 	  </ProjectReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\NewFolder\" />
-  </ItemGroup>
-
 </Project>

@@ -1,17 +1,9 @@
-﻿using RetireSimple.Backend.DomainModel.Analysis.Strategy;
+﻿using RetireSimple.Backend.DomainModel.Analysis;
 
 namespace RetireSimple.Backend.DomainModel.Data.Investment {
-	public class RestrictedInvestmentVehicle : InvestmentBase {
-		public RestrictedInvestmentVehicleAS RestrictedInvestmentVehicleAS {
-			get => default;
-			set {
-			}
-		}
-
-		public override InvestmentModel GenerateAnalysis() {
-			throw new NotImplementedException();
-		}
+	public abstract class RestrictedInvestmentVehicle : InvestmentBase {
 
 
+		public override void ValidateData() => throw new NotImplementedException();
 	}
 }
