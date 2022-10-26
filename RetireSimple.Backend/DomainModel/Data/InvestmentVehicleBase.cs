@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using RetireSimple.Backend.DomainModel.Data.Investment;
 
 namespace RetireSimple.Backend.DomainModel.Data {
 	public abstract class InvestmentVehicleBase {

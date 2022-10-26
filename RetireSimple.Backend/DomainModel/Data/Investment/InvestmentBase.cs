@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
+using RetireSimple.Backend.DomainModel.User;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace RetireSimple.Backend.DomainModel.Data {
+namespace RetireSimple.Backend.DomainModel.Data.Investment {
 	//
 	public delegate InvestmentModel AnalysisDelegate<T>(T investment) where T : InvestmentBase;
 
@@ -21,15 +21,17 @@ namespace RetireSimple.Backend.DomainModel.Data {
 
 		//This is the easiest way to store data while maintaining type safety
 		//It's recommended to create getter/setter methods for properties you expect to exist in this map
-		public Dictionary<string, string> InvestmentData { get; set; }
-
+		public Dictionary<string, string> InvestmentData { get; set; } = new Dictionary<string, string>();
 
 		public string? AnalysisType { get; set; }
+
+		public int PortfolioId { get; set; }
+		public Portfolio Portfolio { get; set; }
 
 		//NOTE This is also useable after 
 		public abstract void ResolveAnalysisDelegate(string analysisType);
 		public abstract InvestmentModel InvokeAnalysis();
-		
+
 		//TODO use on entity create to ensure data integrity?
 		public abstract void ValidateData();
 
@@ -45,7 +47,7 @@ namespace RetireSimple.Backend.DomainModel.Data {
 		public void Configure(EntityTypeBuilder<InvestmentBase> builder) {
 			builder.HasKey(i => i.InvestmentId);
 
-			builder.HasDiscriminator(i => i.InvestmentType);
+			builder.HasDiscriminator(i => i.InvestmentType).HasValue<StockInvestment>("StockInvestment");
 
 			builder.Property(i => i.InvestmentData)
 				.HasConversion(
@@ -57,7 +59,10 @@ namespace RetireSimple.Backend.DomainModel.Data {
 					c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
 					c => c.ToDictionary(entry => entry.Key, entry => entry.Value)
 				));
-			builder.Property(i => i.AnalysisType);
+
+			builder.Property(i => i.AnalysisType).HasColumnName("AnalysisType");
+
+
 		}
 	}
 }
