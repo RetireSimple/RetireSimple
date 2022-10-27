@@ -28,7 +28,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		//NOTE This is also useable after 
 		public abstract void ResolveAnalysisDelegate(string analysisType);
 		public abstract InvestmentModel InvokeAnalysis();
-
+		
 	}
 
 	public class InvestmentBaseConfiguration : IEntityTypeConfiguration<InvestmentBase> {

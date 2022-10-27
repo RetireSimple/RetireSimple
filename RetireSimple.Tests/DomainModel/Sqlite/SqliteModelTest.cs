@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
+
+using Microsoft.EntityFrameworkCore;
 
 using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.Services;
@@ -29,6 +31,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Investments.Add(investment2);
 
             context.SaveChanges();
+
+            context.Investments.Should().HaveCount(2);
         }
 
         [Fact]
@@ -38,12 +42,32 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
             context.Investments.Add(investment);
             context.Investments.Add(investment2);
-
             context.SaveChanges();
-
             context.InvestmentModels.Add(investment2.InvokeAnalysis());
             context.InvestmentModels.Add(investment.InvokeAnalysis());
             context.SaveChanges();
+
+            context.InvestmentModels.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void TestInvestmentModelFKConstraintonInvestment() {
+            var investment = new StockInvestment("testAnalysis");
+            var investment2 = new StockInvestment("testAnalysis2");
+
+            context.Investments.Add(investment);
+            context.Investments.Add(investment2);
+            context.SaveChanges();
+            context.InvestmentModels.Add(investment2.InvokeAnalysis());
+            context.InvestmentModels.Add(investment.InvokeAnalysis());
+            context.SaveChanges();
+
+            Action act = () => {
+                context.Investments.Remove(investment);
+                context.SaveChanges();
+            };
+
+            act.Should().Throw<DbUpdateException>();
         }
     }
 }
