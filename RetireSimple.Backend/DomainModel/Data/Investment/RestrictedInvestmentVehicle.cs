@@ -2,6 +2,6 @@
 	public abstract class RestrictedInvestmentVehicle : InvestmentBase {
 
 
-		public override void ValidateData() => throw new NotImplementedException();
+	
 	}
 }
