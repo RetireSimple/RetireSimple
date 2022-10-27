@@ -19,7 +19,6 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 
 		}
 
-
 		public override void ResolveAnalysisDelegate(string analysisType) {
 			switch(analysisType) {
 				case "testAnalysis":
@@ -38,8 +37,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 			this.AnalysisType = analysisType;
 		}
 
-		public override void ValidateData() => throw new NotImplementedException();
-		public override InvestmentModel InvokeAnalysis() => analysis(this) ;
+		public override InvestmentModel InvokeAnalysis() => analysis(this);
 	}
 
 
