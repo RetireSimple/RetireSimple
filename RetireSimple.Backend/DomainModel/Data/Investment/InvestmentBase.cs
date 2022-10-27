@@ -29,10 +29,6 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public abstract void ResolveAnalysisDelegate(string analysisType);
 		public abstract InvestmentModel InvokeAnalysis();
 
-		//TODO use on entity create to ensure data integrity?
-		public abstract void ValidateData();
-
-
 	}
 
 	public class InvestmentBaseConfiguration : IEntityTypeConfiguration<InvestmentBase> {

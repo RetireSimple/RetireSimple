@@ -11,8 +11,6 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 		//TODO Relational Issues to resolve
 		protected List<InvestmentBase> investments;
 
-
-
 		public InvestmentVehicleBase() {
 			investments = new List<InvestmentBase>();
 		}
