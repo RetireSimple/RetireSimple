@@ -1,5 +1,5 @@
 ﻿namespace RetireSimple.Backend.DomainModel.Analysis {
-	public abstract class PensionAS{
+	public abstract class PensionAS {
 
 	}
 }

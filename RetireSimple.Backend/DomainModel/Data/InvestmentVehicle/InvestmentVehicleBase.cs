@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data.Investment;
 
-namespace RetireSimple.Backend.DomainModel.Data {
+namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 	public abstract class InvestmentVehicleBase {
 		public int InvestmentVehicleId { get; set; }
 
@@ -24,7 +24,7 @@ namespace RetireSimple.Backend.DomainModel.Data {
 		public void Configure(EntityTypeBuilder<InvestmentVehicleBase> builder) {
 			builder.HasKey(i => i.InvestmentVehicleId);
 
-			builder.HasDiscriminator(i=>i.InvestmentVehicleType);
+			builder.HasDiscriminator(i => i.InvestmentVehicleType);
 		}
 	}
 

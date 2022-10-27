@@ -39,7 +39,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		}
 
 		public override void ValidateData() => throw new NotImplementedException();
-		public override InvestmentModel InvokeAnalysis() => analysis(this) ;
+		public override InvestmentModel InvokeAnalysis() => analysis(this);
 	}
 
 
