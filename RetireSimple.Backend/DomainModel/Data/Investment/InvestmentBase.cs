@@ -1,11 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RetireSimple.Backend.DomainModel.User;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace RetireSimple.Backend.DomainModel.Data.Investment {
 	//
@@ -25,8 +22,8 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 
 		public string? AnalysisType { get; set; }
 
-		public int PortfolioId { get; set; }
-		public Portfolio Portfolio { get; set; }
+		//public int PortfolioId { get; set; }
+		//public Portfolio Portfolio { get; set; }
 
 		//NOTE This is also useable after 
 		public abstract void ResolveAnalysisDelegate(string analysisType);

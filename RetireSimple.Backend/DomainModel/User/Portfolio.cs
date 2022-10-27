@@ -24,7 +24,7 @@ namespace RetireSimple.Backend.DomainModel.User {
 			//TODO setup relationship schema
 			builder.HasKey(p => p.PortfolioId);
 			builder.HasOne(p => p.Profile).WithMany(p => p.Portfolios).HasForeignKey(p => p.ProfileId);
-			builder.HasMany(p => p.Investments).WithOne(i => i.Portfolio);
+			//builder.HasMany(p => p.Investments).WithOne(i => i.Portfolio);
 
 		}
 	}

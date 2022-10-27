@@ -1,178 +1,268 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
-  <Class Name="RetireSimple.Backend.DomainModel.Analysis.Strategy.StockAS" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="0.75" Y="1.25" Width="1.5" />
+  <Class Name="RetireSimple.Backend.Controllers.WeatherForecastController" Collapsed="true">
+    <Position X="20" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DomainModel\Analysis\Strategy\StockAS.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="StockInvestment" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Analysis.Strategy.RestrictedInvestmentVehicleAS" BaseTypeListCollapsed="true">
-    <Position X="1.75" Y="5.25" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DomainModel\Analysis\Strategy\RestrictedInvestmentVehicleAS.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="RestrictedInvestmentVehicle" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Analysis.Strategy.FixedAS" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10" Y="1.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DomainModel\Analysis\Strategy\FixedAS.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="FixedInvestment" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Analysis.Strategy.PensionAS" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="7.75" Y="5.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DomainModel\Analysis\Strategy\PensionAS.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="PensionInvestment" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Analysis.Strategy.BondAS" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="12.25" Y="1.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
-      <FileName>DomainModel\Analysis\Strategy\BondAS.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="BondInvestment" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase" Collapsed="true">
-    <Position X="5" Y="5.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DomainModel\Data\InvestmentVehicleBase.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAEBAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\WeatherForecastController.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentBase">
-    <Position X="5" Y="0.5" Width="4.25" />
+  <Class Name="RetireSimple.Backend.DomainModel.Analysis.BondAS" Collapsed="true">
+    <Position X="13" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DomainModel\Data\InvestmentBase.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Analysis\BondAS.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.StockInvestment">
-    <Position X="0.75" Y="2.75" Width="1.5" />
+  <Class Name="RetireSimple.Backend.DomainModel.Analysis.FixedAS" Collapsed="true">
+    <Position X="14.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
-      <FileName>DomainModel\Data\Investment\StockInvestment.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Analysis\FixedAS.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.RestrictedInvestmentVehicle">
-    <Position X="3" Y="2.75" Width="2" />
+  <Class Name="RetireSimple.Backend.DomainModel.Analysis.PensionAS" Collapsed="true">
+    <Position X="13" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
-      <FileName>DomainModel\Data\Investment\RestrictedInvestmentVehicle.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Analysis\PensionAS.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.PensionInvestment">
-    <Position X="5.75" Y="2.75" Width="1.5" />
+  <Class Name="RetireSimple.Backend.DomainModel.Analysis.RestrictedInvestmentVehicleAS" Collapsed="true">
+    <Position X="13" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DomainModel\Data\Investment\PensionInvestment.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Analysis\RestrictedInvestmentVehicleAS.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.FixedInvestment">
-    <Position X="8" Y="2.75" Width="3.5" />
+  <Class Name="RetireSimple.Backend.DomainModel.Analysis.StockAS">
+    <Position X="17.25" Y="5.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAQAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DomainModel\Data\Investment\FixedInvestment.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAgAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Analysis\StockAS.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RetireSimple.Backend.DomainModel.Data.Expense.OneTimeExpense" Collapsed="true">
-    <Position X="14.75" Y="0.5" Width="1.5" />
+    <Position X="0.5" Y="9.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DomainModel\Data\Expense\OneTimeExpense.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Data.Expense.RecurringExpense">
-    <Position X="16.5" Y="1.5" Width="1.5" />
+  <Class Name="RetireSimple.Backend.DomainModel.Data.Expense.RecurringExpense" Collapsed="true">
+    <Position X="2.75" Y="9.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DomainModel\Data\Expense\RecurringExpense.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.Vehicle401k" Collapsed="true">
-    <Position X="0.5" Y="6.75" Width="1.5" />
+  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.BondInvestment" Collapsed="true">
+    <Position X="5.5" Y="6.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\Investment\BondInvestment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.FixedInvestment">
+    <Position X="10.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\Investment\FixedInvestment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase">
+    <Position X="4.5" Y="3.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>EAAQEAAAAAAAAAAAAAAICAAAAAAAAAAAMAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\Investment\InvestmentBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBaseConfiguration" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="18.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\Investment\InvestmentBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.PensionInvestment" Collapsed="true">
+    <Position X="1" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\Investment\PensionInvestment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.RestrictedInvestmentVehicle" Collapsed="true">
+    <Position X="3.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\Investment\RestrictedInvestmentVehicle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.StockInvestment">
+    <Position X="7.75" Y="6.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAABCAAAAAAAAAAAIAAAgAAAAAQ=</HashCode>
+      <FileName>DomainModel\Data\Investment\StockInvestment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.Vehicle401k" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
       <FileName>DomainModel\Data\InvestmentVehicle\Vehicle401k.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.Vehicle403b" Collapsed="true">
-    <Position X="2.75" Y="6.75" Width="1.5" />
+    <Position X="5.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
       <FileName>DomainModel\Data\InvestmentVehicle\Vehicle403b.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.Vehicle457" Collapsed="true">
-    <Position X="5" Y="6.75" Width="1.5" />
+    <Position X="7.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
       <FileName>DomainModel\Data\InvestmentVehicle\Vehicle457.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.VehicleIRA" Collapsed="true">
-    <Position X="7.25" Y="6.75" Width="1.5" />
+    <Position X="9.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
       <FileName>DomainModel\Data\InvestmentVehicle\VehicleIRA.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.VehicleRothIRA" Collapsed="true">
-    <Position X="9.5" Y="6.75" Width="1.5" />
+    <Position X="0.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
       <FileName>DomainModel\Data\InvestmentVehicle\VehicleRothIRA.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.User.Profile">
-    <Position X="14.75" Y="1.5" Width="1.5" />
+  <Class Name="RetireSimple.Backend.DomainModel.Data.ExpenseBase" Collapsed="true">
+    <Position X="1.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DomainModel\User\Profile.cs</FileName>
+      <FileName>DomainModel\Data\ExpenseBase.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.User.Portfolio">
-    <Position X="16.5" Y="0.5" Width="3.5" />
+  <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentModel" Collapsed="true">
+    <Position X="14.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAEAAEAAAAACAAAAAEAAAA=</HashCode>
+      <HashCode>AAEQAAEAAIAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\InvestmentModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentModelConfiguration" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\InvestmentModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentTransfer" Collapsed="true">
+    <Position X="18.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\InvestmentTransfer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAEAAAAAAAAAiAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\InvestmentVehicleBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBaseConfiguration" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="20" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\InvestmentVehicleBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.User.Portfolio" Collapsed="true">
+    <Position X="14.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAgAAABAAACRAAAAACgAA=</HashCode>
       <FileName>DomainModel\User\Portfolio.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RetireSimple.Backend.DomainModel.Data.Investment.BondInvestment">
-    <Position X="12.25" Y="2.75" Width="1.5" />
+  <Class Name="RetireSimple.Backend.DomainModel.User.PortfolioConfig" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DomainModel\Data\Investment\BondInvestment.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\User\Portfolio.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="RetireSimple.Backend.DomainModel.User.Profile" Collapsed="true">
+    <Position X="18.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>DomainModel\User\Profile.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="RetireSimple.Backend.DomainModel.Analysis.IAnalysisStrategy">
-    <Position X="14.75" Y="2.75" Width="1.5" />
+  <Class Name="RetireSimple.Backend.DomainModel.User.ProfileConfiguration" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="20" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\User\Profile.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="RetireSimple.Backend.Migrations.InitialSchema" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
+      <FileName>Migrations\20221026185108_InitialSchema.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.Migrations.InvestmentDBContextModelSnapshot" Collapsed="true">
+    <Position X="13" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Migrations\InvestmentDBContextModelSnapshot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.Services.InvestmentDBContext" Collapsed="true">
+    <Position X="20" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAEAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\InvestmentDBContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RetireSimple.Backend.Services.SqliteCreator" Collapsed="true">
+    <Position X="14.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DomainModel\Analysis\AnalysisStrategy.cs</FileName>
+      <FileName>Services\SqliteCreator.cs</FileName>
     </TypeIdentifier>
-  </Interface>
+  </Class>
+  <Class Name="RetireSimple.Backend.WeatherForecast" Collapsed="true">
+    <Position X="18.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAEAAA=</HashCode>
+      <FileName>WeatherForecast.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Delegate Name="RetireSimple.Backend.DomainModel.Analysis.StockAnalysisDelegate">
+    <Position X="14.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Analysis\StockAS.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="RetireSimple.Backend.DomainModel.Data.Investment.AnalysisDelegate&lt;T&gt;">
+    <Position X="13" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DomainModel\Data\Investment\InvestmentBase.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

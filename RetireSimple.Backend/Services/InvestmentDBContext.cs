@@ -2,7 +2,6 @@
 
 using RetireSimple.Backend.DomainModel.Data;
 using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.User;
 
 
 namespace RetireSimple.Backend.Services {
