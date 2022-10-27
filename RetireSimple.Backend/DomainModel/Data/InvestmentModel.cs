@@ -26,8 +26,8 @@ namespace RetireSimple.Backend.DomainModel.Data {
 		};
 		public void Configure(EntityTypeBuilder<InvestmentModel> builder) {
 			builder.ToTable("InvestmentModel");
-			builder.HasKey(i => i.InvestmentModelId);
-			builder.HasOne(i => i.Investment).WithOne().HasForeignKey<InvestmentModel>(i => i.InvestmentId);
+			builder.HasKey(i => new { i.InvestmentModelId, i.InvestmentId });
+			builder.HasOne(i => i.Investment).WithOne().HasForeignKey<InvestmentModel>(i => i.InvestmentId).IsRequired(true);
 
 			builder.Property(i => i.MaxModelData)
 			.HasConversion(

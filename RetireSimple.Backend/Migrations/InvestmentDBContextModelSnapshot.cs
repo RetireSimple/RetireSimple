@@ -44,7 +44,6 @@ namespace RetireSimple.Backend.Migrations
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentModel", b =>
                 {
                     b.Property<int>("InvestmentModelId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("InvestmentId")
@@ -58,7 +57,7 @@ namespace RetireSimple.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("InvestmentModelId");
+                    b.HasKey("InvestmentModelId", "InvestmentId");
 
                     b.HasIndex("InvestmentId")
                         .IsUnique();
