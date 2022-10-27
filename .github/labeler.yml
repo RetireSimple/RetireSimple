@@ -1,0 +1,15 @@
+# Tags used for organizing work in the project
+backend:
+  - '(Backend|Database|DB)'
+frontend:
+  - '(Frontend|Mocks)'
+documentation:
+  - '(Architecture|Wiki|Requirements|User Persona|User Scenarios)'
+requirements:
+  - '(Requirements|User Persona|User Scenarios)'
+user-persona:
+  - '(User Persona)'
+user-scenario:
+  - '(User Scenario(s?))'
+
+
