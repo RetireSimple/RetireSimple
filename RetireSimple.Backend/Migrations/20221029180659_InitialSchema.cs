@@ -40,7 +40,7 @@ namespace RetireSimple.Backend.Migrations
                         column: x => x.InvestmentId,
                         principalTable: "Investments",
                         principalColumn: "InvestmentId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

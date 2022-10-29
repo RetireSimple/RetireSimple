@@ -77,12 +77,18 @@ namespace RetireSimple.Backend.Migrations
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentModel", b =>
                 {
                     b.HasOne("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", "Investment")
-                        .WithOne()
+                        .WithOne("InvestmentModel")
                         .HasForeignKey("RetireSimple.Backend.DomainModel.Data.InvestmentModel", "InvestmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Investment");
+                });
+
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", b =>
+                {
+                    b.Navigation("InvestmentModel")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

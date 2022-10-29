@@ -67,7 +67,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
                 context.SaveChanges();
             };
 
-            act.Should().Throw<DbUpdateException>();
+            act.Should().Throw<InvalidOperationException>();
         }
     }
 }
