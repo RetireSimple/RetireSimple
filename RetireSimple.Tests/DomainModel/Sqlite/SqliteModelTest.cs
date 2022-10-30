@@ -5,15 +5,23 @@ using Microsoft.EntityFrameworkCore;
 using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.Services;
 
+using Xunit;
+using Xunit.Abstractions;
+
 namespace RetireSimple.Tests.DomainModel.Sqlite {
+
+
     public class SqliteModelTest : IDisposable {
         InvestmentDBContext context { get; set; }
+        private readonly ITestOutputHelper output;
 
-        public SqliteModelTest() {
+        public SqliteModelTest(ITestOutputHelper output) {
             context = new InvestmentDBContext();
 
             context.Database.Migrate();
             context.Database.EnsureCreated();
+
+            this.output = output;
         }
 
         public void Dispose() {
@@ -64,10 +72,27 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
             Action act = () => {
                 context.Investments.Remove(investment);
-                context.SaveChanges();
             };
 
             act.Should().Throw<InvalidOperationException>();
         }
+
+        //TODO is this test stupid?
+        //[Fact]
+        //public void TestInvestmentDataSerialization() {
+        //    var Investment = new StockInvestment("testAnalysis");
+
+        //    Investment.StockPrice = 100;
+        //    Investment.StockTicker = "AAPL";
+
+        //    context.Investments.Add(Investment);
+
+        //    context.SaveChanges();
+
+        //    var result = context.Investments.
+
+        //    output.WriteLine(result);
+        //    Assert.False(true);
+        //}
     }
 }

@@ -37,6 +37,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		static JsonSerializerOptions options = new JsonSerializerOptions {
 			AllowTrailingCommas = true,
 			DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+			IncludeFields = true
 		};
 
 		public void Configure(EntityTypeBuilder<InvestmentBase> builder) {
