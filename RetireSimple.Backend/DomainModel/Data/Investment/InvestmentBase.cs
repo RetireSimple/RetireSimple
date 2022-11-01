@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace RetireSimple.Backend.DomainModel.Data.Investment {
 	//
-	public delegate InvestmentModel AnalysisDelegate<T>(T investment) where T : InvestmentBase;
+	public delegate InvestmentModel AnalysisDelegate<T>(T investment, Dictionary<string,string> options) where T : InvestmentBase;
 
 
 	[Table("Investments")]
@@ -29,7 +29,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 
 		//NOTE This is also useable after 
 		public abstract void ResolveAnalysisDelegate(string analysisType);
-		public abstract InvestmentModel InvokeAnalysis();
+		public abstract InvestmentModel InvokeAnalysis(Dictionary<string,string> options);
 
 	}
 

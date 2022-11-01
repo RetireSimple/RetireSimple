@@ -47,12 +47,14 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         public void TestStockInvestmentModelAdd() {
             var investment = new StockInvestment("testAnalysis");
             var investment2 = new StockInvestment("testAnalysis2");
+            var options = new Dictionary<string, string>();
+
 
             context.Investments.Add(investment);
             context.Investments.Add(investment2);
             context.SaveChanges();
-            context.InvestmentModels.Add(investment2.InvokeAnalysis());
-            context.InvestmentModels.Add(investment.InvokeAnalysis());
+            context.InvestmentModels.Add(investment2.InvokeAnalysis(options));
+            context.InvestmentModels.Add(investment.InvokeAnalysis(options));
             context.SaveChanges();
 
             context.InvestmentModels.Should().HaveCount(2);
@@ -62,12 +64,13 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         public void TestInvestmentModelFKConstraintonInvestment() {
             var investment = new StockInvestment("testAnalysis");
             var investment2 = new StockInvestment("testAnalysis2");
+            var options = new Dictionary<string, string>();
 
             context.Investments.Add(investment);
             context.Investments.Add(investment2);
             context.SaveChanges();
-            context.InvestmentModels.Add(investment2.InvokeAnalysis());
-            context.InvestmentModels.Add(investment.InvokeAnalysis());
+            context.InvestmentModels.Add(investment2.InvokeAnalysis(options));
+            context.InvestmentModels.Add(investment.InvokeAnalysis(options));
             context.SaveChanges();
 
             Action act = () => {
