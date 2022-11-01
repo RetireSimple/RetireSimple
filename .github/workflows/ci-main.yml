@@ -2,36 +2,52 @@ name: Build/Testing CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   dotnet-build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build Backend Project
-      run: dotnet build .\RetireSimple.Backend\RetireSimple.Backend.csproj --no-restore --no-dependencies
-    - name: Build Test Project
-      run: dotnet build .\RetireSimple.Tests\RetireSimple.Tests.csproj --no-restore --no-dependencies
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build Backend Project
+        run: dotnet build .\RetireSimple.Backend\RetireSimple.Backend.csproj --no-restore --no-dependencies
+      - name: Build Test Project
+        run: dotnet build .\RetireSimple.Tests\RetireSimple.Tests.csproj --no-restore --no-dependencies
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
 
   node-build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16
-
-    - name: Build
-      run: |
-        cd RetireSimple.Frontend
-        npm install
-        npm run build
-        cd ..
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - uses: actions/cache@v3
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Build
+        run: |
+          cd RetireSimple.Frontend
+          npm install
+          npm run build
+          cd ..
