@@ -1,6 +1,6 @@
 ﻿namespace RetireSimple.Backend.DomainModel.Analysis {
 
-	public abstract class BondAS {
+	public class BondAS {
 
 	}
 }

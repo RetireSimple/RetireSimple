@@ -1,17 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
+
+using Microsoft.EntityFrameworkCore;
 
 using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.Services;
 
+using Xunit;
+using Xunit.Abstractions;
+
 namespace RetireSimple.Tests.DomainModel.Sqlite {
+
+
     public class SqliteModelTest : IDisposable {
         InvestmentDBContext context { get; set; }
+        private readonly ITestOutputHelper output;
 
-        public SqliteModelTest() {
+        public SqliteModelTest(ITestOutputHelper output) {
             context = new InvestmentDBContext();
 
             context.Database.Migrate();
             context.Database.EnsureCreated();
+
+            this.output = output;
         }
 
         public void Dispose() {
@@ -29,21 +39,63 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Investments.Add(investment2);
 
             context.SaveChanges();
+
+            context.Investments.Should().HaveCount(2);
         }
 
         [Fact]
         public void TestStockInvestmentModelAdd() {
             var investment = new StockInvestment("testAnalysis");
             var investment2 = new StockInvestment("testAnalysis2");
+            var options = new Dictionary<string, string>();
+
 
             context.Investments.Add(investment);
             context.Investments.Add(investment2);
-
+            context.SaveChanges();
+            context.InvestmentModels.Add(investment2.InvokeAnalysis(options));
+            context.InvestmentModels.Add(investment.InvokeAnalysis(options));
             context.SaveChanges();
 
-            context.InvestmentModels.Add(investment2.InvokeAnalysis());
-            context.InvestmentModels.Add(investment.InvokeAnalysis());
-            context.SaveChanges();
+            context.InvestmentModels.Should().HaveCount(2);
         }
+
+        [Fact]
+        public void TestInvestmentModelFKConstraintonInvestment() {
+            var investment = new StockInvestment("testAnalysis");
+            var investment2 = new StockInvestment("testAnalysis2");
+            var options = new Dictionary<string, string>();
+
+            context.Investments.Add(investment);
+            context.Investments.Add(investment2);
+            context.SaveChanges();
+            context.InvestmentModels.Add(investment2.InvokeAnalysis(options));
+            context.InvestmentModels.Add(investment.InvokeAnalysis(options));
+            context.SaveChanges();
+
+            Action act = () => {
+                context.Investments.Remove(investment);
+            };
+
+            act.Should().Throw<InvalidOperationException>();
+        }
+
+        //TODO is this test stupid?
+        //[Fact]
+        //public void TestInvestmentDataSerialization() {
+        //    var Investment = new StockInvestment("testAnalysis");
+
+        //    Investment.StockPrice = 100;
+        //    Investment.StockTicker = "AAPL";
+
+        //    context.Investments.Add(Investment);
+
+        //    context.SaveChanges();
+
+        //    var result = context.Investments.
+
+        //    output.WriteLine(result);
+        //    Assert.False(true);
+        //}
     }
 }

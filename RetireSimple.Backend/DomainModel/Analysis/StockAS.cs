@@ -2,12 +2,11 @@
 using RetireSimple.Backend.DomainModel.Data.Investment;
 
 namespace RetireSimple.Backend.DomainModel.Analysis {
-	public delegate InvestmentModel StockAnalysisDelegate(StockInvestment investment);
 
 	public class StockAS {
 
 
-		public static InvestmentModel testAnalysis(StockInvestment investment) {
+		public static InvestmentModel testAnalysis(StockInvestment investment, Dictionary<string, string> options) {
 			Console.WriteLine("testAnalysis 1 invoked!");
 			return new InvestmentModel() {
 				InvestmentId = investment.InvestmentId,
@@ -16,7 +15,7 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 			};
 		}
 
-		public static InvestmentModel testAnalysis2(StockInvestment investment) {
+		public static InvestmentModel testAnalysis2(StockInvestment investment, Dictionary<string, string> options) {
 			Console.WriteLine("testAnalysis 2 invoked!");
 			return new InvestmentModel() {
 				InvestmentId = investment.InvestmentId,

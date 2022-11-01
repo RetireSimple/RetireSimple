@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace RetireSimple.Backend.DomainModel.Data.Investment {
 	//
-	public delegate InvestmentModel AnalysisDelegate<T>(T investment) where T : InvestmentBase;
+	public delegate InvestmentModel AnalysisDelegate<T>(T investment, Dictionary<string,string> options) where T : InvestmentBase;
 
 
 	[Table("Investments")]
@@ -22,12 +22,14 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 
 		public string? AnalysisType { get; set; }
 
+		public InvestmentModel InvestmentModel { get; set; }
+
 		//public int PortfolioId { get; set; }
 		//public Portfolio Portfolio { get; set; }
 
 		//NOTE This is also useable after 
 		public abstract void ResolveAnalysisDelegate(string analysisType);
-		public abstract InvestmentModel InvokeAnalysis();
+		public abstract InvestmentModel InvokeAnalysis(Dictionary<string,string> options);
 
 	}
 
@@ -35,10 +37,13 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		static JsonSerializerOptions options = new JsonSerializerOptions {
 			AllowTrailingCommas = true,
 			DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+			IncludeFields = true
 		};
 
 		public void Configure(EntityTypeBuilder<InvestmentBase> builder) {
 			builder.HasKey(i => i.InvestmentId);
+
+			builder.HasOne(i => i.InvestmentModel).WithOne(i => i.Investment).OnDelete(DeleteBehavior.Restrict);
 
 			builder.HasDiscriminator(i => i.InvestmentType).HasValue<StockInvestment>("StockInvestment");
 
@@ -54,7 +59,6 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 				));
 
 			builder.Property(i => i.AnalysisType).HasColumnName("AnalysisType");
-
 
 		}
 	}

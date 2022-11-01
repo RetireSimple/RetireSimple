@@ -17,17 +17,25 @@ namespace RetireSimple.Backend.DomainModel.Data {
 		//TODO change to Math.NET/other types if needed
 		public List<(double, double)> MaxModelData { get; set; } = new List<(double, double)>();
 		public List<(double, double)> MinModelData { get; set; } = new List<(double, double)>();
+
+		public void AddOtherData(InvestmentModel otherModel) {
+
+			//TODO add more data fields when we get there
+			MaxModelData.AddRange(otherModel.MaxModelData);
+			MinModelData.AddRange(otherModel.MinModelData);
+		}
 	}
 
 	public class InvestmentModelConfiguration : IEntityTypeConfiguration<InvestmentModel> {
 		static JsonSerializerOptions options = new JsonSerializerOptions {
 			AllowTrailingCommas = true,
 			DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+			IncludeFields = true,
 		};
 		public void Configure(EntityTypeBuilder<InvestmentModel> builder) {
 			builder.ToTable("InvestmentModel");
-			builder.HasKey(i => i.InvestmentModelId);
-			builder.HasOne(i => i.Investment).WithOne().HasForeignKey<InvestmentModel>(i => i.InvestmentId);
+			builder.HasKey(i => new { i.InvestmentModelId, i.InvestmentId });
+			builder.HasOne(i => i.Investment).WithOne(i => i.InvestmentModel).HasForeignKey<InvestmentModel>(i => i.InvestmentId).IsRequired(true);
 
 			builder.Property(i => i.MaxModelData)
 			.HasConversion(

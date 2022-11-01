@@ -10,7 +10,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		[NotMapped]
 		public string StockTicker { get => this.InvestmentData["StockTicker"]; set => this.InvestmentData["StockTicker"] = value; }
 
-		public AnalysisDelegate<StockInvestment>? analysis;
+		public AnalysisDelegate<StockInvestment>? Analysis;
 
 		//Constructor used by EF
 		public StockInvestment(String analysisType) : base() {
@@ -22,13 +22,13 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public override void ResolveAnalysisDelegate(string analysisType) {
 			switch(analysisType) {
 				case "testAnalysis":
-					analysis = StockAS.testAnalysis;
+					Analysis = StockAS.testAnalysis;
 					break;
 				case "testAnalysis2":
-					analysis = StockAS.testAnalysis2;
+					Analysis = StockAS.testAnalysis2;
 					break;
 				default:
-					analysis = null;
+					Analysis = null;
 					break;
 
 			}
@@ -37,7 +37,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 			this.AnalysisType = analysisType;
 		}
 
-		public override InvestmentModel InvokeAnalysis() => analysis(this);
+		public override InvestmentModel InvokeAnalysis(Dictionary<string,string> options) => Analysis(this, options);
 	}
 
 
