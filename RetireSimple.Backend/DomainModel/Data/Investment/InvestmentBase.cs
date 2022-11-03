@@ -20,7 +20,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		//It's recommended to create getter/setter methods for properties you expect to exist in this map
 		public Dictionary<string, string> InvestmentData { get; set; } = new Dictionary<string, string>();
 
-		public string? AnalysisType { get; set; }
+		public  string? AnalysisType { get; set; }
 
 		public InvestmentModel InvestmentModel { get; set; }
 
