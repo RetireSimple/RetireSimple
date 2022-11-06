@@ -9,6 +9,6 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public AnalysisDelegate<FixedInvestment>? analysis;
 
 		public override void ResolveAnalysisDelegate(string analysisType) => throw new NotImplementedException();
-		public override InvestmentModel InvokeAnalysis(Dictionary<string,string> options) => throw new NotImplementedException();
+		public override InvestmentModel InvokeAnalysis(OptionsDict options) => throw new NotImplementedException();
 	}
 }
