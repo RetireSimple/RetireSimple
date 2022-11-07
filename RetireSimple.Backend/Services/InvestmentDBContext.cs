@@ -27,9 +27,5 @@ namespace RetireSimple.Backend.Services {
 
 		}
 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-			optionsBuilder.UseSqlite("Data Source=InvestmentDB.db");
-		}
-
 	}
 }

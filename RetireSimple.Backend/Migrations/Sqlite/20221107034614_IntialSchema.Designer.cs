@@ -7,11 +7,11 @@ using RetireSimple.Backend.Services;
 
 #nullable disable
 
-namespace RetireSimple.Backend.Migrations
+namespace RetireSimple.Backend.Migrations.Sqlite
 {
-    [DbContext(typeof(InvestmentDBContext))]
-    [Migration("20221029180659_InitialSchema")]
-    partial class InitialSchema
+    [DbContext(typeof(SqliteInvestmentContext))]
+    [Migration("20221107034614_IntialSchema")]
+    partial class IntialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,6 +65,33 @@ namespace RetireSimple.Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("InvestmentModel", (string)null);
+                });
+
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.BondInvestment", b =>
+                {
+                    b.HasBaseType("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase");
+
+                    b.ToTable("Investments");
+
+                    b.HasDiscriminator().HasValue("BondInvestment");
+                });
+
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.FixedInvestment", b =>
+                {
+                    b.HasBaseType("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase");
+
+                    b.ToTable("Investments");
+
+                    b.HasDiscriminator().HasValue("FixedInvestment");
+                });
+
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.PensionInvestment", b =>
+                {
+                    b.HasBaseType("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase");
+
+                    b.ToTable("Investments");
+
+                    b.HasDiscriminator().HasValue("PensionInvestment");
                 });
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.StockInvestment", b =>

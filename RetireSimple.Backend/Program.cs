@@ -1,5 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddCommandLine(args);
+
 
 // Add services to the container.
 
