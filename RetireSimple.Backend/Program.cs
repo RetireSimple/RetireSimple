@@ -27,12 +27,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<InvestmentDBContext>(options => _ =
 	builder.Configuration["Provider"] switch {
 		"sqlite" =>
-			options.UseSqlite("Data Source=InvestmentDB.db",
-			x => x.MigrationsAssembly("RetireSimple.Migrations.Sqlite")
+			options.UseSqlite("Data Source=InvestmentDB.db"
+			//x => x.MigrationsAssembly("RetireSimple.Migrations.Sqlite")
 			),
 		"mariadb" =>
 			options.UseMySql(ServerVersion.AutoDetect(builder.Configuration["ConnectionString"]),
-			x => x.MigrationsAssembly("RetireSimple.Migrations.MariaDB")),
+			x => x.MigrationsAssembly("RetireSimple.Migrations.MariaDB")
+			),
 		_ => throw new ArgumentException("Invalid provider")
 	});
 

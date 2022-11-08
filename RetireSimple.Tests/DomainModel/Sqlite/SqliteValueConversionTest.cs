@@ -23,8 +23,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             //TODO create a new Sqlite DB for this test with seeded test data
             context = new InvestmentDBContext(
                 new DbContextOptionsBuilder()
-                    .UseSqlite("Data Source=InvestmentDB.db",
-                    x => x.MigrationsAssembly("RetireSimple.Migrations.Sqlite"))
+                    .UseSqlite("Data Source=InvestmentDB.db")
+                    //x => x.MigrationsAssembly("RetireSimple.Migrations.Sqlite"))
                     .Options);
 
             context.Database.Migrate();

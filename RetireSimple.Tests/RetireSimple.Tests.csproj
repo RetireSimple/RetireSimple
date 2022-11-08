@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -26,7 +26,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\RetireSimple.Backend\RetireSimple.Backend.csproj" />
-		<ProjectReference Include="..\Migrations\SqliteMigrations\RetireSimple.Migrations.Sqlite.csproj"/>
 	</ItemGroup>
 
 </Project>
