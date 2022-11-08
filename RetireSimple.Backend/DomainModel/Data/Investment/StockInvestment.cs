@@ -37,7 +37,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 			this.AnalysisType = analysisType;
 		}
 
-		public override InvestmentModel InvokeAnalysis(Dictionary<string,string> options) => Analysis(this, options);
+		public override InvestmentModel InvokeAnalysis(OptionsDict options) => Analysis(this, options);
 	}
 
 

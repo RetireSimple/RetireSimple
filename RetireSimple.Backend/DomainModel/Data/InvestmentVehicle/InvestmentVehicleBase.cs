@@ -15,7 +15,7 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 			investments = new List<InvestmentBase>();
 		}
 
-		public abstract void GenerateAggregateAnalysis(Dictionary<string,string> options);
+		public abstract InvestmentModel GenerateAnalysis(OptionsDict options);
 	}
 
 	public class InvestmentVehicleBaseConfiguration : IEntityTypeConfiguration<InvestmentVehicleBase> {

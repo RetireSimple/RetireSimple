@@ -6,6 +6,9 @@ using RetireSimple.Backend.DomainModel.Data.Investment;
 
 namespace RetireSimple.Backend.Services {
 	public class InvestmentDBContext : DbContext {
+		public InvestmentDBContext(DbContextOptions options) : base(options) {
+		}
+
 		public DbSet<InvestmentBase> Investments { get; set; }
 		//DbSet<InvestmentVehicleBase> InvestmentVehicles { get; set; }
 		public DbSet<InvestmentModel> InvestmentModels { get; set; }
@@ -25,10 +28,6 @@ namespace RetireSimple.Backend.Services {
 			//modelBuilder.Entity<InvestmentTransfer>().ToTable("InvestmentTransfers");
 
 
-		}
-
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-			optionsBuilder.UseSqlite("Data Source=InvestmentDB.db");
 		}
 
 	}

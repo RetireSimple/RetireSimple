@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.Services;
 
-using Xunit;
 using Xunit.Abstractions;
 
 namespace RetireSimple.Tests.DomainModel.Sqlite {
@@ -16,7 +15,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         private readonly ITestOutputHelper output;
 
         public SqliteModelTest(ITestOutputHelper output) {
-            context = new InvestmentDBContext();
+            context = SqliteInvestmentContext.MakeTestContext();
 
             context.Database.Migrate();
             context.Database.EnsureCreated();
@@ -80,22 +79,5 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             act.Should().Throw<InvalidOperationException>();
         }
 
-        //TODO is this test stupid?
-        //[Fact]
-        //public void TestInvestmentDataSerialization() {
-        //    var Investment = new StockInvestment("testAnalysis");
-
-        //    Investment.StockPrice = 100;
-        //    Investment.StockTicker = "AAPL";
-
-        //    context.Investments.Add(Investment);
-
-        //    context.SaveChanges();
-
-        //    var result = context.Investments.
-
-        //    output.WriteLine(result);
-        //    Assert.False(true);
-        //}
     }
 }

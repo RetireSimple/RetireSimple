@@ -6,7 +6,7 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 	public class StockAS {
 
 
-		public static InvestmentModel testAnalysis(StockInvestment investment, Dictionary<string, string> options) {
+		public static InvestmentModel testAnalysis(StockInvestment investment, OptionsDict options) {
 			Console.WriteLine("testAnalysis 1 invoked!");
 			return new InvestmentModel() {
 				InvestmentId = investment.InvestmentId,
@@ -15,7 +15,7 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 			};
 		}
 
-		public static InvestmentModel testAnalysis2(StockInvestment investment, Dictionary<string, string> options) {
+		public static InvestmentModel testAnalysis2(StockInvestment investment, OptionsDict options) {
 			Console.WriteLine("testAnalysis 2 invoked!");
 			return new InvestmentModel() {
 				InvestmentId = investment.InvestmentId,

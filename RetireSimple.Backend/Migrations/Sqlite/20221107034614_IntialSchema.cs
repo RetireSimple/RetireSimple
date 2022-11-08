@@ -2,9 +2,9 @@
 
 #nullable disable
 
-namespace RetireSimple.Backend.Migrations
+namespace RetireSimple.Backend.Migrations.Sqlite
 {
-    public partial class InitialSchema : Migration
+    public partial class IntialSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

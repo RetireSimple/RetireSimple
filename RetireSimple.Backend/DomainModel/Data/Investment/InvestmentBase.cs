@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace RetireSimple.Backend.DomainModel.Data.Investment {
 	//
-	public delegate InvestmentModel AnalysisDelegate<T>(T investment, Dictionary<string,string> options) where T : InvestmentBase;
+	public delegate InvestmentModel AnalysisDelegate<T>(T investment, OptionsDict options) where T : InvestmentBase;
 
 
 	[Table("Investments")]
@@ -18,7 +18,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 
 		//This is the easiest way to store data while maintaining type safety
 		//It's recommended to create getter/setter methods for properties you expect to exist in this map
-		public Dictionary<string, string> InvestmentData { get; set; } = new Dictionary<string, string>();
+		public OptionsDict InvestmentData { get; set; } = new OptionsDict();
 
 		public string? AnalysisType { get; set; }
 
@@ -29,7 +29,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 
 		//NOTE This is also useable after 
 		public abstract void ResolveAnalysisDelegate(string analysisType);
-		public abstract InvestmentModel InvokeAnalysis(Dictionary<string,string> options);
+		public abstract InvestmentModel InvokeAnalysis(OptionsDict options);
 
 	}
 
@@ -45,14 +45,17 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 
 			builder.HasOne(i => i.InvestmentModel).WithOne(i => i.Investment).OnDelete(DeleteBehavior.Restrict);
 
-			builder.HasDiscriminator(i => i.InvestmentType).HasValue<StockInvestment>("StockInvestment");
+			builder.HasDiscriminator(i => i.InvestmentType).HasValue<StockInvestment>("StockInvestment")
+															.HasValue<BondInvestment>("BondInvestment")
+															.HasValue<FixedInvestment>("FixedInvestment")
+															.HasValue<PensionInvestment>("PensionInvestment");
 
 			builder.Property(i => i.InvestmentData)
 				.HasConversion(
 					v => JsonSerializer.Serialize(v, options),
-					v => JsonSerializer.Deserialize<Dictionary<string, string>>(v, options) ?? new Dictionary<string, string>()
+					v => JsonSerializer.Deserialize<OptionsDict>(v, options) ?? new OptionsDict()
 				)
-				.Metadata.SetValueComparer(new ValueComparer<Dictionary<string, string>>(
+				.Metadata.SetValueComparer(new ValueComparer<OptionsDict>(
 					(c1, c2) => c1.SequenceEqual(c2),
 					c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
 					c => c.ToDictionary(entry => entry.Key, entry => entry.Value)

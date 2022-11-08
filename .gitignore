@@ -542,3 +542,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 *.db
+
+*.db-wal
+*.db-shm
