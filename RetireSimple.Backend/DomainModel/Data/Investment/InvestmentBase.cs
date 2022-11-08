@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using RetireSimple.Backend.DomainModel.Data.Expense;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 
@@ -21,6 +22,12 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public OptionsDict InvestmentData { get; set; } = new OptionsDict();
 
 		public string? AnalysisType { get; set; }
+
+		public List<ExpenseBase> Expenses { get; set; } = new List<ExpenseBase>();
+
+		public List<InvestmentTransfer> TransfersFrom { get; set; } = new List<InvestmentTransfer>();
+		public List<InvestmentTransfer> TransfersTo { get; set; } = new List<InvestmentTransfer>();
+
 
 		public InvestmentModel InvestmentModel { get; set; }
 
