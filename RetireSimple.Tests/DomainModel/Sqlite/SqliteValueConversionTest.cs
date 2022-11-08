@@ -21,7 +21,11 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
         public SqliteValueConversionTest(ITestOutputHelper output) {
             //TODO create a new Sqlite DB for this test with seeded test data
-            context = SqliteInvestmentContext.MakeTestContext();
+            context = new InvestmentDBContext(
+                new DbContextOptionsBuilder()
+                    .UseSqlite("Data Source=InvestmentDB.db",
+                    x => x.MigrationsAssembly("RetireSimple.Migrations.Sqlite"))
+                    .Options);
 
             context.Database.Migrate();
             context.Database.EnsureCreated();

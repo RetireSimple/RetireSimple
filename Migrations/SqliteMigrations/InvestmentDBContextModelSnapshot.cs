@@ -9,8 +9,8 @@ using RetireSimple.Backend.Services;
 
 namespace RetireSimple.Backend.Migrations
 {
-    [DbContext(typeof(SqliteInvestmentContext))]
-    partial class SqliteInvestmentContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(InvestmentDBContext))]
+    partial class InvestmentDBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

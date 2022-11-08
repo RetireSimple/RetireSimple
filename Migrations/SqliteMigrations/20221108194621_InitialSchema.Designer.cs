@@ -10,8 +10,8 @@ using RetireSimple.Backend.Services;
 
 namespace RetireSimple.Backend.Migrations
 {
-    [DbContext(typeof(SqliteInvestmentContext))]
-    [Migration("20221108185721_InitialSchema")]
+    [DbContext(typeof(InvestmentDBContext))]
+    [Migration("20221108194621_InitialSchema")]
     partial class InitialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
