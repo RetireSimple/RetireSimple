@@ -14,11 +14,18 @@ EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "RetireSimple.Frontend", "RetireSimple.Frontend\RetireSimple.Frontend.esproj", "{7C2F73A2-51C4-44C4-A5ED-BFAD4B5AA058}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetireSimple.Tests", "RetireSimple.Tests\RetireSimple.Tests.csproj", "{EF18802F-4E8F-4A64-85EF-9D719084C8FA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C6EBBF2C-69A6-48DA-9AA0-CAED932A8D68} = {C6EBBF2C-69A6-48DA-9AA0-CAED932A8D68}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scratchpad", "Scratchpad", "{DA173F27-67BD-48F8-84A9-805539E9A3FE}"
 	ProjectSection(SolutionItems) = preProject
 		util\RetireSimple.Scratch\Program.cs = util\RetireSimple.Scratch\Program.cs
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrations", "Migrations", "{A33273F5-1949-4B97-AD04-B2F61766C57E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetireSimple.Migrations.Sqlite", "Migrations\SqliteMigrations\RetireSimple.Migrations.Sqlite.csproj", "{C6EBBF2C-69A6-48DA-9AA0-CAED932A8D68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,12 +47,18 @@ Global
 		{EF18802F-4E8F-4A64-85EF-9D719084C8FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF18802F-4E8F-4A64-85EF-9D719084C8FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF18802F-4E8F-4A64-85EF-9D719084C8FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6EBBF2C-69A6-48DA-9AA0-CAED932A8D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6EBBF2C-69A6-48DA-9AA0-CAED932A8D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6EBBF2C-69A6-48DA-9AA0-CAED932A8D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6EBBF2C-69A6-48DA-9AA0-CAED932A8D68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DA173F27-67BD-48F8-84A9-805539E9A3FE} = {7B8EC216-52A2-400E-AAA0-52764E05432A}
+		{A33273F5-1949-4B97-AD04-B2F61766C57E} = {7B8EC216-52A2-400E-AAA0-52764E05432A}
+		{C6EBBF2C-69A6-48DA-9AA0-CAED932A8D68} = {A33273F5-1949-4B97-AD04-B2F61766C57E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D873A26-7091-4B13-8E96-51BADD59405B}
