@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data.Investment;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace RetireSimple.Backend.DomainModel.Data {
 	public class InvestmentModel {
@@ -11,6 +12,8 @@ namespace RetireSimple.Backend.DomainModel.Data {
 
 		//TODO ensure relationship to InvestmentBase
 		public int InvestmentId { get; set; }
+		
+		[JsonIgnore]
 		public InvestmentBase Investment { get; set; }
 
 

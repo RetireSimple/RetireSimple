@@ -1,28 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using RetireSimple.Backend.Services;
+using System.Text.Json;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddCommandLine(args);
 builder.Configuration["Provider"] ??= "sqlite";
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+	.AddJsonOptions(options => {
+		options.JsonSerializerOptions.AllowTrailingCommas = true;
+		options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+		options.JsonSerializerOptions.IncludeFields = true;
+	});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-////Needed to ensure inherited context type overrides base type
-//builder.Services.AddDbContext<InvestmentDBContext>(options =>
-//	options.UseSqlite("Data Source=InvestmentDB.db"));
-
-//switch(builder.Configuration["Provider"]) {
-//	case "sqlite":
-//		builder.Services.AddDbContext<SqliteInvestmentContext>(options => options.UseSqlite("Data Source=InvestmentDB.db"));
-//		break;
-//	case "mariadb":
-//		builder.Services.AddDbContext<MariaDBInvestmentContext>();
-//		break;
-//	default:
-//		throw new ArgumentException("Invalid provider");
-//}
 
 builder.Services.AddDbContext<InvestmentDBContext>(options => _ =
 	builder.Configuration["Provider"] switch {
