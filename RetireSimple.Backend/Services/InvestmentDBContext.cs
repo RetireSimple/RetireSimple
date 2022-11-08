@@ -6,6 +6,9 @@ using RetireSimple.Backend.DomainModel.Data.Investment;
 
 namespace RetireSimple.Backend.Services {
 	public class InvestmentDBContext : DbContext {
+		public InvestmentDBContext(DbContextOptions options) : base(options) {
+		}
+
 		public DbSet<InvestmentBase> Investments { get; set; }
 		//DbSet<InvestmentVehicleBase> InvestmentVehicles { get; set; }
 		public DbSet<InvestmentModel> InvestmentModels { get; set; }

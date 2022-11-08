@@ -21,7 +21,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
         public SqliteValueConversionTest(ITestOutputHelper output) {
             //TODO create a new Sqlite DB for this test with seeded test data
-            context = new SqliteInvestmentContext();
+            context = SqliteInvestmentContext.MakeTestContext();
 
             context.Database.Migrate();
             context.Database.EnsureCreated();
@@ -30,6 +30,6 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         }
 
 
-        
+
     }
 }

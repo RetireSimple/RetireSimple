@@ -15,7 +15,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         private readonly ITestOutputHelper output;
 
         public SqliteModelTest(ITestOutputHelper output) {
-            context = new SqliteInvestmentContext();
+            context = SqliteInvestmentContext.MakeTestContext();
 
             context.Database.Migrate();
             context.Database.EnsureCreated();
