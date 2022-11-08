@@ -11,7 +11,7 @@ using RetireSimple.Backend.Services;
 namespace RetireSimple.Backend.Migrations
 {
     [DbContext(typeof(SqliteInvestmentContext))]
-    [Migration("20221108162838_InitialSchema")]
+    [Migration("20221108183833_InitialSchema")]
     partial class InitialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,9 @@ namespace RetireSimple.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("LastAnalysis")
+                        .HasColumnType("datetime2(7)");
+
                     b.HasKey("InvestmentId");
 
                     b.ToTable("Investments");
@@ -78,6 +81,9 @@ namespace RetireSimple.Backend.Migrations
 
                     b.Property<int>("InvestmentId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("MaxModelData")
                         .IsRequired()

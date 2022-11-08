@@ -28,6 +28,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public List<InvestmentTransfer> TransfersFrom { get; set; } = new List<InvestmentTransfer>();
 		public List<InvestmentTransfer> TransfersTo { get; set; } = new List<InvestmentTransfer>();
 
+		public DateTime? LastAnalysis { get; set; }
 
 		public InvestmentModel InvestmentModel { get; set; }
 
@@ -50,12 +51,16 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public void Configure(EntityTypeBuilder<InvestmentBase> builder) {
 			builder.HasKey(i => i.InvestmentId);
 
-			builder.HasOne(i => i.InvestmentModel).WithOne(i => i.Investment).OnDelete(DeleteBehavior.Restrict);
+			//TODO Allow Cascade of models as those should not exist if the investment still exists
+			builder.HasOne(i => i.InvestmentModel)
+					.WithOne(i => i.Investment)
+					.OnDelete(DeleteBehavior.Restrict);
 
-			builder.HasDiscriminator(i => i.InvestmentType).HasValue<StockInvestment>("StockInvestment")
-															.HasValue<BondInvestment>("BondInvestment")
-															.HasValue<FixedInvestment>("FixedInvestment")
-															.HasValue<PensionInvestment>("PensionInvestment");
+			builder.HasDiscriminator(i => i.InvestmentType)
+					.HasValue<StockInvestment>("StockInvestment")
+					.HasValue<BondInvestment>("BondInvestment")
+					.HasValue<FixedInvestment>("FixedInvestment")
+					.HasValue<PensionInvestment>("PensionInvestment");
 
 			builder.Property(i => i.InvestmentData)
 				.HasConversion(
@@ -68,7 +73,12 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 					c => c.ToDictionary(entry => entry.Key, entry => entry.Value)
 				));
 
-			builder.Property(i => i.AnalysisType).HasColumnName("AnalysisType");
+			builder.Property(i => i.AnalysisType)
+					.HasColumnName("AnalysisType");
+
+			builder.Property(i => i.LastAnalysis)
+					.HasColumnType("datetime2(7)");
+
 
 		}
 	}

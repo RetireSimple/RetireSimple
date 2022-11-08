@@ -62,6 +62,9 @@ namespace RetireSimple.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("LastAnalysis")
+                        .HasColumnType("datetime2(7)");
+
                     b.HasKey("InvestmentId");
 
                     b.ToTable("Investments");
@@ -76,6 +79,9 @@ namespace RetireSimple.Backend.Migrations
 
                     b.Property<int>("InvestmentId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("MaxModelData")
                         .IsRequired()

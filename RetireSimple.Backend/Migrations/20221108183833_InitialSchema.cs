@@ -17,7 +17,8 @@ namespace RetireSimple.Backend.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     InvestmentType = table.Column<string>(type: "TEXT", nullable: false),
                     InvestmentData = table.Column<string>(type: "TEXT", nullable: false),
-                    AnalysisType = table.Column<string>(type: "TEXT", nullable: true)
+                    AnalysisType = table.Column<string>(type: "TEXT", nullable: true),
+                    LastAnalysis = table.Column<DateTime>(type: "datetime2(7)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,7 +57,8 @@ namespace RetireSimple.Backend.Migrations
                     InvestmentModelId = table.Column<int>(type: "INTEGER", nullable: false),
                     InvestmentId = table.Column<int>(type: "INTEGER", nullable: false),
                     MaxModelData = table.Column<string>(type: "TEXT", nullable: false),
-                    MinModelData = table.Column<string>(type: "TEXT", nullable: false)
+                    MinModelData = table.Column<string>(type: "TEXT", nullable: false),
+                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

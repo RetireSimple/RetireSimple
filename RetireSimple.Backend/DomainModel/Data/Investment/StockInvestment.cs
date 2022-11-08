@@ -6,9 +6,28 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 	public class StockInvestment : InvestmentBase {
 
 		[NotMapped]
-		public double StockPrice { get => double.Parse(this.InvestmentData["StockPrice"]); set => this.InvestmentData["StockPrice"] = value.ToString(); }
+		public decimal StockPrice {
+			get => decimal.Parse(this.InvestmentData["StockPrice"]);
+			set => this.InvestmentData["StockPrice"] = value.ToString();
+		}
+		
 		[NotMapped]
-		public string StockTicker { get => this.InvestmentData["StockTicker"]; set => this.InvestmentData["StockTicker"] = value; }
+		public string StockTicker {
+			get => this.InvestmentData["StockTicker"];
+			set => this.InvestmentData["StockTicker"] = value;
+		}
+		
+		[NotMapped]
+		public int StockQuantity {
+			get => int.Parse(this.InvestmentData["StockQuantity"]);
+			set => this.InvestmentData["StockQuantity"] = value.ToString();
+		}
+
+		[NotMapped]
+		public DateTime StockPurchaseDate {
+			get => DateTime.Parse(this.InvestmentData["StockPurchaseDate"]);
+			set => this.InvestmentData["StockPurchaseDate"] = value.ToString();
+		}
 
 		public AnalysisDelegate<StockInvestment>? Analysis;
 
