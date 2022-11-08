@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using RetireSimple.Backend.DomainModel.Data;
+using RetireSimple.Backend.DomainModel.Data.Expense;
 using RetireSimple.Backend.DomainModel.Data.Investment;
 
 
@@ -14,8 +15,8 @@ namespace RetireSimple.Backend.Services {
 		public DbSet<InvestmentModel> InvestmentModels { get; set; }
 		//DbSet<Profile> Profiles { get; set; }
 		//DbSet<Portfolio> Portfolios { get; set; }
-		//DbSet<ExpenseBase> Expenses { get; set; }
-		//DbSet<InvestmentTransfer> InvestmentTransfers { get; set; }
+		DbSet<ExpenseBase> Expenses { get; set; }
+		DbSet<InvestmentTransfer> InvestmentTransfers { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.ApplyConfiguration(new InvestmentBaseConfiguration());
@@ -24,8 +25,8 @@ namespace RetireSimple.Backend.Services {
 
 			modelBuilder.ApplyConfiguration(new InvestmentModelConfiguration());
 			//modelBuilder.Entity<Profile>().ToTable("Profiles");
-			//modelBuilder.Entity<ExpenseBase>().ToTable("Expenses");
-			//modelBuilder.Entity<InvestmentTransfer>().ToTable("InvestmentTransfers");
+			modelBuilder.ApplyConfiguration(new ExpenseBaseConfiguration());
+			modelBuilder.ApplyConfiguration(new InvestmentTransferConfiguration());
 
 
 		}
