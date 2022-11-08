@@ -30,7 +30,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 
 		public DateTime? LastAnalysis { get; set; }
 
-		public InvestmentModel InvestmentModel { get; set; }
+		public InvestmentModel? InvestmentModel { get; set; }
 
 		//public int PortfolioId { get; set; }
 		//public Portfolio Portfolio { get; set; }

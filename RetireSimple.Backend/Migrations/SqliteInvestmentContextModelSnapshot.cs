@@ -235,8 +235,7 @@ namespace RetireSimple.Backend.Migrations
                 {
                     b.Navigation("Expenses");
 
-                    b.Navigation("InvestmentModel")
-                        .IsRequired();
+                    b.Navigation("InvestmentModel");
 
                     b.Navigation("TransfersFrom");
 

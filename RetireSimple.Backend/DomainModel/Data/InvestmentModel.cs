@@ -15,8 +15,8 @@ namespace RetireSimple.Backend.DomainModel.Data {
 
 
 		//TODO change to Math.NET/other types if needed
-		public List<(double, double)> MaxModelData { get; set; } = new List<(double, double)>();
-		public List<(double, double)> MinModelData { get; set; } = new List<(double, double)>();
+		public List<(decimal, decimal)> MaxModelData { get; set; } = new List<(decimal, decimal)>();
+		public List<(decimal, decimal)> MinModelData { get; set; } = new List<(decimal, decimal)>();
 
 		public DateTime LastUpdated { get; set; } = DateTime.Now;
 
@@ -45,9 +45,9 @@ namespace RetireSimple.Backend.DomainModel.Data {
 			builder.Property(i => i.MaxModelData)
 			.HasConversion(
 				v => JsonSerializer.Serialize(v, options),
-				v => JsonSerializer.Deserialize<List<(double, double)>>(v, options) ?? new List<(double, double)>()
+				v => JsonSerializer.Deserialize<List<(decimal, decimal)>>(v, options) ?? new List<(decimal, decimal)>()
 			)
-			.Metadata.SetValueComparer(new ValueComparer<List<(double, double)>>(
+			.Metadata.SetValueComparer(new ValueComparer<List<(decimal, decimal)>>(
 				(c1, c2) => c1.SequenceEqual(c2),
 				c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
 				c => c.ToList())
@@ -56,9 +56,9 @@ namespace RetireSimple.Backend.DomainModel.Data {
 			builder.Property(i => i.MinModelData)
 			.HasConversion(
 				v => JsonSerializer.Serialize(v, options),
-				v => JsonSerializer.Deserialize<List<(double, double)>>(v, options) ?? new List<(double, double)>()
+				v => JsonSerializer.Deserialize<List<(decimal, decimal)>>(v, options) ?? new List<(decimal, decimal)>()
 			)
-			.Metadata.SetValueComparer(new ValueComparer<List<(double, double)>>(
+			.Metadata.SetValueComparer(new ValueComparer<List<(decimal, decimal)>>(
 				(c1, c2) => c1.SequenceEqual(c2),
 				c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
 				c => c.ToList())

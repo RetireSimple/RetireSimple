@@ -11,7 +11,7 @@ using RetireSimple.Backend.Services;
 namespace RetireSimple.Backend.Migrations
 {
     [DbContext(typeof(SqliteInvestmentContext))]
-    [Migration("20221108183833_InitialSchema")]
+    [Migration("20221108185721_InitialSchema")]
     partial class InitialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -237,8 +237,7 @@ namespace RetireSimple.Backend.Migrations
                 {
                     b.Navigation("Expenses");
 
-                    b.Navigation("InvestmentModel")
-                        .IsRequired();
+                    b.Navigation("InvestmentModel");
 
                     b.Navigation("TransfersFrom");
 
