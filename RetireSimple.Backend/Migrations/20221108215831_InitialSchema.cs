@@ -99,38 +99,38 @@ namespace RetireSimple.Backend.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "UserProfile",
-                columns: table => new {
-                    ProfileId = table.Column<int>(type: "INTEGER", nullable: false).Annotation("Sqlite:Autoincrement", true),
-                    UserAge = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserStatus = table.Column<bool>(type: "BOOLEAN", nullable: false),
-                    UserName = table.Column<string>(type: "STRING", nullable: false)
-				},
+    //        migrationBuilder.CreateTable(
+    //            name: "UserProfile",
+    //            columns: table => new {
+    //                ProfileId = table.Column<int>(type: "INTEGER", nullable: false).Annotation("Sqlite:Autoincrement", true),
+    //                UserAge = table.Column<int>(type: "INTEGER", nullable: false),
+    //                UserStatus = table.Column<bool>(type: "BOOLEAN", nullable: false),
+    //                UserName = table.Column<string>(type: "STRING", nullable: false)
+				//},
 
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserProfile", x => x.ProfileId);
-				});
+    //            constraints: table =>
+    //            {
+    //                table.PrimaryKey("PK_UserProfile", x => x.ProfileId);
+				//});
 
-            migrationBuilder.CreateTable(
-                name: "UserPortfolio",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PortfolioId = table.Column<int>(type: "INTEGER", nullable: false)
-				},
+    //        migrationBuilder.CreateTable(
+    //            name: "UserPortfolio",
+    //            columns: table => new
+    //            {
+    //                UserId = table.Column<int>(type: "INTEGER", nullable: false),
+    //                PortfolioId = table.Column<int>(type: "INTEGER", nullable: false)
+				//},
 
-                constraints: table =>
-                {
-					table.PrimaryKey("PK_UserPortfolio", x => x.PortfolioId);
-					table.ForeignKey(
-						name: "FK_UserPortfolio_UserProfile_UserId",
-						column: x => x.UserId,
-						principalTable: "UserProfile",
-						principalColumn: "ProfileId",
-						onDelete: ReferentialAction.Cascade);
-				});
+    //            constraints: table =>
+    //            {
+				//	table.PrimaryKey("PK_UserPortfolio", x => x.PortfolioId);
+				//	table.ForeignKey(
+				//		name: "FK_UserPortfolio_UserProfile_UserId",
+				//		column: x => x.UserId,
+				//		principalTable: "UserProfile",
+				//		principalColumn: "ProfileId",
+				//		onDelete: ReferentialAction.Cascade);
+				//});
 
             migrationBuilder.CreateIndex(
                 name: "IX_Expenses_SourceInvestmentId",
@@ -168,11 +168,11 @@ namespace RetireSimple.Backend.Migrations
             migrationBuilder.DropTable(
                 name: "Investments");
 
-            migrationBuilder.DropTable(
-                name: "UserProfile");
+            //migrationBuilder.DropTable(
+            //    name: "UserProfile");
 
-            migrationBuilder.DropTable(
-                name: "UserPortfolio");
+            //migrationBuilder.DropTable(
+            //    name: "UserPortfolio");
         }
     }
 }

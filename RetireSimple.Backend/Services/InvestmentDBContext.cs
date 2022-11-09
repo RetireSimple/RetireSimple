@@ -3,7 +3,7 @@
 using RetireSimple.Backend.DomainModel.Data;
 using RetireSimple.Backend.DomainModel.Data.Expense;
 using RetireSimple.Backend.DomainModel.Data.Investment;
-
+using RetireSimple.Backend.DomainModel.User;
 
 namespace RetireSimple.Backend.Services {
 	public class InvestmentDBContext : DbContext {
@@ -13,7 +13,7 @@ namespace RetireSimple.Backend.Services {
 		public DbSet<InvestmentBase> Investments { get; set; }
 		//DbSet<InvestmentVehicleBase> InvestmentVehicles { get; set; }
 		public DbSet<InvestmentModel> InvestmentModels { get; set; }
-		//DbSet<Profile> Profiles { get; set; }
+		public DbSet<Profile> Profiles { get; set; }
 		//DbSet<Portfolio> Portfolios { get; set; }
 		DbSet<ExpenseBase> Expenses { get; set; }
 		DbSet<InvestmentTransfer> InvestmentTransfers { get; set; }
@@ -24,7 +24,7 @@ namespace RetireSimple.Backend.Services {
 			//modelBuilder.ApplyConfiguration(new PortfolioConfig());
 
 			modelBuilder.ApplyConfiguration(new InvestmentModelConfiguration());
-			//modelBuilder.Entity<Profile>().ToTable("Profiles");
+			modelBuilder.ApplyConfiguration(new ProfileConfiguration());
 			modelBuilder.ApplyConfiguration(new ExpenseBaseConfiguration());
 			modelBuilder.ApplyConfiguration(new InvestmentTransferConfiguration());
 

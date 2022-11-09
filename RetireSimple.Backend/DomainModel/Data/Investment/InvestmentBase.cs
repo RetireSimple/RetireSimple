@@ -38,7 +38,8 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		[JsonIgnore]
 		public InvestmentModel? InvestmentModel { get; set; }
 
-		//public int PortfolioId { get; set; }
+
+		public int PortfolioId { get; set; }
 		//public Portfolio Portfolio { get; set; }
 
 		//NOTE This is also useable after 
