@@ -5,7 +5,6 @@ const context = [
     "/api/Investment/AddStock",
     "/api/Investment/AddRandomStock",
     "/api/Analysis/GetAnalysis",
-    "/weatherforecast"
 ];
 
 module.exports = function (app) {
