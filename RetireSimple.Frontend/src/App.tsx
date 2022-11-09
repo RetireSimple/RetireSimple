@@ -1,4 +1,5 @@
 import React from 'react';
+import { Investment } from './Models/Interfaces';
 
 
 export interface Forecast {
@@ -8,41 +9,60 @@ export interface Forecast {
     summary?: string;
 }
 
+
+
 export default function App() {
-    const [forecasts, setForecasts] = React.useState<Forecast[]>([]);
+    //const [forecasts, setForecasts] = React.useState<Forecast[]>([]);
+    const [investments, setInvestments] = React.useState<Investment[]>([]);
+    //const [investmentModels, setInvestmentModels] = React.useState<InvestmentModel[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
 
 
 
-    const populateWeatherData = async () => {
-        const response = await fetch('weatherforecast');
+    const populateInvestmentData = async () => {
+        const response = await fetch('/api/Investment/GetAllInvestments');
         const data = await response.json();
-        setForecasts(data);
+        setInvestments(data);
         setLoading(false);
     };
 
+    const addNewInvestment = async () => {
+        const request = new Request('/api/Investment/AddRandomStock', { method: 'POST' })
+
+        fetch(request).then(async () =>
+            await populateInvestmentData());
+    }
+
     React.useEffect(() => {
-        if (loading) { populateWeatherData() };
+        if (loading) { populateInvestmentData() };
     });
 
-    const renderForecastsTable = (forecasts: Forecast[]) => {
+    const renderInvestmentsTable = (investments: Investment[]) => {
         return (
             <table className='table table-striped' aria-labelledby="tabelLabel">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Temp. (C)</th>
-                        <th>Temp. (F)</th>
-                        <th>Summary</th>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Analysis Type</th>
+                        <th>Last Analysis</th>
+                        <th>Ticker</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Purchase Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {forecasts.map(forecast =>
-                        <tr key={forecast.date}>
-                            <td>{forecast.date}</td>
-                            <td>{forecast.temperatureC}</td>
-                            <td>{forecast.temperatureF}</td>
-                            <td>{forecast.summary}</td>
+                    {investments.map(inv =>
+                        <tr key={inv.investmentId}>
+                            <td>{inv.investmentId}</td>
+                            <td>{inv.investmentType}</td>
+                            <td>{inv.analysisType}</td>
+                            <td>{inv.lastAnalysis}</td>
+                            <td>{inv.investmentData['stockTicker']}</td>
+                            <td>{inv.investmentData['stockPrice']}</td>
+                            <td>{inv.investmentData['stockQuantity']}</td>
+                            <td>{inv.investmentData['stockPurchaseDate']}</td>
                         </tr>
                     )}
                 </tbody>
@@ -53,12 +73,15 @@ export default function App() {
     {
         let contents = loading
             ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-            : renderForecastsTable(forecasts);
+            : renderInvestmentsTable(investments);
 
         return (
             <div>
-                <h1 id="tabelLabel" >Weather forecast</h1>
-                <p>This component demonstrates fetching data from the server.</p>
+                <button onClick={addNewInvestment}>Add New Stonk</button>
+                <h1 id="tabelLabel" >Investments</h1>
+                <p></p>
+
+
                 {contents}
             </div>
 
