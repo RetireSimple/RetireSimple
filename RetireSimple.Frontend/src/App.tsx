@@ -1,5 +1,5 @@
 import React from 'react';
-import { Investment, InvestmentModel } from './Models/Interfaces';
+import { Investment } from './Models/Interfaces';
 
 
 export interface Forecast {
