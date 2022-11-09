@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data.Expense;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace RetireSimple.Backend.DomainModel.Data.Investment {
 	//
@@ -23,13 +24,18 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 
 		public string? AnalysisType { get; set; }
 
+		[JsonIgnore]
 		public List<ExpenseBase> Expenses { get; set; } = new List<ExpenseBase>();
 
+		[JsonIgnore]
 		public List<InvestmentTransfer> TransfersFrom { get; set; } = new List<InvestmentTransfer>();
+		
+		[JsonIgnore]
 		public List<InvestmentTransfer> TransfersTo { get; set; } = new List<InvestmentTransfer>();
 
 		public DateTime? LastAnalysis { get; set; }
 
+		[JsonIgnore]
 		public InvestmentModel? InvestmentModel { get; set; }
 
 		//public int PortfolioId { get; set; }
