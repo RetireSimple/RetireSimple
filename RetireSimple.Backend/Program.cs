@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using RetireSimple.Backend.Services;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,13 +51,38 @@ if(app.Configuration["Provider"] == "sqlite") {
 if(app.Environment.IsDevelopment()) {
 	app.UseSwagger();
 	app.UseSwaggerUI();
+
+	//This is to fix an issue related to packaging
+	app.UseHttpsRedirection();
+	app.UseAuthorization();
 }
 
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+if(app.Environment.IsProduction()) {
+	app.UseStaticFiles();
+}
 
 app.MapControllers();
 
+//invoke browser to app window
+if(app.Environment.IsProduction()) {
+	var url = "http://localhost:5000/index.html";
+	try {
+		Process.Start(url);
+	} catch {
+		// hack because of this: https://github.com/dotnet/corefx/issues/10361
+		if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+			url = url.Replace("&", "^&");
+			Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+		} else if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+			Process.Start("xdg-open", url);
+		} else if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
+			Process.Start("open", url);
+		} else {
+			throw;
+		}
+	}
+}
+
 app.Run();
+
+
