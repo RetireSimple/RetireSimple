@@ -24,16 +24,14 @@ namespace RetireSimple.Backend.DomainModel.User {
 	public class PortfolioConfig : IEntityTypeConfiguration<Portfolio> {
 		public void Configure(EntityTypeBuilder<Portfolio> builder) {
 			builder.HasKey(p => p.PortfolioId);
-<<<<<<< Updated upstream
+
 			builder.HasOne(p => p.Profile).WithMany(p => p.Portfolios).HasForeignKey(p => p.ProfileId).IsRequired();
 			builder.HasMany(p => p.Investments).WithOne().HasForeignKey(i => i.PortfolioId);
 			builder.HasMany(p => p.Expenses).WithOne().HasForeignKey(e => e.PorfolioId);
 			builder.HasMany(p => p.Transfers).WithOne().HasForeignKey(t => t.PorfolioId);
-=======
+
 			builder.HasOne(p => p.Profile).WithMany(p => p.Portfolios)
 				.HasForeignKey(p => p.ProfileId).OnDelete(DeleteBehavior.Restrict);
->>>>>>> Stashed changes
-			//builder.HasMany(p => p.Investments).WithOne(i => i.Portfolio);
 			
 		}
 	}
