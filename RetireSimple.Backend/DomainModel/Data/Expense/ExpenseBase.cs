@@ -7,6 +7,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Expense {
 		public int ExpenseId { get; set; }
 		public int SourceInvestmentId { get; set; }
 		public InvestmentBase SourceInvestment { get; set; }
+		public int PorfolioId { get; set; }
 
 		public double Amount { get; set; }
 
