@@ -46,8 +46,23 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             investment2.StockQuantity = 20;
             investment2.StockTicker = "TEST";
 
-            context.Investments.Add(investment);
-            context.Investments.Add(investment2);
+            var profile = new Profile();
+            profile.Name = "jack";
+            profile.Age = 65;
+            profile.Status = true;
+
+            var portfolio = new Portfolio();
+
+            context.Profiles.Add(profile);
+            context.SaveChanges();
+            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.SaveChanges();
+            context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
+            context.SaveChanges();
+            context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment2);
+
+            //context.Investments.Add(investment);
+            //context.Investments.Add(investment2);
 
             context.SaveChanges();
 
@@ -55,7 +70,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         }
 
         [Fact]
-        public void TestStockInvestmentModelAdd() {
+        public void TestStockInvestmentModelAdd()
+        {
             var investment = new StockInvestment("testAnalysis");
             investment.StockPrice = 100;
             investment.StockQuantity = 10;
@@ -68,9 +84,20 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
             var options = new Dictionary<string, string>();
 
+            var profile = new Profile();
+            profile.Name = "jack";
+            profile.Age = 65;
+            profile.Status = true;
 
-            context.Investments.Add(investment);
-            context.Investments.Add(investment2);
+            var portfolio = new Portfolio();
+
+            context.Profiles.Add(profile);
+            context.SaveChanges();
+            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.SaveChanges();
+            context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
+            context.SaveChanges();
+            context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment2);
             context.SaveChanges();
             context.InvestmentModels.Add(investment2.InvokeAnalysis(options));
             context.InvestmentModels.Add(investment.InvokeAnalysis(options));
@@ -80,7 +107,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         }
 
         [Fact]
-        public void TestInvestmentModelFKConstraintonInvestment() {
+        public void TestInvestmentModelFKConstraintonInvestment()
+        {
             var investment = new StockInvestment("testAnalysis");
             investment.StockPrice = 100;
             investment.StockQuantity = 10;
@@ -93,14 +121,27 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
             var options = new Dictionary<string, string>();
 
-            context.Investments.Add(investment);
-            context.Investments.Add(investment2);
+            var profile = new Profile();
+            profile.Name = "jack";
+            profile.Age = 65;
+            profile.Status = true;
+
+            var portfolio = new Portfolio();
+
+            context.Profiles.Add(profile);
+            context.SaveChanges();
+            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.SaveChanges();
+            context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
+            context.SaveChanges();
+            context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment2);
             context.SaveChanges();
             context.InvestmentModels.Add(investment2.InvokeAnalysis(options));
             context.InvestmentModels.Add(investment.InvokeAnalysis(options));
             context.SaveChanges();
 
-            Action act = () => {
+            Action act = () =>
+            {
                 context.Investments.Remove(investment);
             };
 
@@ -108,18 +149,25 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         }
 
         [Fact]
-        public void TestPortfolioAdd() {
+        public void TestPortfolioAdd()
+        {
             var portfolio = new Portfolio();
             var portfolio2 = new Portfolio();
             var profile = new Profile();
+            profile.Name = "jack";
+            profile.Age = 65;
+            profile.Status = true;
+
+
 
             context.Profiles.Add(profile);
+            context.SaveChanges();
             context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
             context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio2);
 
 
             context.SaveChanges();
-            context.Portfolios.Should().HaveCount(2);
+            context.Portfolio.Should().HaveCount(2);
         }
 
         [Fact]
@@ -127,6 +175,13 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         {
             var profile = new Profile();
             var profile2 = new Profile();
+            profile.Name = "jack";
+            profile.Age = 65;
+            profile.Status = true;
+
+            profile2.Name = "jake";
+            profile2.Age = 25;
+            profile2.Status = false;
 
             context.Profiles.Add(profile);
             context.Profiles.Add(profile2);
@@ -141,17 +196,77 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             var portfolio = new Portfolio();
             var profile = new Profile();
 
+            profile.Name = "jack";
+            profile.Age = 65;
+            profile.Status = true;
+
             context.Profiles.Add(profile);
             context.SaveChanges();
             context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.SaveChanges();
 
 
-            Action act = () => {
-                context.Portfolios.Remove(portfolio);
+            Action act = () =>
+            {
+                context.Profiles.Remove(profile);
             };
 
             act.Should().Throw<InvalidOperationException>();
         }
 
+        [Fact]
+        public void TestPortfolioRemove()
+        {
+            var portfolio = new Portfolio();
+            var portfolio2 = new Portfolio();
+            var profile = new Profile();
+
+            profile.Name = "jack";
+            profile.Age = 65;
+            profile.Status = true;
+
+
+            context.Profiles.Add(profile);
+            context.SaveChanges();
+            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio2);
+            context.SaveChanges();
+            context.Portfolio.Remove(portfolio);
+            context.SaveChanges();
+
+            context.Portfolio.Should().HaveCount(1);
+
+
+        }
+
+        [Fact]
+        public void TestProfileRemove()
+        {
+            var profile = new Profile();
+            var profile2 = new Profile();
+
+            profile.Name = "jack";
+            profile.Age = 65;
+            profile.Status = true;
+
+            profile2.Name = "jake";
+            profile2.Age = 25;
+            profile2.Status = false;
+
+
+
+            context.Profiles.Add(profile);
+            context.Profiles.Add(profile2);
+
+            context.SaveChanges();
+
+            context.Profiles.Remove(profile);
+            context.SaveChanges();
+
+            context.Profiles.Should().HaveCount(1);
+        }
+
     }
+
 }
+

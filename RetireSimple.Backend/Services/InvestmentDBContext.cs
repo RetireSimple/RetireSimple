@@ -15,7 +15,7 @@ namespace RetireSimple.Backend.Services {
 		//DbSet<InvestmentVehicleBase> InvestmentVehicles { get; set; }
 		public DbSet<InvestmentModel> InvestmentModels { get; set; }
 		public DbSet<Profile> Profiles { get; set; }
-		public DbSet<Portfolio> Portfolios { get; set; }
+		public DbSet<Portfolio> Portfolio { get; set; }
 		public DbSet<ExpenseBase> Expenses { get; set; }
 		public DbSet<InvestmentTransfer> InvestmentTransfers { get; set; }
 

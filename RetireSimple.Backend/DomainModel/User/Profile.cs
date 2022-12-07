@@ -7,7 +7,7 @@ namespace RetireSimple.Backend.DomainModel.User {
 		public int ProfileId { get; set; }
 		public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
 		public string Name { get; set; }
-		public string Age { get; set; }
+		public int Age { get; set; }
 		public bool Status { get; set; }
 
 	}
