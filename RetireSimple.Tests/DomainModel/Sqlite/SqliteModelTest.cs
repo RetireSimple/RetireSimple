@@ -142,7 +142,9 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             var profile = new Profile();
 
             context.Profiles.Add(profile);
+            context.SaveChanges();
             context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+
 
             Action act = () => {
                 context.Portfolios.Remove(portfolio);
