@@ -219,15 +219,6 @@ namespace RetireSimple.Backend.Migrations
                     b.HasDiscriminator().HasValue("BondInvestment");
                 });
 
-            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.CashInvestment", b =>
-                {
-                    b.HasBaseType("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase");
-
-                    b.ToTable("Investments");
-
-                    b.HasDiscriminator().HasValue("CashInvestment");
-                });
-
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.FixedInvestment", b =>
                 {
                     b.HasBaseType("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase");
