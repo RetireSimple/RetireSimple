@@ -22,6 +22,8 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		//It's recommended to create getter/setter methods for properties you expect to exist in this map
 		public OptionsDict InvestmentData { get; set; } = new OptionsDict();
 
+		public OptionsDict AnalysisOptionsOverrides { get; set; } = new OptionsDict();
+
 		public string? AnalysisType { get; set; }
 
 		[JsonIgnore]
@@ -29,7 +31,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 
 		[JsonIgnore]
 		public List<InvestmentTransfer> TransfersFrom { get; set; } = new List<InvestmentTransfer>();
-		
+
 		[JsonIgnore]
 		public List<InvestmentTransfer> TransfersTo { get; set; } = new List<InvestmentTransfer>();
 
@@ -71,6 +73,17 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 					.HasValue<PensionInvestment>("PensionInvestment");
 
 			builder.Property(i => i.InvestmentData)
+				.HasConversion(
+					v => JsonSerializer.Serialize(v, options),
+					v => JsonSerializer.Deserialize<OptionsDict>(v, options) ?? new OptionsDict()
+				)
+				.Metadata.SetValueComparer(new ValueComparer<OptionsDict>(
+					(c1, c2) => c1.SequenceEqual(c2),
+					c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+					c => c.ToDictionary(entry => entry.Key, entry => entry.Value)
+				));
+
+			builder.Property(i => i.AnalysisOptionsOverrides)
 				.HasConversion(
 					v => JsonSerializer.Serialize(v, options),
 					v => JsonSerializer.Deserialize<OptionsDict>(v, options) ?? new OptionsDict()

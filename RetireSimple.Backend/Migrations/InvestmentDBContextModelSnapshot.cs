@@ -35,15 +35,12 @@ namespace RetireSimple.Backend.Migrations
                     b.Property<int>("PorfolioId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PortfolioId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("SourceInvestmentId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ExpenseId");
 
-                    b.HasIndex("PortfolioId");
+                    b.HasIndex("PorfolioId");
 
                     b.HasIndex("SourceInvestmentId");
 
@@ -58,6 +55,10 @@ namespace RetireSimple.Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("AnalysisOptionsOverrides")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("AnalysisType")
                         .HasColumnType("TEXT")
                         .HasColumnName("AnalysisType");
@@ -70,6 +71,9 @@ namespace RetireSimple.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("InvestmentVehicleBaseInvestmentVehicleId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime?>("LastAnalysis")
                         .HasColumnType("datetime2(7)");
 
@@ -77,6 +81,8 @@ namespace RetireSimple.Backend.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("InvestmentId");
+
+                    b.HasIndex("InvestmentVehicleBaseInvestmentVehicleId");
 
                     b.HasIndex("PortfolioId");
 
@@ -126,7 +132,7 @@ namespace RetireSimple.Backend.Migrations
                     b.Property<int>("DestinationInvestmentId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PortfolioId")
+                    b.Property<int>("PorfolioId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("SourceInvestmentId")
@@ -139,11 +145,37 @@ namespace RetireSimple.Backend.Migrations
 
                     b.HasIndex("DestinationInvestmentId");
 
-                    b.HasIndex("PortfolioId");
+                    b.HasIndex("PorfolioId");
 
                     b.HasIndex("SourceInvestmentId");
 
                     b.ToTable("InvestmentTransfers", (string)null);
+                });
+
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase", b =>
+                {
+                    b.Property<int>("InvestmentVehicleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AnalysisOptionsOverrides")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("InvestmentVehicleType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PortfolioId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("InvestmentVehicleId");
+
+                    b.HasIndex("PortfolioId");
+
+                    b.ToTable("InvestmentVehicles");
+
+                    b.HasDiscriminator<string>("InvestmentVehicleType").HasValue("InvestmentVehicleBase");
                 });
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.User.Portfolio", b =>
@@ -168,9 +200,8 @@ namespace RetireSimple.Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Age")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Age")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -255,11 +286,48 @@ namespace RetireSimple.Backend.Migrations
                     b.HasDiscriminator().HasValue("StockInvestment");
                 });
 
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.Vehicle401k", b =>
+                {
+                    b.HasBaseType("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase");
+
+                    b.HasDiscriminator().HasValue("401k");
+                });
+
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.Vehicle403b", b =>
+                {
+                    b.HasBaseType("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase");
+
+                    b.HasDiscriminator().HasValue("403b");
+                });
+
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.Vehicle457", b =>
+                {
+                    b.HasBaseType("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase");
+
+                    b.HasDiscriminator().HasValue("457");
+                });
+
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.VehicleIRA", b =>
+                {
+                    b.HasBaseType("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase");
+
+                    b.HasDiscriminator().HasValue("IRA");
+                });
+
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.VehicleRothIRA", b =>
+                {
+                    b.HasBaseType("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase");
+
+                    b.HasDiscriminator().HasValue("RothIRA");
+                });
+
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Expense.ExpenseBase", b =>
                 {
                     b.HasOne("RetireSimple.Backend.DomainModel.User.Portfolio", null)
                         .WithMany("Expenses")
-                        .HasForeignKey("PortfolioId");
+                        .HasForeignKey("PorfolioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", "SourceInvestment")
                         .WithMany("Expenses")
@@ -272,6 +340,11 @@ namespace RetireSimple.Backend.Migrations
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", b =>
                 {
+                    b.HasOne("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase", null)
+                        .WithMany("Investments")
+                        .HasForeignKey("InvestmentVehicleBaseInvestmentVehicleId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("RetireSimple.Backend.DomainModel.User.Portfolio", null)
                         .WithMany("Investments")
                         .HasForeignKey("PortfolioId")
@@ -300,7 +373,9 @@ namespace RetireSimple.Backend.Migrations
 
                     b.HasOne("RetireSimple.Backend.DomainModel.User.Portfolio", null)
                         .WithMany("Transfers")
-                        .HasForeignKey("PortfolioId");
+                        .HasForeignKey("PorfolioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", "SourceInvestment")
                         .WithMany("TransfersFrom")
@@ -313,12 +388,21 @@ namespace RetireSimple.Backend.Migrations
                     b.Navigation("SourceInvestment");
                 });
 
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase", b =>
+                {
+                    b.HasOne("RetireSimple.Backend.DomainModel.User.Portfolio", null)
+                        .WithMany("InvestmentVehicles")
+                        .HasForeignKey("PortfolioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.User.Portfolio", b =>
                 {
                     b.HasOne("RetireSimple.Backend.DomainModel.User.Profile", "Profile")
                         .WithMany("Portfolios")
                         .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Profile");
@@ -335,9 +419,16 @@ namespace RetireSimple.Backend.Migrations
                     b.Navigation("TransfersTo");
                 });
 
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase", b =>
+                {
+                    b.Navigation("Investments");
+                });
+
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.User.Portfolio", b =>
                 {
                     b.Navigation("Expenses");
+
+                    b.Navigation("InvestmentVehicles");
 
                     b.Navigation("Investments");
 

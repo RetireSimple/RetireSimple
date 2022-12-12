@@ -1,7 +1,4 @@
-﻿//These tests use an existing Sqlite DB to test if value convereters are implemented as expected
-//for data fields, as those rely on a specific method
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using RetireSimple.Backend.Services;
 
@@ -14,26 +11,30 @@ using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 namespace RetireSimple.Tests.DomainModel.Sqlite {
-    public class SqliteValueConversionTest {
-
+    public class InvestmentModelTests : IDisposable {
         InvestmentDBContext context { get; set; }
+
         private readonly ITestOutputHelper output;
 
-        public SqliteValueConversionTest(ITestOutputHelper output) {
-            //TODO create a new Sqlite DB for this test with seeded test data
+        public InvestmentModelTests(ITestOutputHelper output) {
             context = new InvestmentDBContext(
                 new DbContextOptionsBuilder()
-                    .UseSqlite("Data Source=InvestmentDB.db")
-                    //x => x.MigrationsAssembly("RetireSimple.Migrations.Sqlite"))
+                    .UseSqlite("Data Source=InvestmentDB_modeltests.db")
                     .Options);
-
             context.Database.Migrate();
             context.Database.EnsureCreated();
 
             this.output = output;
         }
 
+        public void Dispose() {
+            context.Database.EnsureDeleted();
+            context.Dispose();
+        }
 
-
+        //TODO Tests to add
+        // 1. Investment Model Add
+        // 2. Investment Model Remove
+        // 3. InvestmentModel FK -> Requires Investment
     }
 }
