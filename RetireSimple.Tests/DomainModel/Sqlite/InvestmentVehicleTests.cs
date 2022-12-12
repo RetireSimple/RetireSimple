@@ -19,7 +19,6 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context = new InvestmentDBContext(
                 new DbContextOptionsBuilder()
                     .UseSqlite("Data Source=InvestmentDB.db")
-                    //x => x.MigrationsAssembly("RetireSimple.Migrations.Sqlite"))
                     .Options);
             context.Database.Migrate();
             context.Database.EnsureCreated();
