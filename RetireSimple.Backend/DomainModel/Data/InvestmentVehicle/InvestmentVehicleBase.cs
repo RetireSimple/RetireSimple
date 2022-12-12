@@ -2,10 +2,13 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data.Investment;
+using RetireSimple.Backend.DomainModel.User;
 using System.Text.Json;
 
 namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 	public abstract class InvestmentVehicleBase {
+		public int PortfolioId { get; set; }
+
 		public int InvestmentVehicleId { get; set; }
 
 		public string InvestmentVehicleType { get; set; }
