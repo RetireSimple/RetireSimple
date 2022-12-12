@@ -22,8 +22,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         public InvestmentTests(ITestOutputHelper output) {
             context = new InvestmentDBContext(
                 new DbContextOptionsBuilder()
-                    .UseSqlite("Data Source=InvestmentDB.db")
-                    //x => x.MigrationsAssembly("RetireSimple.Migrations.Sqlite"))
+                    .UseSqlite("Data Source=InvestmentDB_invtests.db")
                     .Options);
             context.Database.Migrate();
             context.Database.EnsureCreated();
@@ -52,8 +51,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
         //TODO Tests to Add
         //1. Discriminator tests (Storing Different Types of Investments)
-        
-        
+
+
 
         [Fact]
         public void TestStockInvestmentAdd() {
@@ -109,6 +108,9 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             investment.StockTicker = "TST";
 
             var options = new Dictionary<string, string>();
+
+            context.Portfolio.First().Investments.Add(investment);
+            context.SaveChanges();
 
             context.InvestmentModels.Add(investment.InvokeAnalysis(options));
 

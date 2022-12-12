@@ -18,7 +18,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         public InvestmentVehicleTests(ITestOutputHelper output) {
             context = new InvestmentDBContext(
                 new DbContextOptionsBuilder()
-                    .UseSqlite("Data Source=InvestmentDB.db")
+                    .UseSqlite("Data Source=InvestmentDB_vehicletests.db")
                     .Options);
             context.Database.Migrate();
             context.Database.EnsureCreated();
