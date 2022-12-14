@@ -1,58 +1,64 @@
+
 ﻿using RetireSimple.Backend.DomainModel.Analysis;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace RetireSimple.Backend.DomainModel.Data.Investment
-
-{
+namespace RetireSimple.Backend.DomainModel.Data.Investment {
 	public class SocialSecurityInvestment : InvestmentBase {
 
 		[JsonIgnore]
 		[NotMapped]
-		public decimal StartAmount {
-			get => decimal.Parse(this.InvestmentData["SSStartAmount"]);
-			set => this.InvestmentData["SSStartAmount"] = value.ToString();
+		public DateOnly SocialSecurityStartDate {
+			get => DateOnly.Parse(this.InvestmentData["SocialSecurityStartDate"]);
+			set => this.InvestmentData["SocialSecurityStartDate"] = value.ToString();
+		}
+		
+		[JsonIgnore]
+		[NotMapped]
+		public int SocialSecurityAge {
+			get => int.Parse(this.InvestmentData["SocialSecurityAge"]);
+			set => this.InvestmentData["SocialSecurityAge"] = value.ToString();
 		}
 
 		[JsonIgnore]
 		[NotMapped]
-		public DateTime StartDate {
-			get => DateTime.Parse(this.InvestmentData["SSStartDate"]);
-			set => this.InvestmentData["SSStartDate"] = value.ToString();
+		public decimal SocialSecurityStartAmount {
+			get => decimal.Parse(this.InvestmentData["SocialSecurityStartAmount"]);
+			set => this.InvestmentData["SocialSecurityStartAmount"] = value.ToString();
 		}
 
 		[JsonIgnore]
 		[NotMapped]
-		public decimal YearlyIncrease {
-			get => decimal.Parse(this.InvestmentData["SSYearlyIncrease"]);
-			set => this.InvestmentData["SSYearlyIncrease"] = value.ToString();
+		public decimal SocialSecurityYearlyIncrease {
+			get => decimal.Parse(this.InvestmentData["SocialSecurityYearlyIncrease"]);
+			set => this.InvestmentData["SocialSecurityYearlyIncrease"] = value.ToString();
 		}
 
-		[JsonIgnore]
 		[NotMapped]
-		public String StartAge {
-			get => this.InvestmentData["SSStartAge"];
-			set => this.InvestmentData["SSStartAge"] = value;
+		[JsonIgnore]
+		public AnalysisDelegate<SocialSecurityInvestment>? Analysis;
+
+		//Constructor used by EF
+		public SocialSecurityInvestment(String analysisType) : base() {
+			InvestmentType = "SocialSecurityInvestment";
+			ResolveAnalysisDelegate(analysisType);
 		}
 
-		public AnalysisDelegate<SocialSecurityInvestment>? analysis;
-
-		public override void ResolveAnalysisDelegate(string analysisType)
-		{
+		public override void ResolveAnalysisDelegate(string analysisType) {
 			switch(analysisType) {
-				case "DefaultSSAnalysis":
-					this.analysis = SSAS.DefaultSSAnalyis;
+				case "testAnalysis":
+					Analysis = SocialSecurityAS.DefaultSocialSecurityAnalysis;
 					break;
 				default:
-					this.analysis = null;
+					Analysis = null;
 					break;
+
 			}
-			//Overwrite The current Analysis Delegate Type
+			//Overwrite The current Analysis Delegate Type 
 			this.AnalysisType = analysisType;
 		}
 
-		public override InvestmentModel InvokeAnalysis(OptionsDict options) => analysis(this, options);
+		public override InvestmentModel InvokeAnalysis(OptionsDict options) => Analysis(this, options);
 	}
-}
 
+}

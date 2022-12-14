@@ -1,57 +1,67 @@
-﻿using System;
-using RetireSimple.Backend.DomainModel.Analysis;
+﻿using RetireSimple.Backend.DomainModel.Analysis;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Backend.DomainModel.Data.Investment {
-
-	public class AnnuityInvestment : InvestmentBase
-	{
+	public class AnnuityInvestment : InvestmentBase {
+	
 		[JsonIgnore]
 		[NotMapped]
-		public decimal StartAmount
-		{
+		public string AnnuityName {
+			get => this.InvestmentData["AnnuityName"];
+			set => this.InvestmentData["AnnuityName"] = value;
+		}
+
+		[JsonIgnore]
+		[NotMapped]
+		public decimal AnnuityStartAmount {
 			get => decimal.Parse(this.InvestmentData["AnnuityStartAmount"]);
 			set => this.InvestmentData["AnnuityStartAmount"] = value.ToString();
 		}
 
 		[JsonIgnore]
 		[NotMapped]
-		public DateTime StartDate {
-			get => DateTime.Parse(this.InvestmentData["AnnuityStartDate"]);
+		public DateOnly AnnuityStartDate {
+			get => DateOnly.Parse(this.InvestmentData["AnnuityStartDate"]);
 			set => this.InvestmentData["AnnuityStartDate"] = value.ToString();
 		}
 
 		[JsonIgnore]
 		[NotMapped]
-		public decimal MonthlyPayment {
+		public decimal AnnuityMonthlyPayment {
 			get => decimal.Parse(this.InvestmentData["AnnuityMonthlyPayment"]);
 			set => this.InvestmentData["AnnuityMonthlyPayment"] = value.ToString();
 		}
 
 		[JsonIgnore]
 		[NotMapped]
-		public decimal InterestRate {
-			get => decimal.Parse(this.InvestmentData["AnnuityInterestRate"]);
-			set => this.InvestmentData["AnnuityInterestRate"] = value.ToString();
+		public decimal AnnuityYield {
+			get => decimal.Parse(this.InvestmentData["AnnuityYield"]);
+			set => this.InvestmentData["AnnuityYield"] = value.ToString();
 		}
 
-		public AnalysisDelegate<AnnuityInvestment>? analysis;
+		[NotMapped]
+		[JsonIgnore]
+		public AnalysisDelegate<AnnuityInvestment>? Analysis;
+
+		public AnnuityInvestment(String analysisType) : base() {
+			InvestmentType = "AnnuityInvestment";
+			ResolveAnalysisDelegate(analysisType);
+		}
 
 		public override void ResolveAnalysisDelegate(string analysisType) {
 			switch(analysisType) {
-				case "DefaultAnnuityAnalysis":
-					this.analysis = AnnuityAS.DefaultAnnuityAnalyis;
+				case "DefaultCashAnalysis":
+					this.Analysis = AnnuityAS.DefaultAnnuityAnalysis;
 					break;
 				default:
-					this.analysis = null;
+					this.Analysis = null;
 					break;
 			}
 			//Overwrite The current Analysis Delegate Type
 			this.AnalysisType = analysisType;
 		}
-
-		public override InvestmentModel InvokeAnalysis(OptionsDict options) => analysis(this, options);
+		public override InvestmentModel InvokeAnalysis(OptionsDict options) => Analysis(this, options);
 	}
 }
 

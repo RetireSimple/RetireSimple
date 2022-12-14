@@ -70,6 +70,8 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 					.HasValue<BondInvestment>("BondInvestment")
 					.HasValue<FixedInvestment>("FixedInvestment")
 					.HasValue<CashInvestment>("CashInvestment")
+					.HasValue<SocialSecurityInvestment>("SocialSecurityInvestment")
+					.HasValue<AnnuityInvestment>("AnnuityInvestment")
 					.HasValue<PensionInvestment>("PensionInvestment");
 
 			builder.Property(i => i.InvestmentData)
