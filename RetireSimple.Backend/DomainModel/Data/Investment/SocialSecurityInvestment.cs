@@ -1,3 +1,4 @@
+
 ﻿using RetireSimple.Backend.DomainModel.Analysis;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;

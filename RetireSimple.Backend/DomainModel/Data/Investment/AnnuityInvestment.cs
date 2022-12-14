@@ -52,7 +52,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public override void ResolveAnalysisDelegate(string analysisType) {
 			switch(analysisType) {
 				case "DefaultCashAnalysis":
-					this.Analysis = AnnuityAS.DefaultAnnuityAnalysis;
+					this.Analysis = AnnuityAS.DefaultAnnuityAnalyis;
 					break;
 				default:
 					this.Analysis = null;
@@ -64,3 +64,4 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) => Analysis(this, options);
 	}
 }
+
