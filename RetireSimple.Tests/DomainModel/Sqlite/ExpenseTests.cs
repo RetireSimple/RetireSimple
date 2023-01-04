@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using RetireSimple.Backend.DomainModel.Data.Expense;
+using RetireSimple.Backend.DomainModel.Data.Investment;
+using RetireSimple.Backend.DomainModel.User;
 using RetireSimple.Backend.Services;
 
 using System;
@@ -26,6 +29,27 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Database.EnsureCreated();
 
             this.output = output;
+
+            //Expense Specific Setup
+
+            var profile = new Profile();
+            profile.Name = "jack";
+            profile.Age = 65;
+            profile.Status = true;
+
+            var portfolio = new Portfolio();
+
+            context.Profiles.Add(profile);
+            context.SaveChanges();
+            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.SaveChanges();
+
+            var investment = new StockInvestment("test");
+            investment.StockPrice = 100;
+            investment.StockQuantity = 10;
+            investment.StockTicker = "TST";
+            context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
+            context.SaveChanges();
         }
 
         public void Dispose() {
@@ -35,6 +59,20 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
         //Tests to Add:
         // 1. Expense Model Add
+
+        [Fact]
+        public void TestExpenseAdd()
+        {
+            //TODO: add manual constraint of Expense's investments
+            var expense = new OneTimeExpense();
+            expense.Amount = 100.0;
+
+            context.Portfolio.First(p => p.PortfolioId == 1).Expenses.Add(expense);
+            expense.SourceInvestment = context.Investments.First(i => i.InvestmentId == 1);
+            context.SaveChanges();
+            Assert.Equal(1, context.Expenses.Count());
+
+        }
         // 2. Expense Model Remove
         // 3. ExpenseModel FK -> Requires Investment + Portfolio
     }

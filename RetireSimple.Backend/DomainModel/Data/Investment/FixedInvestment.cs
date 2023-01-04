@@ -13,6 +13,8 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 			set => this.InvestmentData["FixedValue"] = value.ToString();
 		}
 
+		[JsonIgnore]
+		[NotMapped]
 		public decimal FixedInterestedRate
 		{
 			get => decimal.Parse(this.InvestmentData["FixedInterestRate"]);
@@ -20,7 +22,8 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		}
 
 
-
+		[JsonIgnore]
+		[NotMapped]
 		public AnalysisDelegate<FixedInvestment>? analysis;
 
 		public override void ResolveAnalysisDelegate(string analysisType)

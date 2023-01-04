@@ -40,7 +40,8 @@ namespace RetireSimple.Backend.DomainModel.User {
 
 			builder.HasMany(p => p.Expenses)
 				.WithOne()
-				.HasForeignKey(e => e.PorfolioId);
+				.HasForeignKey(e => e.PorfolioId)
+				.IsRequired();
 			
 			builder.HasMany(p => p.Transfers)
 				.WithOne()
