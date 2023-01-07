@@ -7,17 +7,30 @@ using RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase;
 
 namespace RetireSimple.Backend.DomainModel.User {
 	public class Portfolio {
+		/// <summary>
+		/// Primary Key for the Portfolio Table
+		/// </summary>
 		public int PortfolioId { get; set; }
 
+		/// <summary>
+		/// Foreign Key ID for the <see cref="Profile"/> that contains this Portfolio
+		/// </summary>
 		public int ProfileId { get; set; }
+
+		/// <summary>
+		/// The <see cref="Profile"/> object that contains this Portfolio
+		/// </summary>
 		public Profile Profile { get; set; }
 
-
+		//TODO Change to ID Fields? 
 		public List<InvestmentBase> Investments { get; set; } = new List<InvestmentBase>();
 		public List<InvestmentVehicleBase> InvestmentVehicles { get; set; } = new List<InvestmentVehicleBase>();
 		public List<ExpenseBase> Expenses { get; set; } = new List<ExpenseBase>();
 		public List<InvestmentTransfer> Transfers { get; set; } = new List<InvestmentTransfer>();
 
+		/// <summary>
+		/// TODO Not Implemented Yet
+		/// </summary>
 		public void generateFullAnalysis() { }
 	}
 

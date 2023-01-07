@@ -125,7 +125,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 					.HasValue<SocialSecurityInvestment>("SocialSecurityInvestment")
 					.HasValue<AnnuityInvestment>("AnnuityInvestment")
 					.HasValue<PensionInvestment>("PensionInvestment");
-
+			
 #pragma warning disable CS8604 // Possible null reference argument.
 			builder.Property(i => i.InvestmentData)
 				.HasConversion(
@@ -149,7 +149,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 					c => c.ToDictionary(entry => entry.Key, entry => entry.Value)
 				));
 #pragma warning restore CS8604 // Possible null reference argument.
-
+			
 			builder.Property(i => i.InvestmentName)
 				.HasDefaultValue("");
 

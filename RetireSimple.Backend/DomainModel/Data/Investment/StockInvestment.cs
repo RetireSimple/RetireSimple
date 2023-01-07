@@ -31,8 +31,8 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		/// </summary>
 		[JsonIgnore]
 		[NotMapped]
-		public int StockQuantity {
-			get => int.Parse(this.InvestmentData["stockQuantity"]);
+		public decimal StockQuantity {
+			get => decimal.Parse(this.InvestmentData["stockQuantity"]);
 			set => this.InvestmentData["stockQuantity"] = value.ToString();
 		}
 
