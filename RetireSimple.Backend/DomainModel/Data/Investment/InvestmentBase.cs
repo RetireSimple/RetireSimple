@@ -22,7 +22,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		/// <summary>
 		/// Name of the investment (e.g. "My 401k")
 		/// </summary>
-		public string InvestmentName { get; set; }
+		public string InvestmentName { get; set; } = "";
 
 		/// <summary>
 		/// Discriminator Field for the Investment Table to differentiate investment Types. 
