@@ -22,7 +22,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		/// <summary>
 		/// Name of the investment (e.g. "My 401k")
 		/// </summary>
-		public string InvestementName { get; set; }
+		public string InvestmentName { get; set; }
 
 		/// <summary>
 		/// Discriminator Field for the Investment Table to differentiate investment Types. 
@@ -126,6 +126,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 					.HasValue<AnnuityInvestment>("AnnuityInvestment")
 					.HasValue<PensionInvestment>("PensionInvestment");
 
+#pragma warning disable CS8604 // Possible null reference argument.
 			builder.Property(i => i.InvestmentData)
 				.HasConversion(
 					v => JsonSerializer.Serialize(v, options),
@@ -147,6 +148,10 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 					c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
 					c => c.ToDictionary(entry => entry.Key, entry => entry.Value)
 				));
+#pragma warning restore CS8604 // Possible null reference argument.
+
+			builder.Property(i => i.InvestmentName)
+				.HasDefaultValue("");
 
 			builder.Property(i => i.AnalysisType)
 					.HasColumnName("AnalysisType");

@@ -45,6 +45,7 @@ namespace RetireSimple.Backend.DomainModel.Data {
 					.HasForeignKey<InvestmentModel>(i => i.InvestmentId)
 					.IsRequired(true);
 
+#pragma warning disable CS8604 // Possible null reference argument.
 			builder.Property(i => i.MaxModelData)
 			.HasConversion(
 				v => JsonSerializer.Serialize(v, options),
@@ -66,6 +67,7 @@ namespace RetireSimple.Backend.DomainModel.Data {
 				c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
 				c => c.ToList())
 			);
+#pragma warning restore CS8604 // Possible null reference argument.
 
 			builder.Property(i => i.LastUpdated)
 					.HasColumnType("datetime2");

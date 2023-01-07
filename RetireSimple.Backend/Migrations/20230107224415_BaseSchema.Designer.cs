@@ -11,7 +11,7 @@ using RetireSimple.Backend.Services;
 namespace RetireSimple.Backend.Migrations
 {
     [DbContext(typeof(InvestmentDBContext))]
-    [Migration("20221212163306_BaseSchema")]
+    [Migration("20230107224415_BaseSchema")]
     partial class BaseSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,10 @@ namespace RetireSimple.Backend.Migrations
                     b.Property<string>("AnalysisType")
                         .HasColumnType("TEXT")
                         .HasColumnName("AnalysisType");
+
+                    b.Property<string>("InvestementName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("InvestmentData")
                         .IsRequired()
@@ -243,6 +247,15 @@ namespace RetireSimple.Backend.Migrations
                     b.HasDiscriminator().HasValue("Recurring");
                 });
 
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.AnnuityInvestment", b =>
+                {
+                    b.HasBaseType("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase");
+
+                    b.ToTable("Investments");
+
+                    b.HasDiscriminator().HasValue("AnnuityInvestment");
+                });
+
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.BondInvestment", b =>
                 {
                     b.HasBaseType("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase");
@@ -265,6 +278,9 @@ namespace RetireSimple.Backend.Migrations
                 {
                     b.HasBaseType("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase");
 
+                    b.Property<decimal>("FixedInterestedRate")
+                        .HasColumnType("TEXT");
+
                     b.ToTable("Investments");
 
                     b.HasDiscriminator().HasValue("FixedInvestment");
@@ -277,6 +293,15 @@ namespace RetireSimple.Backend.Migrations
                     b.ToTable("Investments");
 
                     b.HasDiscriminator().HasValue("PensionInvestment");
+                });
+
+            modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.SocialSecurityInvestment", b =>
+                {
+                    b.HasBaseType("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase");
+
+                    b.ToTable("Investments");
+
+                    b.HasDiscriminator().HasValue("SocialSecurityInvestment");
                 });
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Investment.StockInvestment", b =>
