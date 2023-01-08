@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetireSimple.Backend.Services;
+using RetireSimple.Backend.DomainModel.Data.InvestmentVehicle;
 
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,11 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
         //TODO Tests to add
         //1. InvestmentVehicle Model Add
+        [Fact]
+        public void TestInvestmentVehicleAdd()
+        { }
+
+
         //2. InvestmentVehicle Model Remove
         //3. InvestmentVehicle Model FK -> Requires Portfolio
         //4. InvestmentVehicle Model FK -> Doesn't Cascade Investments
