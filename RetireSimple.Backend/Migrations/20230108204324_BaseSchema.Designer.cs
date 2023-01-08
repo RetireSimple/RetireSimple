@@ -11,7 +11,7 @@ using RetireSimple.Backend.Services;
 namespace RetireSimple.Backend.Migrations
 {
     [DbContext(typeof(InvestmentDBContext))]
-    [Migration("20230107224415_BaseSchema")]
+    [Migration("20230108204324_BaseSchema")]
     partial class BaseSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,13 +65,15 @@ namespace RetireSimple.Backend.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("AnalysisType");
 
-                    b.Property<string>("InvestementName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("InvestmentData")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("InvestmentName")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("");
 
                     b.Property<string>("InvestmentType")
                         .IsRequired()
@@ -104,6 +106,10 @@ namespace RetireSimple.Backend.Migrations
 
                     b.Property<int>("InvestmentId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("AvgModelData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
