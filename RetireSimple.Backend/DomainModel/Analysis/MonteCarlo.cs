@@ -1,6 +1,7 @@
 ﻿using MathNet.Numerics.Distributions;
 using RetireSimple.Backend.DomainModel.Data;
 using RetireSimple.Backend.DomainModel.Data.Investment;
+using System.Collections.Concurrent;
 
 namespace RetireSimple.Backend.DomainModel.Analysis {
 	public class MonteCarlo {
@@ -8,13 +9,56 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 		//NOTE A lot of this is commented out intentionally as there is uncertainty on the
 		//     best way to implement this. I'm leaving it here for now as a reference
 
+		/// <summary>
+		/// Monte Carlo Simulation using a "scaled" normal random variable to simulate the random walk. <br/>
+		/// This is used to only simulate the random walk of the stock's price over time, post-processing is
+		/// required for getting actual value of the stock
+		/// <br/>
+		/// Used Analysis Options: <br/>
+		/// - "AnalysisLength": Number of Months to Simulate Analysis Over<br/>
+		/// - "SimCount": Number of Simulations to perform <br/>
+		/// - "RandomVariableMu": The Expectation (mu) of the Normal Distribution <br/>
+		/// - "RandomVariableSigma": The Standard Deviation (sigma) of the Normal Distribution <br/>
+		/// - "RandomVarialbeScaleFactor": The "scaling factor" to apply 
+		/// to random variable samples. This is parsed as a <see cref="decimal"/>.
+		/// </summary>
+		/// <param name="stock"></param>
+		/// <param name="options"></param>
+		/// <returns></returns>
 		public static InvestmentModel MonteCarloSim_NormalDistribution(StockInvestment stock, OptionsDict options) {
-			//TODO implement
+			//Extract Required Data for simulation purposes
+			var basePrice = stock.StockPrice;
+			var analysisLength = int.Parse(options["AnalysisLength"]);
+			var maxIterations = int.Parse(options["SimCount"]);
+			var normalMu = double.Parse(options["RandomVariableMu"]);
+			var normalSigma = double.Parse(options["RandomVariableSigma"]);
+			var normalScaleFactor = decimal.Parse(options["RandomVariableScaleFactor"]);
+
+			var normalDist = new Normal(normalMu, normalSigma);
+
+			//Threading the task because .NET concurrency pretty sick
+			var simLists = new ConcurrentBag<List<decimal>>();
+			Parallel.For(0, maxIterations, x => {
+				var currentPrice = basePrice;
+				var iterModel = new List<decimal>();
+
+				for(var step = 0; step < analysisLength; step++) {
+					iterModel.Add(currentPrice);
+					currentPrice += (normalScaleFactor * (decimal)normalDist.Sample());
+				}
+
+				simLists.Add(iterModel);
+			});
+
+			var model = new InvestmentModel();
+			for(int i = 0; i < analysisLength; i++) {
+				model.AvgModelData.Add(simLists.Select(x => x[i]).Min());
+				model.AvgModelData.Add(simLists.Select(x => x[i]).Max());
+				model.AvgModelData.Add(simLists.Select(x => x[i]).Average());
+			}
 
 
-
-			
-			return null;
+			return model;
 		}
 
 

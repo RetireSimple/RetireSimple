@@ -1,41 +1,28 @@
 ﻿#r "D:\Onedrive\SeniorProject\RetireSimple\RetireSimple.Backend\bin\Debug\net6.0\RetireSimple.Backend.dll"
 #r "D:\Onedrive\SeniorProject\RetireSimple\RetireSimple.Backend\bin\Debug\net6.0\MathNet.Numerics.dll"
+global using OptionsDict = System.Collections.Generic.Dictionary<string, string>;
 using System.Collections.Generic;
-
+using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.DomainModel.Analysis;
 
-//var testDict = new Dictionary<string, string>();
-//testDict["stockMu"] = "0.5";
-//testDict["stockSigma"] = "0.05";
-//testDict["randomVarMu"] = "0";
-//testDict["randomVarSigma"] = "1";
-//testDict["stockPrice"] = "100";
+var testStonk = new StockInvestment("testAnalysis");
+testStonk.StockPrice = 100;
 
-//var testModel = RetireSimple.Backend.DomainModel.Analysis.MonteCarlo.MonteCarloSim_GeometricBrownianMotion(100, (decimal) 100, testDict);
+var testDict = new OptionsDict() {
+	["AnalysisLength"] = "60",
+	["SimCount"] = "100",
+	["RandomVariableMu"] = "0",
+	["RandomVariableSigma"] = "1",
+	["RandomVariableScaleFactor"] = "5"
+};
 
-var testAggregate = new List<List<(string, decimal)>>();
-for (int i = 0; i < 100; i++) {
-	testAggregate.Add(MonteCarlo.MonteCarloSim_GeometricBrownianMotion(100, 100.0, 0, 1));
+var testModel = MonteCarlo.MonteCarloSim_NormalDistribution(testStonk, testDict);
+
+var csvList = new List<string>();
+for (int i = 0; i < 60; i++) {
+	csvList.Add(testModel.MinModelData[i].ToString() + "," + testModel.AvgModelData[i].ToString() + "," + testModel.MaxModelData[i].ToString());
+	Console.WriteLine(csvList[i]);
 }
 
 
-var csvStrings = new List<string>();
-for (var i = 0; i < 100; i++) {
-	var stepRow = i.ToString();
-	foreach (var testModel in testAggregate) {
-		var modelStepValue = testModel.ElementAt(i).Item2;
-		stepRow += ("," + modelStepValue.ToString());
-	}
-	csvStrings.Add(stepRow);
-}
-
-
-File.WriteAllLines("D:\\Onedrive\\SeniorProject\\RetireSimple\\RetireSimple.Backend\\DomainModel\\MonteCarloTest.csv", csvStrings);
-//foreach (var csvString in csvStrings) {
-	//Console.WriteLine(csvString);
-	//File.AppendAllText("D:\\Onedrive\\SeniorProject\\RetireSimple\\RetireSimple.Backend\\DomainModel\\MonteCarloTest.csv", csvString + Environment.NewLine);
-//}
-
-//foreach (var step in testModel) {
-//		Console.WriteLine(step);
-//	}
+File.WriteAllLines("D:\\Onedrive\\SeniorProject\\RetireSimple\\RetireSimple.Backend\\DomainModel\\MonteCarloTest.csv", csvList);
