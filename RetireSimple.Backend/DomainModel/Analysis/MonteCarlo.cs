@@ -1,23 +1,37 @@
 ﻿using MathNet.Numerics.Distributions;
 using RetireSimple.Backend.DomainModel.Data;
+using RetireSimple.Backend.DomainModel.Data.Investment;
 
 namespace RetireSimple.Backend.DomainModel.Analysis {
 	public class MonteCarlo {
 
-		public static List<(string, decimal)> MonteCarloSim_LogNormal(int numSteps, decimal startVal, Dictionary<string, string> simOptions) {
-			var model = new List<(string, decimal)>();
-			var step = 0;
-			var mu = double.Parse(simOptions["mu"]);
-			var sigma = double.Parse(simOptions["sigma"]);
+		//NOTE A lot of this is commented out intentionally as there is uncertainty on the
+		//     best way to implement this. I'm leaving it here for now as a reference
 
-			var distribution = new LogNormal(mu, sigma);
-
-			model.Add((step.ToString(), startVal));
+		public static InvestmentModel MonteCarloSim_NormalDistribution(StockInvestment stock, OptionsDict options) {
+			//TODO implement
 
 
-			return model;
+
+			
+			return null;
 		}
 
+
+
+		//public static List<(string, decimal)> MonteCarloSim_LogNormal(int numSteps, decimal startVal, Dictionary<string, string> simOptions) {
+		//	var model = new List<(string, decimal)>();
+		//	var step = 0;
+		//	var mu = double.Parse(simOptions["mu"]);
+		//	var sigma = double.Parse(simOptions["sigma"]);
+
+		//	var distribution = new LogNormal(mu, sigma);
+
+		//	model.Add((step.ToString(), startVal));
+
+
+		//	return model;
+		//}
 
 		//NOTE I think this is wrong, purely scratch work
 		//public static List<(string, decimal)> MonteCarloSim_GeometricBrownianMotion(int numSteps, decimal startVal, Dictionary<string, string> simOptions) {
@@ -53,22 +67,22 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 		//	return model;
 		//}
 
-		public static List<(string, decimal)> MonteCarloSim_GeometricBrownianMotion(int numSteps, double startVal, double mu, double sigma) {
-			var model = new List<(string, decimal)>();
-			var step = 0;
-			var BrownianMotion = new Normal(mu, sigma);
+		//public static List<(string, decimal)> MonteCarloSim_GeometricBrownianMotion(int numSteps, double startVal, double mu, double sigma) {
+		//	var model = new List<(string, decimal)>();
+		//	var step = 0;
+		//	var BrownianMotion = new Normal(mu, sigma);
 
-				
-			while(step < numSteps) {
-				var exp_fact = (mu - (sigma * sigma) / 2) * step;
-				exp_fact += sigma * BrownianMotion.Sample();
-				var modelVal = startVal * Math.Exp(exp_fact);
-				model.Add((step.ToString(), (decimal)modelVal));
-				step++;
-			}
 
-			return model;
-		}
+		//	while(step < numSteps) {
+		//		var exp_fact = (mu - (sigma * sigma) / 2) * step;
+		//		exp_fact += sigma * BrownianMotion.Sample();
+		//		var modelVal = startVal * Math.Exp(exp_fact);
+		//		model.Add((step.ToString(), (decimal)modelVal));
+		//		step++;
+		//	}
+
+		//	return model;
+		//}
 
 
 		//TODO encode this into a reasonable string and not steps!

@@ -1,17 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using RetireSimple.Backend.Services;
 using RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xunit.Abstractions;
-using RetireSimple.Backend.DomainModel.User;
-using RetireSimple.Backend.DomainModel.Data.Investment;
-
+using RetireSimple.Backend.DomainModel.User;
+using RetireSimple.Backend.DomainModel.Data.Investment;
+
 namespace RetireSimple.Tests.DomainModel.Sqlite {
     public class InvestmentVehicleTests : IDisposable {
         InvestmentDBContext context { get; set; }
@@ -40,7 +35,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
             context.SaveChanges();
 
-            var investment = new StockInvestment("test");
+            var investment = new StockInvestment("test");
             investment.StockPrice = 100;
             investment.StockQuantity = 10;
             investment.StockTicker = "TST";
@@ -56,7 +51,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         //TODO Tests to add
         //1. InvestmentVehicle Model Add
         [Fact]
-        public void TestInvestmentVehicleAdd()
+        public void TestInvestmentVehicleAdd()
         {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
@@ -72,8 +67,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         //2. InvestmentVehicle Model Remove
 
         [Fact]
-        public void TestInvestmentVehicleRemove()
-        {
+        public void TestInvestmentVehicleRemove()
+        {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
             context.SaveChanges();
@@ -83,29 +78,29 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.InvestmentVehicles.Remove(vehicle);
             context.SaveChanges();
 
-            Assert.Equal(0, context.InvestmentVehicles.Count());
+            Assert.Equal(0, context.InvestmentVehicles.Count());
         }
         //3. InvestmentVehicle Model FK -> Requires Portfolio
 
         [Fact]
-        public void TestInvestmentVehicleFKConstraintPortfolio()
-        {
+        public void TestInvestmentVehicleFKConstraintPortfolio()
+        {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             //context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
-
-
-            Action act = () => {
-                context.InvestmentVehicles.Add(vehicle);
+
+
+            Action act = () => {
+                context.InvestmentVehicles.Add(vehicle);
                 context.SaveChanges();
             };
 
-            act.Should().Throw<DbUpdateException>();
+            act.Should().Throw<DbUpdateException>();
         }
         //4. InvestmentVehicle Model FK -> Doesn't Cascade Investments
 
         [Fact]
-        public void TestInvestmentVehicleFKConstraintInvestment()
-        {
+        public void TestInvestmentVehicleFKConstraintInvestment()
+        {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
             context.SaveChanges();
@@ -115,7 +110,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.InvestmentVehicles.Remove(vehicle);
             context.SaveChanges();
 
-            Assert.Equal(1, context.Investments.Count());
+            Assert.Equal(1, context.Investments.Count());
         }
 
         //5. Discriminator Configuration (Adding different types of investment Vehicles)

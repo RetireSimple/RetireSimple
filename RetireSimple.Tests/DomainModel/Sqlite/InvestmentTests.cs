@@ -1,15 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.DomainModel.User;
 using RetireSimple.Backend.Services;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xunit.Abstractions;
 
@@ -61,19 +54,12 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             investment.StockQuantity = 10;
             investment.StockTicker = "TST";
 
-            var investment2 = new StockInvestment("testAnalysis2");
-            investment2.StockPrice = 200;
-            investment2.StockQuantity = 20;
-            investment2.StockTicker = "TEST";
-
             context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
             context.SaveChanges();
-            context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment2);
-            context.SaveChanges();
 
-            Assert.Equal(2, context.Investments.Count());
-            Assert.Equal(2, context.Portfolio.First(p => p.PortfolioId == 1).Investments.Count());
-            Assert.Equal(2, context.Profiles.First(p => p.ProfileId == 1).Portfolios.First().Investments.Count());
+            Assert.Equal(1, context.Investments.Count());
+            Assert.Single(context.Portfolio.First(p => p.PortfolioId == 1).Investments);
+            Assert.Single(context.Profiles.First(p => p.ProfileId == 1).Portfolios.First().Investments);
         }
 
         [Fact]
@@ -83,21 +69,14 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             investment.StockQuantity = 10;
             investment.StockTicker = "TST";
 
-            var investment2 = new StockInvestment("testAnalysis2");
-            investment2.StockPrice = 200;
-            investment2.StockQuantity = 20;
-            investment2.StockTicker = "TEST";
-
             context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
-            context.SaveChanges();
-            context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment2);
             context.SaveChanges();
 
             context.Portfolio.First(p => p.PortfolioId == 1).Investments.Remove(investment);
             context.SaveChanges();
 
-            Assert.Equal(1, context.Investments.Count());
-            Assert.Single(context.Portfolio.First(p => p.PortfolioId == 1).Investments);
+            Assert.Equal(0, context.Investments.Count());
+            Assert.Empty(context.Portfolio.First(p => p.PortfolioId == 1).Investments);
         }
 
         [Fact]

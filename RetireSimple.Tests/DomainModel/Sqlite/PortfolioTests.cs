@@ -6,12 +6,6 @@ using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.DomainModel.User;
 using RetireSimple.Backend.Services;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xunit.Abstractions;
 
 namespace RetireSimple.Tests.DomainModel.Sqlite {

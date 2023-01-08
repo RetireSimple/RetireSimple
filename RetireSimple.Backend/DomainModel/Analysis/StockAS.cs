@@ -8,16 +8,11 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 
 		//This dictionary is statically available to allow for a common set of defaults that all
 		//analysis modules for the same type of investment can use. 
-
 		public static readonly OptionsDict DefaultStockAnalysisOptions = new() {
 			["AnalysisLength"] = "60",                          //Number of months to project
 			["StockAnalysisExpectedGrowth"] = "0.1",            //Expected Percentage Growth of the stock
 
 		};
-
-		#region "Dividend Calculations"
-		/// NOTE: These do not produce <see cref="InvestmentModel"/> objects. They are used in conjunction with an existing model 
-		/// in most cases to calculate the resulting stock value
 
 		private static int GetDividendIntervalMonths(string interval) => interval switch {
 			"Month" => 1,
@@ -56,9 +51,6 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 			return quantityList;
 		}
 
-
-		#endregion
-
 		//TODO Move to Testing/Debugging
 		public static InvestmentModel testAnalysis(StockInvestment investment, OptionsDict options) {
 			var value = investment.StockPrice * investment.StockQuantity;
@@ -68,37 +60,24 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 
 			return new InvestmentModel() {
 				InvestmentId = investment.InvestmentId,
-				MaxModelData = new List<(decimal, decimal)>() {
-					(0, value),
-					(1, 2*value),
-					(2, 4*value)
+				MaxModelData = new List<decimal>() {
+					value,
+					2*value,
+					4*value
 				},
-				MinModelData = new List<(decimal, decimal)>() {
-					(0, value),
-					(1, new decimal(0.5) * value),
-					(2, new decimal(0.25) * value)
+				MinModelData = new List<decimal>() {
+					value,
+					0.5m * value,
+					0.25m * value
+				},
+				AvgModelData = new List<decimal>() {
+					value,
+					value,
+					2* value
 				}
 			};
 		}
 
-		//TODO Move to Testing/Debugging
-		public static InvestmentModel testAnalysis2(StockInvestment investment, OptionsDict options) {
-			var value = investment.StockPrice * investment.StockQuantity;
-
-			return new InvestmentModel() {
-				InvestmentId = investment.InvestmentId,
-				MaxModelData = new List<(decimal, decimal)>() {
-					(0, value),
-					(1, new decimal(1.5)*value),
-					(2, 2*value)
-				},
-				MinModelData = new List<(decimal, decimal)>() {
-					(0, value),
-					(1, new decimal(0.75) * value),
-					(2, new decimal(0.5) * value)
-				}
-			};
-		}
 
 	}
 }

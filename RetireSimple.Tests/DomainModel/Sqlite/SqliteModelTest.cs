@@ -9,7 +9,7 @@ using RetireSimple.Backend.Services;
 using Xunit.Abstractions;
 
 namespace RetireSimple.Tests.DomainModel.Sqlite {
-    
+
     // This is the setup/teardown code for all model tests!
     public class SqliteModelTest : IDisposable {
         InvestmentDBContext context { get; set; }
@@ -32,7 +32,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Dispose();
         }
 
-          
+
     }
 
 }

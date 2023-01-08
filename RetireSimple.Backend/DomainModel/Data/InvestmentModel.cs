@@ -7,27 +7,36 @@ using System.Text.Json.Serialization;
 
 namespace RetireSimple.Backend.DomainModel.Data {
 	public class InvestmentModel {
+		/// <summary>
+		/// Primary Key ID of the object.
+		/// </summary>
 		public int InvestmentModelId { get; set; }
-		//TODO add more statistics fields when we get there
 
-		//TODO ensure relationship to InvestmentBase
+		/// <summary>
+		/// Foreign Key ID of the Investment that this model is for.
+		/// </summary>
 		public int InvestmentId { get; set; }
-		
+
 		[JsonIgnore]
 		public InvestmentBase Investment { get; set; }
 
 
-		//TODO change to Math.NET/other types if needed
-		public List<(decimal, decimal)> MaxModelData { get; set; } = new List<(decimal, decimal)>();
-		public List<(decimal, decimal)> MinModelData { get; set; } = new List<(decimal, decimal)>();
+		//Index defaults to the number of months since model start point
+		//Assertion: All lists are of the same length otherwise calcs get screwy
+		public List<decimal> MaxModelData { get; set; } = new List<decimal>();
+		public List<decimal> MinModelData { get; set; } = new List<decimal>();
+		public List<decimal> AvgModelData { get; set; } = new List<decimal>();
 
 		public DateTime LastUpdated { get; set; } = DateTime.Now;
 
-		public void AddOtherData(InvestmentModel otherModel) {
 
-			//TODO add more data fields when we get there
-			MaxModelData.AddRange(otherModel.MaxModelData);
-			MinModelData.AddRange(otherModel.MinModelData);
+		//Methods to produce statistical information per step/overall of the model
+		public static decimal Variance(){
+			var variance = 0.0m;
+
+			//TODO Implement Somehow??? Brain small atm
+
+			return variance;
 		}
 	}
 
@@ -49,9 +58,8 @@ namespace RetireSimple.Backend.DomainModel.Data {
 			builder.Property(i => i.MaxModelData)
 			.HasConversion(
 				v => JsonSerializer.Serialize(v, options),
-				v => JsonSerializer.Deserialize<List<(decimal, decimal)>>(v, options) ?? new List<(decimal, decimal)>()
-			)
-			.Metadata.SetValueComparer(new ValueComparer<List<(decimal, decimal)>>(
+				v => JsonSerializer.Deserialize<List<decimal>>(v, options) ?? new List<decimal>()
+			).Metadata.SetValueComparer(new ValueComparer<List<decimal>>(
 				(c1, c2) => c1.SequenceEqual(c2),
 				c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
 				c => c.ToList())
@@ -60,9 +68,18 @@ namespace RetireSimple.Backend.DomainModel.Data {
 			builder.Property(i => i.MinModelData)
 			.HasConversion(
 				v => JsonSerializer.Serialize(v, options),
-				v => JsonSerializer.Deserialize<List<(decimal, decimal)>>(v, options) ?? new List<(decimal, decimal)>()
-			)
-			.Metadata.SetValueComparer(new ValueComparer<List<(decimal, decimal)>>(
+				v => JsonSerializer.Deserialize<List<decimal>>(v, options) ?? new List<decimal>()
+			).Metadata.SetValueComparer(new ValueComparer<List<decimal>>(
+				(c1, c2) => c1.SequenceEqual(c2),
+				c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+				c => c.ToList())
+			);
+
+			builder.Property(i => i.AvgModelData)
+			.HasConversion(
+				v => JsonSerializer.Serialize(v, options),
+				v => JsonSerializer.Deserialize<List<decimal>>(v, options) ?? new List<decimal>()
+			).Metadata.SetValueComparer(new ValueComparer<List<decimal>>(
 				(c1, c2) => c1.SequenceEqual(c2),
 				c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
 				c => c.ToList())
