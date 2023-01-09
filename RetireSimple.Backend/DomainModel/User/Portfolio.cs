@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data;
 using RetireSimple.Backend.DomainModel.Data.Expense;
 using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.Data.InvestmentVehicle;
+using RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase;
 
 namespace RetireSimple.Backend.DomainModel.User {
 	public class Portfolio {

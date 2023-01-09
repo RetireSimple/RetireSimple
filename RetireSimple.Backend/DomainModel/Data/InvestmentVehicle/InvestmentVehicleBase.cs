@@ -5,7 +5,7 @@ using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.DomainModel.User;
 using System.Text.Json;
 
-namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
+namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase {
 	public abstract class InvestmentVehicleBase {
 		public int PortfolioId { get; set; }
 

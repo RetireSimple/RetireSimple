@@ -3,7 +3,7 @@
 using RetireSimple.Backend.DomainModel.Data;
 using RetireSimple.Backend.DomainModel.Data.Expense;
 using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.Data.InvestmentVehicle;
+using RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase;
 using RetireSimple.Backend.DomainModel.User;
 
 
