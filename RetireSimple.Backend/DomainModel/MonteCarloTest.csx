@@ -11,9 +11,9 @@ testStonk.StockPrice = 100;
 var testDict = new OptionsDict() {
 	["AnalysisLength"] = "60",
 	["SimCount"] = "100",
-	["RandomVariableMu"] = "0",
+	["RandomVariableMu"] = ".5",
 	["RandomVariableSigma"] = "1",
-	["RandomVariableScaleFactor"] = "5"
+	["RandomVariableScaleFactor"] = "2.5"
 };
 
 var testModel = MonteCarlo.MonteCarloSim_NormalDistribution(testStonk, testDict);

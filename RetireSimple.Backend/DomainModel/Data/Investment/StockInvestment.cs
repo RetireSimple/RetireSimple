@@ -104,6 +104,9 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 				case "testAnalysis":
 					Analysis = StockAS.testAnalysis;
 					break;
+				case "MonteCarlo_NormalDist":
+					Analysis = StockAS.MonteCarlo_NormalDist;
+					break;
 				default:
 					Analysis = null;
 					break;

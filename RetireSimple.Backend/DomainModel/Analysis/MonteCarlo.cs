@@ -52,8 +52,8 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 
 			var model = new InvestmentModel();
 			for(int i = 0; i < analysisLength; i++) {
-				model.AvgModelData.Add(simLists.Select(x => x[i]).Min());
-				model.AvgModelData.Add(simLists.Select(x => x[i]).Max());
+				model.MinModelData.Add(simLists.Select(x => x[i]).Min());
+				model.MaxModelData.Add(simLists.Select(x => x[i]).Max());
 				model.AvgModelData.Add(simLists.Select(x => x[i]).Average());
 			}
 
