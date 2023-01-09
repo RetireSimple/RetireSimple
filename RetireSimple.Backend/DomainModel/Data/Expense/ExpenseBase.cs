@@ -28,7 +28,6 @@ namespace RetireSimple.Backend.DomainModel.Data.Expense {
 			builder.Property(e => e.Amount)
 					.IsRequired()
 					.HasDefaultValue(0);
-
 		}
 	}
 }

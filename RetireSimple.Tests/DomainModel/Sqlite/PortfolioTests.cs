@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using RetireSimple.Backend.DomainModel.Data;
+using RetireSimple.Backend.DomainModel.Data.Expense;
+using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.DomainModel.User;
 using RetireSimple.Backend.Services;
 
@@ -46,7 +49,38 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
         //TODO Tests to add
         //1. Portfolio FK -> Doesn't Cascade any dependents on Delete
+
+        [Fact]
+        public void TestPortfolioFKConstraintDelete()
+        {
+            var portfolio = new Portfolio();
+            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+
+            var investment = new StockInvestment("testAnalysis");
+            investment.StockPrice = 100;
+            investment.StockQuantity = 10;
+            investment.StockTicker = "TST";
+
+            portfolio.Investments.Add(investment);
+            context.SaveChanges();
+
+            Assert.Single(context.Investments);
+
+
+        }
+
         //2. Portfolio FK -> Requires Profile
+
+        [Fact]
+        public void TestPortfolioFKConstraintProfile() {
+            var portfolio = new Portfolio();
+            Action act = () => {
+                context.Portfolio.Add(portfolio);
+                context.SaveChanges();
+            };
+
+            act.Should().Throw<DbUpdateException>();
+        }
 
         [Fact]
         public void TestPortfolioAdd() {

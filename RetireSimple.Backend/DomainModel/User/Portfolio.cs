@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data;
 using RetireSimple.Backend.DomainModel.Data.Expense;
 using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.Data.InvestmentVehicle;
+using RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase;
 
 namespace RetireSimple.Backend.DomainModel.User {
 	public class Portfolio {
@@ -40,7 +40,8 @@ namespace RetireSimple.Backend.DomainModel.User {
 
 			builder.HasMany(p => p.Expenses)
 				.WithOne()
-				.HasForeignKey(e => e.PorfolioId);
+				.HasForeignKey(e => e.PorfolioId)
+				.IsRequired();
 			
 			builder.HasMany(p => p.Transfers)
 				.WithOne()
