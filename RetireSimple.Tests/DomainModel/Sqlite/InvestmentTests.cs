@@ -42,11 +42,6 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Dispose();
         }
 
-        //TODO Tests to Add
-        //1. Discriminator tests (Storing Different Types of Investments)
-
-
-
         [Fact]
         public void TestStockInvestmentAdd() {
             var investment = new StockInvestment("testAnalysis");

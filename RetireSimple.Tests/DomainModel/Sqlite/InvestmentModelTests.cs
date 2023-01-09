@@ -48,12 +48,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Dispose();
         }
 
-        //TODO Tests to add
-        // 1. Investment Model Add
-
         [Fact]
-        public void TestInvestmentModelAdd()
-        {
+        public void TestInvestmentModelAdd() {
             InvestmentModel model = new InvestmentModel();
             model.Investment = context.Portfolio.First(p => p.PortfolioId == 1).Investments.First(i => i.InvestmentId == 1);
 
@@ -63,10 +59,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             Assert.Single(context.InvestmentModels);
         }
 
-        // 2. Investment Model Remove
         [Fact]
-        public void TestInvestmentModelRemove()
-        {
+        public void TestInvestmentModelRemove() {
             InvestmentModel model = new InvestmentModel();
             model.Investment = context.Portfolio.First(p => p.PortfolioId == 1).Investments.First(i => i.InvestmentId == 1);
 
@@ -79,10 +73,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             Assert.Equal(0, context.InvestmentModels.Count());
         }
 
-        // 3. InvestmentModel FK -> Requires Investment
         [Fact]
-        public void TestInvestmentModelFKConstraint()
-        {
+        public void TestInvestmentModelFKConstraint() {
             InvestmentModel model = new InvestmentModel();
 
             Action act = () => {

@@ -41,12 +41,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Dispose();
         }
 
-        //TODO Tests to add
-        //1. Portfolio FK -> Doesn't Cascade any dependents on Delete
-
         [Fact]
-        public void TestPortfolioFKConstraintDelete()
-        {
+        public void TestPortfolioFKConstraintDelete() {
             var portfolio = new Portfolio();
             context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
 
@@ -62,8 +58,6 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
 
         }
-
-        //2. Portfolio FK -> Requires Profile
 
         [Fact]
         public void TestPortfolioFKConstraintProfile() {
