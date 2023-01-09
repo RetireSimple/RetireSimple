@@ -70,13 +70,15 @@ namespace RetireSimple.Backend.Migrations
                 {
                     InvestmentId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    InvestmentName = table.Column<string>(type: "TEXT", nullable: false, defaultValue: ""),
                     InvestmentType = table.Column<string>(type: "TEXT", nullable: false),
                     InvestmentData = table.Column<string>(type: "TEXT", nullable: false),
                     AnalysisOptionsOverrides = table.Column<string>(type: "TEXT", nullable: false),
                     AnalysisType = table.Column<string>(type: "TEXT", nullable: true),
                     LastAnalysis = table.Column<DateTime>(type: "datetime2(7)", nullable: true),
                     PortfolioId = table.Column<int>(type: "INTEGER", nullable: false),
-                    InvestmentVehicleBaseInvestmentVehicleId = table.Column<int>(type: "INTEGER", nullable: true)
+                    InvestmentVehicleBaseInvestmentVehicleId = table.Column<int>(type: "INTEGER", nullable: true),
+                    FixedInterestedRate = table.Column<decimal>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -135,6 +137,7 @@ namespace RetireSimple.Backend.Migrations
                     InvestmentId = table.Column<int>(type: "INTEGER", nullable: false),
                     MaxModelData = table.Column<string>(type: "TEXT", nullable: false),
                     MinModelData = table.Column<string>(type: "TEXT", nullable: false),
+                    AvgModelData = table.Column<string>(type: "TEXT", nullable: false),
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

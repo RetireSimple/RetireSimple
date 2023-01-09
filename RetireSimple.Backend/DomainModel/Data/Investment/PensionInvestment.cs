@@ -6,6 +6,9 @@ using System.Text.Json.Serialization;
 namespace RetireSimple.Backend.DomainModel.Data.Investment {
 	public class PensionInvestment : InvestmentBase {
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[JsonIgnore]
 		[NotMapped]
 		public string PensionName {

@@ -1,16 +1,44 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data.Investment;
+using System.Text.Json.Serialization;
 
 namespace RetireSimple.Backend.DomainModel.Data.Expense {
+
+	/// <summary>
+	/// The base class 
+	/// </summary>
 	public abstract class ExpenseBase {
+		/// <summary>
+		/// Primary Key of the Expense Table
+		/// </summary>
 		public int ExpenseId { get; set; }
+
+		/// <summary>
+		/// Foreign Key of the <see cref="InvestmentBase"/> that this expense is associated with.
+		/// </summary>
 		public int SourceInvestmentId { get; set; }
+
+		/// <summary>
+		/// The <see cref="InvestmentBase"/> that this expense is associated with.
+		/// </summary>
+		[JsonIgnore]
 		public InvestmentBase SourceInvestment { get; set; }
+
+		/// <summary>
+		/// Foreign Key of the <see cref="RetireSimple.Backend.DomainModel.User.Portfolio"/> that this expense is associated with.
+		/// </summary>
 		public int PorfolioId { get; set; }
 
+		/// <summary>
+		/// The amount this expense deducts from the investment.
+		/// </summary>
 		public double Amount { get; set; }
 
+		/// <summary>
+		/// Generate the dates that the expense will affect the model depending on the expense type.
+		/// </summary>
+		/// <returns></returns>
 		public abstract List<DateTime> GetExpenseDates();
 	}
 

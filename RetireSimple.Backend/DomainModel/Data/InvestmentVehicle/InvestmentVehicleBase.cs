@@ -48,6 +48,7 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase {
 				.IsRequired(false)
 				.OnDelete(DeleteBehavior.Restrict);
 
+#pragma warning disable CS8604 // Possible null reference argument.
 			builder.Property(i => i.AnalysisOptionsOverrides)
 				.HasConversion(
 					v => JsonSerializer.Serialize(v, options),
@@ -58,6 +59,8 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase {
 					c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
 					c => c.ToDictionary(entry => entry.Key, entry => entry.Value)
 				));
+#pragma warning restore CS8604 // Possible null reference argument.
+
 		}
 	}
 

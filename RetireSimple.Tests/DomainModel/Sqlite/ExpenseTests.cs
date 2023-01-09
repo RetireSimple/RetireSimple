@@ -5,12 +5,6 @@ using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.DomainModel.User;
 using RetireSimple.Backend.Services;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xunit.Abstractions;
 
 namespace RetireSimple.Tests.DomainModel.Sqlite {
@@ -57,12 +51,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Dispose();
         }
 
-        //Tests to Add:
-        // 1. Expense Model Add
-
         [Fact]
-        public void TestExpenseAdd()
-        {
+        public void TestExpenseAdd() {
             //TODO: add manual constraint of Expense's investments
             var expense = new OneTimeExpense();
             expense.Amount = 100.0;
@@ -73,11 +63,9 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             Assert.Equal(1, context.Expenses.Count());
 
         }
-        // 2. Expense Model Remove
 
         [Fact]
-        public void TestExpenseRemove()
-        {
+        public void TestExpenseRemove() {
             var expense = new OneTimeExpense();
             expense.Amount = 100.0;
 
@@ -88,19 +76,13 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.SaveChanges();
             Assert.Equal(0, context.Expenses.Count());
         }
-        // 3. ExpenseModel FK -> Requires Investment + Portfolio
 
         [Fact]
-        public void TestExpenseFKConstraint()
-        {
+        public void TestExpenseFKConstraint() {
             var expense = new OneTimeExpense();
             expense.Amount = 100.0;
 
-            //context.Portfolio.First(p => p.PortfolioId == 1).Expenses.Add(expense);
-            //expense.SourceInvestment = context.Investments.First(i => i.InvestmentId == 1);
-
-            Action act = () =>
-            {
+            Action act = () => {
                 context.Expenses.Add(expense);
                 context.SaveChanges();
             };
