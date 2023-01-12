@@ -52,7 +52,7 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 		}
 
 		public static InvestmentModel MonteCarlo_NormalDist(StockInvestment investment, OptionsDict options) {
-			var priceModel = MonteCarlo.MonteCarloSim_NormalDistribution(investment, options);
+			var priceModel = MonteCarlo.MonteCarloSim_Normal(investment, options);
 			//TODO Update to support other dividend types
 			var dividendModel = StockAS.ProjectStockDividend(investment, options);
 
