@@ -1,6 +1,11 @@
-﻿using RetireSimple.Backend.DomainModel.Data.Investment;
+﻿using MathNet.Numerics.Distributions;
+
+using RetireSimple.Backend.DomainModel.Analysis;
+using RetireSimple.Backend.DomainModel.Data.Investment;
 
 using System.Security.Cryptography.X509Certificates;
+
+using static RetireSimple.Backend.DomainModel.Analysis.MonteCarlo;
 
 namespace RetireSimple.Tests.Analysis {
     public class StockMonteCarloTests {
@@ -10,8 +15,18 @@ namespace RetireSimple.Tests.Analysis {
         //Array Structure
         // [mu, sigma, scale factor]
         public static readonly IEnumerable<object[]> distParams =
-            new List<object[]> { new object[] { 0, 1, 1 },
-                    };
+            new List<object[]> {
+                new object[] { 0, 1, 1 },
+                new object[] { 1, 0, 1 },
+                new object[] { 1, 1, 1 },
+                new object[] { 0.25, 5, 1 },
+                new object[] { -0.25, 5, 1 },
+                new object[] { 0, 1, 2 },
+                new object[] { 1, 0, 2 },
+                new object[] { 1, 1, 2 },
+                new object[] { 0.25, 5, 2 },
+                new object[] { -0.25, 5, 2 },
+            };
 
         public StockMonteCarloTests() {
             TestInvestment = new StockInvestment("test") {
@@ -31,15 +46,28 @@ namespace RetireSimple.Tests.Analysis {
             //Statistically speaking, this should be true 99.7% of the time, given
             //props of the Normal Dist
 
-            var options = new OptionsDict() {
-                ["RandomVarMu"] = mu.ToString(),
-                ["RandomVarSigma"] = sigma.ToString(),
-                ["RandomVarScaleFactor"] = scaleFactor.ToString(),
-                ["RandomVarType"] = "Normal",
-
+            //Create SimOptions 
+            var options = new MonteCarloOptions() {
+                BasePrice = TestInvestment.StockPrice,
+                AnalysisLength = 60,
+                RandomVarScaleFactor = (decimal)scaleFactor,
+                RandomVariable = new Normal(mu, sigma)
             };
 
-            
+
+
+            //Generate a Sim Reult
+            var simResult = MonteCarlo.MonteCarloSim_SingleIteration(options);
+
+            for (int i = 0; i < 59; i++) {
+                var delta = simResult[i + 1] - simResult[i];
+                Assert.True((double)delta <= (scaleFactor * (mu + (4 * sigma))));
+                Assert.True((double)delta >= (scaleFactor * (mu - (4 * sigma))));
+            }
+
         }
+
+
     }
+
 }
