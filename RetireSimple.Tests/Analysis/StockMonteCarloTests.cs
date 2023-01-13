@@ -1,11 +1,6 @@
 ﻿using MathNet.Numerics.Distributions;
 
-using Microsoft.Extensions.ObjectPool;
-
-using RetireSimple.Backend.DomainModel.Analysis;
 using RetireSimple.Backend.DomainModel.Data.Investment;
-
-using System.Security.Cryptography.X509Certificates;
 
 using static RetireSimple.Backend.DomainModel.Analysis.MonteCarlo;
 
@@ -24,16 +19,16 @@ namespace RetireSimple.Tests.Analysis {
         // [mu, sigma, scale factor]
         public static readonly IEnumerable<object[]> NormalDistParams =
             new List<object[]> {
-                new object[] { 0, 1, 1 },
-                new object[] { 1, 0, 1 },
-                new object[] { 1, 1, 1 },
-                new object[] { 0.25, 5, 1 },
-                new object[] { -0.25, 5, 1 },
-                new object[] { 0, 1, 2 },
-                new object[] { 1, 0, 2 },
-                new object[] { 1, 1, 2 },
-                new object[] { 0.25, 5, 2 },
-                new object[] { -0.25, 5, 2 },
+                new object[] { 0d, 1d, 1d },
+                new object[] { 1d, 0d, 1d },
+                new object[] { 1d, 1d, 1d },
+                new object[] { 0.25d, 5d, 1d },
+                new object[] { -0.25d, 5d, 1d },
+                new object[] { 0d, 1d, 2d },
+                new object[] { 1d, 0d, 2d },
+                new object[] { 1d, 1d, 2d },
+                new object[] { 0.25d, 5d, 2d },
+                new object[] { -0.25d, 5d, 2d },
             };
         [Theory, MemberData(nameof(NormalDistParams))]
         public void TestSimulationTolerance_Normal(double mu, double sigma, double scaleFactor) {
@@ -54,9 +49,8 @@ namespace RetireSimple.Tests.Analysis {
         }
 
         public static readonly IEnumerable<object[]> LogNormalDistParams =
-            NormalDistParams.Where(x => (double)x[0] >= 0);
-
-        [Theory, MemberData(nameof(NormalDistParams))]
+            NormalDistParams.Where(x => (double)(x[0]) >= 0);
+        [Theory, MemberData(nameof(LogNormalDistParams))]
         public void TestSimulationTolerance_LogNormal(double mu, double sigma, double scaleFactor) {
             var options = new MonteCarloOptions() {
                 BasePrice = TestInvestment.StockPrice,
@@ -65,16 +59,16 @@ namespace RetireSimple.Tests.Analysis {
                 RandomVariable = new LogNormal(mu, sigma)
             };
 
+            //NOTE Minor rounding is used here to increase test determinism
             var simResult = MonteCarloSim_SingleIteration(options);
             for (int i = 0; i < 59; i++) {
-                var delta = (double)(simResult[i + 1] - simResult[i]);
-                delta.Should().BeInRange(scaleFactor * Math.Exp(mu - (4 * sigma)),
-                    scaleFactor * Math.Exp(mu + (4 * sigma)));
+                var delta = (double)Math.Round((simResult[i + 1] - simResult[i]), 7);
+                var minDeltaRange = Math.Round(scaleFactor * Math.Exp((mu - (4 * sigma))), 7);
+                var maxDeltaRange = Math.Round(scaleFactor * Math.Exp((mu + (4 * sigma))), 7);
+
+                delta.Should().BeInRange(minDeltaRange, maxDeltaRange);
             }
         }
-
-
-
 
     }
 
