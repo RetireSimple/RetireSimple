@@ -1,5 +1,7 @@
 ﻿using MathNet.Numerics.Distributions;
 
+using Microsoft.Extensions.ObjectPool;
+
 using RetireSimple.Backend.DomainModel.Analysis;
 using RetireSimple.Backend.DomainModel.Data.Investment;
 
@@ -12,9 +14,15 @@ namespace RetireSimple.Tests.Analysis {
 
         public StockInvestment TestInvestment { get; set; }
 
+        public StockMonteCarloTests() {
+            TestInvestment = new StockInvestment("test") {
+                StockPrice = 100,
+            };
+        }
+
         //Array Structure
         // [mu, sigma, scale factor]
-        public static readonly IEnumerable<object[]> distParams =
+        public static readonly IEnumerable<object[]> NormalDistParams =
             new List<object[]> {
                 new object[] { 0, 1, 1 },
                 new object[] { 1, 0, 1 },
@@ -27,26 +35,8 @@ namespace RetireSimple.Tests.Analysis {
                 new object[] { 0.25, 5, 2 },
                 new object[] { -0.25, 5, 2 },
             };
-
-        public StockMonteCarloTests() {
-            TestInvestment = new StockInvestment("test") {
-                StockPrice = 100,
-            };
-        }
-
-        [Theory, MemberData(nameof(distParams))]
-        public void TestSimulationTolerance_NormalDistribution(double mu, double sigma, double scaleFactor) {
-            //Methodology ideas
-
-            //Run a simulation
-            //For each step of a simulation:
-            //  Assert that the delta between steps is within at most 3-4 std.
-            //  devs of the mean
-
-            //Statistically speaking, this should be true 99.7% of the time, given
-            //props of the Normal Dist
-
-            //Create SimOptions 
+        [Theory, MemberData(nameof(NormalDistParams))]
+        public void TestSimulationTolerance_Normal(double mu, double sigma, double scaleFactor) {
             var options = new MonteCarloOptions() {
                 BasePrice = TestInvestment.StockPrice,
                 AnalysisLength = 60,
@@ -54,18 +44,36 @@ namespace RetireSimple.Tests.Analysis {
                 RandomVariable = new Normal(mu, sigma)
             };
 
-
-
-            //Generate a Sim Reult
-            var simResult = MonteCarlo.MonteCarloSim_SingleIteration(options);
-
+            var simResult = MonteCarloSim_SingleIteration(options);
             for (int i = 0; i < 59; i++) {
-                var delta = simResult[i + 1] - simResult[i];
-                Assert.True((double)delta <= (scaleFactor * (mu + (4 * sigma))));
-                Assert.True((double)delta >= (scaleFactor * (mu - (4 * sigma))));
+                var delta = (double)(simResult[i + 1] - simResult[i]);
+                delta.Should().BeInRange(scaleFactor * (mu - (4 * sigma)),
+                    scaleFactor * (mu + (4 * sigma)));
             }
 
         }
+
+        public static readonly IEnumerable<object[]> LogNormalDistParams =
+            NormalDistParams.Where(x => (double)x[0] >= 0);
+
+        [Theory, MemberData(nameof(NormalDistParams))]
+        public void TestSimulationTolerance_LogNormal(double mu, double sigma, double scaleFactor) {
+            var options = new MonteCarloOptions() {
+                BasePrice = TestInvestment.StockPrice,
+                AnalysisLength = 60,
+                RandomVarScaleFactor = (decimal)scaleFactor,
+                RandomVariable = new LogNormal(mu, sigma)
+            };
+
+            var simResult = MonteCarloSim_SingleIteration(options);
+            for (int i = 0; i < 59; i++) {
+                var delta = (double)(simResult[i + 1] - simResult[i]);
+                delta.Should().BeInRange(scaleFactor * Math.Exp(mu - (4 * sigma)),
+                    scaleFactor * Math.Exp(mu + (4 * sigma)));
+            }
+        }
+
+
 
 
     }
