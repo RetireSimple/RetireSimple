@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.DomainModel.Analysis;
 
+//Basic PoC Testing for Stock Monte Carlo Simulations
+
+
 var testStonk = new StockInvestment("testAnalysis");
 testStonk.StockPrice = 100;
 
