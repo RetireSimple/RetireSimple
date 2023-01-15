@@ -1,6 +1,18 @@
 import React from 'react';
+import { Line } from 'react-chartjs-2';
 import { Investment } from './Models/Interfaces';
+import sourceFile from './source.json';
 
+
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,} from 'chart.js';
 
 export interface Forecast {
     date: string;
@@ -17,7 +29,57 @@ export default function App() {
     //const [investmentModels, setInvestmentModels] = React.useState<InvestmentModel[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
 
+        // const response = await fetch('/api/'); fetch data used in excel
+        // const data = await response.json();
+        ChartJS.register(
+            CategoryScale,
+            LinearScale,
+            PointElement,
+            LineElement,
+            Title,
+            Tooltip,
+            Legend
+        );
 
+        const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
+        const data = {
+            labels,
+            datasets: [
+                {
+                    label: 'Dataset 1',
+                    data: sourceFile.mindata,
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                },
+                {
+                    label: 'Dataset 2',
+                    data: sourceFile.avgdata,
+                    borderColor: 'rgb(53, 162, 235)',
+                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
+
+                },
+                {
+                    label: 'Dataset 3',
+                    data: sourceFile.maxdata,
+                    borderColor: 'rgb(53, 162, 235)',
+                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
+},
+            ],
+        };
+        const options = {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top' as const,
+                },
+                title: {
+                    display: true,
+                    text: 'Chart.js Line Chart',
+                },
+            },
+        };
+        //return <Line options={options} data={data} />;
 
     const populateInvestmentData = async () => {
         const response = await fetch('/api/Investment/GetAllInvestments');
@@ -36,6 +98,10 @@ export default function App() {
     React.useEffect(() => {
         if (loading) { populateInvestmentData() };
     });
+
+    const renderAnalysis = (options: any, data: any) => {
+        return <Line options={options} data={data} />;
+    }
 
     const renderInvestmentsTable = (investments: Investment[]) => {
         return (
@@ -71,6 +137,8 @@ export default function App() {
     }
 
     {
+        let chart = renderAnalysis(options, data);
+
         let contents = loading
             ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
             : renderInvestmentsTable(investments);
@@ -80,8 +148,7 @@ export default function App() {
                 <button onClick={addNewInvestment}>Add New Stonk</button>
                 <h1 id="tabelLabel" >Investments</h1>
                 <p></p>
-
-
+                {chart}
                 {contents}
             </div>
 
