@@ -1,4 +1,6 @@
-﻿using MathNet.Numerics.Distributions;
+﻿using FluentAssertions.Execution;
+
+using MathNet.Numerics.Distributions;
 
 using RetireSimple.Backend.DomainModel.Data.Investment;
 
@@ -39,13 +41,20 @@ namespace RetireSimple.Tests.Analysis {
                 RandomVariable = new Normal(mu, sigma)
             };
 
-            var simResult = MonteCarloSim_SingleIteration(options);
-            for (int i = 0; i < 59; i++) {
-                var delta = (double)(simResult[i + 1] - simResult[i]);
-                delta.Should().BeInRange(scaleFactor * (mu - (4 * sigma)),
-                    scaleFactor * (mu + (4 * sigma)));
-            }
+            using (new AssertionScope("root")) {
+                //Rerun test multiple times because of probability
+                for (int i = 0; i < 100; i++) {
+                    var simResult = MonteCarloSim_SingleIteration(options);
+                    for (int step = 0; step < 59; step++) {
+                        using (new AssertionScope($"iteration {i} - step {step}")) {
+                            var delta = (double)(simResult[step + 1] - simResult[step]);
+                            delta.Should().BeInRange(scaleFactor * (mu - (6 * sigma)),
+                                scaleFactor * (mu + (6 * sigma)));
+                        }
+                    }
 
+                }
+            }
         }
 
         public static readonly IEnumerable<object[]> LogNormalDistParams =
@@ -59,17 +68,25 @@ namespace RetireSimple.Tests.Analysis {
                 RandomVariable = new LogNormal(mu, sigma)
             };
 
-            //NOTE Minor rounding is used here to increase test determinism
-            var simResult = MonteCarloSim_SingleIteration(options);
-            for (int i = 0; i < 59; i++) {
-                var delta = (double)Math.Round((simResult[i + 1] - simResult[i]), 7);
-                var minDeltaRange = Math.Round(scaleFactor * Math.Exp((mu - (4 * sigma))), 7);
-                var maxDeltaRange = Math.Round(scaleFactor * Math.Exp((mu + (4 * sigma))), 7);
+            using (new AssertionScope("root")) {
+                //Rerun test multiple times because of probability
+                for (int i = 0; i < 100; i++) {
+                    using (new AssertionScope($"iteration-{i}")) {
+                        //NOTE Minor rounding is used here to increase test 
+                        var simResult = MonteCarloSim_SingleIteration(options);
+                        for (int step = 0; step < 59; step++) {
+                            using (new AssertionScope($"iteration {i} - step {step}")) {
+                                var delta = (double)Math.Round((simResult[step + 1] - simResult[step]), 7);
+                                var minDeltaRange = Math.Round(scaleFactor * Math.Exp((mu - (6 * sigma))), 7);
+                                var maxDeltaRange = Math.Round(scaleFactor * Math.Exp((mu + (6 * sigma))), 7);
 
-                delta.Should().BeInRange(minDeltaRange, maxDeltaRange);
+                                delta.Should().BeInRange(minDeltaRange, maxDeltaRange);
+                            }
+                        }
+                    }
+                }
             }
+
         }
-
     }
-
 }
