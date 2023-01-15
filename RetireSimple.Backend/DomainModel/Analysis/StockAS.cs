@@ -63,6 +63,19 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 			return priceModel;
 		}
 
+		public static InvestmentModel MonteCarlo_LogNormalDist(StockInvestment investment, OptionsDict options) {
+			var priceModel = MonteCarlo.MonteCarloSim_LogNormal(investment, options);
+			//TODO Update to support other dividend types
+			var dividendModel = StockAS.ProjectStockDividend(investment, options);
+
+			priceModel.MinModelData = priceModel.MinModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
+			priceModel.AvgModelData = priceModel.AvgModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
+			priceModel.MaxModelData = priceModel.MaxModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
+
+			return priceModel;
+		}
+
+
 		//TODO Move to Testing/Debugging
 		public static InvestmentModel testAnalysis(StockInvestment investment, OptionsDict options) {
 			var value = investment.StockPrice * investment.StockQuantity;
