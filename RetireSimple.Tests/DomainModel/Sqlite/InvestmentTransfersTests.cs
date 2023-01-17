@@ -29,9 +29,9 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
             var portfolio = new Portfolio();
 
-            context.Profiles.Add(profile);
+            context.Profile.Add(profile);
             context.SaveChanges();
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
             context.SaveChanges();
 
             var investment = new StockInvestment("test");
@@ -56,33 +56,33 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         [Fact]
         public void TestInvestmentTransferAdd() {
             InvestmentTransfer transfer = new InvestmentTransfer();
-            transfer.SourceInvestment = context.Investments.First(i => i.InvestmentId == 1);
-            transfer.DestinationInvestment = context.Investments.First(i => i.InvestmentId == 2);
+            transfer.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
+            transfer.DestinationInvestment = context.Investment.First(i => i.InvestmentId == 2);
             context.Portfolio.First(p => p.PortfolioId == 1).Transfers.Add(transfer);
             context.SaveChanges();
 
-            Assert.Single(context.InvestmentTransfers);
+            Assert.Single(context.InvestmentTransfer);
         }
 
         [Fact]
         public void TestInvestmentTransferRemove() {
             InvestmentTransfer transfer = new InvestmentTransfer();
-            transfer.SourceInvestment = context.Investments.First(i => i.InvestmentId == 1);
-            transfer.DestinationInvestment = context.Investments.First(i => i.InvestmentId == 2);
+            transfer.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
+            transfer.DestinationInvestment = context.Investment.First(i => i.InvestmentId == 2);
             context.Portfolio.First(p => p.PortfolioId == 1).Transfers.Add(transfer);
             context.SaveChanges();
 
-            context.InvestmentTransfers.Remove(transfer);
+            context.InvestmentTransfer.Remove(transfer);
             context.SaveChanges();
 
-            Assert.Empty(context.InvestmentTransfers);
+            Assert.Empty(context.InvestmentTransfer);
         }
 
         [Fact]
         public void TestInvestmentTransferFKConstraint() {
             InvestmentTransfer transfer = new InvestmentTransfer();
             Action act = () => {
-                context.InvestmentTransfers.Add(transfer);
+                context.InvestmentTransfer.Add(transfer);
                 context.SaveChanges();
             };
 

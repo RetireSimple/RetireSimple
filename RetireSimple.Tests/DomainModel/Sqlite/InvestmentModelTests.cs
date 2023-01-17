@@ -30,9 +30,9 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
             var portfolio = new Portfolio();
 
-            context.Profiles.Add(profile);
+            context.Profile.Add(profile);
             context.SaveChanges();
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
             context.SaveChanges();
 
             var investment = new StockInvestment("test");
@@ -53,10 +53,10 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentModel model = new InvestmentModel();
             model.Investment = context.Portfolio.First(p => p.PortfolioId == 1).Investments.First(i => i.InvestmentId == 1);
 
-            context.InvestmentModels.Add(model);
+            context.InvestmentModel.Add(model);
             context.SaveChanges();
 
-            Assert.Single(context.InvestmentModels);
+            Assert.Single(context.InvestmentModel);
         }
 
         [Fact]
@@ -64,13 +64,13 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentModel model = new InvestmentModel();
             model.Investment = context.Portfolio.First(p => p.PortfolioId == 1).Investments.First(i => i.InvestmentId == 1);
 
-            context.InvestmentModels.Add(model);
+            context.InvestmentModel.Add(model);
             context.SaveChanges();
 
-            context.InvestmentModels.Remove(model);
+            context.InvestmentModel.Remove(model);
             context.SaveChanges();
 
-            Assert.Equal(0, context.InvestmentModels.Count());
+            Assert.Equal(0, context.InvestmentModel.Count());
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentModel model = new InvestmentModel();
 
             Action act = () => {
-                context.InvestmentModels.Add(model);
+                context.InvestmentModel.Add(model);
                 context.SaveChanges();
             };
 

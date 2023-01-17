@@ -31,9 +31,9 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
             var portfolio = new Portfolio();
 
-            context.Profiles.Add(profile);
+            context.Profile.Add(profile);
             context.SaveChanges();
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
             context.SaveChanges();
         }
 
@@ -52,9 +52,9 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
             context.SaveChanges();
 
-            Assert.Equal(1, context.Investments.Count());
+            Assert.Equal(1, context.Investment.Count());
             Assert.Single(context.Portfolio.First(p => p.PortfolioId == 1).Investments);
-            Assert.Single(context.Profiles.First(p => p.ProfileId == 1).Portfolios.First().Investments);
+            Assert.Single(context.Profile.First(p => p.ProfileId == 1).Portfolios.First().Investments);
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Portfolio.First(p => p.PortfolioId == 1).Investments.Remove(investment);
             context.SaveChanges();
 
-            Assert.Equal(0, context.Investments.Count());
+            Assert.Equal(0, context.Investment.Count());
             Assert.Empty(context.Portfolio.First(p => p.PortfolioId == 1).Investments);
         }
 
@@ -86,11 +86,11 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Portfolio.First().Investments.Add(investment);
             context.SaveChanges();
 
-            context.InvestmentModels.Add(investment.InvokeAnalysis(options));
+            context.InvestmentModel.Add(investment.InvokeAnalysis(options));
 
             context.SaveChanges();
             Action act = () => {
-                context.Investments.Remove(investment);
+                context.Investment.Remove(investment);
             };
 
             act.Should().Throw<InvalidOperationException>();

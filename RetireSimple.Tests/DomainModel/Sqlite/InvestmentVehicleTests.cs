@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using RetireSimple.Backend.Services;
-using RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase;
+using RetireSimple.Backend.DomainModel.Data.InvestmentVehicle;
 
 using Xunit.Abstractions;
 using RetireSimple.Backend.DomainModel.User;
@@ -30,9 +30,9 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
             var portfolio = new Portfolio();
 
-            context.Profiles.Add(profile);
+            context.Profile.Add(profile);
             context.SaveChanges();
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
             context.SaveChanges();
 
             var investment = new StockInvestment("test");
@@ -53,10 +53,10 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
             context.SaveChanges();
-            vehicle.Investments.Add(context.Investments.First(i => i.InvestmentId == 1));
+            vehicle.Investments.Add(context.Investment.First(i => i.InvestmentId == 1));
             context.SaveChanges();
 
-            Assert.Single(context.InvestmentVehicles);
+            Assert.Single(context.InvestmentVehicle);
         }
 
         [Fact]
@@ -64,13 +64,13 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
             context.SaveChanges();
-            vehicle.Investments.Add(context.Investments.First(i => i.InvestmentId == 1));
+            vehicle.Investments.Add(context.Investment.First(i => i.InvestmentId == 1));
             context.SaveChanges();
 
-            context.InvestmentVehicles.Remove(vehicle);
+            context.InvestmentVehicle.Remove(vehicle);
             context.SaveChanges();
 
-            Assert.Equal(0, context.InvestmentVehicles.Count());
+            Assert.Equal(0, context.InvestmentVehicle.Count());
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentVehicleBase vehicle = new Vehicle403b();
 
             Action act = () => {
-                context.InvestmentVehicles.Add(vehicle);
+                context.InvestmentVehicle.Add(vehicle);
                 context.SaveChanges();
             };
 
@@ -90,13 +90,13 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
             context.SaveChanges();
-            vehicle.Investments.Add(context.Investments.First(i => i.InvestmentId == 1));
+            vehicle.Investments.Add(context.Investment.First(i => i.InvestmentId == 1));
             context.SaveChanges();
 
-            context.InvestmentVehicles.Remove(vehicle);
+            context.InvestmentVehicle.Remove(vehicle);
             context.SaveChanges();
 
-            Assert.Equal(1, context.Investments.Count());
+            Assert.Equal(1, context.Investment.Count());
         }
 
     }

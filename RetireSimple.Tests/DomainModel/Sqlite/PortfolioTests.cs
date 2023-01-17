@@ -32,7 +32,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             profile.Status = true;
 
 
-            context.Profiles.Add(profile);
+            context.Profile.Add(profile);
             context.SaveChanges();
         }
 
@@ -44,7 +44,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         [Fact]
         public void TestPortfolioFKConstraintDelete() {
             var portfolio = new Portfolio();
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
 
             var investment = new StockInvestment("testAnalysis");
             investment.StockPrice = 100;
@@ -54,7 +54,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             portfolio.Investments.Add(investment);
             context.SaveChanges();
 
-            Assert.Single(context.Investments);
+            Assert.Single(context.Investment);
 
 
         }
@@ -75,8 +75,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             var portfolio = new Portfolio();
             var portfolio2 = new Portfolio();
 
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio2);
+            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio2);
 
             context.SaveChanges();
             context.Portfolio.Should().HaveCount(2);
@@ -87,8 +87,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             var portfolio = new Portfolio();
             var portfolio2 = new Portfolio();
 
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio2);
+            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio2);
             context.SaveChanges();
             context.Portfolio.Remove(portfolio);
             context.SaveChanges();

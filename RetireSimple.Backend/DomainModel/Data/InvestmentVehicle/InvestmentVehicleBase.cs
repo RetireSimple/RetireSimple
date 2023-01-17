@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.User;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase {
+namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 	public abstract class InvestmentVehicleBase {
+
 		public int PortfolioId { get; set; }
 
 		public int InvestmentVehicleId { get; set; }
@@ -15,7 +16,18 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase {
 
 		public List<InvestmentBase> Investments { get; set; }
 
+		public int? InvestmentVehicleModelId { get; set; }
+		[JsonIgnore]
+		public InvestmentVehicleModel? InvestmentVehicleModel { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public OptionsDict AnalysisOptionsOverrides { get; set; } = new OptionsDict();
+
+		public static readonly OptionsDict DefaultInvestmentVehicleOptions = new OptionsDict() {
+			["VehicleTaxPercentage"] = "0.29"   //Tax to apply on contribution/withdrawal/valuation
+		};
 
 		public InvestmentVehicleBase() {
 			Investments = new List<InvestmentBase>();
@@ -45,6 +57,12 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase {
 
 			builder.HasMany(i => i.Investments)
 				.WithOne()
+				.IsRequired(false)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			builder.HasOne(i => i.InvestmentVehicleModel)
+				.WithOne()
+				.HasForeignKey<InvestmentVehicleModel>(m => m.InvestmentVehicleId)
 				.IsRequired(false)
 				.OnDelete(DeleteBehavior.Restrict);
 

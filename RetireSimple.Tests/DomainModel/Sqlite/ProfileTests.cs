@@ -40,11 +40,11 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             profile2.Age = 25;
             profile2.Status = false;
 
-            context.Profiles.Add(profile);
-            context.Profiles.Add(profile2);
+            context.Profile.Add(profile);
+            context.Profile.Add(profile2);
 
             context.SaveChanges();
-            context.Profiles.Should().HaveCount(2);
+            context.Profile.Should().HaveCount(2);
         }
 
         [Fact]
@@ -56,14 +56,14 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             profile.Age = 65;
             profile.Status = true;
 
-            context.Profiles.Add(profile);
+            context.Profile.Add(profile);
             context.SaveChanges();
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
             context.SaveChanges();
 
 
             Action act = () => {
-                context.Profiles.Remove(profile);
+                context.Profile.Remove(profile);
             };
 
             act.Should().Throw<InvalidOperationException>();
@@ -84,15 +84,15 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
 
 
-            context.Profiles.Add(profile);
-            context.Profiles.Add(profile2);
+            context.Profile.Add(profile);
+            context.Profile.Add(profile2);
 
             context.SaveChanges();
 
-            context.Profiles.Remove(profile);
+            context.Profile.Remove(profile);
             context.SaveChanges();
 
-            context.Profiles.Should().HaveCount(1);
+            context.Profile.Should().HaveCount(1);
         }
 
     }
