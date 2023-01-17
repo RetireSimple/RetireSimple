@@ -19,13 +19,13 @@ namespace RetireSimple.Backend.Controllers {
 		[HttpGet]
 		[Route("GetAnalysis")]
 		public async Task<ActionResult<InvestmentModel>> GetAnalysis([FromQuery] int InvestmentId) {
-			var investment = await _context.Investments.FirstAsync(i => i.InvestmentId == InvestmentId);
+			var investment = await _context.Investment.FirstAsync(i => i.InvestmentId == InvestmentId);
 			if(investment == null) {
 				return NotFound();
 			}
 			if(investment.InvestmentModel is null
 				|| investment.InvestmentModel.LastUpdated != investment.LastAnalysis) {
-				await _context.InvestmentModels.AddAsync(investment.InvokeAnalysis(options));
+				await _context.InvestmentModel.AddAsync(investment.InvokeAnalysis(options));
 			}
 
 

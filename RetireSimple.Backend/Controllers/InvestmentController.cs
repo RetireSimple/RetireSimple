@@ -23,7 +23,7 @@ namespace RetireSimple.Backend.Controllers {
 		[HttpGet]
 		[Route("GetAllInvestments")]
 		public async Task<ActionResult<List<InvestmentBase>>> GetInvestments() {
-			var investments = await _context.Investments.ToListAsync();
+			var investments = await _context.Investment.ToListAsync();
 			return Ok(investments);
 		}
 
@@ -36,7 +36,7 @@ namespace RetireSimple.Backend.Controllers {
 			newInvestment.StockTicker = body.Ticker;
 			newInvestment.StockPurchaseDate = body.Date;
 
-			await _context.Investments.AddAsync(newInvestment);
+			await _context.Investment.AddAsync(newInvestment);
 			await _context.SaveChangesAsync();
 
 			return Ok();
@@ -53,7 +53,7 @@ namespace RetireSimple.Backend.Controllers {
 			newInvestment.StockTicker = MakeRandomTicker();
 			newInvestment.StockPurchaseDate = DateTime.Today;
 
-			await _context.Investments.AddAsync(newInvestment);
+			await _context.Investment.AddAsync(newInvestment);
 			await _context.SaveChangesAsync();
 
 			return Ok();
