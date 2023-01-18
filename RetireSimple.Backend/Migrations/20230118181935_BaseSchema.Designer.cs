@@ -11,7 +11,7 @@ using RetireSimple.Backend.Services;
 namespace RetireSimple.Backend.Migrations
 {
     [DbContext(typeof(InvestmentDBContext))]
-    [Migration("20230117152256_BaseSchema")]
+    [Migration("20230118181935_BaseSchema")]
     partial class BaseSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,15 +34,10 @@ namespace RetireSimple.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PorfolioId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("SourceInvestmentId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ExpenseId");
-
-                    b.HasIndex("PorfolioId");
 
                     b.HasIndex("SourceInvestmentId");
 
@@ -144,9 +139,6 @@ namespace RetireSimple.Backend.Migrations
                     b.Property<int>("DestinationInvestmentId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PorfolioId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("SourceInvestmentId")
                         .HasColumnType("INTEGER");
 
@@ -156,8 +148,6 @@ namespace RetireSimple.Backend.Migrations
                     b.HasKey("InvestmentTransferId");
 
                     b.HasIndex("DestinationInvestmentId");
-
-                    b.HasIndex("PorfolioId");
 
                     b.HasIndex("SourceInvestmentId");
 
@@ -400,12 +390,6 @@ namespace RetireSimple.Backend.Migrations
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Expense.ExpenseBase", b =>
                 {
-                    b.HasOne("RetireSimple.Backend.DomainModel.User.Portfolio", null)
-                        .WithMany("Expenses")
-                        .HasForeignKey("PorfolioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", "SourceInvestment")
                         .WithMany("Expenses")
                         .HasForeignKey("SourceInvestmentId")
@@ -445,12 +429,6 @@ namespace RetireSimple.Backend.Migrations
                     b.HasOne("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", "DestinationInvestment")
                         .WithMany("TransfersTo")
                         .HasForeignKey("DestinationInvestmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RetireSimple.Backend.DomainModel.User.Portfolio", null)
-                        .WithMany("Transfers")
-                        .HasForeignKey("PorfolioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -514,13 +492,9 @@ namespace RetireSimple.Backend.Migrations
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.User.Portfolio", b =>
                 {
-                    b.Navigation("Expenses");
-
                     b.Navigation("InvestmentVehicles");
 
                     b.Navigation("Investments");
-
-                    b.Navigation("Transfers");
                 });
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.User.Profile", b =>

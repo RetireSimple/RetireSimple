@@ -57,8 +57,8 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             var expense = new OneTimeExpense();
             expense.Amount = 100.0;
 
-            context.Portfolio.First(p => p.PortfolioId == 1).Expenses.Add(expense);
             expense.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
+            context.Expense.Add(expense);
             context.SaveChanges();
             Assert.Equal(1, context.Expense.Count());
 
@@ -69,10 +69,11 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             var expense = new OneTimeExpense();
             expense.Amount = 100.0;
 
-            context.Portfolio.First(p => p.PortfolioId == 1).Expenses.Add(expense);
             expense.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
+            context.Expense.Add(expense);
+
             context.SaveChanges();
-            context.Portfolio.First(p => p.PortfolioId == 1).Expenses.Remove(expense);
+            context.Expense.Remove(expense);
             context.SaveChanges();
             Assert.Equal(0, context.Expense.Count());
         }

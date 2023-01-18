@@ -58,7 +58,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentTransfer transfer = new InvestmentTransfer();
             transfer.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
             transfer.DestinationInvestment = context.Investment.First(i => i.InvestmentId == 2);
-            context.Portfolio.First(p => p.PortfolioId == 1).Transfers.Add(transfer);
+            context.InvestmentTransfer.Add(transfer);
             context.SaveChanges();
 
             Assert.Single(context.InvestmentTransfer);
@@ -69,7 +69,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentTransfer transfer = new InvestmentTransfer();
             transfer.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
             transfer.DestinationInvestment = context.Investment.First(i => i.InvestmentId == 2);
-            context.Portfolio.First(p => p.PortfolioId == 1).Transfers.Add(transfer);
+            context.InvestmentTransfer.Add(transfer);
             context.SaveChanges();
 
             context.InvestmentTransfer.Remove(transfer);
