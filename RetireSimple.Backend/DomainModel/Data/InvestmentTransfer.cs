@@ -11,7 +11,6 @@ namespace RetireSimple.Backend.DomainModel.Data {
 		public InvestmentBase DestinationInvestment { get; set; }
 		public double Amount { get; set; }
 		public double TransferDate { get; set; }
-		//public int PorfolioId;
 	}
 
 	public class InvestmentTransferConfiguration : IEntityTypeConfiguration<InvestmentTransfer> {

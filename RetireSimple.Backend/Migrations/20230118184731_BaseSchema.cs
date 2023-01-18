@@ -88,7 +88,7 @@ namespace RetireSimple.Backend.Migrations
                         column: x => x.InvestmentVehicleBaseInvestmentVehicleId,
                         principalTable: "InvestmentVehicle",
                         principalColumn: "InvestmentVehicleId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Investments_Portfolio_PortfolioId",
                         column: x => x.PortfolioId,
@@ -167,7 +167,7 @@ namespace RetireSimple.Backend.Migrations
                         column: x => x.InvestmentId,
                         principalTable: "Investments",
                         principalColumn: "InvestmentId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,13 +189,13 @@ namespace RetireSimple.Backend.Migrations
                         column: x => x.DestinationInvestmentId,
                         principalTable: "Investments",
                         principalColumn: "InvestmentId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_InvestmentTransfers_Investments_SourceInvestmentId",
                         column: x => x.SourceInvestmentId,
                         principalTable: "Investments",
                         principalColumn: "InvestmentId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

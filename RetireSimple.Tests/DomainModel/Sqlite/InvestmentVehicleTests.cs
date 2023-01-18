@@ -86,18 +86,23 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
         }
 
         [Fact]
-        public void TestInvestmentVehicleFKConstraintInvestment() {
+        public void TestInvestmentVehicleFKConstraintInvestmentDeleteCascades() {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
-            context.SaveChanges();
             vehicle.Investments.Add(context.Investment.First(i => i.InvestmentId == 1));
             context.SaveChanges();
 
-            context.InvestmentVehicle.Remove(vehicle);
-            context.SaveChanges();
+            Action act = () => {
+                context.InvestmentVehicle.Remove(vehicle);
+                context.SaveChanges();
+            };
 
-            Assert.Equal(1, context.Investment.Count());
+            act.Should().NotThrow();
+            context.Investment.Should().BeEmpty();
+            context.InvestmentVehicle.Should().BeEmpty();
         }
+
+        //TODO add cascade test for Vehicle models
 
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using RetireSimple.Backend.DomainModel.Data;
+using RetireSimple.Backend.DomainModel.Data.Expense;
 using RetireSimple.Backend.DomainModel.Data.Investment;
 using RetireSimple.Backend.DomainModel.User;
 using RetireSimple.Backend.Services;
@@ -91,19 +93,115 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.SaveChanges();
             Action act = () => {
                 context.Investment.Remove(investment);
+                context.SaveChanges();
+            };
+
+            act.Should().NotThrow();
+            context.Investment.Should().BeEmpty();
+            context.InvestmentModel.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void TestInvestmentFKExpensesConstraint() {
+            var investment = new StockInvestment("testAnalysis");
+            investment.StockPrice = 100;
+            investment.StockQuantity = 10;
+            investment.StockTicker = "TST";
+
+            var options = new Dictionary<string, string>();
+
+            context.Portfolio.First().Investments.Add(investment);
+            context.SaveChanges();
+
+            var testExpense1 = new OneTimeExpense();
+            testExpense1.Amount = 100;
+            var testExpense2 = new OneTimeExpense();
+            testExpense2.Amount = 200;
+            context.Investment.First().Expenses.Add(testExpense1);
+            context.Investment.First().Expenses.Add(testExpense2);
+            context.SaveChanges();
+
+            Action act = () => {
+                context.Investment.Remove(investment);
+                context.SaveChanges();
+            };
+
+            act.Should().NotThrow();
+            context.Investment.Should().BeEmpty();
+            context.Expense.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void TestInvestmentFKPortfolioConstraint() {
+            var investment = new StockInvestment("testAnalysis");
+            investment.StockPrice = 100;
+            investment.StockQuantity = 10;
+            investment.StockTicker = "TST";
+
+            Action act = () => {
+                context.Investment.Add(investment);
+                context.SaveChanges();
+            };
+
+            act.Should().Throw<DbUpdateException>();
+        }
+
+        [Fact]
+        public void TestInvestmentFKTransfersFromConstraint() {
+            var investment = new StockInvestment("testAnalysis");
+            investment.StockPrice = 100;
+            investment.StockQuantity = 10;
+            investment.StockTicker = "TST";
+            var investment2 = new StockInvestment("testAnalysis");
+            investment.StockPrice = 200;
+            investment.StockQuantity = 50;
+            investment.StockTicker = "TST2";
+
+            context.Portfolio.First().Investments.Add(investment);
+            context.Portfolio.First().Investments.Add(investment2);
+            context.SaveChanges();
+
+            var transfer = new InvestmentTransfer();
+            transfer.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
+            transfer.DestinationInvestment = context.Investment.First(i => i.InvestmentId == 2);
+            context.InvestmentTransfer.Add(transfer);
+            context.SaveChanges();
+
+            Action act = () => {
+                context.Investment.Remove(investment);
+                context.SaveChanges();
             };
 
             act.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]
-        public void TestInvestmentFKPortfolioModelConstraint() {
-            //TODO
-        }
+        public void TestInvestmentFKTransfersConstraint() {
+            var investment = new StockInvestment("testAnalysis");
+            investment.StockPrice = 100;
+            investment.StockQuantity = 10;
+            investment.StockTicker = "TST";
+            var investment2 = new StockInvestment("testAnalysis");
+            investment.StockPrice = 200;
+            investment.StockQuantity = 50;
+            investment.StockTicker = "TST2";
 
-        [Fact]
-        public void TestInvestmentFKInvestmentVehicleNotRequired() {
-            //TODO
+            context.Portfolio.First().Investments.Add(investment);
+            context.Portfolio.First().Investments.Add(investment2);
+            context.SaveChanges();
+
+            var transfer = new InvestmentTransfer();
+            transfer.DestinationInvestment = context.Investment.First(i => i.InvestmentId == 1);
+            transfer.SourceInvestment = context.Investment.First(i => i.InvestmentId == 2);
+            context.InvestmentTransfer.Add(transfer);
+            context.SaveChanges();
+
+            Action act = () => {
+                context.Investment.Remove(investment);
+                context.SaveChanges();
+            };
+
+            act.Should().Throw<InvalidOperationException>();
         }
 
     }

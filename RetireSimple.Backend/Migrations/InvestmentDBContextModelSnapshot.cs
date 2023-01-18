@@ -402,7 +402,7 @@ namespace RetireSimple.Backend.Migrations
                     b.HasOne("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase", null)
                         .WithMany("Investments")
                         .HasForeignKey("InvestmentVehicleBaseInvestmentVehicleId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("RetireSimple.Backend.DomainModel.User.Portfolio", null)
                         .WithMany("Investments")
@@ -416,7 +416,7 @@ namespace RetireSimple.Backend.Migrations
                     b.HasOne("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", "Investment")
                         .WithOne("InvestmentModel")
                         .HasForeignKey("RetireSimple.Backend.DomainModel.Data.InvestmentModel", "InvestmentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Investment");
@@ -427,13 +427,13 @@ namespace RetireSimple.Backend.Migrations
                     b.HasOne("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", "DestinationInvestment")
                         .WithMany("TransfersTo")
                         .HasForeignKey("DestinationInvestmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", "SourceInvestment")
                         .WithMany("TransfersFrom")
                         .HasForeignKey("SourceInvestmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("DestinationInvestment");

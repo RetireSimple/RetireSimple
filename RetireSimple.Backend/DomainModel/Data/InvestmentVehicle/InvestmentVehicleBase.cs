@@ -20,9 +20,7 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 		[JsonIgnore]
 		public InvestmentVehicleModel? InvestmentVehicleModel { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
+
 		public OptionsDict AnalysisOptionsOverrides { get; set; } = new OptionsDict();
 
 		public static readonly OptionsDict DefaultInvestmentVehicleOptions = new OptionsDict() {
@@ -58,7 +56,7 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 			builder.HasMany(i => i.Investments)
 				.WithOne()
 				.IsRequired(false)
-				.OnDelete(DeleteBehavior.Restrict);
+				.OnDelete(DeleteBehavior.Cascade);
 
 			builder.HasOne(i => i.InvestmentVehicleModel)
 				.WithOne()
