@@ -12,6 +12,8 @@ namespace RetireSimple.Backend.DomainModel.User {
 		/// </summary>
 		public int PortfolioId { get; set; }
 
+		public string PortfolioName { get; set; }
+
 		/// <summary>
 		/// Foreign Key ID for the <see cref="Profile"/> that contains this Portfolio
 		/// </summary>
@@ -43,17 +45,21 @@ namespace RetireSimple.Backend.DomainModel.User {
 
 			builder.HasMany(p => p.Investments)
 				.WithOne()
-				.HasForeignKey(i => i.PortfolioId);
+				.HasForeignKey(i => i.PortfolioId)
+				.OnDelete(DeleteBehavior.Cascade);
 
 			builder.HasMany(p => p.InvestmentVehicles)
 				.WithOne()
-				.HasForeignKey(i => i.PortfolioId);
+				.HasForeignKey(i => i.PortfolioId)
+				.OnDelete(DeleteBehavior.Cascade);
 
 			builder.HasOne(p => p.Profile)
 				.WithMany(p => p.Portfolios)
 				.HasForeignKey(p => p.ProfileId)
 				.OnDelete(DeleteBehavior.Restrict);
 
+			//NOTE this is a placeholder to guarantee an existing Profile/Portfolio until that feature reaches implementation
+			builder.HasData(new { PortfolioId = 1, ProfileId = 1, PortfolioName = "Default" });
 		}
 	}
 }

@@ -15,7 +15,12 @@ namespace RetireSimple.Backend.DomainModel.User {
 	public class ProfileConfiguration : IEntityTypeConfiguration<Profile> {
 		public void Configure(EntityTypeBuilder<Profile> builder) {
 			builder.HasKey(p => p.ProfileId);
-			builder.HasMany(p => p.Portfolios).WithOne(p => p.Profile);
+			builder.HasMany(p => p.Portfolios)
+				.WithOne(p => p.Profile)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			//NOTE this is a placeholder to guarantee an existing Profile/Portfolio until that feature reaches implementation
+			builder.HasData(new { ProfileId = 1, Name = "Default", Age = 65, Status = true });
 		}
 	}
 

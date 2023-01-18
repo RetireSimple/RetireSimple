@@ -11,7 +11,7 @@ using RetireSimple.Backend.Services;
 namespace RetireSimple.Backend.Migrations
 {
     [DbContext(typeof(InvestmentDBContext))]
-    [Migration("20230118192818_BaseSchema")]
+    [Migration("20230118195043_BaseSchema")]
     partial class BaseSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -242,6 +242,10 @@ namespace RetireSimple.Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("PortfolioName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("ProfileId")
                         .HasColumnType("INTEGER");
 
@@ -250,6 +254,14 @@ namespace RetireSimple.Backend.Migrations
                     b.HasIndex("ProfileId");
 
                     b.ToTable("Portfolio");
+
+                    b.HasData(
+                        new
+                        {
+                            PortfolioId = 1,
+                            PortfolioName = "Default",
+                            ProfileId = 1
+                        });
                 });
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.User.Profile", b =>
@@ -271,6 +283,15 @@ namespace RetireSimple.Backend.Migrations
                     b.HasKey("ProfileId");
 
                     b.ToTable("Profile");
+
+                    b.HasData(
+                        new
+                        {
+                            ProfileId = 1,
+                            Age = 65,
+                            Name = "Default",
+                            Status = true
+                        });
                 });
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.Expense.OneTimeExpense", b =>

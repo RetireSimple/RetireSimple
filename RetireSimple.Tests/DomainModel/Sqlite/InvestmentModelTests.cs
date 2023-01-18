@@ -23,18 +23,6 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
 
             this.output = output;
 
-            var profile = new Profile();
-            profile.Name = "jack";
-            profile.Age = 65;
-            profile.Status = true;
-
-            var portfolio = new Portfolio();
-
-            context.Profile.Add(profile);
-            context.SaveChanges();
-            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
-            context.SaveChanges();
-
             var investment = new StockInvestment("test");
             investment.StockPrice = 100;
             investment.StockQuantity = 10;

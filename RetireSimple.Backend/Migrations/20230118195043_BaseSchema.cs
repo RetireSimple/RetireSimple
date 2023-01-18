@@ -30,6 +30,7 @@ namespace RetireSimple.Backend.Migrations
                 {
                     PortfolioId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    PortfolioName = table.Column<string>(type: "TEXT", nullable: false),
                     ProfileId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -187,6 +188,16 @@ namespace RetireSimple.Backend.Migrations
                         principalColumn: "InvestmentVehicleId",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Profile",
+                columns: new[] { "ProfileId", "Age", "Name", "Status" },
+                values: new object[] { 1, 65, "Default", true });
+
+            migrationBuilder.InsertData(
+                table: "Portfolio",
+                columns: new[] { "PortfolioId", "PortfolioName", "ProfileId" },
+                values: new object[] { 1, "Default", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Expenses_SourceInvestmentId",
