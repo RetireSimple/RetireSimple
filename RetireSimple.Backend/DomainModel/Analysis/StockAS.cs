@@ -75,6 +75,21 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 			return priceModel;
 		}
 
+		public static OptionsDict stockAnalysisOption(InvestmentBase investment, OptionsDict dict) {
+			var newDict = new OptionsDict(dict);
+			var investmentOptions = investment.AnalysisOptionsOverrides;
+
+			foreach(var k in investmentOptions.Keys) {
+				newDict.TryAdd(k, investmentOptions[k]);
+			}
+
+			foreach(var k in StockAS.DefaultStockAnalysisOptions.Keys) {
+				newDict.TryAdd(k, StockAS.DefaultStockAnalysisOptions[k]);
+			}
+
+			return newDict;
+		}
+
 
 		//TODO Move to Testing/Debugging
 		public static InvestmentModel testAnalysis(StockInvestment investment, OptionsDict options) {

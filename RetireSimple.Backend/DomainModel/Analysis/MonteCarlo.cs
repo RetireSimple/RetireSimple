@@ -221,6 +221,25 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 		//	return model;
 		//}
 
+		public static readonly OptionsDict DefaultMonteCarloAnalysisOptions = new() {
+			["AnalysisLength"] = "60",                          //Number of months to project
+			["MonteCarloAnalysisExpectedGrowth"] = "0.1",            //Expected Percentage Growth of the stock
 
+		};
+
+		public static OptionsDict MonteCarloAnalysisOption(InvestmentBase investment, OptionsDict dict) {
+			var newDict = new OptionsDict(dict);
+			var investmentOptions = investment.AnalysisOptionsOverrides;
+
+			foreach(var k in investmentOptions.Keys) {
+				newDict.TryAdd(k, investmentOptions[k]);
+			}
+
+			foreach(var k in MonteCarlo.DefaultMonteCarloAnalysisOptions.Keys) {
+				newDict.TryAdd(k, MonteCarlo.DefaultMonteCarloAnalysisOptions[k]);
+			}
+
+			return newDict;
+		}
 	}
 }
