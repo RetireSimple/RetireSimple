@@ -162,8 +162,14 @@ namespace RetireSimple.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("CashInvestmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("InvestmentVehicleModelId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("InvestmentVehicleName")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("InvestmentVehicleType")
                         .IsRequired()
@@ -173,6 +179,9 @@ namespace RetireSimple.Backend.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("InvestmentVehicleId");
+
+                    b.HasIndex("CashInvestmentId")
+                        .IsUnique();
 
                     b.HasIndex("PortfolioId");
 
@@ -443,11 +452,18 @@ namespace RetireSimple.Backend.Migrations
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase", b =>
                 {
+                    b.HasOne("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", "CashInvestment")
+                        .WithOne()
+                        .HasForeignKey("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase", "CashInvestmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("RetireSimple.Backend.DomainModel.User.Portfolio", null)
                         .WithMany("InvestmentVehicles")
                         .HasForeignKey("PortfolioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CashInvestment");
                 });
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicleModel", b =>

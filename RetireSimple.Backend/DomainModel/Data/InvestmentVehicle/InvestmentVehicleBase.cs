@@ -86,7 +86,6 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 			builder.HasOne(i => i.CashInvestment)
 				.WithOne()
 				.IsRequired(false)
-				.HasPrincipalKey("CashInvestmentId")
 				.OnDelete(DeleteBehavior.Cascade);
 
 #pragma warning disable CS8604 // Possible null reference argument.
