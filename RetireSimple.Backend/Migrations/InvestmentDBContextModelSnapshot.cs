@@ -162,8 +162,10 @@ namespace RetireSimple.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CashInvestmentId")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("CashHoldings")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue(0.0m);
 
                     b.Property<int?>("InvestmentVehicleModelId")
                         .HasColumnType("INTEGER");
@@ -179,9 +181,6 @@ namespace RetireSimple.Backend.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("InvestmentVehicleId");
-
-                    b.HasIndex("CashInvestmentId")
-                        .IsUnique();
 
                     b.HasIndex("PortfolioId");
 
@@ -473,18 +472,11 @@ namespace RetireSimple.Backend.Migrations
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase", b =>
                 {
-                    b.HasOne("RetireSimple.Backend.DomainModel.Data.Investment.InvestmentBase", "CashInvestment")
-                        .WithOne()
-                        .HasForeignKey("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase", "CashInvestmentId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("RetireSimple.Backend.DomainModel.User.Portfolio", null)
                         .WithMany("InvestmentVehicles")
                         .HasForeignKey("PortfolioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CashInvestment");
                 });
 
             modelBuilder.Entity("RetireSimple.Backend.DomainModel.Data.InvestmentVehicleModel", b =>
@@ -501,7 +493,7 @@ namespace RetireSimple.Backend.Migrations
                     b.HasOne("RetireSimple.Backend.DomainModel.User.Profile", "Profile")
                         .WithMany("Portfolios")
                         .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Profile");

@@ -22,9 +22,8 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 		[JsonIgnore]
 		public InvestmentVehicleModel? InvestmentVehicleModel { get; set; }
 
-		public int? CashInvestmentId { get; set; }
-		[JsonIgnore]
-		public InvestmentBase? CashInvestment { get; set; }
+		//A specialized field to hold cash that is not allocated to a specific investment in the vehicle. 
+		public decimal CashHoldings { get; set; }
 
 		public OptionsDict AnalysisOptionsOverrides { get; set; } = new OptionsDict();
 
@@ -32,7 +31,6 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 		public static readonly OptionsDict DefaultInvestmentVehicleOptions = new OptionsDict() {
 			["VehicleTaxPercentage"] = "0.29"   //Tax to apply on contribution/withdrawal/valuation
 		};
-
 
 		/// <summary>
 		/// Abstract Declaration for the analysis of a vehicle. While a general
@@ -43,16 +41,6 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 		/// <param name="options"></param>
 		/// <returns></returns>
 		public abstract InvestmentModel GenerateAnalysis(OptionsDict options);
-
-		/// <summary>
-		/// This method should be used instead of direct property access,
-		/// it automatically excludes the vehicle's default 
-		/// <see cref="CashInvestment"/> used to account for contributions
-		/// </summary>
-		/// <returns></returns>
-		public List<InvestmentBase> GetInvestments() {
-			return Investments.Where(i => i.InvestmentId != CashInvestmentId).ToList();
-		}
 	}
 
 	public class InvestmentVehicleBaseConfiguration : IEntityTypeConfiguration<InvestmentVehicleBase> {
@@ -83,10 +71,9 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 				.IsRequired(false)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			builder.HasOne(i => i.CashInvestment)
-				.WithOne()
-				.IsRequired(false)
-				.OnDelete(DeleteBehavior.Cascade);
+			builder.Property(i => i.CashHoldings)
+				.IsRequired(true)
+				.HasDefaultValue(0.0m);
 
 #pragma warning disable CS8604 // Possible null reference argument.
 			builder.Property(i => i.AnalysisOptionsOverrides)
