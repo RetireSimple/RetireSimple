@@ -126,7 +126,8 @@ namespace RetireSimple.Backend.Api {
 		/// <param name="vehicleId"></param>
 		/// <param name="option"></param>
 		/// <param name="value"></param>
-		/// <exception cref="ArgumentException">If the specified option does not exist yet in the overrides and <paramref name="value"/> is null</exception>
+		/// <exception cref="ArgumentException">If the specified option does not exist yet in
+		/// the overrides and <paramref name="value"/> is null</exception>
 		public void UpdateAnalysisOverrides(int vehicleId, string option, string? value) {
 			//TODO Inline validation (eventually)
 			if(!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {

@@ -25,7 +25,6 @@ namespace RetireSimple.Tests.Api {
             context.Dispose();
         }
 
-
         [Theory]
         [InlineData("401k"),
          InlineData("403b"),
