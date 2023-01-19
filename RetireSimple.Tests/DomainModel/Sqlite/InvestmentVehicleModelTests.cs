@@ -1,13 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-using RetireSimple.Backend.DomainModel.Data;
-using RetireSimple.Backend.DomainModel.Data.InvestmentVehicle;
-using RetireSimple.Backend.DomainModel.User;
-using RetireSimple.Backend.Services;
-
-using Xunit.Abstractions;
-
-namespace RetireSimple.Tests.DomainModel.Sqlite {
+﻿namespace RetireSimple.Tests.DomainModel.Sqlite {
     public class InvestmentVehicleModelTests : IDisposable {
         InvestmentDBContext context { get; set; }
 

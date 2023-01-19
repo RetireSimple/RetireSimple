@@ -484,7 +484,7 @@ namespace RetireSimple.Backend.Migrations
                     b.HasOne("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase", null)
                         .WithOne("InvestmentVehicleModel")
                         .HasForeignKey("RetireSimple.Backend.DomainModel.Data.InvestmentVehicleModel", "InvestmentVehicleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

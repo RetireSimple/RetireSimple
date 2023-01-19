@@ -123,7 +123,7 @@ namespace RetireSimple.Backend.Migrations
                         column: x => x.InvestmentVehicleId,
                         principalTable: "InvestmentVehicle",
                         principalColumn: "InvestmentVehicleId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

@@ -69,7 +69,7 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 				.WithOne()
 				.HasForeignKey<InvestmentVehicleModel>(m => m.InvestmentVehicleId)
 				.IsRequired(false)
-				.OnDelete(DeleteBehavior.Restrict);
+				.OnDelete(DeleteBehavior.Cascade);
 
 			builder.Property(i => i.CashHoldings)
 				.IsRequired(true)

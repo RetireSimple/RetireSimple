@@ -11,7 +11,7 @@ using RetireSimple.Backend.Services;
 namespace RetireSimple.Backend.Migrations
 {
     [DbContext(typeof(InvestmentDBContext))]
-    [Migration("20230119051553_BaseSchema")]
+    [Migration("20230119154121_BaseSchema")]
     partial class BaseSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -486,7 +486,7 @@ namespace RetireSimple.Backend.Migrations
                     b.HasOne("RetireSimple.Backend.DomainModel.Data.InvestmentVehicle.InvestmentVehicleBase", null)
                         .WithOne("InvestmentVehicleModel")
                         .HasForeignKey("RetireSimple.Backend.DomainModel.Data.InvestmentVehicleModel", "InvestmentVehicleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
