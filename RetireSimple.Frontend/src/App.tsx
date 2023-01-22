@@ -1,8 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { Investment, InvestmentModel } from './Models/Interfaces';
-import sourceFile from './source.json';
-
 
 import {
     Chart as ChartJS,
@@ -14,7 +12,6 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-import { text } from 'stream/consumers';
 
 export interface Forecast {
     date: string;
