@@ -1,12 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RetireSimple.Backend.DomainModel.Data;
-using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.User;
+﻿using Microsoft.AspNetCore.Mvc;
 using RetireSimple.Backend.Services;
-using MathNet.Numerics;
-using MathNet.Numerics.Random;
 
 namespace RetireSimple.Backend.Controllers {
 	//private readonly Random _rand;
@@ -24,13 +17,13 @@ namespace RetireSimple.Backend.Controllers {
 		[HttpPost]
 		[Route("GetAnaylsis")]
 		public ActionResult GetAnaylsis([FromQuery] int investmentID) {
-			var investment = _context.Investments.First(i => i.InvestmentId == investmentID);
+			var investment = _context.Investment.First(i => i.InvestmentId == investmentID);
 			//check has model 
-			if(!_context.InvestmentModels.Any(m => investmentID == m.InvestmentId)) {
+			if(!_context.InvestmentModel.Any(m => investmentID == m.InvestmentId)) {
 				investment.InvestmentModel = investment.InvokeAnalysis(new OptionsDict());
 				_context.SaveChanges();
 			}
-			return Ok(_context.InvestmentModels.First(m => m.InvestmentId == investmentID));
+			return Ok(_context.InvestmentModel.First(m => m.InvestmentId == investmentID));
 		}
 	}
 }

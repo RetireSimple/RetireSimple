@@ -1,16 +1,11 @@
 ﻿using MathNet.Numerics;
 using MathNet.Numerics.Random;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetireSimple.Backend.Controllers.RequestBody;
-using RetireSimple.Backend.DomainModel.Data.Expense;
-using RetireSimple.Backend.DomainModel.Data;
 using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase;
 using RetireSimple.Backend.DomainModel.User;
 using RetireSimple.Backend.Services;
-using System;
 
 namespace RetireSimple.Backend.Controllers {
 	[Route("api/[controller]")]
@@ -28,20 +23,20 @@ namespace RetireSimple.Backend.Controllers {
 		[Route("GetAllInvestments")]
 		public async Task<ActionResult<List<InvestmentBase>>> GetInvestments() {
 
-			var investments = await _context.Investments.ToListAsync();
+			var investments = await _context.Investment.ToListAsync();
 			return Ok(investments); //converts to JSON
 		}
 
 		[HttpPost]
 		[Route("AddStock")] 
 		public async Task<ActionResult> AddStockInvestment([FromBody] StockAddRequestBody body) {
-			if(_context.Profiles.Count() == 0) {
+			if(_context.Profile.Count() == 0) {
 				var profile = new Profile() {
 					Name = "test1",
 					Age = 10,
 					Status = false,
 				};
-				_context.Profiles.Add(profile);
+				_context.Profile.Add(profile);
 				_context.SaveChanges();
 
 				if(_context.Portfolio.Count() == 0) {
@@ -73,13 +68,13 @@ namespace RetireSimple.Backend.Controllers {
 		[HttpPost]
 		[Route("AddRandomStock")]
 		public async Task<ActionResult> AddRandomStockInvestment() {
-			if(_context.Profiles.Count() == 0) {
+			if(_context.Profile.Count() == 0) {
 				var profile = new Profile() {
 					Name = "test1",
 					Age = 10,
 					Status = false,
 				};
-				_context.Profiles.Add(profile);
+				_context.Profile.Add(profile);
 				_context.SaveChanges();
 
 				if(_context.Portfolio.Count() == 0) {
