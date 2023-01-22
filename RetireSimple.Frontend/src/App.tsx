@@ -1,6 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { Investment } from './Models/Interfaces';
+import { Investment, InvestmentModel } from './Models/Interfaces';
 import sourceFile from './source.json';
 
 
@@ -12,7 +12,9 @@ import {
     LineElement,
     Title,
     Tooltip,
-    Legend,} from 'chart.js';
+    Legend,
+} from 'chart.js';
+import { text } from 'stream/consumers';
 
 export interface Forecast {
     date: string;
@@ -26,7 +28,11 @@ export interface Forecast {
 export default function App() {
     //const [forecasts, setForecasts] = React.useState<Forecast[]>([]);
     const [investments, setInvestments] = React.useState<Investment[]>([]);
-    //const [investmentModels, setInvestmentModels] = React.useState<InvestmentModel[]>([]);
+
+    const [investmentModelId, setInvestmentModelId] = React.useState("");
+
+    const [investmentModels, setInvestmentModels] = React.useState<InvestmentModel>();
+
     const [loading, setLoading] = React.useState<boolean>(true);
 
         // const response = await fetch('/api/'); fetch data used in excel
@@ -40,28 +46,28 @@ export default function App() {
             Tooltip,
             Legend
         );
-
-        const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+       
+        const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
         const data = {
             labels,
             datasets: [
                 {
-                    label: 'Dataset 1',
-                    data: sourceFile.mindata,
+                    label: 'Min Model',
+                    data: investmentModels?.minModelData,
                     borderColor: 'rgb(255, 99, 132)',
                     backgroundColor: 'rgba(255, 99, 132, 0.5)',
                 },
                 {
-                    label: 'Dataset 2',
-                    data: sourceFile.avgdata,
+                    label: 'Avg Model',
+                    data: investmentModels?.avgModelData,
                     borderColor: 'rgb(53, 162, 235)',
                     backgroundColor: 'rgba(53, 162, 235, 0.5)',
 
                 },
                 {
-                    label: 'Dataset 3',
-                    data: sourceFile.maxdata,
+                    label: 'Max Model',
+                    data: investmentModels?.maxModelData,
                     borderColor: 'rgb(53, 162, 235)',
                     backgroundColor: 'rgba(53, 162, 235, 0.5)',
 },
@@ -81,6 +87,12 @@ export default function App() {
         };
         //return <Line options={options} data={data} />;
 
+    const getAnalysis = async () => {
+        const response = await fetch(`/api/Analysis/GetAnaylsis?investmentID=${investmentModelId}`, { method: 'POST' });
+        const data : InvestmentModel = await response.json();
+        setInvestmentModels(data);
+    }
+
     const populateInvestmentData = async () => {
         const response = await fetch('/api/Investment/GetAllInvestments');
         const data = await response.json();
@@ -99,8 +111,11 @@ export default function App() {
         if (loading) { populateInvestmentData() };
     });
 
-    const renderAnalysis = (options: any, data: any) => {
-        return <Line options={options} data={data} />;
+    const renderAnalysis = (sim: String, options: any, data: any) => {
+        switch (sim) {
+            case "MonteCarlo":
+                return <div> <Line options={options} data={data} /> </div>;
+        }
     }
 
     const renderInvestmentsTable = (investments: Investment[]) => {
@@ -137,7 +152,7 @@ export default function App() {
     }
 
     {
-        let chart = renderAnalysis(options, data);
+        let chart = renderAnalysis("MonteCarlo", options, data);
 
         let contents = loading
             ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
@@ -146,8 +161,12 @@ export default function App() {
         return (
             <div>
                 <button onClick={addNewInvestment}>Add New Stonk</button>
+
                 <h1 id="tabelLabel" >Investments</h1>
                 <p></p>
+                <input type="text" onChange={e => setInvestmentModelId(e.target.value)}></input>
+                <button onClick={getAnalysis}>Get Analysis Model</button>
+
                 {chart}
                 {contents}
             </div>

@@ -6,10 +6,11 @@ export interface Investment {
     investmentData: { [key: string]: string }
 }
 
-//export interface InvestmentModel {
-//    investmentModelId: number;
-//    investmentId: number;
-//    lastUpdated: string;    //treat as a date later?
-//    maxModelData: { item1: number, item2: number }[]
-
-//}
+export interface InvestmentModel {
+    investmentModelId: number;
+    investmentId: number;
+    maxModelData: number[];
+    minModelData: number[];
+    avgModelData: number[];
+    lastUpdated: string;   //treat as a date later?
+}

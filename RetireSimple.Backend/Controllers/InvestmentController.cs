@@ -4,7 +4,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetireSimple.Backend.Controllers.RequestBody;
+using RetireSimple.Backend.DomainModel.Data.Expense;
+using RetireSimple.Backend.DomainModel.Data;
 using RetireSimple.Backend.DomainModel.Data.Investment;
+using RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase;
+using RetireSimple.Backend.DomainModel.User;
 using RetireSimple.Backend.Services;
 using System;
 
@@ -24,20 +28,42 @@ namespace RetireSimple.Backend.Controllers {
 		[Route("GetAllInvestments")]
 		public async Task<ActionResult<List<InvestmentBase>>> GetInvestments() {
 			var investments = await _context.Investments.ToListAsync();
-			return Ok(investments);
+			return Ok(investments); //converts to JSON
 		}
 
 		[HttpPost]
-		[Route("AddStock")]
+		[Route("AddStock")] 
 		public async Task<ActionResult> AddStockInvestment([FromBody] StockAddRequestBody body) {
+			if(_context.Profiles.Count() == 0) {
+				var profile = new Profile() {
+					Name = "test1",
+					Age = 10,
+					Status = false,
+				};
+				_context.Profiles.Add(profile);
+				_context.SaveChanges();
+
+				if(_context.Portfolio.Count() == 0) {
+					var portfolio = new Portfolio() {
+						Profile = profile,
+					};
+					_context.Portfolio.Add(portfolio);
+					_context.SaveChanges();
+				}
+			}
+			
+
 			var newInvestment = new StockInvestment("testAnalysis");
 			newInvestment.StockPrice = body.Price;
 			newInvestment.StockQuantity = body.Quantity;
 			newInvestment.StockTicker = body.Ticker;
 			newInvestment.StockPurchaseDate = body.Date;
 
-			await _context.Investments.AddAsync(newInvestment);
+			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
+			mainPortfolio.Investments.Add(newInvestment);
+
 			await _context.SaveChangesAsync();
+
 
 			return Ok();
 		}
@@ -45,7 +71,23 @@ namespace RetireSimple.Backend.Controllers {
 		[HttpPost]
 		[Route("AddRandomStock")]
 		public async Task<ActionResult> AddRandomStockInvestment() {
+			if(_context.Profiles.Count() == 0) {
+				var profile = new Profile() {
+					Name = "test1",
+					Age = 10,
+					Status = false,
+				};
+				_context.Profiles.Add(profile);
+				_context.SaveChanges();
 
+				if(_context.Portfolio.Count() == 0) {
+					var portfolio = new Portfolio() {
+						Profile = profile,
+					};
+					_context.Portfolio.Add(portfolio);
+					_context.SaveChanges();
+				}
+			}
 
 			var newInvestment = new StockInvestment("testAnalysis");
 			newInvestment.StockPrice = (_rand.NextDecimal() * 1000).Round(2);
@@ -53,7 +95,8 @@ namespace RetireSimple.Backend.Controllers {
 			newInvestment.StockTicker = MakeRandomTicker();
 			newInvestment.StockPurchaseDate = DateTime.Today;
 
-			await _context.Investments.AddAsync(newInvestment);
+			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
+			mainPortfolio.Investments.Add(newInvestment);
 			await _context.SaveChangesAsync();
 
 			return Ok();
