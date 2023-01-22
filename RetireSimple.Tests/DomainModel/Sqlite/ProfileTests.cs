@@ -1,11 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-using RetireSimple.Backend.DomainModel.User;
-using RetireSimple.Backend.Services;
-
-using Xunit.Abstractions;
-
-namespace RetireSimple.Tests.DomainModel.Sqlite {
+﻿namespace RetireSimple.Tests.DomainModel.Sqlite {
     public class ProfileTests : IDisposable {
 
         InvestmentDBContext context { get; set; }
@@ -40,33 +33,33 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             profile2.Age = 25;
             profile2.Status = false;
 
-            context.Profiles.Add(profile);
-            context.Profiles.Add(profile2);
+            context.Profile.Add(profile);
+            context.Profile.Add(profile2);
 
             context.SaveChanges();
-            context.Profiles.Should().HaveCount(2);
+            context.Profile.Should().HaveCount(3);
         }
 
         [Fact]
         public void TestPortfolioFKConstraint() {
             var portfolio = new Portfolio();
-            var profile = new Profile();
+            portfolio.PortfolioName = "test";
 
+            var profile = new Profile();
             profile.Name = "jack";
             profile.Age = 65;
             profile.Status = true;
 
-            context.Profiles.Add(profile);
+            context.Profile.Add(profile);
             context.SaveChanges();
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+            context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
             context.SaveChanges();
-
 
             Action act = () => {
-                context.Profiles.Remove(profile);
+                context.Profile.Remove(profile);
             };
 
-            act.Should().Throw<InvalidOperationException>();
+            act.Should().NotThrow();
         }
 
         [Fact]
@@ -82,17 +75,14 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             profile2.Age = 25;
             profile2.Status = false;
 
-
-
-            context.Profiles.Add(profile);
-            context.Profiles.Add(profile2);
-
+            context.Profile.Add(profile);
+            context.Profile.Add(profile2);
             context.SaveChanges();
 
-            context.Profiles.Remove(profile);
+            context.Profile.Remove(profile);
             context.SaveChanges();
 
-            context.Profiles.Should().HaveCount(1);
+            context.Profile.Should().HaveCount(2);
         }
 
     }

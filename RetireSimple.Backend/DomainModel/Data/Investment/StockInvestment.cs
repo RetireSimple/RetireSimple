@@ -9,8 +9,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		/// <summary>
 		/// The price of the Stock
 		/// </summary>
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public decimal StockPrice {
 			get => decimal.Parse(this.InvestmentData["stockPrice"]);
 			set => this.InvestmentData["stockPrice"] = value.ToString();
@@ -19,8 +18,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		/// <summary>
 		/// The Ticker Symbol of the Stock. Currently only used for identification purposes
 		/// </summary>
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public string StockTicker {
 			get => this.InvestmentData["stockTicker"];
 			set => this.InvestmentData["stockTicker"] = value;
@@ -29,8 +27,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		/// <summary>
 		/// The number of shares of the stock held
 		/// </summary>
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public decimal StockQuantity {
 			get => decimal.Parse(this.InvestmentData["stockQuantity"]);
 			set => this.InvestmentData["stockQuantity"] = value.ToString();
@@ -39,8 +36,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		/// <summary>
 		/// The date the stock was purchased. Stores as a Date-Time, but only the date is used. May change before formal release
 		/// </summary>
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public DateTime StockPurchaseDate {
 			get => DateTime.Parse(this.InvestmentData["stockPurchaseDate"]);
 			set => this.InvestmentData["stockPurchaseDate"] = value.ToString();
@@ -49,8 +45,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		/// <summary>
 		/// Percentage dividend that the stock pays. This is a decimal value between 0 and 1.
 		/// </summary>
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public decimal StockDividendPercent {
 			get => decimal.Parse(this.InvestmentData["stockDividendPercent"]);
 			set => this.InvestmentData["stockDividendPercent"] = value.ToString();
@@ -60,8 +55,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		/// <summary>
 		/// The interval upon which dividends are paid. Valid values are "Month", "Quarter", "Annual"
 		/// </summary>
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public string StockDividendDistributionInterval {
 			get => this.InvestmentData["stockDividendDistributionInterval"];
 			set => this.InvestmentData["stockDividendDistributionInterval"] = value;
@@ -71,8 +65,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		/// <summary>
 		/// Method of distribution of the dividends. Valid Values are "Stock", "Cash", "DRIP"
 		/// </summary>
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public string StockDividendDistributionMethod {
 			get => this.InvestmentData["stockDividendDistributionMethod"];
 			set => this.InvestmentData["stockDividendDistributionMethod"] = value;
@@ -81,16 +74,14 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		/// <summary>
 		/// A date to project the Dividend Payment months (Simplified to reduce information needed)
 		/// </summary>
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public DateTime StockDividendFirstPaymentDate {
 			get => DateTime.Parse(this.InvestmentData["stockDividendFirstPaymentDate"]);
 			set => this.InvestmentData["stockDividendFirstPaymentDate"] = value.ToString();
 		}
 
-		[NotMapped]
-		[JsonIgnore]
-		public AnalysisDelegate<StockInvestment>? Analysis;
+		[JsonIgnore, NotMapped]
+		public AnalysisDelegate<StockInvestment>? AnalysisMethod;
 
 		//Constructor used by EF
 		public StockInvestment(String analysisType) : base() {
@@ -102,16 +93,16 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public override void ResolveAnalysisDelegate(string analysisType) {
 			switch(analysisType) {
 				case "testAnalysis":
-					Analysis = StockAS.testAnalysis;
+					AnalysisMethod = StockAS.testAnalysis;
 					break;
 				case "MonteCarlo_NormalDist":
-					Analysis = StockAS.MonteCarlo_NormalDist;
+					AnalysisMethod = StockAS.MonteCarlo_NormalDist;
 					break;
 				case "MonteCarlo_LogNormalDist":
-					Analysis = StockAS.MonteCarlo_LogNormalDist;
+					AnalysisMethod = StockAS.MonteCarlo_LogNormalDist;
 					break;
 				default:
-					Analysis = null;
+					AnalysisMethod = null;
 					break;
 
 			}
@@ -120,6 +111,9 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 			this.AnalysisType = analysisType;
 		}
 
-		public override InvestmentModel InvokeAnalysis(OptionsDict options) => Analysis(this, options);
+		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
+			(AnalysisMethod is not null)
+			? AnalysisMethod(this, options)
+			: throw new InvalidOperationException("The specified investment has no specified analysis");
 	}
 }

@@ -31,7 +31,7 @@ namespace RetireSimple.Backend.DomainModel.Data {
 
 
 		//Methods to produce statistical information per step/overall of the model
-		public static decimal Variance(){
+		public static decimal Variance() {
 			var variance = 0.0m;
 
 			//TODO Implement Somehow??? Brain small atm

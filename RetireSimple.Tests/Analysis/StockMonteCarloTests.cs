@@ -2,8 +2,6 @@
 
 using MathNet.Numerics.Distributions;
 
-using RetireSimple.Backend.DomainModel.Data.Investment;
-
 using static RetireSimple.Backend.DomainModel.Analysis.MonteCarlo;
 
 namespace RetireSimple.Tests.Analysis {

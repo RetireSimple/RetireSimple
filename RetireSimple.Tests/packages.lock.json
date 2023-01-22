@@ -1412,12 +1412,6 @@
           "Pomelo.EntityFrameworkCore.MySql": "[6.0.2, )",
           "Swashbuckle.AspNetCore": "[6.4.0, )"
         }
-      },
-      "retiresimple.migrations.sqlite": {
-        "type": "Project",
-        "dependencies": {
-          "RetireSimple.Backend": "[1.0.0, )"
-        }
       }
     }
   }

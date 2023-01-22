@@ -26,11 +26,6 @@ namespace RetireSimple.Backend.DomainModel.Data.Expense {
 		public InvestmentBase SourceInvestment { get; set; }
 
 		/// <summary>
-		/// Foreign Key of the <see cref="RetireSimple.Backend.DomainModel.User.Portfolio"/> that this expense is associated with.
-		/// </summary>
-		public int PorfolioId { get; set; }
-
-		/// <summary>
 		/// The amount this expense deducts from the investment.
 		/// </summary>
 		public double Amount { get; set; }
@@ -46,16 +41,17 @@ namespace RetireSimple.Backend.DomainModel.Data.Expense {
 		public void Configure(EntityTypeBuilder<ExpenseBase> builder) {
 			builder.ToTable("Expenses");
 			builder.HasKey(e => e.ExpenseId);
-			builder.HasOne(e => e.SourceInvestment)
-					.WithMany(e => e.Expenses)
-					.HasForeignKey(e => e.SourceInvestmentId)
-					.IsRequired();
 			builder.HasDiscriminator()
-					.HasValue<OneTimeExpense>("OneTime")
-					.HasValue<RecurringExpense>("Recurring");
+				.HasValue<OneTimeExpense>("OneTime")
+				.HasValue<RecurringExpense>("Recurring");
+			builder.HasOne(e => e.SourceInvestment)
+				.WithMany(e => e.Expenses)
+				.HasForeignKey(e => e.SourceInvestmentId)
+				.IsRequired();
 			builder.Property(e => e.Amount)
-					.IsRequired()
-					.HasDefaultValue(0);
+				.IsRequired()
+				.HasDefaultValue(0);
+
 		}
 	}
 }

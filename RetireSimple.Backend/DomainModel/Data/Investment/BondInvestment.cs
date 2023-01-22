@@ -7,51 +7,45 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 
 		public AnalysisDelegate<BondInvestment>? analysis;
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public string BondName {
 			get => this.InvestmentData["BondName"];
 			set => this.InvestmentData["BondName"] = value;
 		}
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		// interest payment received by a bondholder from the date of issuance until the date of maturity
 		public decimal BondCouponRate {
 			get => decimal.Parse(this.InvestmentData["BondCouponRate"]);
 			set => this.InvestmentData["BondCouponRate"] = value.ToString();
 		}
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public DateOnly BondMaturityDate {
 			get => DateOnly.Parse(this.InvestmentData["BondMaturityDate"]);
 			set => this.InvestmentData["BondMaturityDate"] = value.ToString();
 		}
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public decimal BondPurchasePrice {
 			get => decimal.Parse(this.InvestmentData["BondPurchasePrice"]);
 			set => this.InvestmentData["BondPurchasePrice"] = value.ToString();
 		}
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public DateOnly BondPurchaseDate {
 			get => DateOnly.Parse(this.InvestmentData["BondPurchaseDate"]);
 			set => this.InvestmentData["BondPurchaseDate"] = value.ToString();
 		}
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public decimal BondCurrentPrice {
 			get => decimal.Parse(this.InvestmentData["BondCurrentPrice"]);
 			set => this.InvestmentData["BondCurrentPrice"] = value.ToString();
 		}
-		[NotMapped]
-		[JsonIgnore]
-		public AnalysisDelegate<BondInvestment>? Analysis;
+
+		[JsonIgnore, NotMapped]
+		public AnalysisDelegate<BondInvestment>? AnalysisMethod;
 
 		//Constructor used by EF
 		public BondInvestment(String analysisType) : base() {
@@ -63,16 +57,19 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public override void ResolveAnalysisDelegate(string analysisType) {
 			switch(analysisType) {
 				case "testAnalysis":
-					Analysis = BondAS.DefaultBondAnalysis;
+					AnalysisMethod = BondAS.DefaultBondAnalysis;
 					break;
 				default:
-					Analysis = null;
+					AnalysisMethod = null;
 					break;
 			}
 
 			//Overwrite The current Analysis Delegate Type 
 			this.AnalysisType = analysisType;
 		}
-		public override InvestmentModel InvokeAnalysis(OptionsDict options) => throw new NotImplementedException();
+		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
+			(AnalysisMethod is not null)
+			? AnalysisMethod(this, options)
+			: throw new InvalidOperationException("The specified investment has no specified analysis");
 	}
 }

@@ -2,27 +2,44 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.User;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase {
+namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 	public abstract class InvestmentVehicleBase {
+
 		public int PortfolioId { get; set; }
 
 		public int InvestmentVehicleId { get; set; }
+		public string? InvestmentVehicleName { get; set; }
 
 		public string InvestmentVehicleType { get; set; }
 
-		public List<InvestmentBase> Investments { get; set; }
+		public List<InvestmentBase> Investments { get; set; } = new List<InvestmentBase>();
+
+		public int? InvestmentVehicleModelId { get; set; }
+		[JsonIgnore]
+		public InvestmentVehicleModel? InvestmentVehicleModel { get; set; }
+
+		//A specialized field to hold cash that is not allocated to a specific investment in the vehicle. 
+		public decimal CashHoldings { get; set; }
 
 		public OptionsDict AnalysisOptionsOverrides { get; set; } = new OptionsDict();
 
-		public InvestmentVehicleBase() {
-			Investments = new List<InvestmentBase>();
-		}
+		[JsonIgnore, NotMapped]
+		public static readonly OptionsDict DefaultInvestmentVehicleOptions = new OptionsDict() {
+			["VehicleTaxPercentage"] = "0.29"   //Tax to apply on contribution/withdrawal/valuation
+		};
 
-		//The modularity of investment module analysis is restricted to the type of vehicle for logic
-		//constraints that are not yet clear.  This is a placeholder for future work.
+		/// <summary>
+		/// Abstract Declaration for the analysis of a vehicle. While a general
+		/// portion of the code remains the same, some of the things such as 
+		/// applying taxes differ by the vehicle, so we provide a method to 
+		/// override based on the vehicle.
+		/// </summary>
+		/// <param name="options"></param>
+		/// <returns></returns>
 		public abstract InvestmentModel GenerateAnalysis(OptionsDict options);
 	}
 
@@ -46,7 +63,17 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase {
 			builder.HasMany(i => i.Investments)
 				.WithOne()
 				.IsRequired(false)
-				.OnDelete(DeleteBehavior.Restrict);
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.HasOne(i => i.InvestmentVehicleModel)
+				.WithOne()
+				.HasForeignKey<InvestmentVehicleModel>(m => m.InvestmentVehicleId)
+				.IsRequired(false)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Property(i => i.CashHoldings)
+				.IsRequired(true)
+				.HasDefaultValue(0.0m);
 
 #pragma warning disable CS8604 // Possible null reference argument.
 			builder.Property(i => i.AnalysisOptionsOverrides)

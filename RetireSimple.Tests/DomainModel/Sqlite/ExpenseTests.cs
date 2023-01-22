@@ -1,13 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-using RetireSimple.Backend.DomainModel.Data.Expense;
-using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.User;
-using RetireSimple.Backend.Services;
-
-using Xunit.Abstractions;
-
-namespace RetireSimple.Tests.DomainModel.Sqlite {
+﻿namespace RetireSimple.Tests.DomainModel.Sqlite {
     public class ExpenseTests : IDisposable {
 
         InvestmentDBContext context { get; set; }
@@ -23,20 +14,6 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Database.EnsureCreated();
 
             this.output = output;
-
-            //Expense Specific Setup
-
-            var profile = new Profile();
-            profile.Name = "jack";
-            profile.Age = 65;
-            profile.Status = true;
-
-            var portfolio = new Portfolio();
-
-            context.Profiles.Add(profile);
-            context.SaveChanges();
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
-            context.SaveChanges();
 
             var investment = new StockInvestment("test");
             investment.StockPrice = 100;
@@ -57,10 +34,10 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             var expense = new OneTimeExpense();
             expense.Amount = 100.0;
 
-            context.Portfolio.First(p => p.PortfolioId == 1).Expenses.Add(expense);
-            expense.SourceInvestment = context.Investments.First(i => i.InvestmentId == 1);
+            expense.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
+            context.Expense.Add(expense);
             context.SaveChanges();
-            Assert.Equal(1, context.Expenses.Count());
+            Assert.Equal(1, context.Expense.Count());
 
         }
 
@@ -69,12 +46,13 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             var expense = new OneTimeExpense();
             expense.Amount = 100.0;
 
-            context.Portfolio.First(p => p.PortfolioId == 1).Expenses.Add(expense);
-            expense.SourceInvestment = context.Investments.First(i => i.InvestmentId == 1);
+            expense.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
+            context.Expense.Add(expense);
+
             context.SaveChanges();
-            context.Portfolio.First(p => p.PortfolioId == 1).Expenses.Remove(expense);
+            context.Expense.Remove(expense);
             context.SaveChanges();
-            Assert.Equal(0, context.Expenses.Count());
+            Assert.Equal(0, context.Expense.Count());
         }
 
         [Fact]
@@ -83,7 +61,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             expense.Amount = 100.0;
 
             Action act = () => {
-                context.Expenses.Add(expense);
+                context.Expense.Add(expense);
                 context.SaveChanges();
             };
 

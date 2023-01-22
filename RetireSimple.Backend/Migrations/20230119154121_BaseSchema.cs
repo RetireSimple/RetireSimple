@@ -10,7 +10,7 @@ namespace RetireSimple.Backend.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Profiles",
+                name: "Profile",
                 columns: table => new
                 {
                     ProfileId = table.Column<int>(type: "INTEGER", nullable: false)
@@ -21,7 +21,7 @@ namespace RetireSimple.Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Profiles", x => x.ProfileId);
+                    table.PrimaryKey("PK_Profile", x => x.ProfileId);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,34 +30,38 @@ namespace RetireSimple.Backend.Migrations
                 {
                     PortfolioId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    PortfolioName = table.Column<string>(type: "TEXT", nullable: false),
                     ProfileId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Portfolio", x => x.PortfolioId);
                     table.ForeignKey(
-                        name: "FK_Portfolio_Profiles_ProfileId",
+                        name: "FK_Portfolio_Profile_ProfileId",
                         column: x => x.ProfileId,
-                        principalTable: "Profiles",
+                        principalTable: "Profile",
                         principalColumn: "ProfileId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "InvestmentVehicles",
+                name: "InvestmentVehicle",
                 columns: table => new
                 {
                     InvestmentVehicleId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     PortfolioId = table.Column<int>(type: "INTEGER", nullable: false),
+                    InvestmentVehicleName = table.Column<string>(type: "TEXT", nullable: true),
                     InvestmentVehicleType = table.Column<string>(type: "TEXT", nullable: false),
+                    InvestmentVehicleModelId = table.Column<int>(type: "INTEGER", nullable: true),
+                    CashHoldings = table.Column<decimal>(type: "TEXT", nullable: false, defaultValue: 0.0m),
                     AnalysisOptionsOverrides = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InvestmentVehicles", x => x.InvestmentVehicleId);
+                    table.PrimaryKey("PK_InvestmentVehicle", x => x.InvestmentVehicleId);
                     table.ForeignKey(
-                        name: "FK_InvestmentVehicles_Portfolio_PortfolioId",
+                        name: "FK_InvestmentVehicle_Portfolio_PortfolioId",
                         column: x => x.PortfolioId,
                         principalTable: "Portfolio",
                         principalColumn: "PortfolioId",
@@ -77,23 +81,48 @@ namespace RetireSimple.Backend.Migrations
                     AnalysisType = table.Column<string>(type: "TEXT", nullable: true),
                     LastAnalysis = table.Column<DateTime>(type: "datetime2(7)", nullable: true),
                     PortfolioId = table.Column<int>(type: "INTEGER", nullable: false),
-                    InvestmentVehicleBaseInvestmentVehicleId = table.Column<int>(type: "INTEGER", nullable: true),
-                    FixedInterestedRate = table.Column<decimal>(type: "TEXT", nullable: true)
+                    InvestmentVehicleBaseInvestmentVehicleId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Investments", x => x.InvestmentId);
                     table.ForeignKey(
-                        name: "FK_Investments_InvestmentVehicles_InvestmentVehicleBaseInvestmentVehicleId",
+                        name: "FK_Investments_InvestmentVehicle_InvestmentVehicleBaseInvestmentVehicleId",
                         column: x => x.InvestmentVehicleBaseInvestmentVehicleId,
-                        principalTable: "InvestmentVehicles",
+                        principalTable: "InvestmentVehicle",
                         principalColumn: "InvestmentVehicleId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Investments_Portfolio_PortfolioId",
                         column: x => x.PortfolioId,
                         principalTable: "Portfolio",
                         principalColumn: "PortfolioId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InvestmentVehicleModel",
+                columns: table => new
+                {
+                    ModelId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    InvestmentVehicleId = table.Column<int>(type: "INTEGER", nullable: false),
+                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MaxModelData = table.Column<string>(type: "TEXT", nullable: false),
+                    MinModelData = table.Column<string>(type: "TEXT", nullable: false),
+                    AvgModelData = table.Column<string>(type: "TEXT", nullable: false),
+                    TaxDeductedMaxModelData = table.Column<string>(type: "TEXT", nullable: false),
+                    TaxDeductedMinModelData = table.Column<string>(type: "TEXT", nullable: false),
+                    TaxDeductedAvgModelData = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvestmentVehicleModel", x => x.ModelId);
+                    table.ForeignKey(
+                        name: "FK_InvestmentVehicleModel_InvestmentVehicle_InvestmentVehicleId",
+                        column: x => x.InvestmentVehicleId,
+                        principalTable: "InvestmentVehicle",
+                        principalColumn: "InvestmentVehicleId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -104,7 +133,6 @@ namespace RetireSimple.Backend.Migrations
                     ExpenseId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     SourceInvestmentId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PorfolioId = table.Column<int>(type: "INTEGER", nullable: false),
                     Amount = table.Column<double>(type: "REAL", nullable: false, defaultValue: 0.0),
                     Discriminator = table.Column<string>(type: "TEXT", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -120,12 +148,6 @@ namespace RetireSimple.Backend.Migrations
                         column: x => x.SourceInvestmentId,
                         principalTable: "Investments",
                         principalColumn: "InvestmentId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Expenses_Portfolio_PorfolioId",
-                        column: x => x.PorfolioId,
-                        principalTable: "Portfolio",
-                        principalColumn: "PortfolioId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -148,7 +170,7 @@ namespace RetireSimple.Backend.Migrations
                         column: x => x.InvestmentId,
                         principalTable: "Investments",
                         principalColumn: "InvestmentId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -160,8 +182,7 @@ namespace RetireSimple.Backend.Migrations
                     SourceInvestmentId = table.Column<int>(type: "INTEGER", nullable: false),
                     DestinationInvestmentId = table.Column<int>(type: "INTEGER", nullable: false),
                     Amount = table.Column<double>(type: "REAL", nullable: false, defaultValue: 0.0),
-                    TransferDate = table.Column<double>(type: "REAL", nullable: false),
-                    PorfolioId = table.Column<int>(type: "INTEGER", nullable: false)
+                    TransferDate = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -171,25 +192,24 @@ namespace RetireSimple.Backend.Migrations
                         column: x => x.DestinationInvestmentId,
                         principalTable: "Investments",
                         principalColumn: "InvestmentId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_InvestmentTransfers_Investments_SourceInvestmentId",
                         column: x => x.SourceInvestmentId,
                         principalTable: "Investments",
                         principalColumn: "InvestmentId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InvestmentTransfers_Portfolio_PorfolioId",
-                        column: x => x.PorfolioId,
-                        principalTable: "Portfolio",
-                        principalColumn: "PortfolioId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Expenses_PorfolioId",
-                table: "Expenses",
-                column: "PorfolioId");
+            migrationBuilder.InsertData(
+                table: "Profile",
+                columns: new[] { "ProfileId", "Age", "Name", "Status" },
+                values: new object[] { 1, 65, "Default", true });
+
+            migrationBuilder.InsertData(
+                table: "Portfolio",
+                columns: new[] { "PortfolioId", "PortfolioName", "ProfileId" },
+                values: new object[] { 1, "Default", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Expenses_SourceInvestmentId",
@@ -218,19 +238,20 @@ namespace RetireSimple.Backend.Migrations
                 column: "DestinationInvestmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvestmentTransfers_PorfolioId",
-                table: "InvestmentTransfers",
-                column: "PorfolioId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_InvestmentTransfers_SourceInvestmentId",
                 table: "InvestmentTransfers",
                 column: "SourceInvestmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvestmentVehicles_PortfolioId",
-                table: "InvestmentVehicles",
+                name: "IX_InvestmentVehicle_PortfolioId",
+                table: "InvestmentVehicle",
                 column: "PortfolioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvestmentVehicleModel_InvestmentVehicleId",
+                table: "InvestmentVehicleModel",
+                column: "InvestmentVehicleId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Portfolio_ProfileId",
@@ -250,16 +271,19 @@ namespace RetireSimple.Backend.Migrations
                 name: "InvestmentTransfers");
 
             migrationBuilder.DropTable(
+                name: "InvestmentVehicleModel");
+
+            migrationBuilder.DropTable(
                 name: "Investments");
 
             migrationBuilder.DropTable(
-                name: "InvestmentVehicles");
+                name: "InvestmentVehicle");
 
             migrationBuilder.DropTable(
                 name: "Portfolio");
 
             migrationBuilder.DropTable(
-                name: "Profiles");
+                name: "Profile");
         }
     }
 }

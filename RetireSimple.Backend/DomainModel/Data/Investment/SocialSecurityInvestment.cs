@@ -1,42 +1,37 @@
 
-﻿using RetireSimple.Backend.DomainModel.Analysis;
+using RetireSimple.Backend.DomainModel.Analysis;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Backend.DomainModel.Data.Investment {
 	public class SocialSecurityInvestment : InvestmentBase {
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public DateOnly SocialSecurityStartDate {
 			get => DateOnly.Parse(this.InvestmentData["SocialSecurityStartDate"]);
 			set => this.InvestmentData["SocialSecurityStartDate"] = value.ToString();
 		}
-		
-		[JsonIgnore]
-		[NotMapped]
+
+		[JsonIgnore, NotMapped]
 		public int SocialSecurityAge {
 			get => int.Parse(this.InvestmentData["SocialSecurityAge"]);
 			set => this.InvestmentData["SocialSecurityAge"] = value.ToString();
 		}
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public decimal SocialSecurityStartAmount {
 			get => decimal.Parse(this.InvestmentData["SocialSecurityStartAmount"]);
 			set => this.InvestmentData["SocialSecurityStartAmount"] = value.ToString();
 		}
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public decimal SocialSecurityYearlyIncrease {
 			get => decimal.Parse(this.InvestmentData["SocialSecurityYearlyIncrease"]);
 			set => this.InvestmentData["SocialSecurityYearlyIncrease"] = value.ToString();
 		}
 
-		[NotMapped]
-		[JsonIgnore]
-		public AnalysisDelegate<SocialSecurityInvestment>? Analysis;
+		[JsonIgnore, NotMapped]
+		public AnalysisDelegate<SocialSecurityInvestment>? AnalysisMethod;
 
 		//Constructor used by EF
 		public SocialSecurityInvestment(String analysisType) : base() {
@@ -47,10 +42,10 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public override void ResolveAnalysisDelegate(string analysisType) {
 			switch(analysisType) {
 				case "testAnalysis":
-					Analysis = SocialSecurityAS.DefaultSocialSecurityAnalysis;
+					AnalysisMethod = SocialSecurityAS.DefaultSocialSecurityAnalysis;
 					break;
 				default:
-					Analysis = null;
+					AnalysisMethod = null;
 					break;
 
 			}
@@ -58,7 +53,10 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 			this.AnalysisType = analysisType;
 		}
 
-		public override InvestmentModel InvokeAnalysis(OptionsDict options) => Analysis(this, options);
+		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
+			(AnalysisMethod is not null)
+			? AnalysisMethod(this, options)
+			: throw new InvalidOperationException("The specified investment has no specified analysis");
 	}
 
 }
