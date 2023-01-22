@@ -2,36 +2,35 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetireSimple.Backend.DomainModel.Data;
+using RetireSimple.Backend.DomainModel.Data.Investment;
+using RetireSimple.Backend.DomainModel.User;
 using RetireSimple.Backend.Services;
+using MathNet.Numerics;
+using MathNet.Numerics.Random;
 
 namespace RetireSimple.Backend.Controllers {
-	[Route("api/[controller]")]
+	//private readonly Random _rand;
+
 	[ApiController]
+	[Route("api/[controller]")]
+
 	public class AnalysisController : ControllerBase {
 		private readonly InvestmentDBContext _context;
-		public static OptionsDict options = new OptionsDict();
 
 		public AnalysisController(InvestmentDBContext context) {
 			_context = context;
 		}
 
-
-		[HttpGet]
-		[Route("GetAnalysis")]
-		public async Task<ActionResult<InvestmentModel>> GetAnalysis([FromQuery] int InvestmentId) {
-			var investment = await _context.Investment.FirstAsync(i => i.InvestmentId == InvestmentId);
-			if(investment == null) {
-				return NotFound();
+		[HttpPost]
+		[Route("GetAnaylsis")]
+		public ActionResult GetAnaylsis([FromQuery] int investmentID) {
+			var investment = _context.Investments.First(i => i.InvestmentId == investmentID);
+			//check has model 
+			if(!_context.InvestmentModels.Any(m => investmentID == m.InvestmentId)) {
+				investment.InvestmentModel = investment.InvokeAnalysis(new OptionsDict());
+				_context.SaveChanges();
 			}
-			if(investment.InvestmentModel is null
-				|| investment.InvestmentModel.LastUpdated != investment.LastAnalysis) {
-				await _context.InvestmentModel.AddAsync(investment.InvokeAnalysis(options));
-			}
-
-
-			return Ok(investment.InvestmentModel);
+			return Ok(_context.InvestmentModels.First(m => m.InvestmentId == investmentID));
 		}
-
-
 	}
 }
