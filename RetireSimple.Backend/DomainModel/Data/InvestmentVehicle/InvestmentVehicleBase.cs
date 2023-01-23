@@ -25,13 +25,12 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 
 		public OptionsDict AnalysisOptionsOverrides { get; set; } = new OptionsDict();
 
-		[JsonIgnore, NotMapped] public static readonly OptionsDict DefaultInvestmentVehicleOptions =
+		[JsonIgnore, NotMapped]
+		public static readonly OptionsDict DefaultInvestmentVehicleOptions =
 			new OptionsDict() {
-				["VehicleTaxPercentage"] =
-					"0.29", //Tax to apply on contribution/withdrawal/valuation
+				["VehicleTaxPercentage"] = "0.29", //Tax to apply on contribution/withdrawal/valuation
 				["VehicleMonthlyContribution"] = "0.00m",
-				["VehicleContributionInvestmentTarget"] =
-					"-1" ///Default, simulates the <see cref="CashHoldings"/> contributions
+				["VehicleContributionInvestmentTarget"] = "-1" ///Default, simulates the <see cref="CashHoldings"/> contributions
 			};
 
 		/// <summary>
@@ -101,28 +100,22 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 			List<InvestmentModel> models,
 			List<decimal>? cashContribution = null) {
 			//The logic here is a bit confusing at first, but here is an explanation of the transforms
-			var minModel = Enumerable
-				.Range(0,
-					models[0].MinModelData
-						.Count) //Project the total length of the model with indexes
-				.Select(model => //For each index,
-					models.Select(m => m.MinModelData[model])
-						.Sum()); //project each model's value at that index and sum 
+			var minModel = Enumerable.Range(0, models[0].MinModelData.Count) //Project the total length of the model with indexes
+									.Select(model =>                                    //For each index,
+										models.Select(m => m.MinModelData[model]).Sum()); //project each model's value at that index and sum 
 			var maxModel = Enumerable.Range(0, models[0].MaxModelData.Count)
-				.Select(model =>
-					models.Select(m => m.MaxModelData[model]).Sum());
+									.Select(model =>
+										models.Select(m => m.MaxModelData[model]).Sum());
 			var avgModel = Enumerable.Range(0, models[0].AvgModelData.Count)
-				.Select(model =>
-					models.Select(m => m.AvgModelData[model]).Sum());
+									.Select(model =>
+										models.Select(m => m.AvgModelData[model]).Sum());
 
 			//If cash-based contributions exist, transform all models to include them
-
 			if(cashContribution != null) {
 				minModel = minModel.Select((val, idx) => val + cashContribution[idx]);
 				maxModel = maxModel.Select((val, idx) => val + cashContribution[idx]);
 				avgModel = avgModel.Select((val, idx) => val + cashContribution[idx]);
 			}
-
 
 			var preTaxModel = new InvestmentModel() {
 				MinModelData = minModel.ToList(),
@@ -132,7 +125,6 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 
 			return preTaxModel;
 		}
-
 
 		public InvestmentModel GeneratePostTaxModel_DefaultAfterTaxVehicle(OptionsDict options,
 			List<InvestmentModel> models,
@@ -156,8 +148,61 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 		public InvestmentModel GeneratePreTaxModel_DefaultPretaxVehicle(OptionsDict options,
 			List<InvestmentModel> models,
 			List<decimal>? cashContribution = null) {
-			//Difference here is that pre-tax vehicles have taxes applied on contributions
+
+			var taxPercentage = decimal.Parse(options["VehicleTaxPercentage"]);
+			//The logic here is a bit confusing at first, but here is an explanation of the transforms
+			var minModel = Enumerable.Range(0, models[0].MinModelData.Count)                //Project the total length of the model with indexes
+									.Select(model =>                                        //For each index,
+										models.Select(m => m.MinModelData[model]).Sum())    //project each model's value at that index and sum 
+									.Select(v => v * (1 - taxPercentage));                  // Apply Taxes
+			var maxModel = Enumerable.Range(0, models[0].MaxModelData.Count)
+									.Select(model =>
+										models.Select(m => m.MaxModelData[model]).Sum())
+									.Select(v => v * (1 - taxPercentage));
+			var avgModel = Enumerable.Range(0, models[0].AvgModelData.Count)
+									.Select(model =>
+										models.Select(m => m.AvgModelData[model]).Sum())
+									.Select(v => v * (1 - taxPercentage));
+
+			//If cash-based contributions exist, transform all models to include them
+			//This version assumes that cash contributions are already taxed
+			if(cashContribution != null) {
+				minModel = minModel.Select((val, idx) => val + (cashContribution[idx]));
+				maxModel = maxModel.Select((val, idx) => val + (cashContribution[idx]));
+				avgModel = avgModel.Select((val, idx) => val + (cashContribution[idx]));
+			}
+
+			var preTaxModel = new InvestmentModel() {
+				MinModelData = minModel.ToList(),
+				MaxModelData = maxModel.ToList(),
+				AvgModelData = avgModel.ToList()
+			};
+
+			return preTaxModel;
 		}
+
+		public List<decimal> SimulateCashContributions_DefaultAfterTax(OptionsDict options) {
+			var analysisLength = int.Parse(options["AnalysisLength"]);
+			var cashContribution = decimal.Parse(options["CashContribution"]);
+			var currentHoldings = this.CashHoldings;
+
+			return Enumerable.Range(0, analysisLength)
+				.Select((val, idx) => (currentHoldings + (cashContribution * idx)))
+				.ToList();
+		}
+
+		public List<decimal> SimulateCashContributions_DefaultPreTax(OptionsDict options) {
+			var analysisLength = int.Parse(options["AnalysisLength"]);
+			var cashContribution = decimal.Parse(options["CashContribution"]);
+			var taxPercentage = decimal.Parse(options["VehicleTaxPercentage"]);
+			var currentHoldings = this.CashHoldings;
+
+			return Enumerable.Range(0, analysisLength)
+				.Select((val, idx) => (currentHoldings + (cashContribution * idx)))
+				.Select(val => val * (1 - taxPercentage))
+				.ToList();
+		}
+
 	}
 
 	public class
