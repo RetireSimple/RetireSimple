@@ -116,7 +116,7 @@
 		}
 
 
-		public static readonly IEnumerable<object[]> AggregateSimVars_PreTax_NoContrib = new List<object[]> {
+		public static readonly IEnumerable<object[]> AggregateSimVars_PreTax = new List<object[]> {
 			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m, ExpectedMockModels[0] },
 			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 100.0m,
 				new InvestmentModel() {
@@ -151,7 +151,7 @@
 			},
 		};
 		[Theory,
-			MemberData(nameof(AggregateSimVars_PreTax_NoContrib))]
+			MemberData(nameof(AggregateSimVars_PreTax))]
 		public void GeneratePreTaxModel_DefaultAfterTaxReturnsValues(List<InvestmentModel> models,
 																	OptionsDict options,
 																	decimal initialHoldings,
@@ -168,7 +168,7 @@
 		}
 
 
-		public static readonly IEnumerable<object[]> AggregateSimVars_PostTax_NoContrib = new List<object[]> {
+		public static readonly IEnumerable<object[]> AggregateSimVars_PostTax = new List<object[]> {
 			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m,
 				new InvestmentModel() {
 					MinModelData = ExpectedMockModels[0].MinModelData.Select(x => x * 0.7m).ToList(),
@@ -219,7 +219,7 @@
 				}},
 		};
 		[Theory,
-			MemberData(nameof(AggregateSimVars_PostTax_NoContrib))]
+			MemberData(nameof(AggregateSimVars_PostTax))]
 		public void GeneratePostTaxModel_DefaultAfterTaxReturnsValues(List<InvestmentModel> models,
 																	OptionsDict options,
 																	decimal initialHoldings,
@@ -229,6 +229,57 @@
 			var cashSim = vehicle.SimulateCashContributions_DefaultAfterTax(options);
 
 			var result = vehicle.GeneratePostTaxModel_DefaultAfterTaxVehicle(options, models, cashSim);
+
+			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
+			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
+			result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
+		}
+
+		public static readonly IEnumerable<object[]> AggregateSimVarsPreTaxVehicle_PreTax = new List<object[]> {
+			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m, ExpectedMockModels[0] },
+			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 100.0m,
+				new InvestmentModel() {
+					MinModelData = ExpectedMockModels[0].MinModelData.Select(x=> x+70).ToList(),
+					AvgModelData = ExpectedMockModels[0].AvgModelData.Select(x=> x+70).ToList(),
+					MaxModelData = ExpectedMockModels[0].MaxModelData.Select(x=> x+70).ToList(),
+				}
+			},
+			new object[] { MockModels.GetRange(0, 2), DefaultOptions, 0.0m, ExpectedMockModels[1] },
+			new object[] { MockModels.GetRange(0, 2), DefaultOptions, 100.0m,
+				new InvestmentModel() {
+					MinModelData = ExpectedMockModels[1].MinModelData.Select(x=> x+70).ToList(),
+					AvgModelData = ExpectedMockModels[1].AvgModelData.Select(x=> x+70).ToList(),
+					MaxModelData = ExpectedMockModels[1].MaxModelData.Select(x=> x+70).ToList(),
+				}
+			},
+			new object[] { MockModels.GetRange(0, 3), DefaultOptions, 0.0m, ExpectedMockModels[2] },
+			new object[] { MockModels.GetRange(0, 3), DefaultOptions, 100.0m,
+				new InvestmentModel() {
+					MinModelData = ExpectedMockModels[2].MinModelData.Select(x=> x+70).ToList(),
+					AvgModelData = ExpectedMockModels[2].AvgModelData.Select(x=> x+70).ToList(),
+					MaxModelData = ExpectedMockModels[2].MaxModelData.Select(x=> x+70).ToList(),
+				}
+			},
+			new object[] { MockModels.GetRange(0, 4), DefaultOptions, 0.0m, ExpectedMockModels[3] },
+			new object[] { MockModels.GetRange(0, 4), DefaultOptions, 100.0m,
+				new InvestmentModel() {
+					MinModelData = ExpectedMockModels[3].MinModelData.Select(x=> x+70).ToList(),
+					AvgModelData = ExpectedMockModels[3].AvgModelData.Select(x=> x+70).ToList(),
+					MaxModelData = ExpectedMockModels[3].MaxModelData.Select(x=> x+70).ToList(),
+				}
+			},
+		};
+		[Theory(Skip = "Needs Fixing"),
+			MemberData(nameof(AggregateSimVarsPreTaxVehicle_PreTax))]
+		public void GeneratePreTaxModel_DefaultPreTaxReturnsValues(List<InvestmentModel> models,
+																	OptionsDict options,
+																	decimal initialHoldings,
+																	InvestmentModel expected) {
+			var vehicle = new Vehicle401k();
+			vehicle.CashHoldings = initialHoldings;
+			var cashSim = vehicle.SimulateCashContributions_DefaultAfterTax(options);
+
+			var result = vehicle.GeneratePreTaxModel_DefaultPreTaxVehicle(options, models, cashSim);
 
 			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
 			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
