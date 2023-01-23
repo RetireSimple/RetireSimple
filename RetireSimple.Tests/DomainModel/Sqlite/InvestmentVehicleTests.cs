@@ -39,7 +39,7 @@
         }
 
         [Fact]
-        public void TestInvestmentVehicleRemove() {
+        public void TestInvestmentVehicleRemove() {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
             context.SaveChanges();

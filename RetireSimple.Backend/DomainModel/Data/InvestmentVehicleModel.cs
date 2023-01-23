@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +25,24 @@ namespace RetireSimple.Backend.DomainModel.Data {
 		public List<decimal> TaxDeductedMinModelData { get; set; } = new List<decimal>();
 		public List<decimal> TaxDeductedAvgModelData { get; set; } = new List<decimal>();
 
+
+		/// <summary>
+		/// Parameterless Constructor for EF, DO NOT REMOVE
+		/// </summary>
+		public InvestmentVehicleModel() { }
+
+		public InvestmentVehicleModel(int vehicleId, InvestmentModel preTaxModel, InvestmentModel postTaxModel) {
+			InvestmentVehicleId = vehicleId;
+			LastUpdated = DateTime.Now;
+
+			MaxModelData = preTaxModel.MaxModelData;
+			MinModelData = preTaxModel.MinModelData;
+			AvgModelData = preTaxModel.AvgModelData;
+
+			TaxDeductedMaxModelData = postTaxModel.MaxModelData;
+			TaxDeductedMinModelData = postTaxModel.MinModelData;
+			TaxDeductedAvgModelData = postTaxModel.AvgModelData;
+		}
 
 		//Methods to produce statistical information per step/overall of the model
 	}

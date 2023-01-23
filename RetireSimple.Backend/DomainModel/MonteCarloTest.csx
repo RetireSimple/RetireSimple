@@ -1,4 +1,4 @@
-﻿#r "C:\Users\nikolira\RetireSimple\RetireSimple.Backend\bin\Debug\net6.0\RetireSimple.Backend.dll"
+#r "C:\Users\nikolira\RetireSimple\RetireSimple.Backend\bin\Debug\net6.0\RetireSimple.Backend.dll"
 #r "C:\Users\nikolira\RetireSimple\RetireSimple.Backend\bin\Debug\net6.0\MathNet.Numerics.dll"
 global using OptionsDict = System.Collections.Generic.Dictionary<string, string>;
 using System.Collections.Generic;
