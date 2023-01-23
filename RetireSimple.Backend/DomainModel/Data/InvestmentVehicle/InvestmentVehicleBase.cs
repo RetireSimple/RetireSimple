@@ -145,7 +145,7 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 			return postTaxModel;
 		}
 
-		public InvestmentModel GeneratePreTaxModel_DefaultPretaxVehicle(OptionsDict options,
+		public InvestmentModel GeneratePreTaxModel_DefaultPreTaxVehicle(OptionsDict options,
 			List<InvestmentModel> models,
 			List<decimal>? cashContribution = null) {
 
@@ -198,8 +198,9 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 			var currentHoldings = this.CashHoldings;
 
 			return Enumerable.Range(0, analysisLength)
-				.Select((val, idx) => (currentHoldings + (cashContribution * idx)))
+				.Select((val, idx) => cashContribution * idx)
 				.Select(val => val * (1 - taxPercentage))
+				.Select(val => val + currentHoldings)
 				.ToList();
 		}
 
