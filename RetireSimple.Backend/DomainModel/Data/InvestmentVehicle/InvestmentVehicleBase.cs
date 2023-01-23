@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data.Investment;
@@ -8,7 +8,6 @@ using System.Text.Json.Serialization;
 
 namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 	public abstract class InvestmentVehicleBase {
-
 		public int PortfolioId { get; set; }
 
 		public int InvestmentVehicleId { get; set; }
@@ -19,20 +18,21 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 		public List<InvestmentBase> Investments { get; set; } = new List<InvestmentBase>();
 
 		public int? InvestmentVehicleModelId { get; set; }
-		[JsonIgnore]
-		public InvestmentVehicleModel? InvestmentVehicleModel { get; set; }
+		[JsonIgnore] public InvestmentVehicleModel? InvestmentVehicleModel { get; set; }
 
 		//A specialized field to hold cash that is not allocated to a specific investment in the vehicle. 
 		public decimal CashHoldings { get; set; }
 
 		public OptionsDict AnalysisOptionsOverrides { get; set; } = new OptionsDict();
 
-		[JsonIgnore, NotMapped]
-		public static readonly OptionsDict DefaultInvestmentVehicleOptions = new OptionsDict() {
-			["VehicleTaxPercentage"] = "0.29",   //Tax to apply on contribution/withdrawal/valuation
-			["VehicleMonthlyContribution"] = "0.00m",
-			["VehicleContributionInvestmentTarget"] = "-1"  ///Default, simulates the <see cref="CashHoldings"/> contributions
-		};
+		[JsonIgnore, NotMapped] public static readonly OptionsDict DefaultInvestmentVehicleOptions =
+			new OptionsDict() {
+				["VehicleTaxPercentage"] =
+					"0.29", //Tax to apply on contribution/withdrawal/valuation
+				["VehicleMonthlyContribution"] = "0.00m",
+				["VehicleContributionInvestmentTarget"] =
+					"-1" ///Default, simulates the <see cref="CashHoldings"/> contributions
+			};
 
 		/// <summary>
 		/// Abstract Declaration for the analysis of a vehicle. While a general
@@ -54,25 +54,29 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 			var preTaxModel = GeneratePreTaxModels(options, containedModels, cashSim);
 			var postTaxModel = GeneratePostTaxModels(options, containedModels, cashSim);
 
-			var newModel = new InvestmentVehicleModel(this.InvestmentVehicleId, preTaxModel, postTaxModel);
+			var newModel =
+				new InvestmentVehicleModel(this.InvestmentVehicleId, preTaxModel, postTaxModel);
 
 			//NOTE don't add to EF in this method, that should be an API level responsibility
 			return newModel;
 		}
 
 		public abstract List<decimal> SimulateCashContributions(OptionsDict options);
+
 		public abstract InvestmentModel GeneratePreTaxModels(OptionsDict options,
-															List<InvestmentModel> models,
-															List<decimal>? cashContribution = null);
+			List<InvestmentModel> models,
+			List<decimal>? cashContribution = null);
+
 		public abstract InvestmentModel GeneratePostTaxModels(OptionsDict options,
-															List<InvestmentModel> models,
-															List<decimal>? cashContribution = null);
+			List<InvestmentModel> models,
+			List<decimal>? cashContribution = null);
 
 		private List<InvestmentModel> GetContainedInvestmentModels(OptionsDict options) {
 			var models = new List<InvestmentModel>();
 			foreach(var investment in Investments) {
 				models.Add(investment.InvokeAnalysis(options));
 			}
+
 			return models;
 		}
 
@@ -94,19 +98,22 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 		///The following methods provide common logic for implementing the template method. You can
 		///have specific modules wrap around these if the logic applies (even partially).
 		public InvestmentModel GeneratePreTaxModel_DefaultAfterTaxVehicle(OptionsDict options,
-																		List<InvestmentModel> models,
-																		List<decimal>? cashContribution = null) {
-
+			List<InvestmentModel> models,
+			List<decimal>? cashContribution = null) {
 			//The logic here is a bit confusing at first, but here is an explanation of the transforms
-			var minModel = Enumerable.Range(0, models[0].MinModelData.Count)        //Project the total length of the model with indexes
-									.Select(model =>                                //For each index,
-										models.Select(m => m.MinModelData[model]).Sum());   //project each model's value at that index and sum 
+			var minModel = Enumerable
+				.Range(0,
+					models[0].MinModelData
+						.Count) //Project the total length of the model with indexes
+				.Select(model => //For each index,
+					models.Select(m => m.MinModelData[model])
+						.Sum()); //project each model's value at that index and sum 
 			var maxModel = Enumerable.Range(0, models[0].MaxModelData.Count)
-									.Select(model =>
-										models.Select(m => m.MaxModelData[model]).Sum());
+				.Select(model =>
+					models.Select(m => m.MaxModelData[model]).Sum());
 			var avgModel = Enumerable.Range(0, models[0].AvgModelData.Count)
-									.Select(model =>
-										models.Select(m => m.AvgModelData[model]).Sum());
+				.Select(model =>
+					models.Select(m => m.AvgModelData[model]).Sum());
 
 			//If cash-based contributions exist, transform all models to include them
 
@@ -128,29 +135,33 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 
 
 		public InvestmentModel GeneratePostTaxModel_DefaultAfterTaxVehicle(OptionsDict options,
-																		List<InvestmentModel> models,
-																		List<decimal>? cashContribution = null) {
+			List<InvestmentModel> models,
+			List<decimal>? cashContribution = null) {
 			//We are basically using the pretax model and applying tax to understand value after tax.
-			var preTaxModel = GeneratePreTaxModel_DefaultAfterTaxVehicle(options, models, cashContribution);
+			var preTaxModel =
+				GeneratePreTaxModel_DefaultAfterTaxVehicle(options, models, cashContribution);
 
 			var taxPercentage = decimal.Parse(options["VehicleTaxPercentage"]);
 			var postTaxModel = new InvestmentModel() {
-				MinModelData = preTaxModel.MinModelData.Select(v => v * (1 - taxPercentage)).ToList(),
-				MaxModelData = preTaxModel.MaxModelData.Select(v => v * (1 - taxPercentage)).ToList(),
-				AvgModelData = preTaxModel.AvgModelData.Select(v => v * (1 - taxPercentage)).ToList()
+				MinModelData = preTaxModel.MinModelData.Select(v => v * (1 - taxPercentage))
+					.ToList(),
+				MaxModelData = preTaxModel.MaxModelData.Select(v => v * (1 - taxPercentage))
+					.ToList(),
+				AvgModelData = preTaxModel.AvgModelData.Select(v => v * (1 - taxPercentage))
+					.ToList()
 			};
 			return postTaxModel;
 		}
 
 		public InvestmentModel GeneratePreTaxModel_DefaultPretaxVehicle(OptionsDict options,
-																		List<InvestmentModel> models,
-																		List<decimal>? cashContribution = null) {
+			List<InvestmentModel> models,
+			List<decimal>? cashContribution = null) {
 			//Difference here is that pre-tax vehicles have taxes applied on contributions
 		}
-
 	}
 
-	public class InvestmentVehicleBaseConfiguration : IEntityTypeConfiguration<InvestmentVehicleBase> {
+	public class
+		InvestmentVehicleBaseConfiguration : IEntityTypeConfiguration<InvestmentVehicleBase> {
 		static JsonSerializerOptions options = new JsonSerializerOptions {
 			AllowTrailingCommas = true,
 			DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
@@ -194,8 +205,6 @@ namespace RetireSimple.Backend.DomainModel.Data.InvestmentVehicle {
 					c => c.ToDictionary(entry => entry.Key, entry => entry.Value)
 				));
 #pragma warning restore CS8604 // Possible null reference argument.
-
 		}
 	}
-
 }

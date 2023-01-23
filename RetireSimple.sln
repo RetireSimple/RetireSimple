@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B8EC216-52A2-400E-AAA0-52764E05432A}"
 	ProjectSection(SolutionItems) = preProject
 		C:\Users\awest\.config\.editorconfig = C:\Users\awest\.config\.editorconfig
+		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
