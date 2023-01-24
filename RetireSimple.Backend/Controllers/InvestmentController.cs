@@ -1,12 +1,11 @@
 ﻿using MathNet.Numerics;
 using MathNet.Numerics.Random;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetireSimple.Backend.Controllers.RequestBody;
 using RetireSimple.Backend.DomainModel.Data.Investment;
+using RetireSimple.Backend.DomainModel.User;
 using RetireSimple.Backend.Services;
-using System;
 
 namespace RetireSimple.Backend.Controllers {
 	[Route("api/[controller]")]
@@ -22,39 +21,49 @@ namespace RetireSimple.Backend.Controllers {
 
 		[HttpGet]
 		[Route("GetAllInvestments")]
-		public async Task<ActionResult<List<InvestmentBase>>> GetInvestments() {
-			var investments = await _context.Investments.ToListAsync();
-			return Ok(investments);
+		public ActionResult<List<InvestmentBase>> GetInvestments() {
+
+			var investments = _context.Investment.ToList();
+			return Ok(investments); //converts to JSON
 		}
 
 		[HttpPost]
 		[Route("AddStock")]
-		public async Task<ActionResult> AddStockInvestment([FromBody] StockAddRequestBody body) {
-			var newInvestment = new StockInvestment("testAnalysis");
+		public ActionResult AddStockInvestment([FromBody] StockAddRequestBody body) {
+			var newInvestment = new StockInvestment(body.AnalysisType);
+			newInvestment.InvestmentName = body.Name;
 			newInvestment.StockPrice = body.Price;
 			newInvestment.StockQuantity = body.Quantity;
 			newInvestment.StockTicker = body.Ticker;
-			newInvestment.StockPurchaseDate = body.Date;
+			newInvestment.StockPurchaseDate = DateTime.Now;
 
-			await _context.Investments.AddAsync(newInvestment);
-			await _context.SaveChangesAsync();
+			//TODO Don't Preset values
+			newInvestment.InvestmentData["stockDividendPercent"] = "0.05";
+			newInvestment.InvestmentData["stockDividendDistributionInterval"] = "Month";
+			newInvestment.InvestmentData["stockDividendDistributionMethod"] = "Stock";
+			newInvestment.InvestmentData["stockDividendFirstPaymentDate"] = "1/1/2020";
+
+
+			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
+			mainPortfolio.Investments.Add(newInvestment);
+
+			_context.SaveChanges();
 
 			return Ok();
 		}
 
 		[HttpPost]
 		[Route("AddRandomStock")]
-		public async Task<ActionResult> AddRandomStockInvestment() {
-
-
+		public ActionResult AddRandomStockInvestment() {
 			var newInvestment = new StockInvestment("testAnalysis");
 			newInvestment.StockPrice = (_rand.NextDecimal() * 1000).Round(2);
 			newInvestment.StockQuantity = _rand.Next(5000);
 			newInvestment.StockTicker = MakeRandomTicker();
 			newInvestment.StockPurchaseDate = DateTime.Today;
 
-			await _context.Investments.AddAsync(newInvestment);
-			await _context.SaveChangesAsync();
+			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
+			mainPortfolio.Investments.Add(newInvestment);
+			_context.SaveChangesAsync();
 
 			return Ok();
 		}

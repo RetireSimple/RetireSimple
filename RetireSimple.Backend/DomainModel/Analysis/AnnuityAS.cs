@@ -1,5 +1,4 @@
-
-﻿using RetireSimple.Backend.DomainModel.Data;
+using RetireSimple.Backend.DomainModel.Data;
 using RetireSimple.Backend.DomainModel.Data.Investment;
 
 namespace RetireSimple.Backend.DomainModel.Analysis {
@@ -31,5 +30,3 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 		}
 	}
 }
-
-

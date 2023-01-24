@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data.Expense;
@@ -115,7 +115,21 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 			//TODO Allow Cascade of models as those should not exist if the investment still exists
 			builder.HasOne(i => i.InvestmentModel)
 					.WithOne(i => i.Investment)
-					.OnDelete(DeleteBehavior.Restrict);
+					.OnDelete(DeleteBehavior.Cascade);
+
+			builder.HasMany(i => i.Expenses)
+				.WithOne(i => i.SourceInvestment)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.HasMany(i => i.TransfersFrom)
+				.WithOne(i => i.SourceInvestment)
+				.HasForeignKey(t => t.SourceInvestmentId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			builder.HasMany(i => i.TransfersTo)
+				.WithOne(i => i.DestinationInvestment)
+				.HasForeignKey(t => t.DestinationInvestmentId)
+				.OnDelete(DeleteBehavior.Restrict);
 
 			builder.HasDiscriminator(i => i.InvestmentType)
 					.HasValue<StockInvestment>("StockInvestment")
@@ -125,7 +139,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 					.HasValue<SocialSecurityInvestment>("SocialSecurityInvestment")
 					.HasValue<AnnuityInvestment>("AnnuityInvestment")
 					.HasValue<PensionInvestment>("PensionInvestment");
-			
+
 #pragma warning disable CS8604 // Possible null reference argument.
 			builder.Property(i => i.InvestmentData)
 				.HasConversion(
@@ -149,7 +163,7 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 					c => c.ToDictionary(entry => entry.Key, entry => entry.Value)
 				));
 #pragma warning restore CS8604 // Possible null reference argument.
-			
+
 			builder.Property(i => i.InvestmentName)
 				.HasDefaultValue("");
 

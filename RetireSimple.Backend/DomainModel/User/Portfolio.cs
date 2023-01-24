@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RetireSimple.Backend.DomainModel.Data;
 using RetireSimple.Backend.DomainModel.Data.Expense;
 using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.Data.InvestmentVehicleBase;
+using RetireSimple.Backend.DomainModel.Data.InvestmentVehicle;
 
 namespace RetireSimple.Backend.DomainModel.User {
 	public class Portfolio {
@@ -11,6 +11,8 @@ namespace RetireSimple.Backend.DomainModel.User {
 		/// Primary Key for the Portfolio Table
 		/// </summary>
 		public int PortfolioId { get; set; }
+
+		public string PortfolioName { get; set; }
 
 		/// <summary>
 		/// Foreign Key ID for the <see cref="Profile"/> that contains this Portfolio
@@ -25,8 +27,6 @@ namespace RetireSimple.Backend.DomainModel.User {
 		//TODO Change to ID Fields? 
 		public List<InvestmentBase> Investments { get; set; } = new List<InvestmentBase>();
 		public List<InvestmentVehicleBase> InvestmentVehicles { get; set; } = new List<InvestmentVehicleBase>();
-		public List<ExpenseBase> Expenses { get; set; } = new List<ExpenseBase>();
-		public List<InvestmentTransfer> Transfers { get; set; } = new List<InvestmentTransfer>();
 
 		/// <summary>
 		/// TODO Not Implemented Yet
@@ -45,26 +45,21 @@ namespace RetireSimple.Backend.DomainModel.User {
 
 			builder.HasMany(p => p.Investments)
 				.WithOne()
-				.HasForeignKey(i => i.PortfolioId);
-			
+				.HasForeignKey(i => i.PortfolioId)
+				.OnDelete(DeleteBehavior.Cascade);
+
 			builder.HasMany(p => p.InvestmentVehicles)
 				.WithOne()
-				.HasForeignKey(i => i.PortfolioId);
-
-			builder.HasMany(p => p.Expenses)
-				.WithOne()
-				.HasForeignKey(e => e.PorfolioId)
-				.IsRequired();
-			
-			builder.HasMany(p => p.Transfers)
-				.WithOne()
-				.HasForeignKey(t => t.PorfolioId);
+				.HasForeignKey(i => i.PortfolioId)
+				.OnDelete(DeleteBehavior.Cascade);
 
 			builder.HasOne(p => p.Profile)
 				.WithMany(p => p.Portfolios)
 				.HasForeignKey(p => p.ProfileId)
 				.OnDelete(DeleteBehavior.Restrict);
 
+			//NOTE this is a placeholder to guarantee an existing Profile/Portfolio until that feature reaches implementation
+			builder.HasData(new { PortfolioId = 1, ProfileId = 1, PortfolioName = "Default" });
 		}
 	}
 }

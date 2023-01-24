@@ -1,5 +1,5 @@
-﻿#r "D:\Onedrive\SeniorProject\RetireSimple\RetireSimple.Backend\bin\Debug\net6.0\RetireSimple.Backend.dll"
-#r "D:\Onedrive\SeniorProject\RetireSimple\RetireSimple.Backend\bin\Debug\net6.0\MathNet.Numerics.dll"
+#r "C:\Users\nikolira\RetireSimple\RetireSimple.Backend\bin\Debug\net6.0\RetireSimple.Backend.dll"
+#r "C:\Users\nikolira\RetireSimple\RetireSimple.Backend\bin\Debug\net6.0\MathNet.Numerics.dll"
 global using OptionsDict = System.Collections.Generic.Dictionary<string, string>;
 using System.Collections.Generic;
 using RetireSimple.Backend.DomainModel.Data.Investment;
@@ -28,4 +28,4 @@ for (int i = 0; i < 60; i++) {
 }
 
 
-File.WriteAllLines("D:\\Onedrive\\SeniorProject\\RetireSimple\\RetireSimple.Backend\\DomainModel\\MonteCarloTest.csv", csvList);
+File.WriteAllLines("C:\\Users\\nikolira\\RetireSimple\\RetireSimple.Backend\\DomainModel\\MonteCarloTest.csv", csvList);

@@ -1,13 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-using RetireSimple.Backend.DomainModel.Data;
-using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.User;
-using RetireSimple.Backend.Services;
-
-using Xunit.Abstractions;
-
-namespace RetireSimple.Tests.DomainModel.Sqlite {
+﻿namespace RetireSimple.Tests.DomainModel.Sqlite {
     public class InvestmentModelTests : IDisposable {
         InvestmentDBContext context { get; set; }
 
@@ -22,18 +13,6 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             context.Database.EnsureCreated();
 
             this.output = output;
-
-            var profile = new Profile();
-            profile.Name = "jack";
-            profile.Age = 65;
-            profile.Status = true;
-
-            var portfolio = new Portfolio();
-
-            context.Profiles.Add(profile);
-            context.SaveChanges();
-            context.Profiles.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
-            context.SaveChanges();
 
             var investment = new StockInvestment("test");
             investment.StockPrice = 100;
@@ -53,10 +32,10 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentModel model = new InvestmentModel();
             model.Investment = context.Portfolio.First(p => p.PortfolioId == 1).Investments.First(i => i.InvestmentId == 1);
 
-            context.InvestmentModels.Add(model);
+            context.InvestmentModel.Add(model);
             context.SaveChanges();
 
-            Assert.Single(context.InvestmentModels);
+            Assert.Single(context.InvestmentModel);
         }
 
         [Fact]
@@ -64,13 +43,13 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentModel model = new InvestmentModel();
             model.Investment = context.Portfolio.First(p => p.PortfolioId == 1).Investments.First(i => i.InvestmentId == 1);
 
-            context.InvestmentModels.Add(model);
+            context.InvestmentModel.Add(model);
             context.SaveChanges();
 
-            context.InvestmentModels.Remove(model);
+            context.InvestmentModel.Remove(model);
             context.SaveChanges();
 
-            Assert.Equal(0, context.InvestmentModels.Count());
+            Assert.Equal(0, context.InvestmentModel.Count());
         }
 
         [Fact]
@@ -78,7 +57,7 @@ namespace RetireSimple.Tests.DomainModel.Sqlite {
             InvestmentModel model = new InvestmentModel();
 
             Action act = () => {
-                context.InvestmentModels.Add(model);
+                context.InvestmentModel.Add(model);
                 context.SaveChanges();
             };
 

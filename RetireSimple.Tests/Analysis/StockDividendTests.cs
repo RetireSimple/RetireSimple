@@ -1,9 +1,4 @@
-﻿using RetireSimple.Backend.DomainModel.Analysis;
-using RetireSimple.Backend.DomainModel.Data.Investment;
-
-using Xunit.Abstractions;
-
-namespace RetireSimple.Tests.Analysis {
+﻿namespace RetireSimple.Tests.Analysis {
     public class StockDividendTests {
 
         StockInvestment TestInvestment { get; set; }

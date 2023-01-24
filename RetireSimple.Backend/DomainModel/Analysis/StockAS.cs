@@ -11,7 +11,10 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 		public static readonly OptionsDict DefaultStockAnalysisOptions = new() {
 			["AnalysisLength"] = "60",                          //Number of months to project
 			["StockAnalysisExpectedGrowth"] = "0.1",            //Expected Percentage Growth of the stock
-
+			["RandomVariableMu"] = "0",
+			["RandomVariableSigma"] = "1",
+			["RandomVariableScaleFactor"] = "1",
+			["SimCount"] = "1000"
 		};
 
 		private static int GetDividendIntervalMonths(string interval) => interval switch {
@@ -52,9 +55,10 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 		}
 
 		public static InvestmentModel MonteCarlo_NormalDist(StockInvestment investment, OptionsDict options) {
-			var priceModel = MonteCarlo.MonteCarloSim_Normal(investment, options);
+			//HACK Temp fix for prototyping purposes
+			var priceModel = MonteCarlo.MonteCarloSim_Normal(investment, DefaultStockAnalysisOptions);
 			//TODO Update to support other dividend types
-			var dividendModel = StockAS.ProjectStockDividend(investment, options);
+			var dividendModel = StockAS.ProjectStockDividend(investment, DefaultStockAnalysisOptions);
 
 			priceModel.MinModelData = priceModel.MinModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
 			priceModel.AvgModelData = priceModel.AvgModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
@@ -64,9 +68,9 @@ namespace RetireSimple.Backend.DomainModel.Analysis {
 		}
 
 		public static InvestmentModel MonteCarlo_LogNormalDist(StockInvestment investment, OptionsDict options) {
-			var priceModel = MonteCarlo.MonteCarloSim_LogNormal(investment, options);
+			var priceModel = MonteCarlo.MonteCarloSim_LogNormal(investment, DefaultStockAnalysisOptions);
 			//TODO Update to support other dividend types
-			var dividendModel = StockAS.ProjectStockDividend(investment, options);
+			var dividendModel = StockAS.ProjectStockDividend(investment, DefaultStockAnalysisOptions);
 
 			priceModel.MinModelData = priceModel.MinModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
 			priceModel.AvgModelData = priceModel.AvgModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();

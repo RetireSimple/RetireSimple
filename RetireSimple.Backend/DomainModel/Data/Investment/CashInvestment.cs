@@ -6,30 +6,26 @@ using System.Text.Json.Serialization;
 namespace RetireSimple.Backend.DomainModel.Data.Investment {
 	public class CashInvestment : InvestmentBase {
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public string CashCurrency {
 			get => this.InvestmentData["CashCurrency"];
 			set => this.InvestmentData["CashCurrency"] = value;
 		}
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public decimal CashQuantity {
 			get => decimal.Parse(this.InvestmentData["CashQuantity"]);
 			set => this.InvestmentData["CashQuantity"] = value.ToString();
 		}
 
-		[JsonIgnore]
-		[NotMapped]
+		[JsonIgnore, NotMapped]
 		public decimal CashCurrentValue {
 			get => decimal.Parse(this.InvestmentData["CashValue"]);
 			set => this.InvestmentData["CashValue"] = value.ToString();
 		}
 
-		[NotMapped]
-		[JsonIgnore]
-		public AnalysisDelegate<CashInvestment>? Analysis;
+		[JsonIgnore, NotMapped]
+		public AnalysisDelegate<CashInvestment>? AnalysisMethod;
 
 		public CashInvestment(String analysisType) : base() {
 			InvestmentType = "CashInvestment";
@@ -39,15 +35,18 @@ namespace RetireSimple.Backend.DomainModel.Data.Investment {
 		public override void ResolveAnalysisDelegate(string analysisType) {
 			switch(analysisType) {
 				case "DefaultCashAnalysis":
-					this.Analysis = CashAS.DefaultCashAnalysis;
+					this.AnalysisMethod = CashAS.DefaultCashAnalysis;
 					break;
 				default:
-					this.Analysis = null;
+					this.AnalysisMethod = null;
 					break;
-			} 
+			}
 			//Overwrite The current Analysis Delegate Type
 			this.AnalysisType = analysisType;
 		}
-		public override InvestmentModel InvokeAnalysis(OptionsDict options) => Analysis(this, options);
+		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
+			(AnalysisMethod is not null)
+			? AnalysisMethod(this, options)
+			: throw new InvalidOperationException("The specified investment has no specified analysis");
 	}
 }
