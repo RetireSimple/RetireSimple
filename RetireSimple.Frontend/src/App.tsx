@@ -43,10 +43,11 @@ export default function App() {
 		Legend
 	);
 
-	const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+	//const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 	const data = {
-		labels,
+		//labels,
+		labels: Array.from(new Array(60), (x, i) => i),
 		datasets: [
 			{
 				label: 'Min Model',
@@ -64,8 +65,8 @@ export default function App() {
 			{
 				label: 'Max Model',
 				data: investmentModels?.maxModelData,
-				borderColor: 'rgb(53, 162, 235)',
-				backgroundColor: 'rgba(53, 162, 235, 0.5)',
+				borderColor: 'rgb(53, 162, 52)',
+				backgroundColor: 'rgba(53, 162, 52, 0.5)',
 			},
 		],
 	};

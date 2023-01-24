@@ -35,7 +35,14 @@ namespace RetireSimple.Backend.Controllers {
 			newInvestment.StockPrice = body.Price;
 			newInvestment.StockQuantity = body.Quantity;
 			newInvestment.StockTicker = body.Ticker;
-			//newInvestment.StockPurchaseDate = body.Date;
+			newInvestment.StockPurchaseDate = DateTime.Now;
+
+			//TODO Don't Preset values
+			newInvestment.InvestmentData["stockDividendPercent"] = "0.05";
+			newInvestment.InvestmentData["stockDividendDistributionInterval"] = "Month";
+			newInvestment.InvestmentData["stockDividendDistributionMethod"] = "Stock";
+			newInvestment.InvestmentData["stockDividendFirstPaymentDate"] = "1/1/2020";
+
 
 			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
 			mainPortfolio.Investments.Add(newInvestment);
