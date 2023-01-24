@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using RetireSimple.Backend.Services;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +34,6 @@ builder.Services.AddDbContext<InvestmentDBContext>(options => _ =
 
 var app = builder.Build();
 
-
 //Only Apply Migrations for Sqlite
 if(app.Configuration["Provider"] == "sqlite") {
 	using(var scope = app.Services.CreateScope()) {
@@ -46,7 +44,6 @@ if(app.Configuration["Provider"] == "sqlite") {
 	}
 }
 
-
 // Configure the HTTP request pipeline.
 if(app.Environment.IsDevelopment()) {
 	app.UseSwagger();
@@ -54,7 +51,7 @@ if(app.Environment.IsDevelopment()) {
 
 	//This is to fix an issue related to packaging
 	app.UseHttpsRedirection();
-	app.UseAuthorization();
+	//app.UseAuthorization();
 }
 
 if(app.Environment.IsProduction()) {
