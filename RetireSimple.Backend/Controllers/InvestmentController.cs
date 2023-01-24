@@ -1,11 +1,9 @@
 ﻿using MathNet.Numerics;
 using MathNet.Numerics.Random;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RetireSimple.Backend.Controllers.RequestBody;
-using RetireSimple.Backend.DomainModel.Data.Investment;
-using RetireSimple.Backend.DomainModel.User;
-using RetireSimple.Backend.Services;
+using RetireSimple.Engine.DomainModel.Data.Investment;
+using RetireSimple.Engine.Services;
 
 namespace RetireSimple.Backend.Controllers {
 	[Route("api/[controller]")]

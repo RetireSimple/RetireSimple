@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using RetireSimple.Backend.Services;
+using RetireSimple.Engine.Services;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -21,13 +21,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<InvestmentDBContext>(options => _ =
 	builder.Configuration["Provider"] switch {
 		"sqlite" =>
-			options.UseSqlite("Data Source=InvestmentDB.db"
-			//x => x.MigrationsAssembly("RetireSimple.Migrations.Sqlite")
-			),
-		"mariadb" =>
-			options.UseMySql(ServerVersion.AutoDetect(builder.Configuration["ConnectionString"]),
-			x => x.MigrationsAssembly("RetireSimple.Migrations.MariaDB")
-			),
+			options.UseSqlite("Data Source=InvestmentDB.db"),
 		_ => throw new ArgumentException("Invalid provider")
 	});
 

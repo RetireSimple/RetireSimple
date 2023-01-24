@@ -25,7 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\RetireSimple.Backend\RetireSimple.Backend.csproj" />
+		<ProjectReference Include="..\RetireSimple.Engine\RetireSimple.Engine.csproj" />
 	</ItemGroup>
 
 </Project>
