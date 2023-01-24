@@ -1,11 +1,11 @@
+import {
+    CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title,
+    Tooltip
+} from 'chart.js';
 import React from 'react';
 import { Line } from 'react-chartjs-2';
+import { useForm } from "react-hook-form";
 import { Investment, InvestmentModel, StockInfo } from './Models/Interfaces';
-import { useForm } from "react-hook-form"
-import {
-	CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title,
-	Tooltip
-} from 'chart.js';
 
 
 export default function App() {
@@ -18,7 +18,7 @@ export default function App() {
 
 	const [loading, setLoading] = React.useState<boolean>(true);
 
-	const { register, setValue, handleSubmit, formState: { errors } } = useForm<StockInfo>();
+	const { register, handleSubmit } = useForm<StockInfo>();
 
 	const onSubmit = handleSubmit((formData: any) => {
 		fetch('/api/Investment/AddStock', {
@@ -31,8 +31,6 @@ export default function App() {
 			.then(async () => await populateInvestmentData());
 	});
 
-	// const response = await fetch('/api/'); fetch data used in excel
-	// const data = await response.json();
 	ChartJS.register(
 		CategoryScale,
 		LinearScale,
@@ -43,10 +41,7 @@ export default function App() {
 		Legend
 	);
 
-	//const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
 	const data = {
-		//labels,
 		labels: Array.from(new Array(60), (x, i) => i),
 		datasets: [
 			{
