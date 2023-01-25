@@ -1,4 +1,4 @@
-name: Build/Testing CI
+name: CI Pipeline
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   engine-build:
-    name: RetireSimple.Engine Build/Testing
+    name: RetireSimple.Engine
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -31,16 +31,17 @@ jobs:
         run: dotnet build ./RetireSimple.Tests/RetireSimple.Tests.csproj --no-restore --no-dependencies
       - name: Execute Tests
         run: dotnet test --no-build --verbosity normal
-      - name: Upload Compiled Engine Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: engine_compiled
-          path: RetireSimple.Engine/bin/
-          retention-days: 1
+      #- name: Upload Compiled Engine Artifact
+      #  uses: actions/upload-artifact@v3
+      #  with:
+      #    name: engine_compiled
+      #    path: | 
+      #      RetireSimple.Engine/bin/
+      #    retention-days: 1
 
   backend-build:
-    name: RetireSimple.Backend Build
-    runs-on: ubuntu-latest
+    name: RetireSimple.Backend
+    runs-on: windows-latest
     needs: engine-build
     steps:
       - uses : actions/checkout@v3
@@ -57,16 +58,16 @@ jobs:
             ${{ runner.os }}-nuget-
       - name: Restore .NET Projects
         run: dotnet restore
-      - name: Retreive Compiled Engine Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: engine_compiled
-          path: RetireSimple.Engine/bin/
+      #- name: Retreive Compiled Engine Artifact
+      #  uses: actions/download-artifact@v3
+      #  with:
+      #    name: engine_compiled
+      #    path: RetireSimple.Engine/bin/
       - name: Build Backend
         run: dotnet build ./RetireSimple.Backend/RetireSimple.Backend.csproj --no-restore 
         
   frontend-build:
-    name: RetireSimple.Frontend Build
+    name: RetireSimple.Frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
