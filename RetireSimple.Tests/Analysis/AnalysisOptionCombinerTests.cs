@@ -1,9 +1,5 @@
-﻿using RetireSimple.Engine.Analysis;
-using RetireSimple.Engine.Data.Investment;
-
-namespace RetireSimple.Tests
-{
-    public class AnalysisOptionCombinerTests {
+﻿namespace RetireSimple.Tests {
+	public class AnalysisOptionCombinerTests {
 		OptionsDict dict, finalDict, investmentDict;
 		InvestmentBase investment;
 

@@ -1,12 +1,10 @@
 ﻿namespace RetireSimple.Tests.DomainModel {
-    public class InvestmentVehicleModelTests : IDisposable
-    {
+    public class InvestmentVehicleModelTests : IDisposable {
         InvestmentDBContext context { get; set; }
 
         private readonly ITestOutputHelper output;
 
-        public InvestmentVehicleModelTests(ITestOutputHelper output)
-        {
+        public InvestmentVehicleModelTests(ITestOutputHelper output) {
             context = new InvestmentDBContext(
                 new DbContextOptionsBuilder()
                     .UseSqlite("Data Source=InvestmentDB_vmodel.db")
@@ -21,15 +19,13 @@
             context.SaveChanges();
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             context.Database.EnsureDeleted();
             context.Dispose();
         }
 
         [Fact]
-        public void TestInvestmentVehicleModelAdd()
-        {
+        public void TestInvestmentVehicleModelAdd() {
             InvestmentVehicleModel model = new InvestmentVehicleModel();
             context.Portfolio.First(p => p.PortfolioId == 1)
                 .InvestmentVehicles.First(i => i.InvestmentVehicleId == 1)
@@ -41,8 +37,7 @@
         }
 
         [Fact]
-        public void TestInvestmentModelRemove()
-        {
+        public void TestInvestmentModelRemove() {
             InvestmentVehicleModel model = new InvestmentVehicleModel();
             context.Portfolio.First(p => p.PortfolioId == 1)
                 .InvestmentVehicles.First(i => i.InvestmentVehicleId == 1)
@@ -57,12 +52,10 @@
         }
 
         [Fact]
-        public void TestInvestmentModelFKConstraint()
-        {
+        public void TestInvestmentModelFKConstraint() {
             InvestmentVehicleModel model = new InvestmentVehicleModel();
 
-            Action act = () =>
-            {
+            Action act = () => {
                 context.InvestmentVehicleModel.Add(model);
                 context.SaveChanges();
             };

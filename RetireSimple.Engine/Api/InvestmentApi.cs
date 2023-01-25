@@ -2,9 +2,8 @@
 using RetireSimple.Engine.Data.Investment;
 using RetireSimple.Engine.Data.InvestmentVehicle;
 
-namespace RetireSimple.Engine.Api
-{
-    public class InvestmentApi {
+namespace RetireSimple.Engine.Api {
+	public class InvestmentApi {
 
 		private readonly InvestmentDBContext _context;
 
@@ -12,12 +11,12 @@ namespace RetireSimple.Engine.Api
 			_context = context;
 		}
 
-        /// <summary>
-        /// Gets a list of <see cref="InvestmentBase"/> objects that are not 
-        /// associated with an <see cref="Data.InvestmentVehicle.InvestmentVehicleBase"/>.
-        /// </summary>
-        /// <returns></returns>
-        public List<InvestmentBase> GetAllInvestments() => throw new NotImplementedException();
+		/// <summary>
+		/// Gets a list of <see cref="InvestmentBase"/> objects that are not 
+		/// associated with an <see cref="Data.InvestmentVehicle.InvestmentVehicleBase"/>.
+		/// </summary>
+		/// <returns></returns>
+		public List<InvestmentBase> GetAllInvestments() => throw new NotImplementedException();
 
 		/// <summary>
 		/// Adds a new investment of the specified type, with investment-specific parameters set 

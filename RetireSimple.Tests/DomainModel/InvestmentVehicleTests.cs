@@ -1,12 +1,10 @@
 ﻿namespace RetireSimple.Tests.DomainModel {
-    public class InvestmentVehicleTests : IDisposable
-    {
+    public class InvestmentVehicleTests : IDisposable {
         InvestmentDBContext context { get; set; }
 
         private readonly ITestOutputHelper output;
 
-        public InvestmentVehicleTests(ITestOutputHelper output)
-        {
+        public InvestmentVehicleTests(ITestOutputHelper output) {
             context = new InvestmentDBContext(
                 new DbContextOptionsBuilder()
                     .UseSqlite("Data Source=InvestmentDB_vehicletests.db")
@@ -24,15 +22,13 @@
             context.SaveChanges();
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             context.Database.EnsureDeleted();
             context.Dispose();
         }
 
         [Fact]
-        public void TestInvestmentVehicleAdd()
-        {
+        public void TestInvestmentVehicleAdd() {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
             context.SaveChanges();
@@ -43,8 +39,7 @@
         }
 
         [Fact]
-        public void TestInvestmentVehicleRemove()
-        {
+        public void TestInvestmentVehicleRemove() {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
             context.SaveChanges();
@@ -58,12 +53,10 @@
         }
 
         [Fact]
-        public void TestInvestmentVehicleFKConstraintPortfolio()
-        {
+        public void TestInvestmentVehicleFKConstraintPortfolio() {
             InvestmentVehicleBase vehicle = new Vehicle403b();
 
-            Action act = () =>
-            {
+            Action act = () => {
                 context.InvestmentVehicle.Add(vehicle);
                 context.SaveChanges();
             };
@@ -72,15 +65,13 @@
         }
 
         [Fact]
-        public void TestInvestmentVehicleFKConstraintInvestmentDeleteCascades()
-        {
+        public void TestInvestmentVehicleFKConstraintInvestmentDeleteCascades() {
             InvestmentVehicleBase vehicle = new Vehicle403b();
             context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
             vehicle.Investments.Add(context.Investment.First(i => i.InvestmentId == 1));
             context.SaveChanges();
 
-            Action act = () =>
-            {
+            Action act = () => {
                 context.InvestmentVehicle.Remove(vehicle);
                 context.SaveChanges();
             };
