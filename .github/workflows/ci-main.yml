@@ -8,6 +8,7 @@ on:
 
 jobs:
   engine-build:
+    name: RetireSimple.Engine Build/Testing
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -38,6 +39,7 @@ jobs:
           retention-days: 1
 
   backend-build:
+    name: RetireSimple.Backend Build
     runs-on: ubuntu-latest
     needs: engine-build
     steps:
@@ -64,6 +66,7 @@ jobs:
         run: dotnet build ./RetireSimple.Backend/RetireSimple.Backend.csproj --no-restore --no-dependencies
         
   frontend-build:
+    name: RetireSimple.Frontend Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
