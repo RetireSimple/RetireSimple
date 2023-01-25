@@ -25,9 +25,9 @@ jobs:
       - name: Restore .NET Projects
         run: dotnet restore
       - name: Build Engine
-        run: dotnet build .\RetireSimple.Engine\RetireSimple.Engine.csproj --no-restore --no-dependencies
+        run: dotnet build ./RetireSimple.Engine/RetireSimple.Engine.csproj --no-restore --no-dependencies
       - name: Build Test Project
-        run: dotnet build .\RetireSimple.Tests\RetireSimple.Tests.csproj --no-restore --no-dependencies
+        run: dotnet build ./RetireSimple.Tests/RetireSimple.Tests.csproj --no-restore --no-dependencies
       - name: Execute Tests
         run: dotnet test --no-build --verbosity normal
       - name: Upload Compiled Engine Artifact
@@ -61,7 +61,7 @@ jobs:
           name: engine_compiled
           path: RetireSimple.Engine/bin/
       - name: Build Backend
-        run: dotnet build .\RetireSimple.Backend\RetireSimple.Backend.csproj --no-restore --no-dependencies
+        run: dotnet build ./RetireSimple.Backend/RetireSimple.Backend.csproj --no-restore --no-dependencies
         
   frontend-build:
     runs-on: ubuntu-latest
