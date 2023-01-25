@@ -1,6 +1,6 @@
 # Tags used for organizing work in the project
 backend:
-  - '\[(Backend|Database|DB)\]'
+  - '\[(Backend)\]'
 frontend:
   - '\[(Frontend|Mocks)\]'
 documentation:
@@ -11,5 +11,7 @@ user-persona:
   - '\[(User Persona)\]'
 user-scenario:
   - '\[(User Scenario(s?))\]'
-
-
+engine:
+  - '\[(Database|DB|Engine)\]'
+ci:
+  - '\[(CI|Continuous Integration)\]'
