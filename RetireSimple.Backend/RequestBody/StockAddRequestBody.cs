@@ -1,4 +1,4 @@
-﻿namespace RetireSimple.Backend.Controllers.RequestBody {
+﻿namespace RetireSimple.Backend.RequestBody {
 	public class StockAddRequestBody {
 		public string Name { get; set; }
 		public string Ticker { get; set; }

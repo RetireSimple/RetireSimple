@@ -1,7 +1,7 @@
 ﻿using MathNet.Numerics;
 using MathNet.Numerics.Random;
 using Microsoft.AspNetCore.Mvc;
-using RetireSimple.Backend.Controllers.RequestBody;
+using RetireSimple.Backend.RequestBody;
 using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Investment;
 
