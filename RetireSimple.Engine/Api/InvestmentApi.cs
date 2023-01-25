@@ -5,9 +5,9 @@ using RetireSimple.Engine.Data.InvestmentVehicle;
 namespace RetireSimple.Engine.Api {
 	public class InvestmentApi {
 
-		private readonly InvestmentDBContext _context;
+		private readonly EngineDbContext _context;
 
-		public InvestmentApi(InvestmentDBContext context) {
+		public InvestmentApi(EngineDbContext context) {
 			_context = context;
 		}
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 using RetireSimple.Engine.Data.Expense;
 using RetireSimple.Engine.Data.Investment;
@@ -6,9 +7,8 @@ using RetireSimple.Engine.Data.InvestmentVehicle;
 using RetireSimple.Engine.Data.User;
 
 namespace RetireSimple.Engine.Data {
-	public class InvestmentDBContext : DbContext {
-		public InvestmentDBContext(DbContextOptions options) : base(options) {
-		}
+	public class EngineDbContext : DbContext {
+		public EngineDbContext(DbContextOptions options) : base(options) { }
 
 		public DbSet<InvestmentBase> Investment { get; set; }
 		public DbSet<InvestmentVehicleBase> InvestmentVehicle { get; set; }
@@ -19,7 +19,6 @@ namespace RetireSimple.Engine.Data {
 		public DbSet<InvestmentTransfer> InvestmentTransfer { get; set; }
 		public DbSet<InvestmentVehicleModel> InvestmentVehicleModel { get; set; }
 
-
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.ApplyConfiguration(new InvestmentBaseConfiguration());
 			modelBuilder.ApplyConfiguration(new InvestmentVehicleBaseConfiguration());
@@ -29,10 +28,16 @@ namespace RetireSimple.Engine.Data {
 			modelBuilder.ApplyConfiguration(new ExpenseBaseConfiguration());
 			modelBuilder.ApplyConfiguration(new InvestmentTransferConfiguration());
 			modelBuilder.ApplyConfiguration(new InvestmentVehicleModelConfiguration());
-
-
 		}
+	}
 
+	public class InvestmentDBContextFactory : IDesignTimeDbContextFactory<EngineDbContext> {
+		public EngineDbContext CreateDbContext(string[] args) {
+			var optionsBuilder = new DbContextOptionsBuilder<EngineDbContext>();
+			optionsBuilder.UseSqlite("Data Source=ef_design.db");
+
+			return new EngineDbContext(optionsBuilder.Options);
+		}
 	}
 
 }

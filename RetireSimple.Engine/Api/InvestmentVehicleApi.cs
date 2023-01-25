@@ -6,12 +6,12 @@ namespace RetireSimple.Engine.Api {
 
 	/// <summary>
 	/// Defines common operations that may be perfomed on an investment vehicle.
-	/// Requires passing an <see cref="InvestmentDBContext"/> instance on construction to use
+	/// Requires passing an <see cref="EngineDbContext"/> instance on construction to use
 	/// </summary>
 	public class InvestmentVehicleApi {
-		private readonly InvestmentDBContext _context;
+		private readonly EngineDbContext _context;
 
-		public InvestmentVehicleApi(InvestmentDBContext context) {
+		public InvestmentVehicleApi(EngineDbContext context) {
 			_context = context;
 		}
 

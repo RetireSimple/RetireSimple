@@ -9,10 +9,10 @@ namespace RetireSimple.Backend.Controllers {
 	[Route("api/[controller]")]
 	[ApiController]
 	public class InvestmentController : ControllerBase {
-		private readonly InvestmentDBContext _context;
+		private readonly EngineDbContext _context;
 		private readonly Random _rand;
 
-		public InvestmentController(InvestmentDBContext context) {
+		public InvestmentController(EngineDbContext context) {
 			_context = context;
 			_rand = new Random();
 		}

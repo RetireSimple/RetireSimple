@@ -1,13 +1,13 @@
 ﻿namespace RetireSimple.Tests.DomainModel {
     public class InvestmentVehicleTests : IDisposable {
-        InvestmentDBContext context { get; set; }
+        EngineDbContext context { get; set; }
 
         private readonly ITestOutputHelper output;
 
         public InvestmentVehicleTests(ITestOutputHelper output) {
-            context = new InvestmentDBContext(
+            context = new EngineDbContext(
                 new DbContextOptionsBuilder()
-                    .UseSqlite("Data Source=InvestmentDB_vehicletests.db")
+                    .UseSqlite("Data Source=testing_vehicle.db")
                     .Options);
             context.Database.Migrate();
             context.Database.EnsureCreated();

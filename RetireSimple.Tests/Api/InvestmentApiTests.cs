@@ -3,14 +3,14 @@
 namespace RetireSimple.Tests.Api {
 	public class InvestmentApiTests : IDisposable {
 		private readonly ITestOutputHelper output;
-		private readonly InvestmentDBContext context;
+		private readonly EngineDbContext context;
 		private readonly InvestmentApi api;
 
 		public InvestmentApiTests(ITestOutputHelper _output) {
 			output = _output;
-			context = new InvestmentDBContext(
+			context = new EngineDbContext(
 				new DbContextOptionsBuilder()
-					.UseSqlite("Data Source=InvestmentDB_api_invest.db")
+					.UseSqlite("Data Source=testing_api_invest.db")
 					.Options);
 			context.Database.Migrate();
 			context.Database.EnsureCreated();

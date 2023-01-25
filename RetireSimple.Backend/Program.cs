@@ -18,10 +18,10 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<InvestmentDBContext>(options => _ =
+builder.Services.AddDbContext<EngineDbContext>(options => _ =
 	builder.Configuration["Provider"] switch {
 		"sqlite" =>
-			options.UseSqlite("Data Source=InvestmentDB.db"),
+			options.UseSqlite("Data Source=EngineDB.db"),
 		_ => throw new ArgumentException("Invalid provider")
 	});
 
@@ -32,7 +32,7 @@ var app = builder.Build();
 if(app.Configuration["Provider"] == "sqlite") {
 	using(var scope = app.Services.CreateScope()) {
 
-		var context = scope.ServiceProvider.GetRequiredService<InvestmentDBContext>();
+		var context = scope.ServiceProvider.GetRequiredService<EngineDbContext>();
 		context.Database.Migrate();
 		context.Database.EnsureCreated();
 	}
