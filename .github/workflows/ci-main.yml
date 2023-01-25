@@ -31,13 +31,6 @@ jobs:
         run: dotnet build ./RetireSimple.Tests/RetireSimple.Tests.csproj --no-restore --no-dependencies
       - name: Execute Tests
         run: dotnet test --no-build --verbosity normal
-      #- name: Upload Compiled Engine Artifact
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: engine_compiled
-      #    path: | 
-      #      RetireSimple.Engine/bin/
-      #    retention-days: 1
 
   backend-build:
     name: RetireSimple.Backend
@@ -45,10 +38,6 @@ jobs:
     needs: engine-build
     steps:
       - uses : actions/checkout@v3
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 6.x
       - name: Restore NuGet Cache
         uses: actions/cache@v3
         with:
@@ -56,13 +45,19 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - uses: actions/cache@v3
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Restore .NET Projects
         run: dotnet restore
-      #- name: Retreive Compiled Engine Artifact
-      #  uses: actions/download-artifact@v3
-      #  with:
-      #    name: engine_compiled
-      #    path: RetireSimple.Engine/bin/
       - name: Build Backend
         run: dotnet build ./RetireSimple.Backend/RetireSimple.Backend.csproj --no-restore 
         
