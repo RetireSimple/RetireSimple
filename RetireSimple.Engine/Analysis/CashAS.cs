@@ -13,15 +13,15 @@ namespace RetireSimple.Engine.Analysis {
 
 		};
 
-		public static OptionsDict CashAnalysisOption(InvestmentBase investment, OptionsDict dict) {
+		public static OptionsDict MergeAnalysisOptions(CashInvestment investment, OptionsDict dict) {
 			var newDict = new OptionsDict(dict);
 			var investmentOptions = investment.AnalysisOptionsOverrides;
 
-			foreach (var k in investmentOptions.Keys) {
+			foreach(var k in investmentOptions.Keys) {
 				newDict.TryAdd(k, investmentOptions[k]);
 			}
 
-			foreach (var k in DefaultCashAnalysisOptions.Keys) {
+			foreach(var k in DefaultCashAnalysisOptions.Keys) {
 				newDict.TryAdd(k, DefaultCashAnalysisOptions[k]);
 			}
 

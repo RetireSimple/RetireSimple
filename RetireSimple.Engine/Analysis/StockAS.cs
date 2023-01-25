@@ -78,7 +78,7 @@ namespace RetireSimple.Engine.Analysis {
 			return priceModel;
 		}
 
-		public static OptionsDict stockAnalysisOption(InvestmentBase investment, OptionsDict dict) {
+		public static OptionsDict MergeAnalysisOptions(StockInvestment investment, OptionsDict dict) {
 			var newDict = new OptionsDict(dict);
 			var investmentOptions = investment.AnalysisOptionsOverrides;
 

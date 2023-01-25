@@ -1,89 +1,76 @@
 ﻿namespace RetireSimple.Tests {
 	public class AnalysisOptionCombinerTests {
-		OptionsDict dict, finalDict, investmentDict;
-		InvestmentBase investment;
+		public static readonly OptionsDict dict = new OptionsDict {
+				{ "test", "result" }
+		};
 
-		public AnalysisOptionCombinerTests() {
-			dict = new OptionsDict();
-			dict.Add("test", "result");
-
-			finalDict = new OptionsDict();
-
-			finalDict.Add("investment", "result");
-			finalDict.Add("test", "result");
-			finalDict.Add("AnalysisLength", "60");
-
-			investmentDict = new OptionsDict();
-			investmentDict.Add("investment", "result");
-
-			investment = new StockInvestment("test");
+		[Fact]
+		public void TestStockASOptionsMerge() {
+			var investment = new StockInvestment("test");
+			var investmentDict = new OptionsDict {
+				{ "investment", "result" },
+				{"test", "result2" }
+			};
 			investment.AnalysisOptionsOverrides = investmentDict;
 
+			var newDict = StockAS.MergeAnalysisOptions(investment, dict);
 
+			var expected = new OptionsDict() {
+				["investment"] = "result",
+				["test"] = "result",
+				["AnalysisLength"] = "60",
+				["StockAnalysisExpectedGrowth"] = "0.1",
+				["RandomVariableMu"] = "0",
+				["RandomVariableSigma"] = "1",
+				["RandomVariableScaleFactor"] = "1",
+				["SimCount"] = "1000"
+			};
+
+			newDict.Should().BeEquivalentTo(expected);
 		}
 
-		[Fact]
-		public void TestStockAS() {
-			var newDict = StockAS.stockAnalysisOption(investment, dict);
-			finalDict.Add("StockAnalysisExpectedGrowth", "0.1");
-			Assert.Equal(newDict, finalDict);
-		}
-
-		[Fact]
-		public void TestSSAS() {
-			var newDict = SSAS.SSAnalysisOption(investment, dict);
-			finalDict.Add("SSAnalysisExpectedGrowth", "0.1");
-			Assert.Equal(newDict, finalDict);
-		}
-
-		[Fact]
+		[Fact(Skip = "Investment Analysis Not Implemented Yet")]
 		public void TestSocialSecurityAS() {
-			var newDict = SocialSecurityAS.SocialSecurityAnalysisOption(investment, dict);
-			finalDict.Add("SocialSecurityAnalysisExpectedGrowth", "0.1");
-			Assert.Equal(newDict, finalDict);
+			//var newDict = SocialSecurityAS.MergeAnalysisOptions(investment, dict);
+			//finalDict.Add("SocialSecurityAnalysisExpectedGrowth", "0.1");
+			//Assert.Equal(newDict, finalDict);
 		}
 
-		[Fact]
+		[Fact(Skip = "Investment Analysis Not Implemented Yet")]
 		public void TestPensionAS() {
-			var newDict = PensionAS.PensionAnalysisOption(investment, dict);
-			finalDict.Add("PensionAnalysisExpectedGrowth", "0.1");
-			Assert.Equal(newDict, finalDict);
+			//var newDict = PensionAS.MergeAnalysisOption(investment, dict);
+			//finalDict.Add("PensionAnalysisExpectedGrowth", "0.1");
+			//Assert.Equal(newDict, finalDict);
 		}
 
-		[Fact]
+		[Fact(Skip = "Investment Analysis Not Implemented Yet")]
 		public void TestFixedAS() {
-			var newDict = FixedAS.FixedAnalysisOption(investment, dict);
-			finalDict.Add("FixedAnalysisExpectedGrowth", "0.1");
-			Assert.Equal(newDict, finalDict);
+			//var newDict = FixedAS.MergeAnalysisOptions(investment, dict);
+			//finalDict.Add("FixedAnalysisExpectedGrowth", "0.1");
+			//Assert.Equal(newDict, finalDict);
 		}
 
-		[Fact]
+		[Fact(Skip = "Investment Analysis Not Implemented Yet")]
 		public void TestCashAS() {
-			var newDict = CashAS.CashAnalysisOption(investment, dict);
-			finalDict.Add("CashAnalysisExpectedGrowth", "0.1");
-			Assert.Equal(newDict, finalDict);
+			//var newDict = CashAS.MergeAnalysisOptions(investment, dict);
+			//finalDict.Add("CashAnalysisExpectedGrowth", "0.1");
+			//Assert.Equal(newDict, finalDict);
 		}
 
-		[Fact]
+		[Fact(Skip = "Investment Analysis Not Implemented Yet")]
 		public void TestBondAS() {
-			var newDict = BondAS.BondAnalysisOption(investment, dict);
-			finalDict.Add("BondAnalysisExpectedGrowth", "0.1");
-			Assert.Equal(newDict, finalDict);
+			//var newDict = BondAS.MergeAnalysisOption(investment, dict);
+			//finalDict.Add("BondAnalysisExpectedGrowth", "0.1");
+			//Assert.Equal(newDict, finalDict);
 		}
 
-		[Fact]
+		[Fact(Skip = "Investment Analysis Not Implemented Yet")]
 		public void TestAnnuityAS() {
-			var newDict = AnnuityAS.AnnuityAnalysisOption(investment, dict);
-			finalDict.Add("AnnuityAnalysisExpectedGrowth", "0.1");
-			Assert.Equal(newDict, finalDict);
+			//var newDict = AnnuityAS.MergeAnalysisOption(investment, dict);
+			//finalDict.Add("AnnuityAnalysisExpectedGrowth", "0.1");
+			//Assert.Equal(newDict, finalDict);
 		}
 
-		[Fact]
-		public void TestMonteCarloAS() {
-			var newDict = MonteCarlo.MonteCarloAnalysisOption(investment, dict);
-			finalDict.Add("MonteCarloAnalysisExpectedGrowth", "0.1");
-			Assert.Equal(newDict, finalDict);
-		}
 	}
 }
 

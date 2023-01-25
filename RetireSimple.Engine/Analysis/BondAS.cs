@@ -15,7 +15,7 @@ namespace RetireSimple.Engine.Analysis {
 
 		};
 
-		public static OptionsDict BondAnalysisOption(InvestmentBase investment, OptionsDict dict) {
+		public static OptionsDict MergeAnalysisOption(BondInvestment investment, OptionsDict dict) {
 			var newDict = new OptionsDict(dict);
 			var investmentOptions = investment.AnalysisOptionsOverrides;
 
