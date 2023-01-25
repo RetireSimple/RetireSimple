@@ -1,4 +1,4 @@
 ﻿namespace RetireSimple.Tests.Api {
-    internal class ExpensesAndTransfersApiTests {
-    }
+	internal class ExpensesAndTransfersApiTests {
+	}
 }

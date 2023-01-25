@@ -1,4 +1,4 @@
 ﻿namespace RetireSimple.Tests.Api {
-    internal class ProfileApiTests {
-    }
+	internal class ProfileApiTests {
+	}
 }

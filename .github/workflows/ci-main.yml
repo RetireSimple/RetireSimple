@@ -1,4 +1,4 @@
-name: Build/Testing CI
+name: CI Pipeline
 
 on:
   push:
@@ -7,26 +7,62 @@ on:
     branches: ["main"]
 
 jobs:
-  dotnet-build:
-    runs-on: windows-latest
+  engine-build:
+    name: RetireSimple.Engine
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.x
+      - name: Restore NuGet Cache
+        uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-      - name: Restore dependencies
+      - name: Restore .NET Projects
         run: dotnet restore
-      - name: Build Backend Project
-        run: dotnet build .\RetireSimple.Backend\RetireSimple.Backend.csproj --no-restore --no-dependencies
+      - name: Build Engine
+        run: dotnet build ./RetireSimple.Engine/RetireSimple.Engine.csproj --no-restore --no-dependencies
       - name: Build Test Project
-        run: dotnet build .\RetireSimple.Tests\RetireSimple.Tests.csproj --no-restore --no-dependencies
-      - name: Test
+        run: dotnet build ./RetireSimple.Tests/RetireSimple.Tests.csproj --no-restore --no-dependencies
+      - name: Execute Tests
         run: dotnet test --no-build --verbosity normal
 
-  node-build:
+  backend-build:
+    name: RetireSimple.Backend
+    runs-on: windows-latest
+    needs: engine-build
+    steps:
+      - uses : actions/checkout@v3
+      - name: Restore NuGet Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - uses: actions/cache@v3
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Restore .NET Projects
+        run: dotnet restore
+      - name: Build Backend
+        run: dotnet build ./RetireSimple.Backend/RetireSimple.Backend.csproj --no-restore 
+        
+  frontend-build:
+    name: RetireSimple.Frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -50,4 +86,3 @@ jobs:
           cd RetireSimple.Frontend
           npm install
           npm run build
-          cd ..

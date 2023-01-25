@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using RetireSimple.Backend.Services;
+using RetireSimple.Engine.Data;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -18,16 +18,10 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<InvestmentDBContext>(options => _ =
+builder.Services.AddDbContext<EngineDbContext>(options => _ =
 	builder.Configuration["Provider"] switch {
 		"sqlite" =>
-			options.UseSqlite("Data Source=InvestmentDB.db"
-			//x => x.MigrationsAssembly("RetireSimple.Migrations.Sqlite")
-			),
-		"mariadb" =>
-			options.UseMySql(ServerVersion.AutoDetect(builder.Configuration["ConnectionString"]),
-			x => x.MigrationsAssembly("RetireSimple.Migrations.MariaDB")
-			),
+			options.UseSqlite("Data Source=EngineDB.db"),
 		_ => throw new ArgumentException("Invalid provider")
 	});
 
@@ -38,7 +32,7 @@ var app = builder.Build();
 if(app.Configuration["Provider"] == "sqlite") {
 	using(var scope = app.Services.CreateScope()) {
 
-		var context = scope.ServiceProvider.GetRequiredService<InvestmentDBContext>();
+		var context = scope.ServiceProvider.GetRequiredService<EngineDbContext>();
 		context.Database.Migrate();
 		context.Database.EnsureCreated();
 	}
@@ -48,10 +42,6 @@ if(app.Configuration["Provider"] == "sqlite") {
 if(app.Environment.IsDevelopment()) {
 	app.UseSwagger();
 	app.UseSwaggerUI();
-
-	//This is to fix an issue related to packaging
-	app.UseHttpsRedirection();
-	//app.UseAuthorization();
 }
 
 if(app.Environment.IsProduction()) {
