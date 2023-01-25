@@ -42,10 +42,6 @@ if(app.Configuration["Provider"] == "sqlite") {
 if(app.Environment.IsDevelopment()) {
 	app.UseSwagger();
 	app.UseSwaggerUI();
-
-	//This is to fix an issue related to packaging
-	app.UseHttpsRedirection();
-	//app.UseAuthorization();
 }
 
 if(app.Environment.IsProduction()) {

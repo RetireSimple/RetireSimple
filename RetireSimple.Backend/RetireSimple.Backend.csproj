@@ -6,6 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Title>RetireSimple Backend</Title>
 		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
