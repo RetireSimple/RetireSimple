@@ -1,5 +1,8 @@
-﻿namespace RetireSimple.Tests.Analysis {
-	public class VehicleAnalysisTests {
+﻿using RetireSimple.Engine.Data;
+
+namespace RetireSimple.Tests.Analysis
+{
+    public class VehicleAnalysisTests {
 		//The purpose of these tests are to check if the default models are aggregated properly
 		//set of provide a set of mock models to aggregate for simplicity
 

@@ -1,14 +1,16 @@
-﻿using RetireSimple.Engine.DomainModel.Data.Investment;
+﻿using RetireSimple.Engine.Data;
+using RetireSimple.Engine.Data.Investment;
+using RetireSimple.Engine.Data.InvestmentVehicle;
 using RetireSimple.Engine.DomainModel.Data.InvestmentVehicle;
-using RetireSimple.Engine.Services;
 
-namespace RetireSimple.Engine.Api {
+namespace RetireSimple.Engine.Api
+{
 
-	/// <summary>
-	/// Defines common operations that may be perfomed on an investment vehicle.
-	/// Requires passing an <see cref="InvestmentDBContext"/> instance on construction to use
-	/// </summary>
-	public class InvestmentVehicleApi {
+    /// <summary>
+    /// Defines common operations that may be perfomed on an investment vehicle.
+    /// Requires passing an <see cref="InvestmentDBContext"/> instance on construction to use
+    /// </summary>
+    public class InvestmentVehicleApi {
 		private readonly InvestmentDBContext _context;
 
 		public InvestmentVehicleApi(InvestmentDBContext context) {

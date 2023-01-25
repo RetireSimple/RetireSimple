@@ -1,4 +1,8 @@
-﻿namespace RetireSimple.Tests.Analysis {
+﻿using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Investment;
+
+namespace RetireSimple.Tests.Analysis
+{
     public class StockDividendTests {
 
         StockInvestment TestInvestment { get; set; }

@@ -1,11 +1,12 @@
 ﻿using FluentAssertions.Execution;
 
 using MathNet.Numerics.Distributions;
+using RetireSimple.Engine.Data.Investment;
+using static RetireSimple.Engine.Analysis.MonteCarlo;
 
-using static RetireSimple.Engine.DomainModel.Analysis.MonteCarlo;
-
-namespace RetireSimple.Tests.Analysis {
-	public class StockMonteCarloTests {
+namespace RetireSimple.Tests.Analysis
+{
+    public class StockMonteCarloTests {
 
 		public StockInvestment TestInvestment { get; set; }
 

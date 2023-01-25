@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
-using RetireSimple.Engine.Services;
+using RetireSimple.Engine.Data;
 
 #nullable disable
 
-namespace RetireSimple.Backend.Migrations {
-	[DbContext(typeof(InvestmentDBContext))]
+namespace RetireSimple.Backend.Migrations
+{
+    [DbContext(typeof(InvestmentDBContext))]
     [Migration("20230119154121_BaseSchema")]
     partial class BaseSchema
     {

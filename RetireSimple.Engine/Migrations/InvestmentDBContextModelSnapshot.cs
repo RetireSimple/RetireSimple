@@ -4,13 +4,13 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
-using RetireSimple.Engine.Services;
+using RetireSimple.Engine.Data;
 
 #nullable disable
 
-namespace RetireSimple.Backend.Migrations {
-	[DbContext(typeof(InvestmentDBContext))]
+namespace RetireSimple.Backend.Migrations
+{
+    [DbContext(typeof(InvestmentDBContext))]
     partial class InvestmentDBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

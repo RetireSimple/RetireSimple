@@ -1,7 +1,8 @@
 ﻿using RetireSimple.Engine.Api;
 
-namespace RetireSimple.Tests.Api {
-	public class InvestmentVehicleApiTests : IDisposable {
+namespace RetireSimple.Tests.Api
+{
+    public class InvestmentVehicleApiTests : IDisposable {
 
 		private readonly ITestOutputHelper output;
 		private readonly InvestmentDBContext context;
