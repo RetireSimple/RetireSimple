@@ -1,17 +1,21 @@
 # RetireSimple
 
-## Tools Needed
+A financial modeling framework focused on retirement, designed around extensibility and user choice.
 
-- Visual Studio with the ASP.NET, NodeJS, and Data Storage Workloads
-  - VS Code can be used with the dotnet CLI + NodeJS separately, but the project is compiled as a VS Solution, which will become important when running builds
-- MariaDB Server
-  - We may use SQLite for single user, but this is still a good idea just in general
-  
-  ## Running
-  
-  - TODO Not far enough in the project to elaborate
-  
-  
-  ## CI/Merging
-  
-  - TODO Make this eventually.
+This project is currently under construction.
+
+## Toolchains/Building
+
+To compile/develop RetireSimple, the following tools are required:
+
+- .NET 6 (`dotnet` CLI)
+- `dotnet-ef` tools [(link)](https://learn.microsoft.com/en-us/ef/core/get-started/overview/install#get-the-entity-framework-core-tools)
+- Node.JS 16 (minimum compatible version, required for frontend build)
+
+The project can be opened in most modern IDEs and built using CLI tools, but was specifically constructed in Visual Studio which should provide the fullest compatibility with the project configuration.
+
+Windows machines are preferred for development as the `.esproj` format used by `dotnet` requires the use of .NET Framework 4.7 during build despite being a general wrapper over an Node project for Visual Studio. Development on other platforms is still viable, the use of the `--no-dependencies` flag with `dotnet build` will help in most cases.
+
+## Documentation
+
+Most of the documentation is still under construction and is subject to change until the initial release. This can be found on the [Wiki](https://github.com/rhit-westeraj/RetireSimple/wiki)
