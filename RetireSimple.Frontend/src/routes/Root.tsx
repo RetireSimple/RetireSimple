@@ -2,9 +2,10 @@ import React from 'react';
 import {useForm} from 'react-hook-form';
 import {InvestmentModelGraph} from '../components/InvestmentModelGraph';
 import {Investment, InvestmentModel, StockInfo} from '../models/Interfaces';
-import {Box, Grid} from '@mui/material';
+import {Box, Grid, Paper} from '@mui/material';
 import {InvestmentListItem, mapListItemProps} from '../components/Sidebar/InvestmentListItem';
 import Skeleton from '@mui/material/Skeleton';
+import {addStock, getInvestmentModel, getInvestments} from '../api/InvestmentApi';
 
 export const Root = () => {
 
@@ -19,34 +20,17 @@ export const Root = () => {
 	const {register, handleSubmit} = useForm<StockInfo>();
 
 	const onSubmit = handleSubmit((formData: any) => {
-		fetch('/api/Investment/AddStock', {
-			method: 'POST', body: JSON.stringify(formData),
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json; charset=utf-8'
-			},
-		})
+		addStock(formData)
 			.then(async () => await populateInvestmentData());
 	});
 
 	const getAnalysis = async () => {
-		const response = await fetch(`/api/Analysis/GetAnaylsis?investmentID=${investmentModelId}`, {method: 'POST'});
-		const data: InvestmentModel = await response.json();
-		setInvestmentModels(data);
+		setInvestmentModels(await getInvestmentModel(Number.parseInt(investmentModelId)));
 	};
 
 	const populateInvestmentData = async () => {
-		const response = await fetch('/api/Investment/GetAllInvestments');
-		const data = await response.json();
-		setInvestments(data);
+		setInvestments(await getInvestments());
 		setLoading(false);
-	};
-
-	const addNewInvestment = async () => {
-		const request = new Request('/api/Investment/AddRandomStock', {method: 'POST'});
-
-		fetch(request).then(async () =>
-			await populateInvestmentData());
 	};
 
 	React.useEffect(() => {
@@ -75,10 +59,13 @@ export const Root = () => {
 	};
 
 	let chart = renderAnalysis();
-	let contents = renderInvestmentsTable(investments);
+	let contents = (<Paper elevation={2}>{renderInvestmentsTable(investments)}</Paper>);
 
 	return (
 		<div>
+
+			{contents}
+
 			<div>
 				<form onSubmit={onSubmit}>
 					<label>Ticker</label>
@@ -99,15 +86,12 @@ export const Root = () => {
 				</form>
 			</div>
 
-			<button onClick={addNewInvestment}>Add New Random Stonk</button>
-
 			<h1 id="tabelLabel" >Investments</h1>
 			<p></p>
 			<input type="text" onChange={e => setInvestmentModelId(e.target.value)}></input>
 			<button onClick={getAnalysis}>Get Analysis Model</button>
 
 			{chart}
-			{contents}
 		</div>
 
 	);
