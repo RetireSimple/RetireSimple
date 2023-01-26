@@ -1,12 +1,15 @@
 ﻿using RetireSimple.Engine.Api;
 
-namespace RetireSimple.Tests.Api {
-	public class InvestmentApiTests : IDisposable {
+namespace RetireSimple.Tests.Api
+{
+	public class InvestmentApiTests : IDisposable
+	{
 		private readonly ITestOutputHelper output;
 		private readonly EngineDbContext context;
 		private readonly InvestmentApi api;
 
-		public InvestmentApiTests(ITestOutputHelper _output) {
+		public InvestmentApiTests(ITestOutputHelper _output)
+		{
 			output = _output;
 			context = new EngineDbContext(
 				new DbContextOptionsBuilder()
@@ -18,13 +21,15 @@ namespace RetireSimple.Tests.Api {
 			api = new InvestmentApi(context);
 		}
 
-		public void Dispose() {
+		public void Dispose()
+		{
 			context.Database.EnsureDeleted();
 			context.Dispose();
 		}
 
 		[Fact(Skip = "Not Implemented")]
-		public void AddInvestmentUnknownTypeThrowsException() {
+		public void AddInvestmentUnknownTypeThrowsException()
+		{
 			//TODO Implement me
 		}
 
@@ -35,7 +40,8 @@ namespace RetireSimple.Tests.Api {
 		InlineData(new object[] { "BondInvestment", typeof(BondInvestment) }),
 		InlineData(new object[] { "PensionInvestment", typeof(PensionInvestment) }),
 		InlineData(new object[] { "CashInvestment", typeof(CashInvestment) }),]
-		public void InvestmentAddStock(string type, Type expectedType) {
+		public void InvestmentAddStock(string type, Type expectedType)
+		{
 			//TODO Implement this test
 		}
 

@@ -1,5 +1,6 @@
 export interface Investment {
 	investmentId: number;
+	investmentName: string;
 	investmentType: string;
 	analysisType?: string;
 	lastAnalysis?: string; //treat as date later?
