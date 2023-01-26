@@ -47,7 +47,7 @@ export const Root = () => {
 		return loading ?
 			(<Skeleton variant="rectangular" width="100%" height={100} />)
 			: (
-				<Box sx={{outerHeight: '100%', width: '20%', alignSelf: 'start'}}>
+				<Box sx={{outerHeight: '100%', width: '100%', alignSelf: 'start'}}>
 					<Grid container spacing={2}>
 						{investments.map((investment: Investment) =>
 						(<Grid item xs={12} key={investment.investmentId}>
@@ -62,11 +62,11 @@ export const Root = () => {
 	let contents = (<Paper elevation={2}>{renderInvestmentsTable(investments)}</Paper>);
 
 	return (
-		<div>
-
-			{contents}
-
-			<div>
+		<Grid container spacing={2}>
+			<Grid item xs={3}>
+				{contents}
+			</Grid>
+			<Grid item xs={9}>
 				<form onSubmit={onSubmit}>
 					<label>Ticker</label>
 					<input {...register("ticker")} /><br />
@@ -84,15 +84,13 @@ export const Root = () => {
 					</select><br />
 					<input type="submit" />
 				</form>
-			</div>
 
-			<h1 id="tabelLabel" >Investments</h1>
-			<p></p>
-			<input type="text" onChange={e => setInvestmentModelId(e.target.value)}></input>
-			<button onClick={getAnalysis}>Get Analysis Model</button>
+				<input type="text" onChange={e => setInvestmentModelId(e.target.value)}></input>
+				<button onClick={getAnalysis}>Get Analysis Model</button>
 
-			{chart}
-		</div>
+				{chart}
+			</Grid>
+		</Grid>
 
 	);
 };

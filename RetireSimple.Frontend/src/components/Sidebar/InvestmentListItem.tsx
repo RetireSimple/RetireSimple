@@ -39,18 +39,15 @@ export const mapListItemProps = (investment: Investment) => {
 export const InvestmentListItem = (props: InvestmentListItemProps) => {
 	return (
 		<Box>
-			<Typography variant="h5" component="div" sx={{flexGrow: 1}}>
+			<Typography variant="body1" component="div" sx={{flexGrow: 1}}>
 				{props.investmentName}
 			</Typography>
-			<Typography variant='h6' component='div' sx={{flexGrow: 1}}>
+			<Typography variant='body2' component='div' sx={{flexGrow: 1}}>
 				Type: {props.investmentType +
 					(props.investmentTicker ? ` (${props.investmentTicker})` : '')}
 			</Typography>
-			<Typography variant='body1' component='div' sx={{flexGrow: 1}}>
-				{props.investmentValue}
-			</Typography>
-			<Typography variant='body1' component='div' sx={{flexGrow: 1}}>
-				${props.investmentNumberValue}
+			<Typography variant='body2' component='div' sx={{flexGrow: 1}}>
+				{props.investmentValue + "-> $" + props.investmentNumberValue}
 			</Typography>
 		</Box>
 	);
