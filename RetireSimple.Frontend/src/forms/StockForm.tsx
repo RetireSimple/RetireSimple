@@ -6,9 +6,11 @@ import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment';
 
 import React from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
+import {MonteCarloAnalysisForm} from './analysis/MonteCarloAnalysisForm';
 
 export const StockForm = () => {
 	const formContext = useFormContext();
+	const [analysisType, setAnalysisType] = React.useState<string>('MonteCarlo_NormalDist');
 
 	React.useEffect(() => {
 		return () => {
@@ -24,6 +26,18 @@ export const StockForm = () => {
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	const analysisSubForm = React.useCallback(() => {
+		switch (analysisType) {
+			case 'MonteCarlo_NormalDist':
+			case 'MonteCarlo_LogNormalDist':
+				return <MonteCarloAnalysisForm />;
+			default:
+				return <Typography variant='subtitle2' >No analysis parameters available</Typography>;
+		}
+	}, [analysisType]);
+
+
 
 	return (
 		<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
@@ -88,7 +102,7 @@ export const StockForm = () => {
 						name="stockDividendPercent"
 						control={formContext.control}
 						render={({field}) => (
-							<TextField {...field} label='Dividend %' fullWidth InputProps={{
+							<TextField {...field} label='Dividend Amt' fullWidth InputProps={{
 								endAdornment: <InputAdornment position="end">%</InputAdornment>,
 							}} />
 						)}
@@ -98,6 +112,7 @@ export const StockForm = () => {
 					<Controller
 						name="stockDividendDistributionInterval"
 						control={formContext.control}
+						defaultValue={'Month'}
 						render={({field}) => (
 							<FormControl fullWidth>
 								<InputLabel id="stockDividendDistributionInterval">Dividend Int.</InputLabel>
@@ -116,6 +131,7 @@ export const StockForm = () => {
 					<Controller
 						name="stockDividendDistributionMethod"
 						control={formContext.control}
+						defaultValue={'Stock'}
 						render={({field}) => (
 							<FormControl fullWidth>
 								<InputLabel id="stockDividendDistributionMethod">Dividend Method</InputLabel>
@@ -156,11 +172,16 @@ export const StockForm = () => {
 					<Controller
 						name="analysisType"
 						control={formContext.control}
+						defaultValue={"MonteCarlo_NormalDist"}
 						render={({field}) => (
 							<FormControl fullWidth>
 								<InputLabel id="analysisType">Analysis Type</InputLabel>
 								<Select {...field}
 									value={field.value}
+									onChange={e => {
+										setAnalysisType(e.target.value);
+										formContext.setValue('analysisType', e.target.value);
+									}}
 									label='Analysis Type'>
 									<MenuItem value="testAnalysis">Test Analysis</MenuItem>
 									<MenuItem value="MonteCarlo_NormalDist">Monte Carlo - Normal Dist.</MenuItem>
@@ -169,7 +190,9 @@ export const StockForm = () => {
 							</FormControl>
 						)} />
 				</Grid>
-
+				<Grid item xs={12}>
+					{analysisSubForm()}
+				</Grid>
 			</Grid>
 		</Box >
 	);
