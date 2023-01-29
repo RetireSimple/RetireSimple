@@ -1,4 +1,4 @@
-import {AppBar, Box, Grid, Paper, Typography} from '@mui/material';
+import {AppBar, Box, Divider, Grid, Icon, MenuItem, Paper, Stack, Typography} from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 import React from 'react';
 import {FieldValues} from 'react-hook-form';
@@ -7,12 +7,13 @@ import {InvestmentModelGraph} from '../components/InvestmentModelGraph';
 import {InvestmentListItem, mapListItemProps} from '../components/Sidebar/InvestmentListItem';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
 import {Investment, InvestmentModel} from '../models/Interfaces';
+import {AddInvestmentDialog} from '../dialogs/AddInvestmentDialog';
 
 export const Root = () => {
 
 	const [investments, setInvestments] = React.useState<Investment[]>([]);
 
-
+	const [addDialogOpen, setAddDialogOpen] = React.useState<boolean>(false);
 
 	const [investmentModels, setInvestmentModels] = React.useState<InvestmentModel>();
 
@@ -43,12 +44,19 @@ export const Root = () => {
 			(<Skeleton variant="rectangular" width="100%" height={100} />)
 			: (
 				<Box sx={{outerHeight: '100%', width: '100%', alignSelf: 'start'}}>
-					<Grid container spacing={2}>
+					<Stack spacing={2}>
 						{investments.map((investment: Investment) =>
-						(<Grid item xs={12} key={investment.investmentId}>
-							<InvestmentListItem {...mapListItemProps(investment)} />
-						</Grid>))}
-					</Grid>
+						(
+							<MenuItem key={investment.investmentId}>
+								<InvestmentListItem {...mapListItemProps(investment)} />
+							</MenuItem>
+						))}
+						<Divider />
+						<MenuItem onClick={() => setAddDialogOpen(true)}>
+							<Icon baseClassName='material-icons' >add_circle</Icon>
+							<Typography variant="body1" component="div" sx={{marginLeft: '10px'}}>Add Investment</Typography>
+						</MenuItem>
+					</Stack>
 				</Box>
 			);
 	};
@@ -76,6 +84,7 @@ export const Root = () => {
 					{chart} */}
 				</Grid>
 			</Grid>
+			<AddInvestmentDialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)} />
 		</div>
 
 	);

@@ -37,8 +37,6 @@ export const StockForm = () => {
 		}
 	}, [analysisType]);
 
-
-
 	return (
 		<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
 			<Typography variant='subtitle2' >Stock Information</Typography>
@@ -100,6 +98,8 @@ export const StockForm = () => {
 				<Grid item xs={2}>
 					<Controller
 						name="stockDividendPercent"
+						rules={{required: true, min: 0, max: 1}}
+
 						control={formContext.control}
 						render={({field}) => (
 							<TextField {...field} label='Dividend Amt' fullWidth InputProps={{
