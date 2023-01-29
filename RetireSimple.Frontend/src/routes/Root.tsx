@@ -1,32 +1,27 @@
-import React from 'react';
-import {useForm} from 'react-hook-form';
-import {InvestmentModelGraph} from '../components/InvestmentModelGraph';
-import {Investment, InvestmentModel, StockInfo} from '../models/Interfaces';
-import {Box, Grid, Paper} from '@mui/material';
-import {InvestmentListItem, mapListItemProps} from '../components/Sidebar/InvestmentListItem';
+import {AppBar, Box, Grid, Paper, Typography} from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
-import {addStock, getInvestmentModel, getInvestments} from '../api/InvestmentApi';
+import React from 'react';
+import {FieldValues} from 'react-hook-form';
+import {getInvestments} from '../api/InvestmentApi';
+import {InvestmentModelGraph} from '../components/InvestmentModelGraph';
+import {InvestmentListItem, mapListItemProps} from '../components/Sidebar/InvestmentListItem';
+import {InvestmentDataForm} from '../forms/InvestmentDataForm';
+import {Investment, InvestmentModel} from '../models/Interfaces';
 
 export const Root = () => {
 
 	const [investments, setInvestments] = React.useState<Investment[]>([]);
 
-	const [investmentModelId, setInvestmentModelId] = React.useState("");
+
 
 	const [investmentModels, setInvestmentModels] = React.useState<InvestmentModel>();
 
 	const [loading, setLoading] = React.useState<boolean>(true);
 
-	const {register, handleSubmit} = useForm<StockInfo>();
 
-	const onSubmit = handleSubmit((formData: any) => {
-		addStock(formData)
-			.then(async () => await populateInvestmentData());
-	});
-
-	const getAnalysis = async () => {
-		setInvestmentModels(await getInvestmentModel(Number.parseInt(investmentModelId)));
-	};
+	// const getAnalysis = async () => {
+	// 	setInvestmentModels(await getInvestmentModel(Number.parseInt(investmentModelId)));
+	// };
 
 	const populateInvestmentData = async () => {
 		setInvestments(await getInvestments());
@@ -62,35 +57,26 @@ export const Root = () => {
 	let contents = (<Paper elevation={2}>{renderInvestmentsTable(investments)}</Paper>);
 
 	return (
-		<Grid container spacing={2}>
-			<Grid item xs={3}>
-				{contents}
-			</Grid>
-			<Grid item xs={9}>
-				<form onSubmit={onSubmit}>
-					<label>Ticker</label>
-					<input {...register("ticker")} /><br />
-					<label>Name</label>
-					<input {...register("name")} /><br />
-					<label>Price</label>
-					<input {...register("price", {valueAsNumber: true})} /><br />
-					<label>Quantity</label>
-					<input {...register("quantity", {valueAsNumber: true})} /><br />
-					<label>AnalysisType</label>
-					<select {...register("analysisType")} >
-						<option value="testAnalysis">Test Analysis</option>
-						<option value="MonteCarlo_NormalDist">Monte Carlo - Normal Dist.</option>
-						<option value="MonteCarlo_LogNormalDist">Monte Carlo - Log Normal Dist.</option>
-					</select><br />
-					<input type="submit" />
-				</form>
+		<div>
+			<AppBar position="static" >
+				<Typography variant="h6" component="div" sx={{flexGrow: 1}}>RetireSimple</Typography>
+			</AppBar>
+			<Grid container spacing={2} sx={{marginTop: '40px'}}>
+				<Grid item xs={3}>
+					{contents}
+				</Grid>
+				<Grid item xs={9}>
 
-				<input type="text" onChange={e => setInvestmentModelId(e.target.value)}></input>
-				<button onClick={getAnalysis}>Get Analysis Model</button>
+					<InvestmentDataForm onSubmit={(data: FieldValues) => {console.log(data);}} />
 
-				{chart}
+					{/*
+					<input type="text" onChange={e => setInvestmentModelId(e.target.value)}></input>
+					<button onClick={getAnalysis}>Get Analysis Model</button>
+
+					{chart} */}
+				</Grid>
 			</Grid>
-		</Grid>
+		</div>
 
 	);
 };

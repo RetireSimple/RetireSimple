@@ -9,12 +9,6 @@ namespace RetireSimple.Engine.Data.Investment {
 		public AnalysisDelegate<BondInvestment>? analysis;
 
 		[JsonIgnore, NotMapped]
-		public string BondName {
-			get => InvestmentData["BondName"];
-			set => InvestmentData["BondName"] = value;
-		}
-
-		[JsonIgnore, NotMapped]
 		// interest payment received by a bondholder from the date of issuance until the date of maturity
 		public decimal BondCouponRate {
 			get => decimal.Parse(InvestmentData["BondCouponRate"]);
@@ -65,7 +59,7 @@ namespace RetireSimple.Engine.Data.Investment {
 					break;
 			}
 
-			//Overwrite The current Analysis Delegate Type 
+			//Overwrite The current Analysis Delegate Type
 			AnalysisType = analysisType;
 		}
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
