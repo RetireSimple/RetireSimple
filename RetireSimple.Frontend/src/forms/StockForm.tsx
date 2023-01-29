@@ -1,5 +1,3 @@
-
-
 import {Box, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography} from '@mui/material';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment';
@@ -49,8 +47,7 @@ export const StockForm = () => {
 							<FormControl fullWidth>
 								<TextField {...field} label='Ticker' />
 							</FormControl>
-						)}
-					/>
+						)} />
 				</Grid>
 				<Grid item xs={2}>
 					<Controller
@@ -60,8 +57,7 @@ export const StockForm = () => {
 							<TextField {...field} label='Price' fullWidth InputProps={{
 								startAdornment: <InputAdornment position="start">$</InputAdornment>,
 							}} />
-						)}
-					/>
+						)} />
 				</Grid>
 
 				<Grid item xs={2}>
@@ -70,8 +66,7 @@ export const StockForm = () => {
 						control={formContext.control}
 						render={({field}) => (
 							<TextField {...field} label='Quantity' fullWidth />
-						)}
-					/>
+						)} />
 				</Grid>
 				<Grid item xs={4}>
 					<Controller
@@ -105,8 +100,7 @@ export const StockForm = () => {
 							<TextField {...field} label='Dividend Amt' fullWidth InputProps={{
 								endAdornment: <InputAdornment position="end">%</InputAdornment>,
 							}} />
-						)}
-					/>
+						)} />
 				</Grid>
 				<Grid item xs={2}>
 					<Controller
@@ -124,8 +118,7 @@ export const StockForm = () => {
 									<MenuItem value="Annual">Annual</MenuItem>
 								</Select>
 							</FormControl>
-						)}
-					/>
+						)} />
 				</Grid>
 				<Grid item xs={2}>
 					<Controller
@@ -143,8 +136,7 @@ export const StockForm = () => {
 									<MenuItem value="DRIP">DRIP</MenuItem>
 								</Select>
 							</FormControl>
-						)}
-					/>
+						)} />
 				</Grid>
 				<Grid item xs={4}>
 					<Controller

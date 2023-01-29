@@ -1,7 +1,7 @@
 import {AppBar, Box, Divider, Grid, Icon, MenuItem, Paper, Stack, Typography} from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 import React from 'react';
-import {FieldValues} from 'react-hook-form';
+import {FieldValues, FormProvider, useForm} from 'react-hook-form';
 import {getInvestments} from '../api/InvestmentApi';
 import {InvestmentModelGraph} from '../components/InvestmentModelGraph';
 import {InvestmentListItem, mapListItemProps} from '../components/Sidebar/InvestmentListItem';
@@ -10,19 +10,14 @@ import {Investment, InvestmentModel} from '../models/Interfaces';
 import {AddInvestmentDialog} from '../dialogs/AddInvestmentDialog';
 
 export const Root = () => {
-
 	const [investments, setInvestments] = React.useState<Investment[]>([]);
-
 	const [addDialogOpen, setAddDialogOpen] = React.useState<boolean>(false);
-
 	const [investmentModels, setInvestmentModels] = React.useState<InvestmentModel>();
-
 	const [loading, setLoading] = React.useState<boolean>(true);
 
 
-	// const getAnalysis = async () => {
-	// 	setInvestmentModels(await getInvestmentModel(Number.parseInt(investmentModelId)));
-	// };
+	const investmentDataFormContext = useForm();
+
 
 	const populateInvestmentData = async () => {
 		setInvestments(await getInvestments());
@@ -74,14 +69,15 @@ export const Root = () => {
 					{contents}
 				</Grid>
 				<Grid item xs={9}>
-
-					<InvestmentDataForm onSubmit={(data: FieldValues) => {console.log(data);}} />
-
+					<FormProvider {...investmentDataFormContext}>
+						<InvestmentDataForm onSubmit={(data: FieldValues) => {console.log(data);}} />
+					</FormProvider>
 					{/*
 					<input type="text" onChange={e => setInvestmentModelId(e.target.value)}></input>
 					<button onClick={getAnalysis}>Get Analysis Model</button>
 
 					{chart} */}
+
 				</Grid>
 			</Grid>
 			<AddInvestmentDialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)} />

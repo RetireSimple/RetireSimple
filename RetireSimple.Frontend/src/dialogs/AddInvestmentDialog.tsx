@@ -1,5 +1,5 @@
-import {Dialog, DialogTitle} from '@mui/material';
-import {FieldValues} from 'react-hook-form';
+import {Button, Dialog, DialogActions, DialogTitle} from '@mui/material';
+import {FieldValues, FormProvider, useForm} from 'react-hook-form';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
 
 export interface AddInvestmentDialogProps {
@@ -9,17 +9,36 @@ export interface AddInvestmentDialogProps {
 
 export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 
-	const handleClose = () => props.onClose;
+	const formContext = useForm({shouldUnregister: true});
 
-	const handleSubmit = (data: FieldValues) => {
+	// formContext.handleSubmit((data: FieldValues) => {
+	// 	console.log(data);
+	// });
+
+	const handleClose = () => props.onClose();
+
+	const onSubmit = (data: FieldValues) => {
 		console.log(data);
 		handleClose();
 	};
 
+	const handleAdd = () => {
+		const data = formContext.getValues();
+		console.log(data);
+		handleClose();
+	};
+
+
 	return (
-		<Dialog onCanPlay={handleClose} open={props.open}>
-			<DialogTitle>Add Investment</DialogTitle>
-			<InvestmentDataForm onSubmit={handleSubmit} />
-		</Dialog>
+		<FormProvider {...formContext}>
+			<Dialog onCanPlay={handleClose} open={props.open}>
+				<DialogTitle>Add Investment</DialogTitle>
+				<InvestmentDataForm onSubmit={onSubmit} />
+				<DialogActions>
+					<Button onClick={handleClose}>Cancel</Button>
+					<Button onClick={handleAdd}>Add</Button>
+				</DialogActions>
+			</Dialog>
+		</FormProvider>
 	);
 };
