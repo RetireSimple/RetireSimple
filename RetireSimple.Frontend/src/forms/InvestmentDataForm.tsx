@@ -26,53 +26,60 @@ export const InvestmentDataForm = ({onSubmit}: {onSubmit: any;}) => {
 		}
 	}, [investmentType]);
 
+	//==============================================
+	//Field definitions (To reduce indent depth)
+	//==============================================
+	const investmentNameField = (
+		<Controller
+			name='investmentName'
+			control={formContext.control}
+			defaultValue=''
+			render={({field}) => (
+				<FormControl
+					error={!!errors.investmentName}
+					fullWidth
+				>
+					<TextField {...field} size='small' label='Investment Name' />
+					<FormHelperText>{errors?.investmentName?.message as string}</FormHelperText>
+				</FormControl>
+			)} />);
+
+	const investmentTypeField = (
+		<Controller
+			name='investmentType'
+			control={formContext.control}
+			defaultValue='StockInvestment'
+			render={({field}) => (
+				<FormControl
+					error={!!errors.investmentType}
+					fullWidth
+					size='small'>
+					<InputLabel id='investmentType'>Investment Type</InputLabel>
+					<Select
+						label='Investment Type'
+						value={investmentType}
+						onChange={(e) => {
+							setInvestmentType(e.target.value as string);
+							field.onChange(e);
+						}}
+						inputRef={formContext.register('investmentType').ref}
+					>
+						<MenuItem value='StockInvestment'>Stock</MenuItem>
+						<MenuItem value='BondInvestment'>Bond</MenuItem>
+					</Select>
+					<FormHelperText>{errors?.investmentType?.message as string}</FormHelperText>
+				</FormControl>
+			)} />);
+
 	return (<>
 		<FormProvider {...formContext}>
 			<form onSubmit={formContext.handleSubmit(onSubmit)}>
 				<Box sx={{margin: '2rem'}}>
 					<Grid container spacing={2}>
-						<Grid item xs={6}>
-							<Controller
-								name='investmentName'
-								control={formContext.control}
-								defaultValue=''
-								render={({field}) => (
-									<FormControl
-										error={!!errors.investmentName}
-										fullWidth>
-										<TextField {...field} label='Investment Name' />
-										<FormHelperText>{errors?.investmentName?.message as string}</FormHelperText>
-									</FormControl>
-								)} />
-						</Grid>
-						<Grid item xs={6}>
-							<Controller
-								name='investmentType'
-								control={formContext.control}
-								defaultValue='StockInvestment'
-								render={({field}) => (
-									<FormControl
-										error={!!errors.investmentType}
-										fullWidth>
-										<InputLabel id='investmentType'>Investment Type</InputLabel>
-										<Select
-											label='Investment Type'
-											value={investmentType}
-											onChange={(e) => {
-												setInvestmentType(e.target.value as string);
-												field.onChange(e);
-											}}
-											inputRef={formContext.register('investmentType').ref}
-										>
-											<MenuItem value='StockInvestment'>Stock</MenuItem>
-											<MenuItem value='BondInvestment'>Bond</MenuItem>
-										</Select>
-										<FormHelperText>{errors?.investmentType?.message as string}</FormHelperText>
-									</FormControl>
-								)} />
-						</Grid>
-						{investmentTypeSubform()}
+						<Grid item xs={4}>{investmentNameField}</Grid>
+						<Grid item xs={4}>{investmentTypeField}</Grid>
 					</Grid>
+					{investmentTypeSubform()}
 				</Box>
 			</form>
 		</FormProvider>

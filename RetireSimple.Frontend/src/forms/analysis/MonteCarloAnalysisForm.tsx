@@ -18,79 +18,92 @@ export const MonteCarloAnalysisForm = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	//==============================================
+	//Field definitions (To reduce indent depth)
+	//==============================================
+	const analysisLengthField = (
+		<Controller
+			name="analysisLength"
+			control={formContext.control}
+			render={({field}) => (
+				<TextField {...field}
+					label='Analysis Length (Months)'
+					fullWidth
+					size='small'
+					error={!!errors.analysisLength}
+					helperText={errors.analysisLength?.message as string}
+				/>
+			)} />);
+
+	const simCountField = (
+		<Controller
+			name="simCount"
+			control={formContext.control}
+			render={({field}) => (
+				<TextField {...field}
+					label='Simulation Count'
+					fullWidth
+					size='small'
+					error={!!errors.simCount}
+					helperText={errors.simCount?.message as string}
+				/>
+			)} />);
+
+	const randomVariableMuField = (
+		<Controller
+			name="randomVariableMu"
+			control={formContext.control}
+			render={({field}) => (
+				<TextField {...field}
+					label='Mu'
+					fullWidth
+					error={!!errors.randomVariableMu}
+					size='small'
+					helperText={errors.randomVariableMu?.message as string}
+				/>
+			)} />);
+
+	const randomVariableSigmaField = (
+		<Controller
+			name="randomVariableSigma"
+			control={formContext.control}
+			render={({field}) => (
+				<TextField {...field}
+					label='Sigma'
+					fullWidth
+					error={!!errors.randomVariableSigma}
+					size='small'
+					helperText={errors.randomVariableSigma?.message as string}
+				/>
+			)} />);
+
+	const randomVariableScaleFactorField = (
+		<Controller
+			name="randomVariableScaleFactor"
+			control={formContext.control}
+			render={({field}) => (
+				<TextField {...field}
+					label='Scale Factor'
+					fullWidth
+					error={!!errors.randomVariableScaleFactor}
+					size='small'
+					helperText={errors.randomVariableScaleFactor?.message as string}
+				/>
+			)} />);
+
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
 				<Typography variant='subtitle2' >Monte Carlo Analysis Parameters</Typography>
 			</Grid>
-			<Grid item xs={4}>
-				<Controller
-					name="analysisLength"
-					control={formContext.control}
-					render={({field}) => (
-						<TextField {...field}
-							label='Analysis Length (Months)'
-							fullWidth
-							error={!!errors.analysisLength}
-							helperText={errors.analysisLength?.message as string}
-						/>
-					)} />
-			</Grid>
-			<Grid item xs={4}>
-				<Controller
-					name="simCount"
-					control={formContext.control}
-					render={({field}) => (
-						<TextField {...field}
-							label='Simulation Count'
-							fullWidth
-							error={!!errors.simCount}
-							helperText={errors.simCount?.message as string}
-						/>
-					)} />
-			</Grid>
+			<Grid item xs={4}>{analysisLengthField}</Grid>
+			<Grid item xs={4}>{simCountField}</Grid>
 			<Grid item xs={12}>
 				<Typography variant='subtitle2' >Random Variable Parameters (Normal)</Typography>
 			</Grid>
-			<Grid item xs={4}>
-				<Controller
-					name="randomVariableMu"
-					control={formContext.control}
-					render={({field}) => (
-						<TextField {...field}
-							label='Mu'
-							fullWidth
-							error={!!errors.randomVariableMu}
-							helperText={errors.randomVariableMu?.message as string}
-						/>
-					)} />
-			</Grid>
-			<Grid item xs={4}>
-				<Controller
-					name="randomVariableSigma"
-					control={formContext.control}
-					render={({field}) => (
-						<TextField {...field}
-							label='Sigma'
-							fullWidth
-							error={!!errors.randomVariableSigma}
-							helperText={errors.randomVariableSigma?.message as string}
-						/>
-					)} />
-			</Grid>
-			<Grid item xs={4}>
-				<Controller
-					name="randomVariableScaleFactor"
-					control={formContext.control}
-					render={({field}) => (
-						<TextField {...field}
-							label='Scale Factor'
-							fullWidth
-							error={!!errors.randomVariableScaleFactor}
-							helperText={errors.randomVariableScaleFactor?.message as string}
-						/>
-					)} />
-			</Grid>
+			<Grid item xs={2}>{randomVariableMuField}</Grid>
+			<Grid item xs={2}>{randomVariableSigmaField}</Grid>
+			<Grid item xs={2}>{randomVariableScaleFactorField}</Grid>
 		</Grid>
 	);
 };

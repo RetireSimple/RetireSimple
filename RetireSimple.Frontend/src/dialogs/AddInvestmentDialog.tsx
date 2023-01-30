@@ -35,7 +35,9 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 
 	return (
 		<FormProvider {...formContext}>
-			<Dialog onCanPlay={handleClose} open={props.open}>
+			<Dialog onCanPlay={handleClose}
+			open={props.open}
+			maxWidth='md'>
 				<DialogTitle>Add Investment</DialogTitle>
 				<InvestmentDataForm onSubmit={onSubmit} />
 				<DialogActions>

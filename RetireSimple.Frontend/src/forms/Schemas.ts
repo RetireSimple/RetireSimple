@@ -1,15 +1,18 @@
 import {number, object, string} from 'yup';
 
 export const investmentFormSchema = object().shape({
-	investmentName: string().defined().required(),
-	investmentType: string().defined().oneOf(['StockInvestment', 'BondInvestment']).required(),
+	investmentName: string().defined('Required').required(),
+	investmentType: string()
+		.defined('Required')
+		.oneOf(['StockInvestment', 'BondInvestment'])
+		.required(),
 	analysisType: string()
 		.required()
 		.when('investmentType', {
 			is: 'StockInvestment',
 			then: (schema) =>
 				schema
-					.defined()
+					.defined('Required')
 					.oneOf(['MonteCarlo_NormalDist', 'MonteCarlo_LogNormalDist', 'testAnalysis']),
 		})
 		.when('investmentType', {
@@ -22,7 +25,7 @@ export const investmentFormSchema = object().shape({
 	//========================================
 	stockTicker: string().when('investmentType', {
 		is: 'StockInvestment',
-		then: (schema) => schema.defined().required().min(3).max(5).uppercase(),
+		then: (schema) => schema.defined('Required').required().min(3).max(5).uppercase(),
 		otherwise: (schema) => schema.strip(),
 	}),
 
@@ -30,7 +33,7 @@ export const investmentFormSchema = object().shape({
 		is: 'StockInvestment',
 		then: (schema) =>
 			schema
-				.defined()
+				.defined('Required')
 				.positive()
 				.test('is-decimal', 'Price must be a decimal', (value) =>
 					value ? /^\d+(\.\d{1,2})?$/.test(value.toString()) : false,
@@ -42,7 +45,7 @@ export const investmentFormSchema = object().shape({
 		is: 'StockInvestment',
 		then: (schema) =>
 			schema
-				.defined()
+				.defined('Required')
 				.positive()
 				.test('is-decimal', 'Quantity must be a decimal', (value) =>
 					value ? /^\d+(\.\d{1,2})?$/.test(value.toString()) : false,
@@ -52,14 +55,14 @@ export const investmentFormSchema = object().shape({
 	}),
 	stockPurchaseDate: string().when('investmentType', {
 		is: 'StockInvestment',
-		then: (schema) => schema.defined().required(),
+		then: (schema) => schema.defined('Required').required(),
 		otherwise: (schema) => schema.strip(),
 	}),
 	stockDividendPercent: number().when('investmentType', {
 		is: 'StockInvestment',
 		then: (schema) =>
 			schema
-				.defined()
+				.defined('Required')
 				.positive()
 				.test('is-decimal', 'Dividend Percent must be a decimal', (value) =>
 					value ? /^\d+(\.\d{1,4})?$/.test(value.toString()) : false,
@@ -69,36 +72,89 @@ export const investmentFormSchema = object().shape({
 	}),
 	stockDividendDistributionInterval: string().when('investmentType', {
 		is: 'StockInvestment',
-		then: (schema) => schema.defined().oneOf(['Month', 'Quarter', 'Annual']).required(),
+		then: (schema) =>
+			schema.defined('Required').oneOf(['Month', 'Quarter', 'Annual']).required(),
 		otherwise: (schema) => schema.strip(),
 	}),
 	stockDividendDistributionMethod: string().when('investmentType', {
 		is: 'StockInvestment',
-		then: (schema) => schema.defined().oneOf(['Stock', 'Cash', 'DRIP']).required(),
+		then: (schema) => schema.defined('Required').oneOf(['Stock', 'Cash', 'DRIP']).required(),
 		otherwise: (schema) => schema.strip(),
 	}),
 	stockDividendFirstPaymentDate: string().when('investmentType', {
 		is: 'StockInvestment',
-		then: (schema) => schema.defined().required(),
+		then: (schema) => schema.defined('Required').required(),
 		otherwise: (schema) => schema.strip(),
 	}),
 
 	//========================================
 	// Bond Investment Specific Fields
 	//========================================
-	//todo - add bond specific fields
+	//TODO modify engine defs to include
+	// bondTicker: string().when('investmentType', {
+	// 	is: 'BondInvestment',
+	// 	then: (schema) => schema.defined('Required').required().min(3).max(5).uppercase(),
+	// 	otherwise: (schema) => schema.strip(),
+	// }),
+	bondCouponRate: number().when('investmentType', {
+		is: 'BondInvestment',
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.positive()
+				.test('is-decimal', 'Coupon Rate must be a decimal', (value) =>
+					value ? /^\d+(\.\d{1,4})?$/.test(value.toString()) : false,
+				)
+				.required(),
+		otherwise: (schema) => schema.strip(),
+	}),
+	bondPurchaseDate: string().when('investmentType', {
+		is: 'BondInvestment',
+		then: (schema) => schema.defined('Required').required(),
+		otherwise: (schema) => schema.strip(),
+	}),
+	bondMaturityDate: string().when('investmentType', {
+		is: 'BondInvestment',
+		then: (schema) => schema.defined('Required').required(),
+		otherwise: (schema) => schema.strip(),
+	}),
+	bondFaceValue: number().when('investmentType', {
+		is: 'BondInvestment',
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.positive()
+				.test('is-decimal', 'Face Value must be a decimal', (value) =>
+					value ? /^\d+(\.\d{1,2})?$/.test(value.toString()) : false,
+				)
+				.required(),
+		otherwise: (schema) => schema.strip(),
+	}),
+	bondPurchasePrice: number().when('investmentType', {
+		is: 'BondInvestment',
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.positive()
+				.test('is-decimal', 'Purchase Price must be a decimal', (value) =>
+					value ? /^\d+(\.\d{1,2})?$/.test(value.toString()) : false,
+				)
+				.required(),
+		otherwise: (schema) => schema.strip(),
+	}),
 
 	//========================================
 	// Monte Carlo Analysis Specific Fields
 	//========================================
 	analysisLength: number().when('analysisType', {
 		is: (value: string) => value !== 'testAnalysis',
-		then: (schema) => schema.defined().positive().required(),
+		then: (schema) => schema.defined('Required').positive().required(),
+		otherwise: (schema) => schema.strip(),
 	}),
 	simCount: number().when('analysisType', {
 		is: (value: string) =>
 			value === 'MonteCarlo_NormalDist' || value === 'MonteCarlo_LogNormalDist',
-		then: (schema) => schema.defined().positive().required(),
+		then: (schema) => schema.defined('Required').positive().required(),
 		otherwise: (schema) => schema.strip(),
 	}),
 	randomVariableMu: number().when('analysisType', {
@@ -106,8 +162,8 @@ export const investmentFormSchema = object().shape({
 			value === 'MonteCarlo_NormalDist' || value === 'MonteCarlo_LogNormalDist',
 		then: (schema) =>
 			schema
-				.defined()
-				.test('is-decimal', 'Random Variable Mu must be a decimal', (value) =>
+				.defined('Required')
+				.test('is-decimal', 'Must be a decimal', (value) =>
 					value ? /^\d+(\.\d{1,4})?$/.test(value.toString()) : false,
 				)
 				.required(),
@@ -118,8 +174,8 @@ export const investmentFormSchema = object().shape({
 			value === 'MonteCarlo_NormalDist' || value === 'MonteCarlo_LogNormalDist',
 		then: (schema) =>
 			schema
-				.defined()
-				.test('is-decimal', 'Random Variable Sigma must be a decimal', (value) =>
+				.defined('Required')
+				.test('is-decimal', 'Must be a decimal', (value) =>
 					value ? /^\d+(\.\d{1,4})?$/.test(value.toString()) : false,
 				)
 				.required(),
@@ -130,8 +186,8 @@ export const investmentFormSchema = object().shape({
 			value === 'MonteCarlo_NormalDist' || value === 'MonteCarlo_LogNormalDist',
 		then: (schema) =>
 			schema
-				.defined()
-				.test('is-decimal', 'Random Variable Sigma must be a decimal', (value) =>
+				.defined('Required')
+				.test('is-decimal', 'Must be a decimal', (value) =>
 					value ? /^\d+(\.\d{1,4})?$/.test(value.toString()) : false,
 				)
 				.required(),
