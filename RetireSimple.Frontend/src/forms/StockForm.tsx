@@ -1,4 +1,4 @@
-import {Box, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography} from '@mui/material';
+import {Box, FormControl, FormHelperText, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography} from '@mui/material';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment';
 
@@ -9,6 +9,8 @@ import {MonteCarloAnalysisForm} from './analysis/MonteCarloAnalysisForm';
 export const StockForm = () => {
 	const formContext = useFormContext();
 	const [analysisType, setAnalysisType] = React.useState<string>('MonteCarlo_NormalDist');
+
+	const {errors} = formContext.formState;
 
 	React.useEffect(() => {
 		return () => {
@@ -44,9 +46,11 @@ export const StockForm = () => {
 						name="stockTicker"
 						control={formContext.control}
 						render={({field}) => (
-							<FormControl fullWidth>
-								<TextField {...field} label='Ticker' />
-							</FormControl>
+							<TextField {...field}
+								label='Ticker'
+								fullWidth
+								error={!!errors.stockTicker}
+								helperText={errors.stockTicker?.message as string} />
 						)} />
 				</Grid>
 				<Grid item xs={2}>
@@ -54,9 +58,14 @@ export const StockForm = () => {
 						name="stockPrice"
 						control={formContext.control}
 						render={({field}) => (
-							<TextField {...field} label='Price' fullWidth InputProps={{
-								startAdornment: <InputAdornment position="start">$</InputAdornment>,
-							}} />
+							<TextField {...field}
+								label='Price'
+								fullWidth
+								error={!!errors.stockPrice}
+								helperText={errors.stockPrice?.message as string}
+								InputProps={{
+									startAdornment: <InputAdornment position="start">$</InputAdornment>,
+								}} />
 						)} />
 				</Grid>
 
@@ -65,7 +74,12 @@ export const StockForm = () => {
 						name="stockQuantity"
 						control={formContext.control}
 						render={({field}) => (
-							<TextField {...field} label='Quantity' fullWidth />
+							<TextField {...field}
+								label='Quantity'
+								fullWidth
+								error={!!errors.stockQuantity}
+								helperText={errors.stockQuantity?.message as string}
+							/>
 						)} />
 				</Grid>
 				<Grid item xs={4}>
@@ -78,7 +92,8 @@ export const StockForm = () => {
 									label="Purchase Date"
 									value={field.value}
 									onChange={(newValue) => {
-										formContext.setValue('stockPurchaseDate', newValue);
+										formContext.setValue('stockPurchaseDate', newValue.toDate().toISOString('yyyy-MM-dd'));
+
 									}}
 									renderInput={(params) => <TextField {...params} />}
 								/>
@@ -97,9 +112,13 @@ export const StockForm = () => {
 
 						control={formContext.control}
 						render={({field}) => (
-							<TextField {...field} label='Dividend Amt' fullWidth InputProps={{
-								endAdornment: <InputAdornment position="end">%</InputAdornment>,
-							}} />
+							<TextField {...field} label='Dividend Amt'
+								fullWidth
+								error={!!errors.stockDividendPercent}
+								helperText={errors.stockDividendPercent?.message as string}
+								InputProps={{
+									endAdornment: <InputAdornment position="end">%</InputAdornment>,
+								}} />
 						)} />
 				</Grid>
 				<Grid item xs={2}>
@@ -108,15 +127,17 @@ export const StockForm = () => {
 						control={formContext.control}
 						defaultValue={'Month'}
 						render={({field}) => (
-							<FormControl fullWidth>
+							<FormControl fullWidth
+								error={!!errors.stockDividendDistributionInterval}>
 								<InputLabel id="stockDividendDistributionInterval">Dividend Int.</InputLabel>
 								<Select {...field}
 									value={field.value}
-									label='Divident Int.'>
+									label='Dividend Int.'>
 									<MenuItem value="Month">Monthly</MenuItem>
 									<MenuItem value="Quarter">Quarterly</MenuItem>
 									<MenuItem value="Annual">Annual</MenuItem>
 								</Select>
+								<FormHelperText>{errors.stockDividendDistributionInterval?.message as string}</FormHelperText>
 							</FormControl>
 						)} />
 				</Grid>
@@ -126,7 +147,10 @@ export const StockForm = () => {
 						control={formContext.control}
 						defaultValue={'Stock'}
 						render={({field}) => (
-							<FormControl fullWidth>
+							<FormControl
+								fullWidth
+								error={!!errors.stockDividendDistributionMethod}
+							>
 								<InputLabel id="stockDividendDistributionMethod">Dividend Method</InputLabel>
 								<Select {...field}
 									value={field.value}
@@ -135,6 +159,7 @@ export const StockForm = () => {
 									<MenuItem value="Cash">Cash</MenuItem>
 									<MenuItem value="DRIP">DRIP</MenuItem>
 								</Select>
+								<FormHelperText>{errors.stockDividendDistributionMethod?.message as string}</FormHelperText>
 							</FormControl>
 						)} />
 				</Grid>

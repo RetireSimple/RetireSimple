@@ -5,6 +5,8 @@ import {Controller, useFormContext} from 'react-hook-form';
 export const MonteCarloAnalysisForm = () => {
 	const formContext = useFormContext();
 
+	const {errors} = formContext.formState;
+
 	React.useEffect(() => {
 		return () => {
 			formContext.unregister('analysisLength');
@@ -26,7 +28,12 @@ export const MonteCarloAnalysisForm = () => {
 					name="analysisLength"
 					control={formContext.control}
 					render={({field}) => (
-						<TextField {...field} label='Analysis Length (Months)' fullWidth />
+						<TextField {...field}
+							label='Analysis Length (Months)'
+							fullWidth
+							error={!!errors.analysisLength}
+							helperText={errors.analysisLength?.message as string}
+						/>
 					)} />
 			</Grid>
 			<Grid item xs={4}>
@@ -34,7 +41,12 @@ export const MonteCarloAnalysisForm = () => {
 					name="simCount"
 					control={formContext.control}
 					render={({field}) => (
-						<TextField {...field} label='Simulation Count' fullWidth />
+						<TextField {...field}
+							label='Simulation Count'
+							fullWidth
+							error={!!errors.simCount}
+							helperText={errors.simCount?.message as string}
+						/>
 					)} />
 			</Grid>
 			<Grid item xs={12}>
@@ -45,7 +57,12 @@ export const MonteCarloAnalysisForm = () => {
 					name="randomVariableMu"
 					control={formContext.control}
 					render={({field}) => (
-						<TextField {...field} label='Mu' fullWidth />
+						<TextField {...field}
+							label='Mu'
+							fullWidth
+							error={!!errors.randomVariableMu}
+							helperText={errors.randomVariableMu?.message as string}
+						/>
 					)} />
 			</Grid>
 			<Grid item xs={4}>
@@ -53,7 +70,12 @@ export const MonteCarloAnalysisForm = () => {
 					name="randomVariableSigma"
 					control={formContext.control}
 					render={({field}) => (
-						<TextField {...field} label='Sigma' fullWidth />
+						<TextField {...field}
+							label='Sigma'
+							fullWidth
+							error={!!errors.randomVariableSigma}
+							helperText={errors.randomVariableSigma?.message as string}
+						/>
 					)} />
 			</Grid>
 			<Grid item xs={4}>
@@ -61,7 +83,12 @@ export const MonteCarloAnalysisForm = () => {
 					name="randomVariableScaleFactor"
 					control={formContext.control}
 					render={({field}) => (
-						<TextField {...field} label='Scale Factor' fullWidth />
+						<TextField {...field}
+							label='Scale Factor'
+							fullWidth
+							error={!!errors.randomVariableScaleFactor}
+							helperText={errors.randomVariableScaleFactor?.message as string}
+						/>
 					)} />
 			</Grid>
 		</Grid>

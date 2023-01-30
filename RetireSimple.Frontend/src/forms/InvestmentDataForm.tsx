@@ -1,4 +1,4 @@
-import {Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField} from '@mui/material';
+import {Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField} from '@mui/material';
 import React from 'react';
 import {Controller, FormProvider, useFormContext} from 'react-hook-form';
 import {BondForm} from './BondForm';
@@ -12,6 +12,8 @@ export const InvestmentDataForm = ({onSubmit}: {onSubmit: any;}) => {
 
 	const [investmentType, setInvestmentType] = React.useState<string>("StockInvestment");
 	const formContext = useFormContext();
+
+	const {errors} = formContext.formState;
 
 	const investmentTypeSubform = React.useCallback(() => {
 		switch (investmentType) {
@@ -35,8 +37,11 @@ export const InvestmentDataForm = ({onSubmit}: {onSubmit: any;}) => {
 								control={formContext.control}
 								defaultValue=''
 								render={({field}) => (
-									<FormControl fullWidth>
+									<FormControl
+										error={!!errors.investmentName}
+										fullWidth>
 										<TextField {...field} label='Investment Name' />
+										<FormHelperText>{errors?.investmentName?.message as string}</FormHelperText>
 									</FormControl>
 								)} />
 						</Grid>
@@ -44,24 +49,27 @@ export const InvestmentDataForm = ({onSubmit}: {onSubmit: any;}) => {
 							<Controller
 								name='investmentType'
 								control={formContext.control}
-								defaultValue={'StockInvestment'}
+								defaultValue='StockInvestment'
 								render={({field}) => (
-									<FormControl fullWidth>
+									<FormControl
+										error={!!errors.investmentType}
+										fullWidth>
 										<InputLabel id='investmentType'>Investment Type</InputLabel>
 										<Select
-											{...field}
 											label='Investment Type'
-											value={field.value}
-											onChange={e => {
-												setInvestmentType(e.target.value);
-												formContext.setValue('investmentType', e.target.value);
-											}}>
+											value={investmentType}
+											onChange={(e) => {
+												setInvestmentType(e.target.value as string);
+												field.onChange(e);
+											}}
+											inputRef={formContext.register('investmentType').ref}
+										>
 											<MenuItem value='StockInvestment'>Stock</MenuItem>
 											<MenuItem value='BondInvestment'>Bond</MenuItem>
 										</Select>
+										<FormHelperText>{errors?.investmentType?.message as string}</FormHelperText>
 									</FormControl>
-								)}
-							/>
+								)} />
 						</Grid>
 						{investmentTypeSubform()}
 					</Grid>
