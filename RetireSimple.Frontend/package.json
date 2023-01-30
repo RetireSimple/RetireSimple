@@ -23,7 +23,8 @@
     "react-hook-form": "^7.42.1",
     "react-router-dom": "^6.7.0",
     "react-scripts": "5.0.1",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "set HTTPS=true&&react-scripts start",

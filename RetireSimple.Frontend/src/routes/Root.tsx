@@ -3,16 +3,15 @@ import Skeleton from '@mui/material/Skeleton';
 import React from 'react';
 import {FieldValues, FormProvider, useForm} from 'react-hook-form';
 import {getInvestments} from '../api/InvestmentApi';
-import {InvestmentModelGraph} from '../components/InvestmentModelGraph';
 import {InvestmentListItem, mapListItemProps} from '../components/Sidebar/InvestmentListItem';
-import {InvestmentDataForm} from '../forms/InvestmentDataForm';
-import {Investment, InvestmentModel} from '../models/Interfaces';
 import {AddInvestmentDialog} from '../dialogs/AddInvestmentDialog';
+import {InvestmentDataForm} from '../forms/InvestmentDataForm';
+import {Investment} from '../models/Interfaces';
 
 export const Root = () => {
 	const [investments, setInvestments] = React.useState<Investment[]>([]);
 	const [addDialogOpen, setAddDialogOpen] = React.useState<boolean>(false);
-	const [investmentModels, setInvestmentModels] = React.useState<InvestmentModel>();
+	// const [investmentModels, setInvestmentModels] = React.useState<InvestmentModel>();
 	const [loading, setLoading] = React.useState<boolean>(true);
 
 
@@ -28,11 +27,11 @@ export const Root = () => {
 		if (loading) {populateInvestmentData();};
 	});
 
-	const renderAnalysis = () => {
-		return (<InvestmentModelGraph
-			modelData={investmentModels}
-			dataLength={investmentModels?.avgModelData.length} />);
-	};
+	// const renderAnalysis = () => {
+	// 	return (<InvestmentModelGraph
+	// 		modelData={investmentModels}
+	// 		dataLength={investmentModels?.avgModelData.length} />);
+	// };
 
 	const renderInvestmentsTable = (investments: Investment[]) => {
 		return loading ?
@@ -56,7 +55,7 @@ export const Root = () => {
 			);
 	};
 
-	let chart = renderAnalysis();
+	// let chart = renderAnalysis();
 	let contents = (<Paper elevation={2}>{renderInvestmentsTable(investments)}</Paper>);
 
 	return (
