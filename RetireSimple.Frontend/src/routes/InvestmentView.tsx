@@ -11,8 +11,10 @@ export const InvestmentView = () => {
 
 	const currentInvestmentData = useLoaderData() as Investment
 
-	const investmentDataFormContext = useForm({resolver: yupResolver(investmentFormSchema),
-	});
+	const investmentDataFormContext = useForm({
+		shouldUnregister:true,
+		resolver: yupResolver(investmentFormSchema),
+		defaultValues: currentInvestmentData as FieldValues});
 
 
 	// let chart = renderAnalysis();

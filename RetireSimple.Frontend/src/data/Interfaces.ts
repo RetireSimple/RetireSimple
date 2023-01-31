@@ -3,8 +3,10 @@ export interface Investment {
 	investmentName: string;
 	investmentType: string;
 	analysisType?: string;
-	lastAnalysis?: string; //treat as date later?
-	investmentData: { [key: string]: string }
+	lastAnalysis?: string | null; //treat as date later?
+	portfolioId: number;
+	investmentData: {[key: string]: string};
+	analysisOptionsOverrides: {[key: string]: string};
 }
 
 export interface InvestmentModel {
@@ -13,13 +15,13 @@ export interface InvestmentModel {
 	maxModelData: number[];
 	minModelData: number[];
 	avgModelData: number[];
-	lastUpdated: string;   //treat as a date later?
+	lastUpdated: string; //treat as a date later?
 }
 
 export interface StockInfo {
-	name: string,
-	ticker: string,
-	quantity: number,
-	price: number,
-	analysisType: string,
+	name: string;
+	ticker: string;
+	quantity: number;
+	price: number;
+	analysisType: string;
 }

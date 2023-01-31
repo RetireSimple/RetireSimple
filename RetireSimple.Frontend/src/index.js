@@ -4,6 +4,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import {getInvestments, getInvestment} from './api/InvestmentApi';
 import './index.css';
 import {InvestmentView} from './routes/InvestmentView';
+import {flattenApiInvestment} from './data/ApiMapper';
 import {Root} from './routes/Root';
 
 const router = createBrowserRouter([
@@ -15,7 +16,7 @@ const router = createBrowserRouter([
 			{
 				path: 'investment/:id',
 				element: <InvestmentView />,
-				loader: async ({params}) => await getInvestment(params.id),
+				loader: async ({params}) => flattenApiInvestment(await getInvestment(params.id)),
 			},
 			// {path: '*', element: <Root />},
 		],
