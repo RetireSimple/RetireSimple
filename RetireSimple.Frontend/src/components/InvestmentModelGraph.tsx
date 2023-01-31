@@ -55,7 +55,7 @@ export const InvestmentModelGraph = (props: InvestmentModelGraphProps) => {
 		LineElement,
 		Title,
 		Tooltip,
-		Legend
+		Legend,
 	);
 
 	return (

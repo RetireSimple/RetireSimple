@@ -23,7 +23,7 @@ export const MonteCarloAnalysisForm = () => {
 	//==============================================
 	const analysisLengthField = (
 		<Controller
-			name="analysisLength"
+			name='analysisLength'
 			control={formContext.control}
 			render={({field}) => (
 				<TextField {...field}
@@ -37,7 +37,7 @@ export const MonteCarloAnalysisForm = () => {
 
 	const simCountField = (
 		<Controller
-			name="simCount"
+			name='simCount'
 			control={formContext.control}
 			render={({field}) => (
 				<TextField {...field}
@@ -51,7 +51,7 @@ export const MonteCarloAnalysisForm = () => {
 
 	const randomVariableMuField = (
 		<Controller
-			name="randomVariableMu"
+			name='randomVariableMu'
 			control={formContext.control}
 			render={({field}) => (
 				<TextField {...field}
@@ -65,7 +65,7 @@ export const MonteCarloAnalysisForm = () => {
 
 	const randomVariableSigmaField = (
 		<Controller
-			name="randomVariableSigma"
+			name='randomVariableSigma'
 			control={formContext.control}
 			render={({field}) => (
 				<TextField {...field}
@@ -79,7 +79,7 @@ export const MonteCarloAnalysisForm = () => {
 
 	const randomVariableScaleFactorField = (
 		<Controller
-			name="randomVariableScaleFactor"
+			name='randomVariableScaleFactor'
 			control={formContext.control}
 			render={({field}) => (
 				<TextField {...field}
@@ -94,12 +94,12 @@ export const MonteCarloAnalysisForm = () => {
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
-				<Typography variant='subtitle2' >Monte Carlo Analysis Parameters</Typography>
+				<Typography variant='subtitle2'>Monte Carlo Analysis Parameters</Typography>
 			</Grid>
 			<Grid item xs={4}>{analysisLengthField}</Grid>
 			<Grid item xs={4}>{simCountField}</Grid>
 			<Grid item xs={12}>
-				<Typography variant='subtitle2' >Random Variable Parameters (Normal)</Typography>
+				<Typography variant='subtitle2'>Random Variable Parameters (Normal)</Typography>
 			</Grid>
 			<Grid item xs={2}>{randomVariableMuField}</Grid>
 			<Grid item xs={2}>{randomVariableSigmaField}</Grid>

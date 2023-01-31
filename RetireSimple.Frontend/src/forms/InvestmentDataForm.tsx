@@ -17,12 +17,12 @@ export const InvestmentDataForm = ({onSubmit}: {onSubmit: any;}) => {
 
 	const investmentTypeSubform = React.useCallback(() => {
 		switch (investmentType) {
-			case 'StockInvestment':
-				return <StockForm />;
-			case 'BondInvestment':
-				return <BondForm />;
-			default:
-				return <div>Unknown investment type</div>;
+		case 'StockInvestment':
+			return <StockForm />;
+		case 'BondInvestment':
+			return <BondForm />;
+		default:
+			return <div>Unknown investment type</div>;
 		}
 	}, [investmentType]);
 
@@ -74,7 +74,7 @@ export const InvestmentDataForm = ({onSubmit}: {onSubmit: any;}) => {
 	return (<>
 		<FormProvider {...formContext}>
 			<form onSubmit={formContext.handleSubmit(onSubmit)}>
-				<Box sx={{margin: '2rem'}}>
+				<Box>
 					<Grid container spacing={2}>
 						<Grid item xs={4}>{investmentNameField}</Grid>
 						<Grid item xs={4}>{investmentTypeField}</Grid>

@@ -29,11 +29,11 @@ export const StockForm = () => {
 
 	const analysisSubForm = React.useCallback(() => {
 		switch (analysisType) {
-			case 'MonteCarlo_NormalDist':
-			case 'MonteCarlo_LogNormalDist':
-				return <MonteCarloAnalysisForm />;
-			default:
-				return <Typography variant='subtitle2' >No analysis parameters available</Typography>;
+		case 'MonteCarlo_NormalDist':
+		case 'MonteCarlo_LogNormalDist':
+			return <MonteCarloAnalysisForm />;
+		default:
+			return <Typography variant='subtitle2'>No analysis parameters available</Typography>;
 		}
 	}, [analysisType]);
 
@@ -42,7 +42,7 @@ export const StockForm = () => {
 	//==============================================
 	const stockTickerField = (
 		<Controller
-			name="stockTicker"
+			name='stockTicker'
 			control={formContext.control}
 			render={({field}) => (
 				<TextField {...field}
@@ -55,7 +55,7 @@ export const StockForm = () => {
 
 	const stockPriceField = (
 		<Controller
-			name="stockPrice"
+			name='stockPrice'
 			control={formContext.control}
 			render={({field}) => (
 				<TextField {...field}
@@ -65,13 +65,13 @@ export const StockForm = () => {
 					error={!!errors.stockPrice}
 					helperText={errors.stockPrice?.message as string}
 					InputProps={{
-						startAdornment: <InputAdornment position="start">$</InputAdornment>,
+						startAdornment: <InputAdornment position='start'>$</InputAdornment>,
 					}} />
 			)} />);
 
 	const stockQuantityField = (
 		<Controller
-			name="stockQuantity"
+			name='stockQuantity'
 			control={formContext.control}
 			render={({field}) => (
 				<TextField {...field}
@@ -85,12 +85,12 @@ export const StockForm = () => {
 
 	const stockPurchaseDateField = (
 		<Controller
-			name="stockPurchaseDate"
+			name='stockPurchaseDate'
 			control={formContext.control}
 			render={({field}) => (
 				<LocalizationProvider dateAdapter={AdapterMoment}>
 					<DatePicker
-						label="Purchase Date"
+						label='Purchase Date'
 						value={field.value}
 						onChange={(newValue) => {
 							formContext.setValue('stockPurchaseDate', newValue.toDate().toISOString('yyyy-MM-dd'));
@@ -103,7 +103,7 @@ export const StockForm = () => {
 
 	const stockDividendPercentField = (
 		<Controller
-			name="stockDividendPercent"
+			name='stockDividendPercent'
 			rules={{required: true, min: 0, max: 1}}
 			control={formContext.control}
 			render={({field}) => (
@@ -113,13 +113,13 @@ export const StockForm = () => {
 					error={!!errors.stockDividendPercent}
 					helperText={errors.stockDividendPercent?.message as string}
 					InputProps={{
-						endAdornment: <InputAdornment position="end">%</InputAdornment>,
+						endAdornment: <InputAdornment position='end'>%</InputAdornment>,
 					}} />
 			)} />);
 
 	const stockDividendDistributionIntervalField = (
 		<Controller
-			name="stockDividendDistributionInterval"
+			name='stockDividendDistributionInterval'
 			control={formContext.control}
 			defaultValue={'Month'}
 			render={({field}) => (
@@ -127,21 +127,23 @@ export const StockForm = () => {
 					error={!!errors.stockDividendDistributionInterval}
 					size='small'
 				>
-					<InputLabel id="stockDividendDistributionInterval">Dividend Int.</InputLabel>
+					<InputLabel id='stockDividendDistributionInterval'>Dividend Int.</InputLabel>
 					<Select {...field}
 						value={field.value}
 						label='Dividend Int.'>
-						<MenuItem value="Month">Monthly</MenuItem>
-						<MenuItem value="Quarter">Quarterly</MenuItem>
-						<MenuItem value="Annual">Annual</MenuItem>
+						<MenuItem value='Month'>Monthly</MenuItem>
+						<MenuItem value='Quarter'>Quarterly</MenuItem>
+						<MenuItem value='Annual'>Annual</MenuItem>
 					</Select>
-					<FormHelperText>{errors.stockDividendDistributionInterval?.message as string}</FormHelperText>
+					<FormHelperText>
+						{errors.stockDividendDistributionInterval?.message as string}
+					</FormHelperText>
 				</FormControl>
 			)} />);
 
 	const stockDividendDistributionMethodField = (
 		<Controller
-			name="stockDividendDistributionMethod"
+			name='stockDividendDistributionMethod'
 			control={formContext.control}
 			defaultValue={'Stock'}
 			render={({field}) => (
@@ -150,26 +152,28 @@ export const StockForm = () => {
 					error={!!errors.stockDividendDistributionMethod}
 					size='small'
 				>
-					<InputLabel id="stockDividendDistributionMethod">Dividend Method</InputLabel>
+					<InputLabel id='stockDividendDistributionMethod'>Dividend Method</InputLabel>
 					<Select {...field}
 						value={field.value}
 						label='Dividend Method'>
-						<MenuItem value="Stock">Stock</MenuItem>
-						<MenuItem value="Cash">Cash</MenuItem>
-						<MenuItem value="DRIP">DRIP</MenuItem>
+						<MenuItem value='Stock'>Stock</MenuItem>
+						<MenuItem value='Cash'>Cash</MenuItem>
+						<MenuItem value='DRIP'>DRIP</MenuItem>
 					</Select>
-					<FormHelperText>{errors.stockDividendDistributionMethod?.message as string}</FormHelperText>
+					<FormHelperText>
+						{errors.stockDividendDistributionMethod?.message as string}
+					</FormHelperText>
 				</FormControl>
 			)} />);
 
 	const stockDividendFirstPaymentDateField = (
 		<Controller
-			name="stockDividendFirstPaymentDate"
+			name='stockDividendFirstPaymentDate'
 			control={formContext.control}
 			render={({field}) => (
 				<LocalizationProvider dateAdapter={AdapterMoment}>
 					<DatePicker
-						label="First Payment Date"
+						label='First Payment Date'
 						value={field.value}
 						onChange={(newValue) => {
 							formContext.setValue('stockDividentFirstPaymentDate', newValue);
@@ -181,12 +185,12 @@ export const StockForm = () => {
 
 	const analysisTypeField = (
 		<Controller
-			name="analysisType"
+			name='analysisType'
 			control={formContext.control}
 			defaultValue={"MonteCarlo_NormalDist"}
 			render={({field}) => (
 				<FormControl fullWidth size='small'>
-					<InputLabel id="analysisType">Analysis Type</InputLabel>
+					<InputLabel id='analysisType'>Analysis Type</InputLabel>
 					<Select {...field}
 						value={field.value}
 						onChange={e => {
@@ -194,16 +198,16 @@ export const StockForm = () => {
 							formContext.setValue('analysisType', e.target.value);
 						}}
 						label='Analysis Type'>
-						<MenuItem value="testAnalysis">Test Analysis</MenuItem>
-						<MenuItem value="MonteCarlo_NormalDist">Monte Carlo - Normal Dist.</MenuItem>
-						<MenuItem value="MonteCarlo_LogNormalDist">Monte Carlo - Log Normal Dist.</MenuItem>
+						<MenuItem value='testAnalysis'>Test Analysis</MenuItem>
+						<MenuItem value='MonteCarlo_NormalDist'>Monte Carlo - Normal Dist.</MenuItem>
+						<MenuItem value='MonteCarlo_LogNormalDist'>Monte Carlo - Log Normal Dist.</MenuItem>
 					</Select>
 				</FormControl>
 			)} />);
 
 	return (
 		<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
-			<Typography variant='subtitle2' >Stock Information</Typography>
+			<Typography variant='subtitle2'>Stock Information</Typography>
 			<Grid container spacing={2}>
 				<Grid item xs={2}>{stockTickerField}</Grid>
 				<Grid item xs={2}>{stockPriceField}</Grid>
@@ -212,7 +216,7 @@ export const StockForm = () => {
 				<Grid item xs={2}></Grid>
 				{/* Dividend Section */}
 				<Grid item xs={12}>
-					<Typography variant='subtitle2' >Dividend Information</Typography>
+					<Typography variant='subtitle2'>Dividend Information</Typography>
 				</Grid>
 				<Grid item xs={2}>{stockDividendPercentField}</Grid>
 				<Grid item xs={2}>{stockDividendDistributionIntervalField}</Grid>
@@ -221,13 +225,13 @@ export const StockForm = () => {
 				<Grid item xs={2}></Grid>
 				{/* Analysis Section */}
 				<Grid item xs={12}>
-					<Typography variant='subtitle2' >Analysis Configuration</Typography>
+					<Typography variant='subtitle2'>Analysis Configuration</Typography>
 				</Grid>
 				<Grid item xs={4}>{analysisTypeField}</Grid>
 				<Grid item xs={12}>
 					{analysisSubForm()}
 				</Grid>
 			</Grid>
-		</Box >
+		</Box>
 	);
 };

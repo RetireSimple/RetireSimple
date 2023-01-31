@@ -14,32 +14,32 @@ export interface InvestmentListItemProps {
 
 export const mapListItemProps = (investment: Investment) => {
 	switch (investment.investmentType) {
-		case 'StockInvestment':
-			return {
-				investmentName: investment.investmentName,
-				investmentNumberValue: (Number.parseFloat(investment.investmentData["stockPrice"])
+	case 'StockInvestment':
+		return {
+			investmentName: investment.investmentName,
+			investmentNumberValue: (Number.parseFloat(investment.investmentData["stockPrice"])
 					* Number.parseFloat(investment.investmentData["stockQuantity"])),
-				investmentValue: `${investment.investmentData["stockQuantity"]} @ $${investment.investmentData["stockPrice"]}`,
-				investmentTicker: investment.investmentData["stockTicker"],
-				investmentType: investment.investmentType,
-				investmentId: investment.investmentId,
-			};
-		default:
-			return {
-				investmentName: "Unknown Investment",
-				investmentNumberValue: 0,
-				investmentValue: "Unknown Investment",
-				investmentTicker: "Unknown Investment",
-				investmentType: "Unknown Investment",
-				investmentId: investment.investmentId,
-			};
+			investmentValue: `${investment.investmentData["stockQuantity"]} @ $${investment.investmentData["stockPrice"]}`,
+			investmentTicker: investment.investmentData["stockTicker"],
+			investmentType: investment.investmentType,
+			investmentId: investment.investmentId,
+		};
+	default:
+		return {
+			investmentName: "Unknown Investment",
+			investmentNumberValue: 0,
+			investmentValue: "Unknown Investment",
+			investmentTicker: "Unknown Investment",
+			investmentType: "Unknown Investment",
+			investmentId: investment.investmentId,
+		};
 	}
 };
 
 export const InvestmentListItem = (props: InvestmentListItemProps) => {
 	return (
 		<Box>
-			<Typography variant="body1" component="div" sx={{flexGrow: 1}}>
+			<Typography variant='body1' component='div' sx={{flexGrow: 1, textDecoration: 'none'}}>
 				{props.investmentName}
 			</Typography>
 			<Typography variant='body2' component='div' sx={{flexGrow: 1}}>

@@ -1,7 +1,7 @@
-import {Button, Dialog, DialogActions, DialogTitle} from '@mui/material';
+import {yupResolver} from '@hookform/resolvers/yup';
+import {Box, Button, Dialog, DialogActions, DialogTitle} from '@mui/material';
 import {FieldValues, FormProvider, useForm} from 'react-hook-form';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
-import {yupResolver} from '@hookform/resolvers/yup';
 import {investmentFormSchema} from '../forms/Schemas';
 
 export interface AddInvestmentDialogProps {
@@ -9,9 +9,10 @@ export interface AddInvestmentDialogProps {
 	onClose: () => void;
 }
 
-
 export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
-	const formContext = useForm({shouldUnregister: true, resolver: yupResolver(investmentFormSchema)});
+	const formContext = useForm({
+		shouldUnregister: true,
+		resolver: yupResolver(investmentFormSchema)});
 
 	const handleClose = () => props.onClose();
 
@@ -36,10 +37,12 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 	return (
 		<FormProvider {...formContext}>
 			<Dialog onCanPlay={handleClose}
-			open={props.open}
-			maxWidth='md'>
+				open={props.open}
+				maxWidth='md'>
 				<DialogTitle>Add Investment</DialogTitle>
-				<InvestmentDataForm onSubmit={onSubmit} />
+				<Box sx={{padding: '2rem'}}>
+					<InvestmentDataForm onSubmit={onSubmit} />
+				</Box>
 				<DialogActions>
 					<Button onClick={handleClose}>Cancel</Button>
 					<Button onClick={handleAdd}>Add</Button>
