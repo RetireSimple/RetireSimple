@@ -18,6 +18,11 @@ export const getInvestments = async (): Promise<Investment[]> => {
 	return await response.json();
 };
 
+export const getInvestment = async (id: number): Promise<Investment> => {
+	const response = await fetch(`/api/Investment/GetInvestment/${id}`);
+	return await response.json();
+};
+
 export const addStock = async (stock: any) => {
 	await fetch('/api/Investment/AddStock', {
 		method: 'POST',

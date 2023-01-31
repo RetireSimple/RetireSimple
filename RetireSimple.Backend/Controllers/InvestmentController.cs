@@ -20,9 +20,15 @@ namespace RetireSimple.Backend.Controllers {
 		[HttpGet]
 		[Route("GetAllInvestments")]
 		public ActionResult<List<InvestmentBase>> GetInvestments() {
-
 			var investments = _context.Investment.ToList();
 			return Ok(investments); //converts to JSON
+		}
+
+		[HttpGet]
+		[Route("GetInvestment/{id}")]
+		public ActionResult<InvestmentBase> GetInvestment(int id) {
+			var investment = _context.Investment.First(i => i.InvestmentId == id);
+			return Ok(investment);
 		}
 
 		[HttpPost]
