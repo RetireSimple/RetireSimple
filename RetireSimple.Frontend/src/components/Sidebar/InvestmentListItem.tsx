@@ -1,6 +1,6 @@
 import {Box, Typography} from '@mui/material';
 import React from 'react';
-import {Investment} from '../../models/Interfaces';
+import {Investment} from '../../data/Interfaces';
 
 export interface InvestmentListItemProps {
 	investmentName: string;

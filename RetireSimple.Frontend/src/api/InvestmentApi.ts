@@ -1,4 +1,4 @@
-import {Investment, InvestmentModel} from '../models/Interfaces';
+import {Investment, InvestmentModel} from '../data/Interfaces';
 
 export const API_BASE_URL = 'https://localhost:3000/api';
 

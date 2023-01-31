@@ -1,8 +1,8 @@
 import {yupResolver} from '@hookform/resolvers/yup';
 import {Box, Button, Dialog, DialogActions, DialogTitle} from '@mui/material';
 import {FieldValues, FormProvider, useForm} from 'react-hook-form';
-import {InvestmentDataForm} from '../forms/InvestmentDataForm';
-import {investmentFormSchema} from '../forms/Schemas';
+import {InvestmentDataForm} from '../../forms/InvestmentDataForm';
+import {investmentFormSchema} from '../../data/FormSchema';
 
 export interface AddInvestmentDialogProps {
 	open: boolean;

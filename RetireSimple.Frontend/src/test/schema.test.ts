@@ -1,5 +1,5 @@
 import {ValidationError} from 'yup';
-import {investmentFormSchema} from '../forms/Schemas';
+import {investmentFormSchema} from '../data/FormSchema';
 
 describe('schema validation', () => {
 	describe('investmentType: StockInvestment', () => {

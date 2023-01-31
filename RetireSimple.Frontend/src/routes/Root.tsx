@@ -2,8 +2,8 @@ import {AppBar, Box, Divider, Grid, Icon, MenuItem, Paper, Stack, Typography} fr
 import React from 'react';
 import {Link, Outlet, useLoaderData} from 'react-router-dom';
 import {InvestmentListItem, mapListItemProps} from '../components/Sidebar/InvestmentListItem';
-import {AddInvestmentDialog} from '../dialogs/AddInvestmentDialog';
-import {Investment} from '../models/Interfaces';
+import {AddInvestmentDialog} from '../components/dialogs/AddInvestmentDialog';
+import {Investment} from '../data/Interfaces';
 
 export const Root = () => {
 	const investments = useLoaderData() as Investment[];

@@ -1,5 +1,5 @@
 import React from 'react';
-import {InvestmentModel} from '../models/Interfaces';
+import {InvestmentModel} from '../data/Interfaces';
 import {CategoryScale, Chart, Legend, LineElement, LinearScale, PointElement, Title, Tooltip} from 'chart.js';
 import {Line} from 'react-chartjs-2';
 

@@ -1,8 +1,8 @@
 import {Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField} from '@mui/material';
 import React from 'react';
 import {Controller, FormProvider, useFormContext} from 'react-hook-form';
-import {BondForm} from './BondForm';
-import {StockForm} from './StockForm';
+import {BondForm} from './investment/BondForm';
+import {StockForm} from './investment/StockForm';
 
 ///IMPORTANT CAVEAT: This form does not use a standard submit action
 ///Data should be validated by calling trigger, then true promise calls getValues()

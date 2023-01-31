@@ -2,10 +2,10 @@ import React from 'react';
 import {FieldValues, FormProvider, useForm} from 'react-hook-form';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
 import {useLoaderData} from 'react-router-dom';
-import {Investment} from '../models/Interfaces';
+import {Investment} from '../data/Interfaces';
 import {Typography} from '@mui/material';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {investmentFormSchema} from '../forms/Schemas';
+import {investmentFormSchema} from '../data/FormSchema';
 
 export const InvestmentView = () => {
 

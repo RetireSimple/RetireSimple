@@ -4,7 +4,7 @@ import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment';
 
 import React from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
-import {MonteCarloAnalysisForm} from './analysis/MonteCarloAnalysisForm';
+import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
 
 export const StockForm = () => {
 	const formContext = useFormContext();
