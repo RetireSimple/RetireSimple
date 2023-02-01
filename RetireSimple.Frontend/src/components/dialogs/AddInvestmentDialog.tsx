@@ -1,20 +1,24 @@
 import {yupResolver} from '@hookform/resolvers/yup';
 import {Box, Button, Dialog, DialogActions, DialogTitle} from '@mui/material';
 import {FieldValues, FormProvider, useForm} from 'react-hook-form';
-import {InvestmentDataForm} from '../../forms/InvestmentDataForm';
+import {useNavigate} from 'react-router-dom';
 import {investmentFormSchema} from '../../data/FormSchema';
+import {InvestmentDataForm} from '../../forms/InvestmentDataForm';
 
-export interface AddInvestmentDialogProps {
-	open: boolean;
-	onClose: () => void;
-}
+// export interface AddInvestmentDialogProps {
+// 	onClose: () => void;
+// }
 
-export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
+export const AddInvestmentDialog = () => {
 	const formContext = useForm({
 		shouldUnregister: true,
 		resolver: yupResolver(investmentFormSchema)});
 
-	const handleClose = () => props.onClose();
+	const navigate = useNavigate();
+
+	const handleClose = () => {
+		navigate(-1);
+	};
 
 	const onSubmit = (data: FieldValues) => {
 		console.log(data);
@@ -36,8 +40,7 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 
 	return (
 		<FormProvider {...formContext}>
-			<Dialog onCanPlay={handleClose}
-				open={props.open}
+			<Dialog open
 				maxWidth='md'>
 				<DialogTitle>Add Investment</DialogTitle>
 				<Box sx={{padding: '2rem'}}>

@@ -15,10 +15,14 @@ export const InvestmentView = () => {
 		shouldUnregister:true,
 		resolver: yupResolver(investmentFormSchema),
 		defaultValues: currentInvestmentData as FieldValues});
+	const {reset} = investmentDataFormContext;
 
+	React.useEffect(() => {
+		reset(currentInvestmentData);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentInvestmentData]);
 
 	// let chart = renderAnalysis();
-
 	return (
 		<>
 			<FormProvider {...investmentDataFormContext}>
