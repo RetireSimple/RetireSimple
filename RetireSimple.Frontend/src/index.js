@@ -7,7 +7,7 @@ import {
 	RouterProvider,
 } from 'react-router-dom';
 import {getInvestment, getInvestments} from './api/InvestmentApi';
-import {Layout} from './App';
+import {Layout} from './Layout';
 import {AddInvestmentDialog} from './components/dialogs/AddInvestmentDialog';
 import {flattenApiInvestment} from './data/ApiMapper';
 import './index.css';
@@ -23,8 +23,9 @@ const router = createBrowserRouter(
 			<Route
 				path='investment/:id'
 				element={<InvestmentView />}
-				loader={async ({params}) => flattenApiInvestment(await getInvestment(params.id))}
-			/>
+				loader={async ({params}) => flattenApiInvestment(await getInvestment(params.id))}>
+				<Route path='add' element={<AddInvestmentDialog />} />
+			</Route>
 		</Route>,
 		<Route path='investment/add' element={<AddInvestmentDialog />} />,
 	]),

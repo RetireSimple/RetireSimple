@@ -1,7 +1,7 @@
 import React from 'react';
 import {FieldValues, FormProvider, useForm} from 'react-hook-form';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
-import {useLoaderData} from 'react-router-dom';
+import {Outlet, useLoaderData} from 'react-router-dom';
 import {Investment} from '../data/Interfaces';
 import {Typography} from '@mui/material';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -36,6 +36,7 @@ export const InvestmentView = () => {
 					<button onClick={getAnalysis}>Get Analysis Model</button>
 
 					{chart} */}
+			<Outlet />
 		</>
 	);
 };
