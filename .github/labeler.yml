@@ -15,3 +15,5 @@ engine:
   - '\[(Database|DB|Engine)\]'
 ci:
   - '\[(CI|Continuous Integration)\]'
+full-stack:
+  - '\[(Full Stack)\]|\[(Frontend)\]\[(Backend)\]|\[(Backend)\]\[(Frontend)\]'
