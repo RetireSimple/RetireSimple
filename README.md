@@ -4,6 +4,12 @@ A financial modeling framework focused on retirement, designed around extensibil
 
 This project is currently under construction.
 
+## Roadmap
+
+We have a general release plan with some of the rationale in the following excel sheet. Items in the sheet will include links to the corresponding GitHub Issues to validate progress. Items that were completed before this plan was created my not have a linked issue.
+
+[Release Plan](https://1drv.ms/x/s!ApAyK07lZKjs5aVw3Fn2t7cW0NeymQ?e=aZJfgg)
+
 ## Toolchains/Building
 
 To compile/develop RetireSimple, the following tools are required:
