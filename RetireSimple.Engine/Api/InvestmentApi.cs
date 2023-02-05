@@ -38,7 +38,25 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="parameters"></param>
 		/// <returns>ID of the newly created investment after it is saved in the database</returns>
 		/// <exception cref="ArgumentException">The specified investment type was not found</exception>
-		public int Add(string type, string name, OptionsDict? parameters = null) => throw new NotImplementedException();
+		public int Add(string type, OptionsDict? parameters = null) {
+			var newInvestment = new StockInvestment("");
+			newInvestment.InvestmentName = parameters.GetValueOrDefault("investmentName");
+			newInvestment.InvestmentType = parameters.GetValueOrDefault(type);
+			newInvestment.StockPrice = Decimal.Parse(parameters.GetValueOrDefault("stockPrice"));
+			newInvestment.StockQuantity = Decimal.Parse(parameters.GetValueOrDefault("stockQuantity"));
+			newInvestment.StockTicker = parameters.GetValueOrDefault("stockTicker");
+			newInvestment.StockPurchaseDate = DateTime.Parse(parameters.GetValueOrDefault("stockPurchaseDate"));
+			newInvestment.StockDividendDistributionInterval = parameters.GetValueOrDefault("stockDividendDistributionInterval");
+			newInvestment.StockDividendDistributionMethod = parameters.GetValueOrDefault("stockDividendDistributionMethod");
+			newInvestment.StockDividendFirstPaymentDate = DateTime.Parse(parameters.GetValueOrDefault("stockDividendFirstPaymentDate"));
+
+			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
+			mainPortfolio.Investments.Add(newInvestment);
+
+			_context.SaveChanges();
+
+			return _context.Investment.First(i => i.Equals(newInvestment)).InvestmentId;
+		}
 
 		//TODO implement this and for other investments
 		private StockInvestment CreateStock(string name, OptionsDict? parameters) {
@@ -58,8 +76,27 @@ namespace RetireSimple.Engine.Api {
 		/// <exception cref="ArgumentException">If the specified investment does not exist</exception>
 		/// <exception cref="InvalidOperationException">If the remove occurs while the investment still has
 		/// some <see cref="InvestmentTransfer"/> objects related to it.</exception>
-		public void Remove(int id) => throw new NotImplementedException();
+		public void Remove(int id) {
+			throw new InvalidOperationException();
+			throw new ArgumentException();
+			{
+				if(_context.InvestmentTransfer.First(it => it.SourceInvestmentId == id) != null
+					|| _context.InvestmentTransfer.First(it => it.DestinationInvestmentId == id) == null) {
+					throw new InvalidOperationException("Investment Transfer has objects related to deleted investment");
+				} else if(_context.Investment.First(i => i.InvestmentId == id) == null) {
+					throw new ArgumentException("ID does not exist");
+				} else {
+					_context.Remove(_context.Investment.First(i => i.InvestmentId == id));
+					_context.SaveChanges();
+					_context.Remove(_context.InvestmentModel.All(im => im.InvestmentId == id));
+					_context.SaveChanges();
+					_context.Remove(_context.Expense.All(e => e.SourceInvestmentId == id));
+					_context.SaveChanges();
+				}
 
+			}
+
+		}
 		/// <summary>
 		/// Updates the specified parameter in that specific investment. For simplicity, this method
 		/// does not validate if the specified investment has such a parameter, rather it is inserted/overwritten 
@@ -71,7 +108,26 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="param"></param>
 		/// <param name="value"></param>
 		/// <exception cref="ArgumentException">If the specified investment does not exist</exception>
-		public void Update(int id, string param, string value) => throw new NotImplementedException();
+		public void Update(int id, string param, string value) {
+			throw new NotImplementedException();
+			{
+				if(_context.Investment.First(i => i.InvestmentId == id) == null) {
+					throw new NotImplementedException("Investment not found");
+				}
+
+				switch(param) {
+					case "investmentName":
+						_context.Investment.First(i => i.InvestmentId == id).InvestmentName = value;
+						_context.SaveChanges();
+					case "investmentType":
+						_context.Investment.First(i => i.InvestmentId == id).InvestmentType = value;
+						_context.SaveChanges();
+					case "analysisType":
+						_context.Investment.First(i => i.InvestmentId == id).AnalysisType = value;
+						_context.SaveChanges();
+				}
+			}	
+		}
 
 		/// <summary>
 		/// Updates many parameters in a specific investment based on the values defined in <paramref name="parameters"/>
@@ -82,10 +138,20 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="id"></param>
 		/// <param name="parameters"></param>
 		/// <exception cref="ArgumentException">If the specified investment does not exist</exception>
-		public void Update(int id, OptionsDict parameters) => throw new NotImplementedException();
+		public void Update(int id, OptionsDict parameters) {
+			throw new NotImplementedException();
+			{
+				if(_context.Investment.First(i => i.InvestmentId == id) == null) {
+					throw new NotImplementedException("Investment not found");
+				}
+
+				_context.Investment.First(i => i.InvestmentId == id).InvestmentData = parameters;
+				_context.SaveChanges();
+			}
+		}
 
 		/// <summary>
-		/// Updates the <see cref="InvestmentVehicleBase.AnalysisOptionsOverrides"/> with the 
+		/// Updates the <see cref="InvestmentBase.AnalysisOptionsOverrides"/> with the 
 		/// specified analysis option and option value. No actual validation of the value with 
 		/// respect to the analysis option is performed in this method. If <paramref name="value"/>
 		/// is null and the option exists, it gets removed from the analysis overrides for the
@@ -96,7 +162,20 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="value"></param>
 		/// <exception cref="ArgumentException">If the specified option does not exist yet in the
 		/// overrides and <paramref name="value"/> is null</exception>
-		public void UpdateAnalysisOption(int id, string param, string? value) => throw new NotImplementedException();
+		public void UpdateAnalysisOption(int id, string param, string? value) {
+			throw new NotImplementedException();
+			{
+				if(_context.Investment.First(i => i.InvestmentId == id) == null) {
+					throw new NotImplementedException("Investment not found");
+				}
+
+				if(_context.Investment.First(i => i.InvestmentId == id).AnalysisOptionsOverrides == null) {
+				}
+				//1.check parameter exists
+				//2. value is null
+				_context.SaveChanges();
+			}
+		}
 
 		/// <summary>
 		/// Returns a model of the investment based on that investment's chosen analysis and (optionally)
@@ -109,6 +188,21 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="options"></param>
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
-		public InvestmentModel GetAnalysis(int id, OptionsDict? options = null) => throw new NotImplementedException();
+		public InvestmentModel GetAnalysis(int id, OptionsDict? options = null) {
+			throw new NotImplementedException();
+			{
+				if(_context.InvestmentModel.First(i => i.InvestmentModelId == id) == null) {
+					throw new NotImplementedException("Investment not found");
+				}
+
+				if(options == null) {
+					//check if investment model is null
+					return _context.Investment.First(i => i.InvestmentId == id).InvestmentModel;
+				} else {
+					//invoke analysis
+					_context.Investment.First(i => i.InvestmentId == id).InvokeAnalysis(options);
+				}
+			}
+		}
 	}
 }
