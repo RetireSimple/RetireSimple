@@ -6,9 +6,32 @@ import React from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
 import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
 
+//Type aliases to shorten names
+type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
+type StateSetter = React.Dispatch<React.SetStateAction<string>>;
+
 export const StockForm = () => {
 	const formContext = useFormContext();
+	//TODO Consolidate state, temp solution to ensure all components are controlled
 	const [analysisType, setAnalysisType] = React.useState<string>('MonteCarlo_NormalDist');
+	const [stockTicker, setStockTicker] = React.useState<string>('');
+	const [stockPrice, setStockPrice] = React.useState<string>('');
+	const [stockQuantity, setStockQuantity] = React.useState<string>('');
+	const [stockPurchaseDate, setStockPurchaseDate] = React.useState<string>('');
+	const [stockDividendPercent, setStockDividendPercent] = React.useState<string>('');
+	const [stockDividendFirstPaymentDate, setStockDividendFirstPaymentDate] = React.useState<string>('');
+
+	const updateField = (setMethod: StateSetter, fieldName: string, value: string|null) => {
+		setMethod(value ?? '');
+		formContext.setValue(fieldName, value??'');
+	};
+
+	const onStockTickerChange = (event: ChangeEvent) => { updateField(setStockTicker, 'stockTicker', event.target.value);};
+	const onStockPriceChange = (event: ChangeEvent) => { updateField(setStockPrice, 'stockPrice', event.target.value);};
+	const onStockQuantityChange = (event: ChangeEvent) => { updateField(setStockQuantity, 'stockQuantity', event.target.value);};
+	const onStockPurchaseDateChange = (event: ChangeEvent | null) => { updateField(setStockPurchaseDate, 'stockPurchaseDate', event? event.target.value.toString() : event);};
+	const onStockDividendPercentChange = (event:ChangeEvent) => { updateField(setStockDividendPercent, 'stockDividendPercent', event.target.value);};
+	const onStockDividendFirstPaymentDateChange = (event: ChangeEvent|null) => { updateField(setStockDividendFirstPaymentDate, 'stockDividendFirstPaymentDate', event? event.target.value.toString(): event);};
 
 	const {errors} = formContext.formState;
 
@@ -49,6 +72,8 @@ export const StockForm = () => {
 					label='Ticker'
 					fullWidth
 					size='small'
+					value={stockTicker}
+					onChange={onStockTickerChange}
 					error={!!errors.stockTicker}
 					helperText={errors.stockTicker?.message as string} />
 			)} />);
@@ -62,6 +87,8 @@ export const StockForm = () => {
 					label='Price'
 					fullWidth
 					size='small'
+					value={stockPrice}
+					onChange={onStockPriceChange}
 					error={!!errors.stockPrice}
 					helperText={errors.stockPrice?.message as string}
 					InputProps={{
@@ -77,6 +104,8 @@ export const StockForm = () => {
 				<TextField {...field}
 					label='Quantity'
 					fullWidth
+					value={stockQuantity}
+					onChange={onStockQuantityChange}
 					size='small'
 					error={!!errors.stockQuantity}
 					helperText={errors.stockQuantity?.message as string}
@@ -90,11 +119,12 @@ export const StockForm = () => {
 			render={({field}) => (
 				<LocalizationProvider dateAdapter={AdapterMoment}>
 					<DatePicker
+						{...field}
 						label='Purchase Date'
-						value={field.value}
-						onChange={(newValue) => {
-							formContext.setValue('stockPurchaseDate', newValue.toDate().toISOString('yyyy-MM-dd'));
-
+						value={stockPurchaseDate}
+						onChange={(date) => {
+							setStockPurchaseDate(date??'');
+							formContext.setValue('stockPurchaseDate', date?.toString() ?? '')
 						}}
 						renderInput={(params) => <TextField {...params} size='small' />}
 					/>
@@ -110,6 +140,8 @@ export const StockForm = () => {
 				<TextField {...field} label='Dividend Amt'
 					fullWidth
 					size='small'
+					value={field.value}
+					onChange={onStockDividendPercentChange}
 					error={!!errors.stockDividendPercent}
 					helperText={errors.stockDividendPercent?.message as string}
 					InputProps={{
@@ -173,12 +205,19 @@ export const StockForm = () => {
 			render={({field}) => (
 				<LocalizationProvider dateAdapter={AdapterMoment}>
 					<DatePicker
+						{...field}
 						label='First Payment Date'
-						value={field.value}
-						onChange={(newValue) => {
-							formContext.setValue('stockDividentFirstPaymentDate', newValue);
+						value={stockDividendFirstPaymentDate}
+						onChange={(date) => {
+							setStockDividendFirstPaymentDate(date?? '');
+							formContext.setValue('stockDividendFirstPaymentDate', date);
 						}}
-						renderInput={(params) => <TextField {...params} size='small' />}
+						renderInput={(params) =>
+							<TextField {...params}
+								size='small'
+								error={!!errors.stockDividendFirstPaymentDate}
+								helperText={errors.stockDividendFirstPaymentDate?.message as string}
+							/>}
 					/>
 				</LocalizationProvider>
 			)} />);

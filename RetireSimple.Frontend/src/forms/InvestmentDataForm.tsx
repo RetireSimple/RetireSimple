@@ -1,6 +1,6 @@
 import {Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField} from '@mui/material';
 import React from 'react';
-import {Controller, FormProvider, useFormContext} from 'react-hook-form';
+import {Controller, useFormContext} from 'react-hook-form';
 import {BondForm} from './investment/BondForm';
 import {StockForm} from './investment/StockForm';
 
@@ -8,7 +8,7 @@ import {StockForm} from './investment/StockForm';
 ///Data should be validated by calling trigger, then true promise calls getValues()
 ///Allows for parents to retrieve data from the form context
 
-export const InvestmentDataForm = ({onSubmit}: {onSubmit: any;}) => {
+export const InvestmentDataForm = () => {
 
 	const [investmentType, setInvestmentType] = React.useState<string>("StockInvestment");
 	const formContext = useFormContext();
@@ -72,16 +72,12 @@ export const InvestmentDataForm = ({onSubmit}: {onSubmit: any;}) => {
 			)} />);
 
 	return (<>
-		<FormProvider {...formContext}>
-			<form onSubmit={formContext.handleSubmit(onSubmit)}>
-				<Box>
-					<Grid container spacing={2}>
-						<Grid item xs={4}>{investmentNameField}</Grid>
-						<Grid item xs={4}>{investmentTypeField}</Grid>
-					</Grid>
-					{investmentTypeSubform()}
-				</Box>
-			</form>
-		</FormProvider>
+		<Box>
+			<Grid container spacing={2}>
+				<Grid item xs={4}>{investmentNameField}</Grid>
+				<Grid item xs={4}>{investmentTypeField}</Grid>
+			</Grid>
+			{investmentTypeSubform()}
+		</Box>
 	</>);
 };

@@ -1,11 +1,10 @@
+import {yupResolver} from '@hookform/resolvers/yup';
 import React from 'react';
 import {FieldValues, FormProvider, useForm} from 'react-hook-form';
-import {InvestmentDataForm} from '../forms/InvestmentDataForm';
 import {Outlet, useLoaderData} from 'react-router-dom';
-import {Investment} from '../data/Interfaces';
-import {Typography} from '@mui/material';
-import {yupResolver} from '@hookform/resolvers/yup';
 import {investmentFormSchema} from '../data/FormSchema';
+import {Investment} from '../data/Interfaces';
+import {InvestmentDataForm} from '../forms/InvestmentDataForm';
 
 export const InvestmentView = () => {
 
@@ -22,11 +21,10 @@ export const InvestmentView = () => {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentInvestmentData]);
 
-	// let chart = renderAnalysis();
 	return (
 		<>
 			<FormProvider {...investmentDataFormContext}>
-				<InvestmentDataForm onSubmit={(data: FieldValues) => {console.log(data);}} />
+				<InvestmentDataForm />
 			</FormProvider>
 
 			{/* <Typography variant='h4'>Router Data (Testing Only)</Typography> */}
