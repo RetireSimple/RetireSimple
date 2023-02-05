@@ -29,8 +29,8 @@ export const InvestmentView = () => {
 				<InvestmentDataForm onSubmit={(data: FieldValues) => {console.log(data);}} />
 			</FormProvider>
 
-			<Typography variant='h4'>Router Data (Testing Only)</Typography>
-			<Typography variant='body1'>{JSON.stringify(currentInvestmentData)}</Typography>
+			{/* <Typography variant='h4'>Router Data (Testing Only)</Typography> */}
+			{/* <Typography variant='body1'>{JSON.stringify(currentInvestmentData)}</Typography> */}
 			{/*
 					<input type="text" onChange={e => setInvestmentModelId(e.target.value)}></input>
 					<button onClick={getAnalysis}>Get Analysis Model</button>

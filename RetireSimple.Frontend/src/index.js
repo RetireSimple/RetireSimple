@@ -26,8 +26,8 @@ const router = createBrowserRouter(
 				loader={async ({params}) => flattenApiInvestment(await getInvestment(params.id))}>
 				<Route path='add' element={<AddInvestmentDialog />} />
 			</Route>
+			<Route path='add' element={<AddInvestmentDialog />} />,
 		</Route>,
-		<Route path='investment/add' element={<AddInvestmentDialog />} />,
 	]),
 );
 

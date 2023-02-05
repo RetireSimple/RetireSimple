@@ -36,8 +36,7 @@ export const Layout = () =>{
 					<Divider />
 
 					<MenuItem component={Link}
-						to={`${location.pathname}/add`}
-						state={({backgroundLocation:location})}>
+						to={`${location.pathname === '/' ? '/' : location.pathname + '/'}add`}>
 						<Icon baseClassName='material-icons'>add_circle</Icon>
 						<Typography variant='body1'
 							component='div'

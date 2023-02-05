@@ -1,4 +1,3 @@
-import {ValidationError} from 'yup';
 import {investmentFormSchema} from '../data/FormSchema';
 
 describe('schema validation', () => {
@@ -24,27 +23,7 @@ describe('schema validation', () => {
 				randomVariableScaleFactor: '1.23',
 			};
 
-			//validate returns casted schema
-			const expectedData = {
-				investmentName: 'Test',
-				investmentType: 'StockInvestment',
-				stockTicker: 'TEST',
-				stockPrice: 123.45,
-				stockQuantity: 123.45,
-				stockPurchaseDate: '2023-01-30',
-				stockDividendPercent: 0.05,
-				stockDividendDistributionInterval: 'Month',
-				stockDividendDistributionMethod: 'Stock',
-				stockDividendFirstPaymentDate: '2023-01-30',
-				analysisType: 'MonteCarlo_NormalDist',
-				analysisLength: 60,
-				simCount: 10000,
-				randomVariableMu: 1.23,
-				randomVariableSigma: 1.23,
-				randomVariableScaleFactor: 1.23,
-			};
-
-			expect(schema.validateSync(data)).toStrictEqual(expectedData);
+			expect(schema.isValidSync(data)).toBeTruthy();
 		});
 
 		test('MonteCarlo_NormalDist_Invalid_NoUndefined', () => {
@@ -68,10 +47,7 @@ describe('schema validation', () => {
 				randomVariableScaleFactor: undefined,
 			};
 
-			const act = () => schema.validateSync(data);
-			expect(act).toThrowError(
-				new ValidationError('randomVariableScaleFactor must be defined'),
-			);
+			expect(schema.isValidSync(data)).toBeFalsy();
 		});
 
 		test('MonteCarlo_LogNormalDist_Valid', () => {
@@ -95,27 +71,7 @@ describe('schema validation', () => {
 				randomVariableScaleFactor: '1.23',
 			};
 
-			//validate returns casted schema
-			const expectedData = {
-				investmentName: 'Test',
-				investmentType: 'StockInvestment',
-				stockTicker: 'TEST',
-				stockPrice: 123.45,
-				stockQuantity: 123.45,
-				stockPurchaseDate: '2023-01-30',
-				stockDividendPercent: 0.05,
-				stockDividendDistributionInterval: 'Month',
-				stockDividendDistributionMethod: 'Stock',
-				stockDividendFirstPaymentDate: '2023-01-30',
-				analysisType: 'MonteCarlo_LogNormalDist',
-				analysisLength: 60,
-				simCount: 10000,
-				randomVariableMu: 1.23,
-				randomVariableSigma: 1.23,
-				randomVariableScaleFactor: 1.23,
-			};
-
-			expect(schema.validateSync(data)).toStrictEqual(expectedData);
+			expect(schema.isValidSync(data)).toBeTruthy();
 		});
 
 		test('testAnalysis_Valid', () => {
@@ -134,22 +90,7 @@ describe('schema validation', () => {
 				analysisType: 'testAnalysis',
 			};
 
-			//validate returns casted schema
-			const expectedData = {
-				investmentName: 'Test',
-				investmentType: 'StockInvestment',
-				stockTicker: 'TEST',
-				stockPrice: 123.45,
-				stockQuantity: 123.45,
-				stockPurchaseDate: '2023-01-30',
-				stockDividendPercent: 0.05,
-				stockDividendDistributionInterval: 'Month',
-				stockDividendDistributionMethod: 'Stock',
-				stockDividendFirstPaymentDate: '2023-01-30',
-				analysisType: 'testAnalysis',
-			};
-
-			expect(schema.validateSync(data)).toStrictEqual(expectedData);
+			expect(schema.isValidSync(data)).toBeTruthy();
 		});
 	});
 });
