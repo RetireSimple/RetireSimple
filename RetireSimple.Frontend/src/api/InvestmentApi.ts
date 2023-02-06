@@ -1,6 +1,6 @@
 import {Investment, InvestmentModel} from '../data/Interfaces';
 
-export const API_BASE_URL = 'http://localhost:3001/api';
+export const API_BASE_URL = 'https://localhost:3000/api';
 
 export const getInvestmentModel = async (id: number): Promise<InvestmentModel> => {
 	const response = await fetch(`${API_BASE_URL}/Analysis/GetAnalysis?investmentID=${id}`, {
@@ -24,6 +24,7 @@ export const getInvestment = async (id: number): Promise<Investment> => {
 };
 
 export const addStock = async (stock: any) => {
+
 	await fetch(`${API_BASE_URL}/Investment/AddStock`, {
 		method: 'POST',
 		body: JSON.stringify(stock),

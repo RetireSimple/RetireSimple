@@ -36,7 +36,7 @@ export const InvestmentDataForm = () => {
 			defaultValue=''
 			render={({field}) => (
 				<FormControl
-					error={!!errors.investmentName}
+					error={!!errors[`${field.name}`]}
 					fullWidth
 				>
 					<TextField {...field} size='small' label='Investment Name' />

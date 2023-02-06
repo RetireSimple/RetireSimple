@@ -1,7 +1,8 @@
 import {Box, FormControl, FormHelperText, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography} from '@mui/material';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
-import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 
+import dayjs, {Dayjs} from 'dayjs';
 import React from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
 import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
@@ -29,9 +30,7 @@ export const StockForm = () => {
 	const onStockTickerChange = (event: ChangeEvent) => { updateField(setStockTicker, 'stockTicker', event.target.value);};
 	const onStockPriceChange = (event: ChangeEvent) => { updateField(setStockPrice, 'stockPrice', event.target.value);};
 	const onStockQuantityChange = (event: ChangeEvent) => { updateField(setStockQuantity, 'stockQuantity', event.target.value);};
-	const onStockPurchaseDateChange = (event: ChangeEvent | null) => { updateField(setStockPurchaseDate, 'stockPurchaseDate', event? event.target.value.toString() : event);};
 	const onStockDividendPercentChange = (event:ChangeEvent) => { updateField(setStockDividendPercent, 'stockDividendPercent', event.target.value);};
-	const onStockDividendFirstPaymentDateChange = (event: ChangeEvent|null) => { updateField(setStockDividendFirstPaymentDate, 'stockDividendFirstPaymentDate', event? event.target.value.toString(): event);};
 
 	const {errors} = formContext.formState;
 
@@ -117,14 +116,14 @@ export const StockForm = () => {
 			name='stockPurchaseDate'
 			control={formContext.control}
 			render={({field}) => (
-				<LocalizationProvider dateAdapter={AdapterMoment}>
+				<LocalizationProvider dateAdapter={AdapterDayjs}>
 					<DatePicker
 						{...field}
 						label='Purchase Date'
 						value={stockPurchaseDate}
-						onChange={(date) => {
-							setStockPurchaseDate(date??'');
-							formContext.setValue('stockPurchaseDate', date?.toString() ?? '')
+						onChange={(date: Dayjs | null) => {
+							setStockPurchaseDate(date?.format('YYYY-MM-DD') ?? dayjs().format('YYYY-MM-DD'));
+							formContext.setValue('stockPurchaseDate', date?.format('YYYY-MM-DD') ?? dayjs().format('YYYY-MM-DD'));
 						}}
 						renderInput={(params) => <TextField {...params} size='small' />}
 					/>
@@ -140,7 +139,7 @@ export const StockForm = () => {
 				<TextField {...field} label='Dividend Amt'
 					fullWidth
 					size='small'
-					value={field.value}
+					value={stockDividendPercent}
 					onChange={onStockDividendPercentChange}
 					error={!!errors.stockDividendPercent}
 					helperText={errors.stockDividendPercent?.message as string}
@@ -203,14 +202,14 @@ export const StockForm = () => {
 			name='stockDividendFirstPaymentDate'
 			control={formContext.control}
 			render={({field}) => (
-				<LocalizationProvider dateAdapter={AdapterMoment}>
+				<LocalizationProvider dateAdapter={AdapterDayjs}>
 					<DatePicker
 						{...field}
 						label='First Payment Date'
 						value={stockDividendFirstPaymentDate}
-						onChange={(date) => {
-							setStockDividendFirstPaymentDate(date?? '');
-							formContext.setValue('stockDividendFirstPaymentDate', date);
+						onChange={(date: Dayjs | null) => {
+							setStockDividendFirstPaymentDate(date?.format('YYYY-MM-DD') ?? dayjs().format('YYYY-MM-DD'));
+							formContext.setValue('stockDividendFirstPaymentDate', date?.format('YYYY-MM-DD') ?? dayjs().format('YYYY-MM-DD'));
 						}}
 						renderInput={(params) =>
 							<TextField {...params}

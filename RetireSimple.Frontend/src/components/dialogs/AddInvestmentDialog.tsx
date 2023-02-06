@@ -27,6 +27,10 @@ export const AddInvestmentDialog = () => {
 
 	const handleAdd = (data:FieldValues) => {
 		console.log(data);
+		//force all fields to be strings
+		data = Object.fromEntries(
+			Object.entries(data).map(([key, value]) => [key, value.toString()]));
+
 		addStock(data).then((res) => {
 			submit(null, {method: 'post', action: '/add'})
 			handleClose();
