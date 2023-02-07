@@ -194,3 +194,22 @@ export const investmentFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 });
+
+export const InvestmentFormDefaults = {
+	investmentName: '',
+	investmentType: 'StockInvestment',
+	stockTicker: '',
+	stockPurchaseDate: '',
+	stockPrice: '',
+	stockQuantity: '',
+	stockDividendPercent: '',
+	stockDividendDistributionInterval: '',
+	stockDividendDistributionMethod: '',
+	stockDividendFirstPaymentDate: '',
+	analysisType: 'MonteCarlo_NormalDist',
+	analysisLength: '60',
+	simCount: '10000',
+	randomVariableMu: '0.0',
+	randomVariableSigma: '1.0',
+	randomVariableScaleFactor: '1',
+};

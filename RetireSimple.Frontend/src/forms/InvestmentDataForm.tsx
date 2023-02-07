@@ -1,14 +1,19 @@
 import {Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField} from '@mui/material';
 import React from 'react';
-import {Controller, useFormContext} from 'react-hook-form';
+import {Controller, useFormContext, FormProvider} from 'react-hook-form';
 import {BondForm} from './investment/BondForm';
 import {StockForm} from './investment/StockForm';
+import {InvestmentFormDefaults} from '../data/FormSchema';
+
+export interface InvestmentDataFormProps {
+	defaultValues?: any;
+}
 
 ///IMPORTANT CAVEAT: This form does not use a standard submit action
 ///Data should be validated by calling trigger, then true promise calls getValues()
 ///Allows for parents to retrieve data from the form context
 
-export const InvestmentDataForm = () => {
+export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 
 	const [investmentType, setInvestmentType] = React.useState<string>("StockInvestment");
 	const formContext = useFormContext();
@@ -25,6 +30,16 @@ export const InvestmentDataForm = () => {
 			return <div>Unknown investment type</div>;
 		}
 	}, [investmentType]);
+
+	React.useEffect((
+	) => {
+		if(props.defaultValues){
+			Object.keys(props.defaultValues).forEach((key: string) => {
+				formContext.setValue(key, props.defaultValues?.value??'');
+			});
+		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ props.defaultValues]);
 
 	//==============================================
 	//Field definitions (To reduce indent depth)
@@ -72,12 +87,15 @@ export const InvestmentDataForm = () => {
 			)} />);
 
 	return (<>
-		<Box>
-			<Grid container spacing={2}>
-				<Grid item xs={4}>{investmentNameField}</Grid>
-				<Grid item xs={4}>{investmentTypeField}</Grid>
-			</Grid>
-			{investmentTypeSubform()}
-		</Box>
+
+		<FormProvider {...formContext}>
+			<Box>
+				<Grid container spacing={2}>
+					<Grid item xs={4}>{investmentNameField}</Grid>
+					<Grid item xs={4}>{investmentTypeField}</Grid>
+				</Grid>
+				{investmentTypeSubform()}
+			</Box>
+		</FormProvider>
 	</>);
 };

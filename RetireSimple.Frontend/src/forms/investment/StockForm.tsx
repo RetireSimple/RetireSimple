@@ -4,23 +4,28 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 
 import dayjs, {Dayjs} from 'dayjs';
 import React from 'react';
-import {Controller, useFormContext} from 'react-hook-form';
+import {Controller, useFormContext, FormProvider} from 'react-hook-form';
 import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
+import {StockTickerField} from './StockFields';
 
 //Type aliases to shorten names
 type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
 type StateSetter = React.Dispatch<React.SetStateAction<string>>;
 
-export const StockForm = () => {
+export interface StockFormProps {
+	defaultValues?: any;
+}
+
+export const StockForm = (props: StockFormProps) => {
 	const formContext = useFormContext();
 	//TODO Consolidate state, temp solution to ensure all components are controlled
-	const [analysisType, setAnalysisType] = React.useState<string>('MonteCarlo_NormalDist');
-	const [stockTicker, setStockTicker] = React.useState<string>('');
-	const [stockPrice, setStockPrice] = React.useState<string>('');
-	const [stockQuantity, setStockQuantity] = React.useState<string>('');
-	const [stockPurchaseDate, setStockPurchaseDate] = React.useState<string>('');
-	const [stockDividendPercent, setStockDividendPercent] = React.useState<string>('');
-	const [stockDividendFirstPaymentDate, setStockDividendFirstPaymentDate] = React.useState<string>('');
+	const [analysisType, setAnalysisType] = React.useState<string>(props.defaultValues?.analysisType ?? 'MonteCarlo_NormalDist');
+	const [stockTicker, setStockTicker] = React.useState<string>(props.defaultValues?.stockTicker ?? '');
+	const [stockPrice, setStockPrice] = React.useState<string>(props.defaultValues?.stockPrice ?? '');
+	const [stockQuantity, setStockQuantity] = React.useState<string>(props.defaultValues?.stockQuantity ?? '');
+	const [stockPurchaseDate, setStockPurchaseDate] = React.useState<string>(props.defaultValues?.stockPurchaseDate ?? '');
+	const [stockDividendPercent, setStockDividendPercent] = React.useState<string>(props.defaultValues?.stockDividendPercent ?? '');
+	const [stockDividendFirstPaymentDate, setStockDividendFirstPaymentDate] = React.useState<string>(props.defaultValues?.stockDividendFirstPaymentDate ?? '');
 
 	const updateField = (setMethod: StateSetter, fieldName: string, value: string|null) => {
 		setMethod(value ?? '');
@@ -35,6 +40,7 @@ export const StockForm = () => {
 	const {errors} = formContext.formState;
 
 	React.useEffect(() => {
+		formContext.reset({...props.defaultValues});
 		return () => {
 			formContext.unregister('stockTicker');
 			formContext.unregister('stockPrice');
@@ -48,6 +54,8 @@ export const StockForm = () => {
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	// const reset = formContext.reset;
 
 	const analysisSubForm = React.useCallback(() => {
 		switch (analysisType) {
@@ -73,6 +81,7 @@ export const StockForm = () => {
 					size='small'
 					value={stockTicker}
 					onChange={onStockTickerChange}
+					// defaultValue={props.defaultValues?.stockTicker ?? ''}
 					error={!!errors.stockTicker}
 					helperText={errors.stockTicker?.message as string} />
 			)} />);
@@ -244,32 +253,38 @@ export const StockForm = () => {
 			)} />);
 
 	return (
-		<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
-			<Typography variant='subtitle2'>Stock Information</Typography>
-			<Grid container spacing={2}>
-				<Grid item xs={2}>{stockTickerField}</Grid>
-				<Grid item xs={2}>{stockPriceField}</Grid>
-				<Grid item xs={2}>{stockQuantityField}</Grid>
-				<Grid item xs={4}>{stockPurchaseDateField}</Grid>
-				<Grid item xs={2}></Grid>
-				{/* Dividend Section */}
-				<Grid item xs={12}>
-					<Typography variant='subtitle2'>Dividend Information</Typography>
+		<FormProvider {...formContext}>
+			<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
+				<Typography variant='subtitle2'>Stock Information</Typography>
+				<Grid container spacing={2}>
+					<Grid item xs={2}>
+						<StockTickerField control={formContext.control} default={props.defaultValues?.stockTicker ?? ''} errors={errors} />
+					</Grid>
+					<Grid item xs={2}>{stockPriceField}</Grid>
+					<Grid item xs={2}>{stockQuantityField}</Grid>
+					<Grid item xs={4}>{stockPurchaseDateField}</Grid>
+					<Grid item xs={2}></Grid>
+					{/* Dividend Section */}
+					<Grid item xs={12}>
+						<Typography variant='subtitle2'>Dividend Information</Typography>
+					</Grid>
+					<Grid item xs={2}>{stockDividendPercentField}</Grid>
+					<Grid item xs={2}>{stockDividendDistributionIntervalField}</Grid>
+					<Grid item xs={2}>{stockDividendDistributionMethodField}</Grid>
+					<Grid item xs={4}>{stockDividendFirstPaymentDateField}</Grid>
+					<Grid item xs={2}></Grid>
+					{/* Analysis Section */}
+					<Grid item xs={12}>
+						<Typography variant='subtitle2'>Analysis Configuration</Typography>
+					</Grid>
+					<Grid item xs={4}>{analysisTypeField}</Grid>
+					<Grid item xs={12}>
+
+						{analysisSubForm()}
+
+					</Grid>
 				</Grid>
-				<Grid item xs={2}>{stockDividendPercentField}</Grid>
-				<Grid item xs={2}>{stockDividendDistributionIntervalField}</Grid>
-				<Grid item xs={2}>{stockDividendDistributionMethodField}</Grid>
-				<Grid item xs={4}>{stockDividendFirstPaymentDateField}</Grid>
-				<Grid item xs={2}></Grid>
-				{/* Analysis Section */}
-				<Grid item xs={12}>
-					<Typography variant='subtitle2'>Analysis Configuration</Typography>
-				</Grid>
-				<Grid item xs={4}>{analysisTypeField}</Grid>
-				<Grid item xs={12}>
-					{analysisSubForm()}
-				</Grid>
-			</Grid>
-		</Box>
+			</Box>
+		</FormProvider>
 	);
 };

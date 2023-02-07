@@ -4,7 +4,7 @@ export const API_BASE_URL = 'https://localhost:3000/api';
 
 export const getInvestmentModel = async (id: number): Promise<InvestmentModel> => {
 	const response = await fetch(`${API_BASE_URL}/Analysis/GetAnalysis?investmentID=${id}`, {
-		method: 'GET',
+		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},

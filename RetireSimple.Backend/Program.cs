@@ -25,7 +25,6 @@ builder.Services.AddDbContext<EngineDbContext>(options => _ =
 		_ => throw new ArgumentException("Invalid provider")
 	});
 
-
 var app = builder.Build();
 
 //Only Apply Migrations for Sqlite
@@ -40,6 +39,8 @@ if(app.Configuration["Provider"] == "sqlite") {
 
 // Configure the HTTP request pipeline.
 if(app.Environment.IsDevelopment()) {
+
+
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }

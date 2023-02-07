@@ -1,8 +1,10 @@
 import {yupResolver} from '@hookform/resolvers/yup';
+import {Box, Divider} from '@mui/material';
 import React from 'react';
-import {FieldValues, FormProvider, useForm} from 'react-hook-form';
+import {FormProvider, useForm} from 'react-hook-form';
 import {Outlet, useLoaderData} from 'react-router-dom';
-import {investmentFormSchema} from '../data/FormSchema';
+import {InvestmentModelGraph} from '../components/InvestmentModelGraph';
+import {InvestmentFormDefaults, investmentFormSchema} from '../data/FormSchema';
 import {Investment} from '../data/Interfaces';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
 
@@ -13,7 +15,7 @@ export const InvestmentView = () => {
 	const investmentDataFormContext = useForm({
 		shouldUnregister:true,
 		resolver: yupResolver(investmentFormSchema),
-		defaultValues: currentInvestmentData as FieldValues});
+		defaultValues: InvestmentFormDefaults});
 	const {reset} = investmentDataFormContext;
 
 	React.useEffect(() => {
@@ -24,16 +26,14 @@ export const InvestmentView = () => {
 	return (
 		<>
 			<FormProvider {...investmentDataFormContext}>
-				<InvestmentDataForm />
+				<InvestmentDataForm defaultValues={currentInvestmentData} />
+				<Divider />
+				<Box sx={{width: '100%', height: '100%'}}>
+					<InvestmentModelGraph investmentId={currentInvestmentData.investmentId} />
+				</Box>
+				{/* {graph} */}
 			</FormProvider>
 
-			{/* <Typography variant='h4'>Router Data (Testing Only)</Typography> */}
-			{/* <Typography variant='body1'>{JSON.stringify(currentInvestmentData)}</Typography> */}
-			{/*
-					<input type="text" onChange={e => setInvestmentModelId(e.target.value)}></input>
-					<button onClick={getAnalysis}>Get Analysis Model</button>
-
-					{chart} */}
 			<Outlet />
 		</>
 	);
