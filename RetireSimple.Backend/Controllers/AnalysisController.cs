@@ -2,7 +2,6 @@
 using RetireSimple.Engine.Data;
 
 namespace RetireSimple.Backend.Controllers {
-	//private readonly Random _rand;
 
 	[ApiController]
 	[Route("api/[controller]")]
@@ -15,10 +14,10 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpPost]
-		[Route("GetAnaylsis")]
-		public ActionResult GetAnaylsis([FromQuery] int investmentID) {
+		[Route("GetAnalysis")]
+		public ActionResult GetAnalysis([FromQuery] int investmentID) {
 			var investment = _context.Investment.First(i => i.InvestmentId == investmentID);
-			//check has model 
+			//check has model
 			if(!_context.InvestmentModel.Any(m => investmentID == m.InvestmentId)) {
 				investment.InvestmentModel = investment.InvokeAnalysis(new OptionsDict());
 				_context.SaveChanges();

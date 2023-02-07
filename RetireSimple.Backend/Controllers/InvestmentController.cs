@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RetireSimple.Backend.RequestBody;
 using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Investment;
+using System.Text.Json;
 
 namespace RetireSimple.Backend.Controllers {
 	[Route("api/[controller]")]
@@ -20,27 +21,39 @@ namespace RetireSimple.Backend.Controllers {
 		[HttpGet]
 		[Route("GetAllInvestments")]
 		public ActionResult<List<InvestmentBase>> GetInvestments() {
-
 			var investments = _context.Investment.ToList();
 			return Ok(investments); //converts to JSON
 		}
 
+		[HttpGet]
+		[Route("GetInvestment/{id}")]
+		public ActionResult<InvestmentBase> GetInvestment(int id) {
+			var investment = _context.Investment.First(i => i.InvestmentId == id);
+			return Ok(investment);
+		}
+
 		[HttpPost]
 		[Route("AddStock")]
-		public ActionResult AddStockInvestment([FromBody] StockAddRequestBody body) {
-			var newInvestment = new StockInvestment(body.AnalysisType);
-			newInvestment.InvestmentName = body.Name;
-			newInvestment.StockPrice = body.Price;
-			newInvestment.StockQuantity = body.Quantity;
-			newInvestment.StockTicker = body.Ticker;
-			newInvestment.StockPurchaseDate = DateTime.Now;
+		public ActionResult AddStockInvestment([FromBody] JsonDocument reqBody) {
+			var body = reqBody.Deserialize<OptionsDict>();
+			var newInvestment = new StockInvestment(body["analysisType"]);
+			newInvestment.InvestmentName = body["investmentName"];
+			newInvestment.StockPrice = Decimal.Parse(body["stockPrice"]);
+			newInvestment.StockQuantity = Decimal.Parse(body["stockQuantity"]);
+			newInvestment.StockTicker = body["stockTicker"];
+			newInvestment.StockPurchaseDate = DateTime.Parse(body["stockPurchaseDate"]);
 
 			//TODO Don't Preset values
-			newInvestment.InvestmentData["stockDividendPercent"] = "0.05";
-			newInvestment.InvestmentData["stockDividendDistributionInterval"] = "Month";
-			newInvestment.InvestmentData["stockDividendDistributionMethod"] = "Stock";
-			newInvestment.InvestmentData["stockDividendFirstPaymentDate"] = "1/1/2020";
+			newInvestment.InvestmentData["stockDividendPercent"] = body["stockDividendPercent"];
+			newInvestment.InvestmentData["stockDividendDistributionInterval"] = body["stockDividendDistributionInterval"];
+			newInvestment.InvestmentData["stockDividendDistributionMethod"] = body["stockDividendDistributionMethod"];
+			newInvestment.InvestmentData["stockDividendFirstPaymentDate"] = body["stockDividendFirstPaymentDate"];
 
+			newInvestment.AnalysisOptionsOverrides["analysisLength"] = body["analysisLength"];
+			newInvestment.AnalysisOptionsOverrides["simCount"] = body["simCount"];
+			newInvestment.AnalysisOptionsOverrides["RandomVariableMu"] = body["randomVariableMu"];
+			newInvestment.AnalysisOptionsOverrides["RandomVariableSigma"] = body["randomVariableSigma"];
+			newInvestment.AnalysisOptionsOverrides["RandomVariableScaleFactor"] = body["randomVariableScaleFactor"];
 
 			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
 			mainPortfolio.Investments.Add(newInvestment);
