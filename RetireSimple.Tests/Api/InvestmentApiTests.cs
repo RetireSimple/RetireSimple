@@ -27,23 +27,23 @@ namespace RetireSimple.Tests.Api
 			context.Dispose();
 		}
 
-		[Fact(Skip = "Not Implemented")]
-		public void AddInvestmentUnknownTypeThrowsException()
-		{
-			//TODO Implement me
-		}
+		// [Fact(Skip = "Not Implemented")]
+		// public void AddInvestmentUnknownTypeThrowsException()
+		// {
+		// 	//TODO Implement me
+		// }
 
 
-		//TODO Implement the following Tests
-		[Theory(Skip = "Not Implemented"),
-		InlineData(new object[] { "StockInvestment", typeof(StockInvestment) }),
-		InlineData(new object[] { "BondInvestment", typeof(BondInvestment) }),
-		InlineData(new object[] { "PensionInvestment", typeof(PensionInvestment) }),
-		InlineData(new object[] { "CashInvestment", typeof(CashInvestment) }),]
-		public void InvestmentAddStock(string type, Type expectedType)
-		{
-			//TODO Implement this test
-		}
+		// //TODO Implement the following Tests
+		// [Theory(Skip = "Not Implemented"),
+		// InlineData(new object[] { "StockInvestment", typeof(StockInvestment) }),
+		// InlineData(new object[] { "BondInvestment", typeof(BondInvestment) }),
+		// InlineData(new object[] { "PensionInvestment", typeof(PensionInvestment) }),
+		// InlineData(new object[] { "CashInvestment", typeof(CashInvestment) }),]
+		// public void InvestmentAddStock(string type, Type expectedType)
+		// {
+		// 	//TODO Implement this test
+		// }
 
 
 

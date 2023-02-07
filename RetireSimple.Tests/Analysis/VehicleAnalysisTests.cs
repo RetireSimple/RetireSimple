@@ -160,7 +160,7 @@
 			vehicle.CashHoldings = initialHoldings;
 			var cashSim = vehicle.SimulateCashContributions_DefaultAfterTax(options);
 
-			var result = vehicle.GeneratePreTaxModel_DefaultAfterTaxVehicle(options, models, cashSim);
+			var result = InvestmentVehicleBase.GeneratePreTaxModel_DefaultAfterTaxVehicle(options, models, cashSim);
 
 			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
 			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
@@ -228,7 +228,7 @@
 			vehicle.CashHoldings = initialHoldings;
 			var cashSim = vehicle.SimulateCashContributions_DefaultAfterTax(options);
 
-			var result = vehicle.GeneratePostTaxModel_DefaultAfterTaxVehicle(options, models, cashSim);
+			var result = InvestmentVehicleBase.GeneratePostTaxModel_DefaultAfterTaxVehicle(options, models, cashSim);
 
 			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
 			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
@@ -279,7 +279,7 @@
 			vehicle.CashHoldings = initialHoldings;
 			var cashSim = vehicle.SimulateCashContributions_DefaultAfterTax(options);
 
-			var result = vehicle.GeneratePreTaxModel_DefaultPreTaxVehicle(options, models, cashSim);
+			var result = InvestmentVehicleBase.GeneratePreTaxModel_DefaultPreTaxVehicle(options, models, cashSim);
 
 			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
 			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);

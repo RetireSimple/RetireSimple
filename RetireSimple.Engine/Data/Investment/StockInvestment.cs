@@ -92,9 +92,9 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		public override void ResolveAnalysisDelegate(string analysisType) {
-			switch (analysisType) {
+			switch(analysisType) {
 				case "testAnalysis":
-					AnalysisMethod = StockAS.testAnalysis;
+					AnalysisMethod = StockAS.TestAnalysis;
 					break;
 				case "MonteCarlo_NormalDist":
 					AnalysisMethod = StockAS.MonteCarlo_NormalDist;
@@ -108,7 +108,7 @@ namespace RetireSimple.Engine.Data.Investment {
 
 			}
 
-			//Overwrite The current Analysis Delegate Type 
+			//Overwrite The current Analysis Delegate Type
 			AnalysisType = analysisType;
 		}
 

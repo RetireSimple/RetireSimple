@@ -6,7 +6,7 @@ namespace RetireSimple.Engine.Analysis {
 	public class StockAS {
 
 		//This dictionary is statically available to allow for a common set of defaults that all
-		//analysis modules for the same type of investment can use. 
+		//analysis modules for the same type of investment can use.
 		public static readonly OptionsDict DefaultStockAnalysisOptions = new() {
 			["AnalysisLength"] = "60",                          //Number of months to project
 			["StockAnalysisExpectedGrowth"] = "0.1",            //Expected Percentage Growth of the stock
@@ -95,7 +95,7 @@ namespace RetireSimple.Engine.Analysis {
 
 
 		//TODO Move to Testing/Debugging
-		public static InvestmentModel testAnalysis(StockInvestment investment, OptionsDict options) {
+		public static InvestmentModel TestAnalysis(StockInvestment investment, OptionsDict options) {
 			var value = investment.StockPrice * investment.StockQuantity;
 
 			//HACK I think this code is leaky, but it won't exist in final builds

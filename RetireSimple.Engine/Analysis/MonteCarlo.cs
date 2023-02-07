@@ -35,7 +35,7 @@ namespace RetireSimple.Engine.Analysis {
 		/// <summary>
 		/// Options Data Structure for Monte Carlo Simulation Parameters
 		/// </summary>
-		public record struct MonteCarloOptions {
+		public readonly record struct MonteCarloOptions {
 			public decimal BasePrice { get; init; }
 			public int AnalysisLength { get; init; }
 			public decimal RandomVarScaleFactor { get; init; }
@@ -43,9 +43,9 @@ namespace RetireSimple.Engine.Analysis {
 		}
 
 		/// <summary>
-		/// Utility Function to generate a Math.NET Continuous Distribution for use in Monte Carlo. 
-		/// Parameters for the distribution should be added to the parameters dictionary with the key 
-		/// for the respective variable. At the moment, the following keys are considered valid for 
+		/// Utility Function to generate a Math.NET Continuous Distribution for use in Monte Carlo.
+		/// Parameters for the distribution should be added to the parameters dictionary with the key
+		/// for the respective variable. At the moment, the following keys are considered valid for
 		/// setting up distributions:
 		/// <br/>
 		/// - "Mu" - Mu parameter (used in Normal, LogNormal, and Student T distributions)<br/>
@@ -90,7 +90,7 @@ namespace RetireSimple.Engine.Analysis {
 		/// - "SimCount": Number of Simulations to perform <br/>
 		/// - "RandomVariableMu": The Expectation (mu) of the Normal Distribution <br/>
 		/// - "RandomVariableSigma": The Standard Deviation (sigma) of the Normal Distribution <br/>
-		/// - "RandomVarialbeScaleFactor": The "scaling factor" to apply 
+		/// - "RandomVarialbeScaleFactor": The "scaling factor" to apply
 		/// to random variable samples. This is parsed as a <see cref="decimal"/>.
 		/// </summary>
 		/// <param name="stock"></param>
@@ -136,7 +136,7 @@ namespace RetireSimple.Engine.Analysis {
 		/// - "SimCount": Number of Simulations to perform <br/>
 		/// - "RandomVariableMu": The Expectation (mu) of the Normal Distribution <br/>
 		/// - "RandomVariableSigma": The Standard Deviation (sigma) of the Normal Distribution <br/>
-		/// - "RandomVarialbeScaleFactor": The "scaling factor" to apply 
+		/// - "RandomVarialbeScaleFactor": The "scaling factor" to apply
 		/// to random variable samples. This is parsed as a <see cref="decimal"/>.
 		/// </summary>
 		/// <param name="stock"></param>
