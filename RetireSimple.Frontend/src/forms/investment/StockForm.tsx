@@ -4,9 +4,8 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 
 import dayjs, {Dayjs} from 'dayjs';
 import React from 'react';
-import {Controller, useFormContext, FormProvider} from 'react-hook-form';
+import {Controller, FormProvider, useFormContext} from 'react-hook-form';
 import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
-import {StockTickerField} from './StockFields';
 
 //Type aliases to shorten names
 type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
@@ -258,7 +257,8 @@ export const StockForm = (props: StockFormProps) => {
 				<Typography variant='subtitle2'>Stock Information</Typography>
 				<Grid container spacing={2}>
 					<Grid item xs={2}>
-						<StockTickerField control={formContext.control} default={props.defaultValues?.stockTicker ?? ''} errors={errors} />
+						{stockTickerField}
+						{/* <StockTickerField control={formContext.control} default={props.defaultValues?.stockTicker ?? ''} errors={errors} /> */}
 					</Grid>
 					<Grid item xs={2}>{stockPriceField}</Grid>
 					<Grid item xs={2}>{stockQuantityField}</Grid>

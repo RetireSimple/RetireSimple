@@ -1,9 +1,8 @@
 import {Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField} from '@mui/material';
 import React from 'react';
-import {Controller, useFormContext, FormProvider} from 'react-hook-form';
+import {Controller, FormProvider, useFormContext} from 'react-hook-form';
 import {BondForm} from './investment/BondForm';
 import {StockForm} from './investment/StockForm';
-import {InvestmentFormDefaults} from '../data/FormSchema';
 
 export interface InvestmentDataFormProps {
 	defaultValues?: any;

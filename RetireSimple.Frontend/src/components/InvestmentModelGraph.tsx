@@ -93,6 +93,7 @@ export const InvestmentModelGraph = (props: InvestmentModelGraphProps) => {
 		hasData ?
 			<Line options={options} data={data} /> :
 			<Button onClick={getModelData}>Get Model Data</Button>,
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	[hasData],
 
 	)
