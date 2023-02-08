@@ -1,68 +1,63 @@
-﻿namespace RetireSimple.Tests.DomainModel {
+namespace RetireSimple.Tests.DomainModel {
 	public class ExpenseTests : IDisposable {
+		EngineDbContext Context { get; set; }
 
-		EngineDbContext context { get; set; }
-
-		private readonly ITestOutputHelper output;
-
-		public ExpenseTests(ITestOutputHelper output) {
-			context = new EngineDbContext(
+		public ExpenseTests() {
+			Context = new EngineDbContext(
 				new DbContextOptionsBuilder()
 					.UseSqlite("Data Source=testing_expense.db")
 					.Options);
-			context.Database.Migrate();
-			context.Database.EnsureCreated();
+			Context.Database.Migrate();
+			Context.Database.EnsureCreated();
 
-			this.output = output;
-
-			var investment = new StockInvestment("test");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
-			context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
-			context.SaveChanges();
+			var investment = new StockInvestment("test") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
+			Context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
+			Context.SaveChanges();
 		}
 
 		public void Dispose() {
-			context.Database.EnsureDeleted();
-			context.Dispose();
+			Context.Database.EnsureDeleted();
+			Context.Dispose();
 		}
 
 		[Fact]
 		public void TestExpenseAdd() {
 			//TODO: add manual constraint of Expense's investments
-			var expense = new OneTimeExpense();
-			expense.Amount = 100.0;
-
-			expense.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
-			context.Expense.Add(expense);
-			context.SaveChanges();
-			Assert.Equal(1, context.Expense.Count());
+			var expense = new OneTimeExpense {
+				Amount = 100.0,
+				SourceInvestment = Context.Investment.First(i => i.InvestmentId == 1)
+			};
+			Context.Expense.Add(expense);
+			Context.SaveChanges();
+			Assert.Equal(1, Context.Expense.Count());
 
 		}
 
 		[Fact]
 		public void TestExpenseRemove() {
-			var expense = new OneTimeExpense();
-			expense.Amount = 100.0;
+			var expense = new OneTimeExpense {
+				Amount = 100.0,
+				SourceInvestment = Context.Investment.First(i => i.InvestmentId == 1)
+			};
+			Context.Expense.Add(expense);
 
-			expense.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
-			context.Expense.Add(expense);
-
-			context.SaveChanges();
-			context.Expense.Remove(expense);
-			context.SaveChanges();
-			Assert.Equal(0, context.Expense.Count());
+			Context.SaveChanges();
+			Context.Expense.Remove(expense);
+			Context.SaveChanges();
+			Assert.Equal(0, Context.Expense.Count());
 		}
 
 		[Fact]
 		public void TestExpenseFKConstraint() {
-			var expense = new OneTimeExpense();
-			expense.Amount = 100.0;
+			var expense = new OneTimeExpense { Amount = 100.0 };
 
 			Action act = () => {
-				context.Expense.Add(expense);
-				context.SaveChanges();
+				Context.Expense.Add(expense);
+				Context.SaveChanges();
 			};
 
 			act.Should().Throw<DbUpdateException>();

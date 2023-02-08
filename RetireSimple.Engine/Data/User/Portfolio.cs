@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using RetireSimple.Engine.Data.Investment;
@@ -21,7 +21,7 @@ namespace RetireSimple.Engine.Data.User {
 		/// <summary>
 		/// The <see cref="Profile"/> object that contains this Portfolio
 		/// </summary>
-		public Profile Profile { get; set; }
+		public Profile Profile { get; set; } = new Profile();
 
 		//TODO Change to ID Fields?
 		public List<InvestmentBase> Investments { get; set; } = new List<InvestmentBase>();

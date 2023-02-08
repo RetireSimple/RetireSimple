@@ -1,12 +1,10 @@
-﻿using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Analysis;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
 	public class BondInvestment : InvestmentBase {
-
-		public AnalysisDelegate<BondInvestment>? analysis;
 
 		[JsonIgnore, NotMapped]
 		// interest payment received by a bondholder from the date of issuance until the date of maturity
@@ -40,7 +38,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public AnalysisDelegate<BondInvestment>? AnalysisMethod;
+		public AnalysisDelegate<BondInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
 		public BondInvestment(string analysisType) : base() {
@@ -50,14 +48,10 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		public override void ResolveAnalysisDelegate(string analysisType) {
-			switch (analysisType) {
-				case "testAnalysis":
-					AnalysisMethod = BondAS.DefaultBondAnalysis;
-					break;
-				default:
-					AnalysisMethod = null;
-					break;
-			}
+			AnalysisMethod = analysisType switch {
+				"testAnalysis" => BondAS.DefaultBondAnalysis,
+				_ => null,
+			};
 
 			//Overwrite The current Analysis Delegate Type
 			AnalysisType = analysisType;

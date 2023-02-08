@@ -1,16 +1,11 @@
-﻿using RetireSimple.Engine.Api;
+using RetireSimple.Engine.Api;
 
-namespace RetireSimple.Tests.Api
-{
-	public class InvestmentApiTests : IDisposable
-	{
-		private readonly ITestOutputHelper output;
+namespace RetireSimple.Tests.Api {
+	public class InvestmentApiTests : IDisposable {
 		private readonly EngineDbContext context;
 		private readonly InvestmentApi api;
 
-		public InvestmentApiTests(ITestOutputHelper _output)
-		{
-			output = _output;
+		public InvestmentApiTests() {
 			context = new EngineDbContext(
 				new DbContextOptionsBuilder()
 					.UseSqlite("Data Source=testing_api_invest.db")
@@ -21,8 +16,7 @@ namespace RetireSimple.Tests.Api
 			api = new InvestmentApi(context);
 		}
 
-		public void Dispose()
-		{
+		public void Dispose() {
 			context.Database.EnsureDeleted();
 			context.Dispose();
 		}

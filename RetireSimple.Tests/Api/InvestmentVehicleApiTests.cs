@@ -1,14 +1,12 @@
-﻿using RetireSimple.Engine.Api;
+using RetireSimple.Engine.Api;
 
 namespace RetireSimple.Tests.Api {
 	public class InvestmentVehicleApiTests : IDisposable {
 
-		private readonly ITestOutputHelper output;
 		private readonly EngineDbContext context;
 		private readonly InvestmentVehicleApi api;
 
-		public InvestmentVehicleApiTests(ITestOutputHelper _output) {
-			output = _output;
+		public InvestmentVehicleApiTests() {
 			context = new EngineDbContext(
 				new DbContextOptionsBuilder()
 					.UseSqlite("Data Source=testing_api_vehicle.db")

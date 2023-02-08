@@ -1,15 +1,15 @@
-﻿namespace RetireSimple.Tests.Analysis {
+namespace RetireSimple.Tests.Analysis {
 	public class VehicleAnalysisTests {
 		//The purpose of these tests are to check if the default models are aggregated properly
 		//set of provide a set of mock models to aggregate for simplicity
 
-		public static readonly OptionsDict DefaultOptions = new OptionsDict() {
+		public static readonly OptionsDict DefaultOptions = new() {
 			["AnalysisLength"] = "10",
 			["CashContribution"] = "0",
 			["VehicleTaxPercentage"] = "0.3",
 		};
 
-		public static readonly List<InvestmentModel> MockModels = new List<InvestmentModel>(){
+		public static readonly List<InvestmentModel> MockModels = new(){
 			new InvestmentModel(){
 				MinModelData = new List<decimal>(){ 100, 105, 110, 115, 120, 125, 130, 135, 140, 145 },
 				AvgModelData = new List<decimal>(){ 100, 110, 120, 130, 140, 150, 160, 170, 180, 190 },
@@ -32,7 +32,7 @@
 			},
 		};
 
-		public static readonly List<InvestmentModel> ExpectedMockModels = new List<InvestmentModel>() {
+		public static readonly List<InvestmentModel> ExpectedMockModels = new() {
 			new InvestmentModel(){
 				MinModelData = new List<decimal>(){ 100, 105, 110, 115, 120, 125, 130, 135, 140, 145 },
 				AvgModelData = new List<decimal>(){ 100, 110, 120, 130, 140, 150, 160, 170, 180, 190 },
@@ -80,8 +80,7 @@
 		[Theory,
 		MemberData(nameof(CashSimVars))]
 		public void SimulateCashContributions_DefaultAfterTaxReturnsValues(OptionsDict options, decimal initialHoldings, List<decimal> expected) {
-			var vehicle = new Vehicle401k();
-			vehicle.CashHoldings = initialHoldings;
+			var vehicle = new Vehicle401k { CashHoldings = initialHoldings };
 
 			var result = vehicle.SimulateCashContributions(options);
 
@@ -106,8 +105,7 @@
 		[Theory,
 		MemberData(nameof(CashSimVars_PostTax))]
 		public void SimulateCashContributions_DefaultPreTaxReturnsValues(OptionsDict options, decimal initialHoldings, List<decimal> expected) {
-			var vehicle = new VehicleRothIRA();
-			vehicle.CashHoldings = initialHoldings;
+			var vehicle = new VehicleRothIRA { CashHoldings = initialHoldings };
 
 			var result = vehicle.SimulateCashContributions(options);
 
@@ -156,11 +154,10 @@
 																	OptionsDict options,
 																	decimal initialHoldings,
 																	InvestmentModel expected) {
-			var vehicle = new Vehicle401k();
-			vehicle.CashHoldings = initialHoldings;
-			var cashSim = vehicle.SimulateCashContributions_DefaultAfterTax(options);
+			var vehicle = new Vehicle401k { CashHoldings = initialHoldings };
+			var cashSim = vehicle.SimulateCashContributionsDefaultAfterTax(options);
 
-			var result = InvestmentVehicleBase.GeneratePreTaxModel_DefaultAfterTaxVehicle(options, models, cashSim);
+			var result = InvestmentVehicleBase.GeneratePreTaxModelDefaultAfterTaxVehicle(options, models, cashSim);
 
 			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
 			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
@@ -224,11 +221,10 @@
 																	OptionsDict options,
 																	decimal initialHoldings,
 																	InvestmentModel expected) {
-			var vehicle = new Vehicle401k();
-			vehicle.CashHoldings = initialHoldings;
-			var cashSim = vehicle.SimulateCashContributions_DefaultAfterTax(options);
+			var vehicle = new Vehicle401k { CashHoldings = initialHoldings };
+			var cashSim = vehicle.SimulateCashContributionsDefaultAfterTax(options);
 
-			var result = InvestmentVehicleBase.GeneratePostTaxModel_DefaultAfterTaxVehicle(options, models, cashSim);
+			var result = InvestmentVehicleBase.GeneratePostTaxModelDefaultAfterTaxVehicle(options, models, cashSim);
 
 			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
 			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
@@ -275,11 +271,10 @@
 																	OptionsDict options,
 																	decimal initialHoldings,
 																	InvestmentModel expected) {
-			var vehicle = new Vehicle401k();
-			vehicle.CashHoldings = initialHoldings;
-			var cashSim = vehicle.SimulateCashContributions_DefaultAfterTax(options);
+			var vehicle = new Vehicle401k { CashHoldings = initialHoldings };
+			var cashSim = vehicle.SimulateCashContributionsDefaultAfterTax(options);
 
-			var result = InvestmentVehicleBase.GeneratePreTaxModel_DefaultPreTaxVehicle(options, models, cashSim);
+			var result = InvestmentVehicleBase.GeneratePreTaxModelDefaultPreTaxVehicle(options, models, cashSim);
 
 			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
 			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);

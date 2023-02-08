@@ -1,62 +1,59 @@
-﻿namespace RetireSimple.Tests.DomainModel {
+namespace RetireSimple.Tests.DomainModel {
 	public class ProfileTests : IDisposable {
 
-		EngineDbContext context { get; set; }
+		EngineDbContext Context { get; set; }
 
-		private readonly ITestOutputHelper output;
-
-		public ProfileTests(ITestOutputHelper output) {
-			context = new EngineDbContext(
+		public ProfileTests() {
+			Context = new EngineDbContext(
 				new DbContextOptionsBuilder()
 					.UseSqlite("Data Source=testing_profiles.db")
 					.Options);
-			context.Database.Migrate();
-			context.Database.EnsureCreated();
-
-			this.output = output;
+			Context.Database.Migrate();
+			Context.Database.EnsureCreated();
 		}
 
 		public void Dispose() {
-			context.Database.EnsureDeleted();
-			context.Dispose();
+			Context.Database.EnsureDeleted();
+			Context.Dispose();
 		}
 
 		[Fact]
 		public void TestProfileAdd() {
-			var profile = new Profile();
-			var profile2 = new Profile();
-			profile.Name = "jack";
-			profile.Age = 65;
-			profile.Status = true;
+			var profile = new Profile {
+				Name = "jack",
+				Age = 65,
+				Status = true
+			};
+			var profile2 = new Profile {
+				Name = "jake",
+				Age = 25,
+				Status = false
+			};
 
-			profile2.Name = "jake";
-			profile2.Age = 25;
-			profile2.Status = false;
+			Context.Profile.Add(profile);
+			Context.Profile.Add(profile2);
 
-			context.Profile.Add(profile);
-			context.Profile.Add(profile2);
-
-			context.SaveChanges();
-			context.Profile.Should().HaveCount(3);
+			Context.SaveChanges();
+			Context.Profile.Should().HaveCount(3);
 		}
 
 		[Fact]
 		public void TestPortfolioFKConstraint() {
-			var portfolio = new Portfolio();
-			portfolio.PortfolioName = "test";
+			var portfolio = new Portfolio { PortfolioName = "test" };
 
-			var profile = new Profile();
-			profile.Name = "jack";
-			profile.Age = 65;
-			profile.Status = true;
+			var profile = new Profile {
+				Name = "jack",
+				Age = 65,
+				Status = true
+			};
 
-			context.Profile.Add(profile);
-			context.SaveChanges();
-			context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
-			context.SaveChanges();
+			Context.Profile.Add(profile);
+			Context.SaveChanges();
+			Context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+			Context.SaveChanges();
 
 			Action act = () => {
-				context.Profile.Remove(profile);
+				Context.Profile.Remove(profile);
 			};
 
 			act.Should().NotThrow();
@@ -64,25 +61,25 @@
 
 		[Fact]
 		public void TestProfileRemove() {
-			var profile = new Profile();
-			var profile2 = new Profile();
+			var profile = new Profile {
+				Name = "jack",
+				Age = 65,
+				Status = true
+			};
+			var profile2 = new Profile {
+				Name = "jake",
+				Age = 25,
+				Status = false
+			};
 
-			profile.Name = "jack";
-			profile.Age = 65;
-			profile.Status = true;
+			Context.Profile.Add(profile);
+			Context.Profile.Add(profile2);
+			Context.SaveChanges();
 
-			profile2.Name = "jake";
-			profile2.Age = 25;
-			profile2.Status = false;
+			Context.Profile.Remove(profile);
+			Context.SaveChanges();
 
-			context.Profile.Add(profile);
-			context.Profile.Add(profile2);
-			context.SaveChanges();
-
-			context.Profile.Remove(profile);
-			context.SaveChanges();
-
-			context.Profile.Should().HaveCount(2);
+			Context.Profile.Should().HaveCount(2);
 		}
 
 	}

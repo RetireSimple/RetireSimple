@@ -11,21 +11,21 @@ namespace RetireSimple.Engine.Analysis {
 		NORMAL,
 		LOGNORMAL,
 		//The following are currently not implemented, but are supported by Math.NET
-		CONTINUOUS_UNIF,
+		CONTINUOUSUNIF,
 		BETA,
 		CAUCHY,
 		CHI,
-		CHI_SQ,
+		CHISQ,
 		ERLANG,
 		EXPONENTIAL,
-		FISHER_SNEDECOR,
+		FISHERSNEDECOR,
 		GAMMA,
-		GAMMA_INV,
+		GAMMAINV,
 		LAPLACE,
 		PARETO,
 		RAYLEIGH,
 		STABLE,
-		STUDENT_T,
+		STUDENTT,
 		WEIBULL,
 		TRIANGULAR
 	}
@@ -56,17 +56,14 @@ namespace RetireSimple.Engine.Analysis {
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
 		private static IContinuousDistribution CreateRandomVarInstance(MonteCarloRV type, Dictionary<string, double> parameters) {
-			switch (type) {
-				case MonteCarloRV.NORMAL:
-					return new Normal(parameters["Mu"], parameters["Sigma"]);
-				case MonteCarloRV.LOGNORMAL:
-					return new LogNormal(parameters["Mu"], parameters["Sigma"]);
-				default:
-					throw new NotImplementedException();
-			}
+			return type switch {
+				MonteCarloRV.NORMAL => new Normal(parameters["Mu"], parameters["Sigma"]),
+				MonteCarloRV.LOGNORMAL => new LogNormal(parameters["Mu"], parameters["Sigma"]),
+				_ => throw new NotImplementedException(),
+			};
 		}
 
-		public static List<decimal> MonteCarloSim_SingleIteration(MonteCarloOptions options) {
+		public static List<decimal> MonteCarloSimSingleIteration(MonteCarloOptions options) {
 			var currentPrice = options.BasePrice;
 			var iterModel = new List<decimal>();
 
@@ -96,7 +93,7 @@ namespace RetireSimple.Engine.Analysis {
 		/// <param name="stock"></param>
 		/// <param name="options"></param>
 		/// <returns></returns>
-		public static InvestmentModel MonteCarloSim_Normal(StockInvestment stock, OptionsDict options) {
+		public static InvestmentModel MonteCarloSimNormal(StockInvestment stock, OptionsDict options) {
 			//Extract Required Data for simulation purposes
 			var rvOptions = new Dictionary<string, double>() {
 				["Mu"] = double.Parse(options["RandomVariableMu"]),
@@ -113,7 +110,7 @@ namespace RetireSimple.Engine.Analysis {
 			//Threading the task because .NET concurrency pretty sick
 			var simLists = new ConcurrentBag<List<decimal>>();
 			Parallel.For(0, maxIterations, x => {
-				simLists.Add(MonteCarloSim_SingleIteration(simOptions));
+				simLists.Add(MonteCarloSimSingleIteration(simOptions));
 			});
 
 			var model = new InvestmentModel();
@@ -142,7 +139,7 @@ namespace RetireSimple.Engine.Analysis {
 		/// <param name="stock"></param>
 		/// <param name="options"></param>
 		/// <returns></returns>
-		public static InvestmentModel MonteCarloSim_LogNormal(StockInvestment stock, OptionsDict options) {
+		public static InvestmentModel MonteCarloSimLogNormal(StockInvestment stock, OptionsDict options) {
 			//Extract Required Data for simulation purposes
 			var rvOptions = new Dictionary<string, double>() {
 				["Mu"] = double.Parse(options["RandomVariableMu"]),
@@ -159,7 +156,7 @@ namespace RetireSimple.Engine.Analysis {
 			//Threading the task because .NET concurrency pretty sick
 			var simLists = new ConcurrentBag<List<decimal>>();
 			Parallel.For(0, maxIterations, x => {
-				simLists.Add(MonteCarloSim_SingleIteration(simOptions));
+				simLists.Add(MonteCarloSimSingleIteration(simOptions));
 			});
 
 			var model = new InvestmentModel();

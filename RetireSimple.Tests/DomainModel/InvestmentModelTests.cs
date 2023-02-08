@@ -1,64 +1,63 @@
-﻿namespace RetireSimple.Tests.DomainModel {
+namespace RetireSimple.Tests.DomainModel {
 	public class InvestmentModelTests : IDisposable {
-		EngineDbContext context { get; set; }
+		EngineDbContext Context { get; set; }
 
-		private readonly ITestOutputHelper output;
-
-		public InvestmentModelTests(ITestOutputHelper output) {
-			context = new EngineDbContext(
+		public InvestmentModelTests() {
+			Context = new EngineDbContext(
 				new DbContextOptionsBuilder()
 					.UseSqlite("Data Source=testing_invmodel.db")
 					.Options);
-			context.Database.Migrate();
-			context.Database.EnsureCreated();
+			Context.Database.Migrate();
+			Context.Database.EnsureCreated();
 
-			this.output = output;
-
-			var investment = new StockInvestment("test");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
-			context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
-			context.SaveChanges();
+			var investment = new StockInvestment("test") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
+			Context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
+			Context.SaveChanges();
 		}
 
 		public void Dispose() {
-			context.Database.EnsureDeleted();
-			context.Dispose();
+			Context.Database.EnsureDeleted();
+			Context.Dispose();
 		}
 
 		[Fact]
 		public void TestInvestmentModelAdd() {
-			InvestmentModel model = new InvestmentModel();
-			model.Investment = context.Portfolio.First(p => p.PortfolioId == 1).Investments.First(i => i.InvestmentId == 1);
+			var model = new InvestmentModel {
+				Investment = Context.Portfolio.First(p => p.PortfolioId == 1).Investments.First(i => i.InvestmentId == 1)
+			};
 
-			context.InvestmentModel.Add(model);
-			context.SaveChanges();
+			Context.InvestmentModel.Add(model);
+			Context.SaveChanges();
 
-			Assert.Single(context.InvestmentModel);
+			Assert.Single(Context.InvestmentModel);
 		}
 
 		[Fact]
 		public void TestInvestmentModelRemove() {
-			InvestmentModel model = new InvestmentModel();
-			model.Investment = context.Portfolio.First(p => p.PortfolioId == 1).Investments.First(i => i.InvestmentId == 1);
+			var model = new InvestmentModel {
+				Investment = Context.Portfolio.First(p => p.PortfolioId == 1).Investments.First(i => i.InvestmentId == 1)
+			};
 
-			context.InvestmentModel.Add(model);
-			context.SaveChanges();
+			Context.InvestmentModel.Add(model);
+			Context.SaveChanges();
 
-			context.InvestmentModel.Remove(model);
-			context.SaveChanges();
+			Context.InvestmentModel.Remove(model);
+			Context.SaveChanges();
 
-			Assert.Equal(0, context.InvestmentModel.Count());
+			Assert.Equal(0, Context.InvestmentModel.Count());
 		}
 
 		[Fact]
 		public void TestInvestmentModelFKConstraint() {
-			InvestmentModel model = new InvestmentModel();
+			var model = new InvestmentModel();
 
 			Action act = () => {
-				context.InvestmentModel.Add(model);
-				context.SaveChanges();
+				Context.InvestmentModel.Add(model);
+				Context.SaveChanges();
 			};
 
 			act.Should().Throw<InvalidOperationException>();

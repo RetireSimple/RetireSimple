@@ -1,4 +1,4 @@
-﻿using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Analysis;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -37,7 +37,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public AnalysisDelegate<AnnuityInvestment>? AnalysisMethod;
+		public AnalysisDelegate<AnnuityInvestment>? AnalysisMethod { get; private set; }
 
 		public AnnuityInvestment(string analysisType) : base() {
 			InvestmentType = "AnnuityInvestment";
@@ -45,14 +45,10 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		public override void ResolveAnalysisDelegate(string analysisType) {
-			switch (analysisType) {
-				case "DefaultCashAnalysis":
-					AnalysisMethod = AnnuityAS.DefaultAnnuityAnalyis;
-					break;
-				default:
-					AnalysisMethod = null;
-					break;
-			}
+			AnalysisMethod = analysisType switch {
+				"DefaultCashAnalysis" => AnnuityAS.DefaultAnnuityAnalyis,
+				_ => null,
+			};
 			//Overwrite The current Analysis Delegate Type
 			AnalysisType = analysisType;
 		}

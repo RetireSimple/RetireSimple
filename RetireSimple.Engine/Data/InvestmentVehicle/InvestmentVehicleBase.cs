@@ -98,7 +98,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 
 		///The following methods provide common logic for implementing the template method. You can
 		///have specific modules wrap around these if the logic applies (even partially).
-		public static InvestmentModel GeneratePreTaxModel_DefaultAfterTaxVehicle(OptionsDict options,
+		public static InvestmentModel GeneratePreTaxModelDefaultAfterTaxVehicle(OptionsDict options,
 			List<InvestmentModel> models,
 			List<decimal>? cashContribution = null) {
 			//The logic here is a bit confusing at first, but here is an explanation of the transforms
@@ -128,12 +128,12 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 			return preTaxModel;
 		}
 
-		public static InvestmentModel GeneratePostTaxModel_DefaultAfterTaxVehicle(OptionsDict options,
+		public static InvestmentModel GeneratePostTaxModelDefaultAfterTaxVehicle(OptionsDict options,
 			List<InvestmentModel> models,
 			List<decimal>? cashContribution = null) {
 			//We are basically using the pretax model and applying tax to understand value after tax.
 			var preTaxModel =
-				GeneratePreTaxModel_DefaultAfterTaxVehicle(options, models, cashContribution);
+				GeneratePreTaxModelDefaultAfterTaxVehicle(options, models, cashContribution);
 
 			var taxPercentage = decimal.Parse(options["VehicleTaxPercentage"]);
 			var postTaxModel = new InvestmentModel() {
@@ -147,7 +147,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 			return postTaxModel;
 		}
 
-		public static InvestmentModel GeneratePreTaxModel_DefaultPreTaxVehicle(OptionsDict options,
+		public static InvestmentModel GeneratePreTaxModelDefaultPreTaxVehicle(OptionsDict options,
 			List<InvestmentModel> models,
 			List<decimal>? cashContribution = null) {
 
@@ -183,7 +183,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 			return preTaxModel;
 		}
 
-		public List<decimal> SimulateCashContributions_DefaultAfterTax(OptionsDict options) {
+		public List<decimal> SimulateCashContributionsDefaultAfterTax(OptionsDict options) {
 			var analysisLength = int.Parse(options["AnalysisLength"]);
 			var cashContribution = decimal.Parse(options["CashContribution"]);
 			var currentHoldings = CashHoldings;
@@ -193,7 +193,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 				.ToList();
 		}
 
-		public List<decimal> SimulateCashContributions_DefaultPreTax(OptionsDict options) {
+		public List<decimal> SimulateCashContributionsDefaultPreTax(OptionsDict options) {
 			var analysisLength = int.Parse(options["AnalysisLength"]);
 			var cashContribution = decimal.Parse(options["CashContribution"]);
 			var taxPercentage = decimal.Parse(options["VehicleTaxPercentage"]);

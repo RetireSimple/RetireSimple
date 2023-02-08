@@ -42,7 +42,7 @@ namespace RetireSimple.Tests.Analysis {
 			using (new AssertionScope("root")) {
 				//Rerun test multiple times because of probability
 				for (int i = 0; i < 100; i++) {
-					var simResult = MonteCarloSim_SingleIteration(options);
+					var simResult = MonteCarloSimSingleIteration(options);
 					for (int step = 0; step < 59; step++) {
 						using (new AssertionScope($"iteration {i} - step {step}")) {
 							var delta = (double)(simResult[step + 1] - simResult[step]);
@@ -70,8 +70,8 @@ namespace RetireSimple.Tests.Analysis {
 				//Rerun test multiple times because of probability
 				for (int i = 0; i < 100; i++) {
 					using (new AssertionScope($"iteration-{i}")) {
-						//NOTE Minor rounding is used here to increase test 
-						var simResult = MonteCarloSim_SingleIteration(options);
+						//NOTE Minor rounding is used here to increase test
+						var simResult = MonteCarloSimSingleIteration(options);
 						for (int step = 0; step < 59; step++) {
 							using (new AssertionScope($"iteration {i} - step {step}")) {
 								var delta = (double)Math.Round((simResult[step + 1] - simResult[step]), 7);
