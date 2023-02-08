@@ -28,7 +28,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		public string InvestmentName { get; set; } = "";
 
 		/// <summary>
-		/// Discriminator Field for the Investment Table to differentiate investment Types. 
+		/// Discriminator Field for the Investment Table to differentiate investment Types.
 		/// Check the discriminator configuration in <see cref="InvestmentBaseConfiguration"/> for valid discriminator values.
 		/// </summary>
 		public string InvestmentType { get; set; }
@@ -106,7 +106,7 @@ namespace RetireSimple.Engine.Data.Investment {
 	}
 
 	public class InvestmentBaseConfiguration : IEntityTypeConfiguration<InvestmentBase> {
-		static JsonSerializerOptions options = new JsonSerializerOptions {
+		static readonly JsonSerializerOptions options = new() {
 			AllowTrailingCommas = true,
 			DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
 			IncludeFields = true

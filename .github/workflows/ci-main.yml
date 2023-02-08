@@ -37,7 +37,7 @@ jobs:
     runs-on: windows-latest
     needs: engine-build
     steps:
-      - uses : actions/checkout@v3
+      - uses: actions/checkout@v3
       - name: Restore NuGet Cache
         uses: actions/cache@v3
         with:
@@ -45,22 +45,22 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: |
-          echo "::set-output name=dir::$(npm config get cache)"
-      - uses: actions/cache@v3
-        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: 16
+          cache: npm
+          cache-dependency-path: RetireSimple.Frontend/package-lock.json
+      - name: Init Frontend Dependencies
+        run: |
+          cd RetireSimple.Frontend
+          npm ci
+          cd ..
       - name: Restore .NET Projects
         run: dotnet restore
       - name: Build Backend
-        run: dotnet build ./RetireSimple.Backend/RetireSimple.Backend.csproj --no-restore 
-        
+        run: dotnet build ./RetireSimple.Backend/RetireSimple.Backend.csproj --no-restore
+
   frontend-build:
     name: RetireSimple.Frontend
     runs-on: ubuntu-latest
@@ -70,19 +70,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: |
-          echo "::set-output name=dir::$(npm config get cache)"
-      - uses: actions/cache@v3
-        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
-        with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: npm
+          cache-dependency-path: RetireSimple.Frontend/package-lock.json
       - name: Build
         run: |
           cd RetireSimple.Frontend
-          npm install
-          npm run build
+          npm ci
+          npm run
+          cd ..
+      - name: Run Tests
+        run: |
+          cd RetireSimple.Frontend
+          npm run test
+          cd ..

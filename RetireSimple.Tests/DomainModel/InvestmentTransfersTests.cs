@@ -1,69 +1,69 @@
-﻿namespace RetireSimple.Tests.DomainModel {
+namespace RetireSimple.Tests.DomainModel {
 	public class InvestmentTransfersTests : IDisposable {
-		EngineDbContext context { get; set; }
+		EngineDbContext Context { get; set; }
 
-		private readonly ITestOutputHelper output;
-
-		public InvestmentTransfersTests(ITestOutputHelper output) {
-			context = new EngineDbContext(
+		public InvestmentTransfersTests() {
+			Context = new EngineDbContext(
 				new DbContextOptionsBuilder()
 					.UseSqlite("Data Source=testing_transfer.db")
 					.Options);
-			context.Database.Migrate();
-			context.Database.EnsureCreated();
+			Context.Database.Migrate();
+			Context.Database.EnsureCreated();
 
-			this.output = output;
-
-			var investment = new StockInvestment("test");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
-			context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
-			context.SaveChanges();
-			var investment2 = new StockInvestment("test2");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
-			context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment2);
-			context.SaveChanges();
+			var investment = new StockInvestment("test") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
+			Context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
+			Context.SaveChanges();
+			var investment2 = new StockInvestment("test2") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
+			Context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment2);
+			Context.SaveChanges();
 		}
 
 		public void Dispose() {
-			context.Database.EnsureDeleted();
-			context.Dispose();
+			Context.Database.EnsureDeleted();
+			Context.Dispose();
 		}
 
 		[Fact]
 		public void TestInvestmentTransferAdd() {
-			InvestmentTransfer transfer = new InvestmentTransfer();
-			transfer.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
-			transfer.DestinationInvestment = context.Investment.First(i => i.InvestmentId == 2);
-			context.InvestmentTransfer.Add(transfer);
-			context.SaveChanges();
+			var transfer = new InvestmentTransfer {
+				SourceInvestment = Context.Investment.First(i => i.InvestmentId == 1),
+				DestinationInvestment = Context.Investment.First(i => i.InvestmentId == 2)
+			};
+			Context.InvestmentTransfer.Add(transfer);
+			Context.SaveChanges();
 
-			Assert.Single(context.InvestmentTransfer);
+			Assert.Single(Context.InvestmentTransfer);
 		}
 
 		[Fact]
 		public void TestInvestmentTransferRemove() {
-			InvestmentTransfer transfer = new InvestmentTransfer();
-			transfer.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
-			transfer.DestinationInvestment = context.Investment.First(i => i.InvestmentId == 2);
-			context.InvestmentTransfer.Add(transfer);
-			context.SaveChanges();
+			var transfer = new InvestmentTransfer {
+				SourceInvestment = Context.Investment.First(i => i.InvestmentId == 1),
+				DestinationInvestment = Context.Investment.First(i => i.InvestmentId == 2)
+			};
+			Context.InvestmentTransfer.Add(transfer);
+			Context.SaveChanges();
 
-			context.InvestmentTransfer.Remove(transfer);
-			context.SaveChanges();
+			Context.InvestmentTransfer.Remove(transfer);
+			Context.SaveChanges();
 
-			Assert.Empty(context.InvestmentTransfer);
+			Assert.Empty(Context.InvestmentTransfer);
 		}
 
 		[Fact]
 		public void TestInvestmentTransferFKConstraint() {
-			InvestmentTransfer transfer = new InvestmentTransfer();
+			var transfer = new InvestmentTransfer();
 			Action act = () => {
-				context.InvestmentTransfer.Add(transfer);
-				context.SaveChanges();
+				Context.InvestmentTransfer.Add(transfer);
+				Context.SaveChanges();
 			};
 
 			act.Should().Throw<DbUpdateException>();

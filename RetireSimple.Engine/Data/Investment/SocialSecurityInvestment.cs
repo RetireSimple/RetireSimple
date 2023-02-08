@@ -31,7 +31,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public AnalysisDelegate<SocialSecurityInvestment>? AnalysisMethod;
+		public AnalysisDelegate<SocialSecurityInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
 		public SocialSecurityInvestment(string analysisType) : base() {
@@ -40,15 +40,10 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		public override void ResolveAnalysisDelegate(string analysisType) {
-			switch (analysisType) {
-				case "testAnalysis":
-					AnalysisMethod = SocialSecurityAS.DefaultSocialSecurityAnalysis;
-					break;
-				default:
-					AnalysisMethod = null;
-					break;
-
-			}
+			AnalysisMethod = analysisType switch {
+				"testAnalysis" => SocialSecurityAS.DefaultSocialSecurityAnalysis,
+				_ => null,
+			};
 			//Overwrite The current Analysis Delegate Type 
 			AnalysisType = analysisType;
 		}

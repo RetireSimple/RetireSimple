@@ -1,42 +1,40 @@
-﻿namespace RetireSimple.Tests.DomainModel {
+namespace RetireSimple.Tests.DomainModel {
 	public class PortfolioTests : IDisposable {
-		EngineDbContext context { get; set; }
+		EngineDbContext Context { get; set; }
 
-		private readonly ITestOutputHelper output;
-
-		public PortfolioTests(ITestOutputHelper output) {
-			context = new EngineDbContext(
+		public PortfolioTests() {
+			Context = new EngineDbContext(
 				new DbContextOptionsBuilder()
 					.UseSqlite("Data Source=testing_portfolio.db")
 					.Options);
-			context.Database.Migrate();
-			context.Database.EnsureCreated();
-
-			this.output = output;
+			Context.Database.Migrate();
+			Context.Database.EnsureCreated();
 		}
 
 		public void Dispose() {
-			context.Database.EnsureDeleted();
-			context.Dispose();
+			Context.Database.EnsureDeleted();
+			Context.Dispose();
 		}
 
 		[Fact]
 		public void TestPortfolioFKConstraintDelete() {
-			var portfolio = new Portfolio();
-			portfolio.PortfolioName = "test";
-			context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+			var portfolio = new Portfolio {
+				PortfolioName = "test"
+			};
+			Context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
 
-			var investment = new StockInvestment("testAnalysis");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
+			var investment = new StockInvestment("testAnalysis") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
 
 			portfolio.Investments.Add(investment);
-			context.SaveChanges();
+			Context.SaveChanges();
 
 			Action act = () => {
-				context.Portfolio.Remove(portfolio);
-				context.SaveChanges();
+				Context.Portfolio.Remove(portfolio);
+				Context.SaveChanges();
 			};
 
 
@@ -45,12 +43,11 @@
 
 		[Fact]
 		public void TestPortfolioFKConstraintProfile() {
-			var portfolio = new Portfolio();
-			portfolio.PortfolioName = "test";
+			var portfolio = new Portfolio { PortfolioName = "test" };
 
 			Action act = () => {
-				context.Portfolio.Add(portfolio);
-				context.SaveChanges();
+				Context.Portfolio.Add(portfolio);
+				Context.SaveChanges();
 			};
 
 			act.Should().Throw<DbUpdateException>();
@@ -58,32 +55,28 @@
 
 		[Fact]
 		public void TestPortfolioAdd() {
-			var portfolio = new Portfolio();
-			portfolio.PortfolioName = "test";
-			var portfolio2 = new Portfolio();
-			portfolio2.PortfolioName = "test2";
+			var portfolio = new Portfolio { PortfolioName = "test" };
+			var portfolio2 = new Portfolio { PortfolioName = "test2" };
 
-			context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
-			context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio2);
+			Context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+			Context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio2);
 
-			context.SaveChanges();
-			context.Portfolio.Should().HaveCount(3);
+			Context.SaveChanges();
+			Context.Portfolio.Should().HaveCount(3);
 		}
 
 		[Fact]
 		public void TestPortfolioRemove() {
-			var portfolio = new Portfolio();
-			portfolio.PortfolioName = "test";
-			var portfolio2 = new Portfolio();
-			portfolio2.PortfolioName = "test2";
+			var portfolio = new Portfolio { PortfolioName = "test" };
+			var portfolio2 = new Portfolio { PortfolioName = "test2" };
 
-			context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
-			context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio2);
-			context.SaveChanges();
-			context.Portfolio.Remove(portfolio);
-			context.SaveChanges();
+			Context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
+			Context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio2);
+			Context.SaveChanges();
+			Context.Portfolio.Remove(portfolio);
+			Context.SaveChanges();
 
-			context.Portfolio.Should().HaveCount(2);
+			Context.Portfolio.Should().HaveCount(2);
 		}
 	}
 }

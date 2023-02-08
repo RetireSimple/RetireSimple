@@ -24,7 +24,8 @@ namespace RetireSimple.Engine.Data.Investment {
 			set => InvestmentData["PensionYearlyIncrease"] = value.ToString();
 		}
 
-		public AnalysisDelegate<PensionInvestment>? AnalysisMethod;
+		[JsonIgnore, NotMapped]
+		public AnalysisDelegate<PensionInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
 		public PensionInvestment(string analysisType) : base() {
@@ -32,14 +33,10 @@ namespace RetireSimple.Engine.Data.Investment {
 			ResolveAnalysisDelegate(analysisType);
 		}
 		public override void ResolveAnalysisDelegate(string analysisType) {
-			switch (analysisType) {
-				case "DefaultCashAnalysis":
-					AnalysisMethod = PensionAS.DefaultPensionAnalysis;
-					break;
-				default:
-					AnalysisMethod = null;
-					break;
-			}
+			AnalysisMethod = analysisType switch {
+				"DefaultCashAnalysis" => PensionAS.DefaultPensionAnalysis,
+				_ => null,
+			};
 			//Overwrite The current Analysis Delegate Type
 			AnalysisType = analysisType;
 		}

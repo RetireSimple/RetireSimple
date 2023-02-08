@@ -1,8 +1,6 @@
-﻿namespace RetireSimple.Tests {
+namespace RetireSimple.Tests {
 	public class AnalysisOptionCombinerTests {
-		public static readonly OptionsDict dict = new OptionsDict {
-				{ "test", "result" }
-		};
+		public static readonly OptionsDict dict = new() { { "test", "result" } };
 
 		[Fact]
 		public void TestStockASOptionsMerge() {

@@ -82,7 +82,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public AnalysisDelegate<StockInvestment>? AnalysisMethod;
+		public AnalysisDelegate<StockInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
 		public StockInvestment(string analysisType) : base() {
@@ -92,23 +92,14 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		public override void ResolveAnalysisDelegate(string analysisType) {
-			switch (analysisType) {
-				case "testAnalysis":
-					AnalysisMethod = StockAS.testAnalysis;
-					break;
-				case "MonteCarlo_NormalDist":
-					AnalysisMethod = StockAS.MonteCarlo_NormalDist;
-					break;
-				case "MonteCarlo_LogNormalDist":
-					AnalysisMethod = StockAS.MonteCarlo_LogNormalDist;
-					break;
-				default:
-					AnalysisMethod = null;
-					break;
+			AnalysisMethod = analysisType switch {
+				"testAnalysis" => StockAS.TestAnalysis,
+				"MonteCarlo_NormalDist" => StockAS.MonteCarloNormalDist,
+				"MonteCarlo_LogNormalDist" => StockAS.MonteCarloLogNormalDist,
+				_ => null,
+			};
 
-			}
-
-			//Overwrite The current Analysis Delegate Type 
+			//Overwrite The current Analysis Delegate Type
 			AnalysisType = analysisType;
 		}
 

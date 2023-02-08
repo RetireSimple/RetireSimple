@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using RetireSimple.Engine.Data.Investment;
@@ -23,14 +23,14 @@ namespace RetireSimple.Engine.Data.User {
 		/// </summary>
 		public Profile Profile { get; set; }
 
-		//TODO Change to ID Fields? 
+		//TODO Change to ID Fields?
 		public List<InvestmentBase> Investments { get; set; } = new List<InvestmentBase>();
 		public List<InvestmentVehicleBase> InvestmentVehicles { get; set; } = new List<InvestmentVehicleBase>();
 
 		/// <summary>
 		/// TODO Not Implemented Yet
 		/// </summary>
-		public void generateFullAnalysis() { }
+		public void GenerateFullAnalysis() { }
 	}
 
 	public class PortfolioConfig : IEntityTypeConfiguration<Portfolio> {

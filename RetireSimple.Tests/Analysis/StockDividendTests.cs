@@ -11,10 +11,12 @@
 
 
 		public StockDividendTests(ITestOutputHelper output) {
-			TestInvestment = new StockInvestment("");
-			TestInvestment.StockPrice = 100;
-			TestInvestment.StockQuantity = 100;
-			TestInvestment.StockDividendPercent = 0.05m;
+			TestInvestment = new StockInvestment("")
+			{
+				StockPrice = 100,
+				StockQuantity = 100,
+				StockDividendPercent = 0.05m
+			};
 			this.output = output;
 		}
 

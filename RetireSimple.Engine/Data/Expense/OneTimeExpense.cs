@@ -8,7 +8,7 @@
 		/// </summary>
 		public DateTime Date { get; set; }
 
-		public override List<DateTime> GetExpenseDates() => new List<DateTime> { Date };
+		public override List<DateTime> GetExpenseDates() => new() { Date };
 
 
 	}

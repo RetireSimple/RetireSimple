@@ -43,7 +43,7 @@ namespace RetireSimple.Engine.Data {
 	}
 
 	public class InvestmentModelConfiguration : IEntityTypeConfiguration<InvestmentModel> {
-		static JsonSerializerOptions options = new JsonSerializerOptions {
+		static readonly JsonSerializerOptions options = new() {
 			AllowTrailingCommas = true,
 			DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
 			IncludeFields = true,

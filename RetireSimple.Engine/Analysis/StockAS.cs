@@ -6,7 +6,7 @@ namespace RetireSimple.Engine.Analysis {
 	public class StockAS {
 
 		//This dictionary is statically available to allow for a common set of defaults that all
-		//analysis modules for the same type of investment can use. 
+		//analysis modules for the same type of investment can use.
 		public static readonly OptionsDict DefaultStockAnalysisOptions = new() {
 			["AnalysisLength"] = "60",                          //Number of months to project
 			["StockAnalysisExpectedGrowth"] = "0.1",            //Expected Percentage Growth of the stock
@@ -39,13 +39,13 @@ namespace RetireSimple.Engine.Analysis {
 			var monthInterval = GetDividendIntervalMonths(investment.StockDividendDistributionInterval);
 
 			//quantityList.Add(stockQuantity);
-			for (int i = 0; i < int.Parse(options["AnalysisLength"]); i++) {
-				if ((currentMonth - firstDividendMonth) % monthInterval == 0) {
+			for(int i = 0; i < int.Parse(options["AnalysisLength"]); i++) {
+				if((currentMonth - firstDividendMonth) % monthInterval == 0) {
 					stockQuantity += stockQuantity * dividendPercent;
 				}
 				quantityList.Add(stockQuantity);
 				currentMonth++;
-				if (currentMonth > 12) {
+				if(currentMonth > 12) {
 					currentMonth = 1;
 				}
 			}
@@ -53,9 +53,9 @@ namespace RetireSimple.Engine.Analysis {
 			return quantityList;
 		}
 
-		public static InvestmentModel MonteCarlo_NormalDist(StockInvestment investment, OptionsDict options) {
+		public static InvestmentModel MonteCarloNormalDist(StockInvestment investment, OptionsDict options) {
 			//HACK Temp fix for prototyping purposes
-			var priceModel = MonteCarlo.MonteCarloSim_Normal(investment, DefaultStockAnalysisOptions);
+			var priceModel = MonteCarlo.MonteCarloSimNormal(investment, DefaultStockAnalysisOptions);
 			//TODO Update to support other dividend types
 			var dividendModel = ProjectStockDividend(investment, DefaultStockAnalysisOptions);
 
@@ -66,8 +66,8 @@ namespace RetireSimple.Engine.Analysis {
 			return priceModel;
 		}
 
-		public static InvestmentModel MonteCarlo_LogNormalDist(StockInvestment investment, OptionsDict options) {
-			var priceModel = MonteCarlo.MonteCarloSim_LogNormal(investment, DefaultStockAnalysisOptions);
+		public static InvestmentModel MonteCarloLogNormalDist(StockInvestment investment, OptionsDict options) {
+			var priceModel = MonteCarlo.MonteCarloSimLogNormal(investment, DefaultStockAnalysisOptions);
 			//TODO Update to support other dividend types
 			var dividendModel = ProjectStockDividend(investment, DefaultStockAnalysisOptions);
 
@@ -82,11 +82,11 @@ namespace RetireSimple.Engine.Analysis {
 			var newDict = new OptionsDict(dict);
 			var investmentOptions = investment.AnalysisOptionsOverrides;
 
-			foreach (var k in investmentOptions.Keys) {
+			foreach(var k in investmentOptions.Keys) {
 				newDict.TryAdd(k, investmentOptions[k]);
 			}
 
-			foreach (var k in DefaultStockAnalysisOptions.Keys) {
+			foreach(var k in DefaultStockAnalysisOptions.Keys) {
 				newDict.TryAdd(k, DefaultStockAnalysisOptions[k]);
 			}
 
@@ -95,7 +95,7 @@ namespace RetireSimple.Engine.Analysis {
 
 
 		//TODO Move to Testing/Debugging
-		public static InvestmentModel testAnalysis(StockInvestment investment, OptionsDict options) {
+		public static InvestmentModel TestAnalysis(StockInvestment investment, OptionsDict options) {
 			var value = investment.StockPrice * investment.StockQuantity;
 
 			//HACK I think this code is leaky, but it won't exist in final builds

@@ -36,12 +36,16 @@ namespace RetireSimple.Backend.Controllers {
 		[Route("AddStock")]
 		public ActionResult AddStockInvestment([FromBody] JsonDocument reqBody) {
 			var body = reqBody.Deserialize<OptionsDict>();
-			var newInvestment = new StockInvestment(body["analysisType"]);
-			newInvestment.InvestmentName = body["investmentName"];
-			newInvestment.StockPrice = Decimal.Parse(body["stockPrice"]);
-			newInvestment.StockQuantity = Decimal.Parse(body["stockQuantity"]);
-			newInvestment.StockTicker = body["stockTicker"];
-			newInvestment.StockPurchaseDate = DateTime.Parse(body["stockPurchaseDate"]);
+			if(body == null) {
+				return BadRequest();
+			}
+			var newInvestment = new StockInvestment(body["analysisType"]) {
+				InvestmentName = body["investmentName"],
+				StockPrice = Decimal.Parse(body["stockPrice"]),
+				StockQuantity = Decimal.Parse(body["stockQuantity"]),
+				StockTicker = body["stockTicker"],
+				StockPurchaseDate = DateTime.Parse(body["stockPurchaseDate"])
+			};
 
 			//TODO Don't Preset values
 			newInvestment.InvestmentData["stockDividendPercent"] = body["stockDividendPercent"];
@@ -66,11 +70,12 @@ namespace RetireSimple.Backend.Controllers {
 		[HttpPost]
 		[Route("AddRandomStock")]
 		public ActionResult AddRandomStockInvestment() {
-			var newInvestment = new StockInvestment("testAnalysis");
-			newInvestment.StockPrice = (_rand.NextDecimal() * 1000).Round(2);
-			newInvestment.StockQuantity = _rand.Next(5000);
-			newInvestment.StockTicker = MakeRandomTicker();
-			newInvestment.StockPurchaseDate = DateTime.Today;
+			var newInvestment = new StockInvestment("testAnalysis") {
+				StockPrice = (_rand.NextDecimal() * 1000).Round(2),
+				StockQuantity = _rand.Next(5000),
+				StockTicker = MakeRandomTicker(),
+				StockPurchaseDate = DateTime.Today
+			};
 
 			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
 			mainPortfolio.Investments.Add(newInvestment);

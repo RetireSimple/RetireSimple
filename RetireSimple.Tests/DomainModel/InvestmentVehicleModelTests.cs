@@ -1,66 +1,62 @@
-﻿namespace RetireSimple.Tests.DomainModel {
-    public class InvestmentVehicleModelTests : IDisposable {
-        EngineDbContext context { get; set; }
+namespace RetireSimple.Tests.DomainModel {
+	public class InvestmentVehicleModelTests : IDisposable {
+		EngineDbContext Context { get; set; }
 
-        private readonly ITestOutputHelper output;
+		public InvestmentVehicleModelTests() {
+			Context = new EngineDbContext(
+				new DbContextOptionsBuilder()
+					.UseSqlite("Data Source=testing_vmodel.db")
+					.Options);
+			Context.Database.Migrate();
+			//context.Database.EnsureCreated();
 
-        public InvestmentVehicleModelTests(ITestOutputHelper output) {
-            context = new EngineDbContext(
-                new DbContextOptionsBuilder()
-                    .UseSqlite("Data Source=testing_vmodel.db")
-                    .Options);
-            context.Database.Migrate();
-            //context.Database.EnsureCreated();
+			var vehicle = new Vehicle401k();
+			Context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
+			Context.SaveChanges();
+		}
 
-            this.output = output;
+		public void Dispose() {
+			Context.Database.EnsureDeleted();
+			Context.Dispose();
+		}
 
-            var vehicle = new Vehicle401k();
-            context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
-            context.SaveChanges();
-        }
+		[Fact]
+		public void TestInvestmentVehicleModelAdd() {
+			InvestmentVehicleModel model = new();
+			Context.Portfolio.First(p => p.PortfolioId == 1)
+				.InvestmentVehicles.First(i => i.InvestmentVehicleId == 1)
+				.InvestmentVehicleModel = model;
 
-        public void Dispose() {
-            context.Database.EnsureDeleted();
-            context.Dispose();
-        }
+			Context.SaveChanges();
 
-        [Fact]
-        public void TestInvestmentVehicleModelAdd() {
-            InvestmentVehicleModel model = new InvestmentVehicleModel();
-            context.Portfolio.First(p => p.PortfolioId == 1)
-                .InvestmentVehicles.First(i => i.InvestmentVehicleId == 1)
-                .InvestmentVehicleModel = model;
+			Assert.Single(Context.InvestmentVehicleModel);
+		}
 
-            context.SaveChanges();
-
-            Assert.Single(context.InvestmentVehicleModel);
-        }
-
-        [Fact]
-        public void TestInvestmentModelRemove() {
-            InvestmentVehicleModel model = new InvestmentVehicleModel();
-            context.Portfolio.First(p => p.PortfolioId == 1)
-                .InvestmentVehicles.First(i => i.InvestmentVehicleId == 1)
-                .InvestmentVehicleModel = model;
-            context.SaveChanges();
+		[Fact]
+		public void TestInvestmentModelRemove() {
+			InvestmentVehicleModel model = new();
+			Context.Portfolio.First(p => p.PortfolioId == 1)
+				.InvestmentVehicles.First(i => i.InvestmentVehicleId == 1)
+				.InvestmentVehicleModel = model;
+			Context.SaveChanges();
 
 
-            context.InvestmentVehicleModel.Remove(context.InvestmentVehicleModel.First());
-            context.SaveChanges();
+			Context.InvestmentVehicleModel.Remove(Context.InvestmentVehicleModel.First());
+			Context.SaveChanges();
 
-            Assert.Empty(context.InvestmentVehicleModel);
-        }
+			Assert.Empty(Context.InvestmentVehicleModel);
+		}
 
-        [Fact]
-        public void TestInvestmentModelFKConstraint() {
-            InvestmentVehicleModel model = new InvestmentVehicleModel();
+		[Fact]
+		public void TestInvestmentModelFKConstraint() {
+			InvestmentVehicleModel model = new();
 
-            Action act = () => {
-                context.InvestmentVehicleModel.Add(model);
-                context.SaveChanges();
-            };
+			Action act = () => {
+				Context.InvestmentVehicleModel.Add(model);
+				Context.SaveChanges();
+			};
 
-            act.Should().Throw<DbUpdateException>();
-        }
-    }
+			act.Should().Throw<DbUpdateException>();
+		}
+	}
 }

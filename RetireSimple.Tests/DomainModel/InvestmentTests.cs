@@ -1,122 +1,121 @@
-﻿namespace RetireSimple.Tests.DomainModel {
+namespace RetireSimple.Tests.DomainModel {
 	public class InvestmentTests : IDisposable {
-		EngineDbContext context { get; set; }
+		EngineDbContext Context { get; set; }
 
-		private readonly ITestOutputHelper output;
-
-		public InvestmentTests(ITestOutputHelper output) {
-			context = new EngineDbContext(
+		public InvestmentTests() {
+			Context = new EngineDbContext(
 				new DbContextOptionsBuilder()
 					.UseSqlite("Data Source=testing_inv.db")
 					.Options);
-			context.Database.Migrate();
-			context.Database.EnsureCreated();
-
-			this.output = output;
+			Context.Database.Migrate();
+			Context.Database.EnsureCreated();
 		}
 
 		public void Dispose() {
-			context.Database.EnsureDeleted();
-			context.Dispose();
+			Context.Database.EnsureDeleted();
+			Context.Dispose();
 		}
 
 		[Fact]
 		public void TestStockInvestmentAdd() {
-			var investment = new StockInvestment("testAnalysis");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
+			var investment = new StockInvestment("testAnalysis") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
 
-			context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
-			context.SaveChanges();
+			Context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
+			Context.SaveChanges();
 
-			Assert.Equal(1, context.Investment.Count());
-			Assert.Single(context.Portfolio.First(p => p.PortfolioId == 1).Investments);
-			Assert.Single(context.Profile.First(p => p.ProfileId == 1).Portfolios.First().Investments);
+			Assert.Equal(1, Context.Investment.Count());
+			Assert.Single(Context.Portfolio.First(p => p.PortfolioId == 1).Investments);
+			Assert.Single(Context.Profile.First(p => p.ProfileId == 1).Portfolios.First().Investments);
 		}
 
 		[Fact]
 		public void TestStockInvestmentRemove() {
-			var investment = new StockInvestment("testAnalysis");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
+			var investment = new StockInvestment("testAnalysis") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
 
-			context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
-			context.SaveChanges();
+			Context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
+			Context.SaveChanges();
 
-			context.Portfolio.First(p => p.PortfolioId == 1).Investments.Remove(investment);
-			context.SaveChanges();
+			Context.Portfolio.First(p => p.PortfolioId == 1).Investments.Remove(investment);
+			Context.SaveChanges();
 
-			Assert.Equal(0, context.Investment.Count());
-			Assert.Empty(context.Portfolio.First(p => p.PortfolioId == 1).Investments);
+			Assert.Equal(0, Context.Investment.Count());
+			Assert.Empty(Context.Portfolio.First(p => p.PortfolioId == 1).Investments);
 		}
 
 		[Fact]
 		public void TestInvestmentFKInvestmentModelConstraint() {
-			var investment = new StockInvestment("testAnalysis");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
+			var investment = new StockInvestment("testAnalysis") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
 
 			var options = new OptionsDict();
 
-			context.Portfolio.First().Investments.Add(investment);
-			context.SaveChanges();
+			Context.Portfolio.First().Investments.Add(investment);
+			Context.SaveChanges();
 
-			context.InvestmentModel.Add(investment.InvokeAnalysis(options));
+			Context.InvestmentModel.Add(investment.InvokeAnalysis(options));
 
-			context.SaveChanges();
+			Context.SaveChanges();
 			Action act = () => {
-				context.Investment.Remove(investment);
-				context.SaveChanges();
+				Context.Investment.Remove(investment);
+				Context.SaveChanges();
 			};
 
 			act.Should().NotThrow();
-			context.Investment.Should().BeEmpty();
-			context.InvestmentModel.Should().BeEmpty();
+			Context.Investment.Should().BeEmpty();
+			Context.InvestmentModel.Should().BeEmpty();
 		}
 
 		[Fact]
 		public void TestInvestmentFKExpensesConstraint() {
-			var investment = new StockInvestment("testAnalysis");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
+			var investment = new StockInvestment("testAnalysis") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
 
 			var options = new OptionsDict();
 
-			context.Portfolio.First().Investments.Add(investment);
-			context.SaveChanges();
+			Context.Portfolio.First().Investments.Add(investment);
+			Context.SaveChanges();
 
-			var testExpense1 = new OneTimeExpense();
-			testExpense1.Amount = 100;
-			var testExpense2 = new OneTimeExpense();
-			testExpense2.Amount = 200;
-			context.Investment.First().Expenses.Add(testExpense1);
-			context.Investment.First().Expenses.Add(testExpense2);
-			context.SaveChanges();
+			var testExpense1 = new OneTimeExpense { Amount = 100 };
+			var testExpense2 = new OneTimeExpense { Amount = 200 };
+			Context.Investment.First().Expenses.Add(testExpense1);
+			Context.Investment.First().Expenses.Add(testExpense2);
+			Context.SaveChanges();
 
 			Action act = () => {
-				context.Investment.Remove(investment);
-				context.SaveChanges();
+				Context.Investment.Remove(investment);
+				Context.SaveChanges();
 			};
 
 			act.Should().NotThrow();
-			context.Investment.Should().BeEmpty();
-			context.Expense.Should().BeEmpty();
+			Context.Investment.Should().BeEmpty();
+			Context.Expense.Should().BeEmpty();
 		}
 
 		[Fact]
 		public void TestInvestmentFKPortfolioConstraint() {
-			var investment = new StockInvestment("testAnalysis");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
+			var investment = new StockInvestment("testAnalysis") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
 
 			Action act = () => {
-				context.Investment.Add(investment);
-				context.SaveChanges();
+				Context.Investment.Add(investment);
+				Context.SaveChanges();
 			};
 
 			act.Should().Throw<DbUpdateException>();
@@ -124,28 +123,31 @@
 
 		[Fact]
 		public void TestInvestmentFKTransfersFromConstraint() {
-			var investment = new StockInvestment("testAnalysis");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
-			var investment2 = new StockInvestment("testAnalysis");
-			investment.StockPrice = 200;
-			investment.StockQuantity = 50;
-			investment.StockTicker = "TST2";
+			var investment = new StockInvestment("testAnalysis") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
+			var investment2 = new StockInvestment("testAnalysis") {
+				StockPrice = 200,
+				StockQuantity = 50,
+				StockTicker = "TST2"
+			};
 
-			context.Portfolio.First().Investments.Add(investment);
-			context.Portfolio.First().Investments.Add(investment2);
-			context.SaveChanges();
+			Context.Portfolio.First().Investments.Add(investment);
+			Context.Portfolio.First().Investments.Add(investment2);
+			Context.SaveChanges();
 
-			var transfer = new InvestmentTransfer();
-			transfer.SourceInvestment = context.Investment.First(i => i.InvestmentId == 1);
-			transfer.DestinationInvestment = context.Investment.First(i => i.InvestmentId == 2);
-			context.InvestmentTransfer.Add(transfer);
-			context.SaveChanges();
+			var transfer = new InvestmentTransfer {
+				SourceInvestment = Context.Investment.First(i => i.InvestmentId == 1),
+				DestinationInvestment = Context.Investment.First(i => i.InvestmentId == 2)
+			};
+			Context.InvestmentTransfer.Add(transfer);
+			Context.SaveChanges();
 
 			Action act = () => {
-				context.Investment.Remove(investment);
-				context.SaveChanges();
+				Context.Investment.Remove(investment);
+				Context.SaveChanges();
 			};
 
 			act.Should().Throw<InvalidOperationException>();
@@ -153,28 +155,31 @@
 
 		[Fact]
 		public void TestInvestmentFKTransfersConstraint() {
-			var investment = new StockInvestment("testAnalysis");
-			investment.StockPrice = 100;
-			investment.StockQuantity = 10;
-			investment.StockTicker = "TST";
-			var investment2 = new StockInvestment("testAnalysis");
-			investment.StockPrice = 200;
-			investment.StockQuantity = 50;
-			investment.StockTicker = "TST2";
+			var investment = new StockInvestment("testAnalysis") {
+				StockPrice = 100,
+				StockQuantity = 10,
+				StockTicker = "TST"
+			};
+			var investment2 = new StockInvestment("testAnalysis") {
+				StockPrice = 200,
+				StockQuantity = 50,
+				StockTicker = "TST2"
+			};
 
-			context.Portfolio.First().Investments.Add(investment);
-			context.Portfolio.First().Investments.Add(investment2);
-			context.SaveChanges();
+			Context.Portfolio.First().Investments.Add(investment);
+			Context.Portfolio.First().Investments.Add(investment2);
+			Context.SaveChanges();
 
-			var transfer = new InvestmentTransfer();
-			transfer.DestinationInvestment = context.Investment.First(i => i.InvestmentId == 1);
-			transfer.SourceInvestment = context.Investment.First(i => i.InvestmentId == 2);
-			context.InvestmentTransfer.Add(transfer);
-			context.SaveChanges();
+			var transfer = new InvestmentTransfer {
+				DestinationInvestment = Context.Investment.First(i => i.InvestmentId == 1),
+				SourceInvestment = Context.Investment.First(i => i.InvestmentId == 2)
+			};
+			Context.InvestmentTransfer.Add(transfer);
+			Context.SaveChanges();
 
 			Action act = () => {
-				context.Investment.Remove(investment);
-				context.SaveChanges();
+				Context.Investment.Remove(investment);
+				Context.SaveChanges();
 			};
 
 			act.Should().Throw<InvalidOperationException>();
