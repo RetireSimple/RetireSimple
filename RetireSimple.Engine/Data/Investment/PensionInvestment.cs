@@ -24,6 +24,7 @@ namespace RetireSimple.Engine.Data.Investment {
 			set => InvestmentData["PensionYearlyIncrease"] = value.ToString();
 		}
 
+		[JsonIgnore, NotMapped]
 		public AnalysisDelegate<PensionInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF

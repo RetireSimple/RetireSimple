@@ -21,7 +21,7 @@ namespace RetireSimple.Engine.Data.User {
 		/// <summary>
 		/// The <see cref="Profile"/> object that contains this Portfolio
 		/// </summary>
-		public Profile Profile { get; set; } = new Profile();
+		public Profile Profile { get; set; }
 
 		//TODO Change to ID Fields?
 		public List<InvestmentBase> Investments { get; set; } = new List<InvestmentBase>();

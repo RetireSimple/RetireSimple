@@ -85,4 +85,10 @@ jobs:
         run: |
           cd RetireSimple.Frontend
           npm install
-          npm run build
+          npm run
+          cd ..
+      - name: Run Tests
+        run: |
+          cd RetireSimple.Frontend
+          npm run test
+          cd ..
