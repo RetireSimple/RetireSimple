@@ -8,9 +8,16 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		[JsonIgnore, NotMapped]
 		// interest payment received by a bondholder from the date of issuance until the date of maturity
-		public decimal BondCouponRate {
-			get => decimal.Parse(InvestmentData["BondCouponRate"]);
+		public double BondCouponRate {
+			get => double.Parse(InvestmentData["BondCouponRate"]);
 			set => InvestmentData["BondCouponRate"] = value.ToString();
+		}
+
+		[JsonIgnore, NotMapped]
+		// interest payment received by a bondholder from the date of issuance until the date of maturity
+		public decimal BondYTM {
+			get => decimal.Parse(InvestmentData["BondYieldToMaturity"]);
+			set => InvestmentData["BondYieldToMaturity"] = value.ToString();
 		}
 
 		[JsonIgnore, NotMapped]
@@ -38,7 +45,21 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public AnalysisDelegate<BondInvestment>? AnalysisMethod { get; private set; }
+		public bool BondIsAnnual {
+			get => ToBoolean(InvestmentData["BondIsAnnual"].ToString());
+			set => InvestmentData["BondIsAnnual"] = value.ToString();
+		}
+
+		private bool ToBoolean(string str) {
+			if(str.Equals("true")) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		[JsonIgnore, NotMapped]
+		public AnalysisDelegate<BondInvestment>? AnalysisMethod;
 
 		//Constructor used by EF
 		public BondInvestment(string analysisType) : base() {
