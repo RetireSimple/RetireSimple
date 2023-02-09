@@ -3,7 +3,6 @@ using RetireSimple.Engine.Data.Investment;
 
 namespace RetireSimple.Engine.Api {
 	public class InvestmentApi {
-
 		private readonly EngineDbContext _context;
 
 		public InvestmentApi(EngineDbContext context) {
