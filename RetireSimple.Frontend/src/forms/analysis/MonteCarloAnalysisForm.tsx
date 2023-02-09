@@ -1,10 +1,10 @@
-import {Grid, TextField, Typography} from '@mui/material';
+import {Grid, Typography} from '@mui/material';
 import React from 'react';
-import {Controller, useFormContext} from 'react-hook-form';
+import {useFormContext} from 'react-hook-form';
+import {FormTextField} from '../Inputs';
 
 export const MonteCarloAnalysisForm = () => {
 	const formContext = useFormContext();
-
 	const {errors} = formContext.formState;
 
 	React.useEffect(() => {
@@ -22,74 +22,45 @@ export const MonteCarloAnalysisForm = () => {
 	//Field definitions (To reduce indent depth)
 	//==============================================
 	const analysisLengthField = (
-		<Controller
+		<FormTextField
 			name='analysisLength'
+			label='Analysis Length (Months)'
 			control={formContext.control}
-			render={({field}) => (
-				<TextField {...field}
-					label='Analysis Length (Months)'
-					fullWidth
-					size='small'
-					error={!!errors.analysisLength}
-					helperText={errors.analysisLength?.message as string}
-				/>
-			)} />);
+			errorField={errors.analysisLength}
+		/>);
 
 	const simCountField = (
-		<Controller
+		<FormTextField
 			name='simCount'
+			label='Simulation Count'
 			control={formContext.control}
-			render={({field}) => (
-				<TextField {...field}
-					label='Simulation Count'
-					fullWidth
-					size='small'
-					error={!!errors.simCount}
-					helperText={errors.simCount?.message as string}
-				/>
-			)} />);
+			errorField={errors.simCount}
+		/>);
 
 	const randomVariableMuField = (
-		<Controller
+		<FormTextField
 			name='randomVariableMu'
+			label='Mu'
 			control={formContext.control}
-			render={({field}) => (
-				<TextField {...field}
-					label='Mu'
-					fullWidth
-					error={!!errors.randomVariableMu}
-					size='small'
-					helperText={errors.randomVariableMu?.message as string}
-				/>
-			)} />);
+			errorField={errors.randomVariableMu}
+		/>);
 
 	const randomVariableSigmaField = (
-		<Controller
+		<FormTextField
 			name='randomVariableSigma'
+			label='Sigma'
 			control={formContext.control}
-			render={({field}) => (
-				<TextField {...field}
-					label='Sigma'
-					fullWidth
-					error={!!errors.randomVariableSigma}
-					size='small'
-					helperText={errors.randomVariableSigma?.message as string}
-				/>
-			)} />);
+			errorField={errors.randomVariableSigma}
+		/>);
 
 	const randomVariableScaleFactorField = (
-		<Controller
+		<FormTextField
 			name='randomVariableScaleFactor'
+			label='Scale Factor'
 			control={formContext.control}
-			render={({field}) => (
-				<TextField {...field}
-					label='Scale Factor'
-					fullWidth
-					error={!!errors.randomVariableScaleFactor}
-					size='small'
-					helperText={errors.randomVariableScaleFactor?.message as string}
-				/>
-			)} />);
+			errorField={errors.randomVariableScaleFactor}
+		/>);
+
 
 	return (
 		<Grid container spacing={2}>

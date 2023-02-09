@@ -1,6 +1,7 @@
-import {Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField} from '@mui/material';
+import {Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select} from '@mui/material';
 import React from 'react';
 import {Controller, FormProvider, useFormContext} from 'react-hook-form';
+import {FormTextField} from './Inputs';
 import {BondForm} from './investment/BondForm';
 import {StockForm} from './investment/StockForm';
 
@@ -19,7 +20,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 
 	const {errors} = formContext.formState;
 
-	const investmentTypeSubform = React.useCallback(() => {
+	const investmentTypeSubform = React.useMemo(() => {
 		switch (investmentType) {
 		case 'StockInvestment':
 			return <StockForm />;
@@ -30,33 +31,16 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 		}
 	}, [investmentType]);
 
-	React.useEffect((
-	) => {
-		if(props.defaultValues){
-			Object.keys(props.defaultValues).forEach((key: string) => {
-				formContext.setValue(key, props.defaultValues?.value??'');
-			});
-		}
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ props.defaultValues]);
-
 	//==============================================
 	//Field definitions (To reduce indent depth)
 	//==============================================
 	const investmentNameField = (
-		<Controller
+		<FormTextField
 			name='investmentName'
+			label='Name'
 			control={formContext.control}
-			defaultValue=''
-			render={({field}) => (
-				<FormControl
-					error={!!errors[`${field.name}`]}
-					fullWidth
-				>
-					<TextField {...field} size='small' label='Investment Name' />
-					<FormHelperText>{errors?.investmentName?.message as string}</FormHelperText>
-				</FormControl>
-			)} />);
+			errorField={errors.investmentName}
+		/>);
 
 	const investmentTypeField = (
 		<Controller
@@ -93,7 +77,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 					<Grid item xs={4}>{investmentNameField}</Grid>
 					<Grid item xs={4}>{investmentTypeField}</Grid>
 				</Grid>
-				{investmentTypeSubform()}
+				{investmentTypeSubform}
 			</Box>
 		</FormProvider>
 	</>);
