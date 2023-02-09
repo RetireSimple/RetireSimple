@@ -11,7 +11,7 @@ using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
 	//
-	public delegate InvestmentModel AnalysisDelegate<T>(T investment, OptionsDict options) where T : InvestmentBase;
+	public delegate InvestmentModel AnalysisModule<T>(T investment, OptionsDict options) where T : InvestmentBase;
 
 
 	[Table("Investments")]
@@ -79,7 +79,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		public DateTime? LastAnalysis { get; set; }
 
 		/// <summary>
-		/// The created <see cref="InvestmentModel"/> for this investment based on the <see cref="AnalysisDelegate{T}"/> run. If analysis has not been run prevously, this will be null.
+		/// The created <see cref="InvestmentModel"/> for this investment based on the <see cref="AnalysisModule{T}"/> run. If analysis has not been run prevously, this will be null.
 		/// </summary>
 		[JsonIgnore]
 		public InvestmentModel? InvestmentModel { get; set; }

@@ -26,7 +26,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public AnalysisDelegate<CashInvestment>? AnalysisMethod { get; private set; }
+		public AnalysisModule<CashInvestment>? AnalysisMethod { get; private set; }
 
 		public CashInvestment(string analysisType) : base() {
 			InvestmentType = "CashInvestment";

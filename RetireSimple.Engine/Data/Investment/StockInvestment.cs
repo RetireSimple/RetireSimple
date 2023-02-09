@@ -82,7 +82,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public AnalysisDelegate<StockInvestment>? AnalysisMethod { get; private set; }
+		public AnalysisModule<StockInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
 		public StockInvestment(string analysisType) : base() {
