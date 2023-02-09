@@ -12,7 +12,7 @@ export const MonteCarloAnalysisForm = () => {
 	//==============================================
 	const analysisLengthField = (
 		<FormTextField
-			name='analysisLength'
+			name='analysis_analysisLength'
 			label='Analysis Length (Months)'
 			control={formContext.control}
 			errorField={errors.analysisLength}
@@ -20,7 +20,7 @@ export const MonteCarloAnalysisForm = () => {
 
 	const simCountField = (
 		<FormTextField
-			name='simCount'
+			name='analysis_simCount'
 			label='Simulation Count'
 			control={formContext.control}
 			errorField={errors.simCount}
@@ -28,7 +28,7 @@ export const MonteCarloAnalysisForm = () => {
 
 	const randomVariableMuField = (
 		<FormTextField
-			name='randomVariableMu'
+			name='analysis_randomVariableMu'
 			label='Mu'
 			control={formContext.control}
 			errorField={errors.randomVariableMu}
@@ -36,7 +36,7 @@ export const MonteCarloAnalysisForm = () => {
 
 	const randomVariableSigmaField = (
 		<FormTextField
-			name='randomVariableSigma'
+			name='analysis_randomVariableSigma'
 			label='Sigma'
 			control={formContext.control}
 			errorField={errors.randomVariableSigma}
@@ -44,7 +44,7 @@ export const MonteCarloAnalysisForm = () => {
 
 	const randomVariableScaleFactorField = (
 		<FormTextField
-			name='randomVariableScaleFactor'
+			name='analysis_randomVariableScaleFactor'
 			label='Scale Factor'
 			control={formContext.control}
 			errorField={errors.randomVariableScaleFactor}
