@@ -389,7 +389,7 @@ namespace RetireSimple.Tests.Api {
 		}
 
 		[Fact]
-		public void UpdateAnalysisOptionsUpdatesExistingKeys(){
+		public void UpdateAnalysisOptionsUpdatesExistingKeys() {
 			api.Add("StockInvestment"); //Using defaults
 			var investment = context.Investment.First();
 			investment.AnalysisOptionsOverrides["analysisLength"] = "60";
@@ -404,8 +404,39 @@ namespace RetireSimple.Tests.Api {
 			investment.AnalysisOptionsOverrides["simCount"].Should().Be("10000");
 		}
 
+		[Fact]
+		public void GetSingluarInvestmentsNoVehicles() {
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
 
+			var investments = api.GetSingluarInvestments();
+			investments.Should().HaveCount(4);
+		}
 
+		[Fact]
+		public void GetSingularInvestmentsNoInvestments() {
+			var investments = api.GetSingluarInvestments();
+			investments.Should().BeEmpty();
+		}
+
+		[Fact]
+		public void GetSingularInvestmentsIgnoresVehicles() {
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
+
+			context.Portfolio.First().InvestmentVehicles.Add(new Vehicle401k());
+			context.SaveChanges();
+			context.InvestmentVehicle.First().Investments.Add(context.Investment.First());
+			context.SaveChanges();
+
+			var investments = api.GetSingluarInvestments();
+			investments.Should().HaveCount(3);
+			investments.Should().NotContain(i => i.InvestmentId == 1);
+		}
 	}
 }
 

@@ -11,11 +11,24 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Gets a list of <see cref="InvestmentBase"/> objects that are not
+		/// Gets a list of all<see cref="InvestmentBase"/> objects </summary>
+		/// <returns></returns>
+		public List<InvestmentBase> GetAllInvestments() => _context.Portfolio.First().Investments.ToList();
+
+		/// <summary>
+		/// Gets a list of all<see cref="InvestmentBase"/> objects that are not
 		/// associated with an <see cref="Data.InvestmentVehicle.InvestmentVehicleBase"/>.
 		/// </summary>
 		/// <returns></returns>
-		public List<InvestmentBase> GetAllInvestments() => throw new NotImplementedException();
+		public List<InvestmentBase> GetSingluarInvestments() {
+			var vehicleInvestments = _context.Portfolio.First()
+											.InvestmentVehicles
+											.SelectMany(v => v.Investments);
+
+			return _context.Portfolio.First()
+					.Investments
+					.Except(vehicleInvestments).ToList();
+		}
 
 		/// <summary>
 		/// Adds a new investment of the specified type, with investment-specific parameters set
