@@ -25,7 +25,7 @@ export const getInvestment = async (id: number): Promise<Investment> => {
 
 export const addStock = async (stock: any) => {
 
-	await fetch(`${API_BASE_URL}/Investment/AddStock`, {
+	await fetch(`${API_BASE_URL}/Investment/Add`, {
 		method: 'POST',
 		body: JSON.stringify(stock),
 		headers: {

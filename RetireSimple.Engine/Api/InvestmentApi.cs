@@ -3,7 +3,6 @@ using RetireSimple.Engine.Data.Investment;
 
 namespace RetireSimple.Engine.Api {
 	public class InvestmentApi {
-
 		private readonly EngineDbContext _context;
 
 		public InvestmentApi(EngineDbContext context) {
@@ -13,7 +12,7 @@ namespace RetireSimple.Engine.Api {
 		/// <summary>
 		/// Gets a list of all<see cref="InvestmentBase"/> objects </summary>
 		/// <returns></returns>
-		public List<InvestmentBase> GetAllInvestments() => _context.Portfolio.First().Investments.ToList();
+		public List<InvestmentBase> GetAllInvestments() => _context.Investment.ToList();
 
 		/// <summary>
 		/// Gets a list of all<see cref="InvestmentBase"/> objects that are not
@@ -29,6 +28,13 @@ namespace RetireSimple.Engine.Api {
 					.Investments
 					.Except(vehicleInvestments).ToList();
 		}
+
+		/// <summary>
+		/// Gets a single investment by its id
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public InvestmentBase GetInvestment(int id) => _context.Investment.First(i => i.InvestmentId == id);
 
 		/// <summary>
 		/// Adds a new investment of the specified type, with investment-specific parameters set

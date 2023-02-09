@@ -1,95 +1,112 @@
-﻿using MathNet.Numerics;
-using MathNet.Numerics.Random;
-using Microsoft.AspNetCore.Mvc;
-using RetireSimple.Backend.RequestBody;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using RetireSimple.Engine.Api;
 using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Investment;
+
 using System.Text.Json;
 
 namespace RetireSimple.Backend.Controllers {
 	[Route("api/[controller]")]
 	[ApiController]
 	public class InvestmentController : ControllerBase {
-		private readonly EngineDbContext _context;
-		private readonly Random _rand;
+		private readonly InvestmentApi _investmentApi;
 
 		public InvestmentController(EngineDbContext context) {
-			_context = context;
-			_rand = new Random();
+			_investmentApi = new InvestmentApi(context);
 		}
 
 		[HttpGet]
 		[Route("GetAllInvestments")]
 		public ActionResult<List<InvestmentBase>> GetInvestments() {
-			var investments = _context.Investment.ToList();
-			return Ok(investments); //converts to JSON
+			return Ok(_investmentApi.GetAllInvestments());
 		}
 
 		[HttpGet]
 		[Route("GetInvestment/{id}")]
 		public ActionResult<InvestmentBase> GetInvestment(int id) {
-			var investment = _context.Investment.First(i => i.InvestmentId == id);
-			return Ok(investment);
+			try {
+				var investment = _investmentApi.GetInvestment(id);
+				return Ok(investment);
+			}
+			catch (InvalidOperationException) {
+				return NotFound("Investment not found");
+			}
 		}
 
 		[HttpPost]
-		[Route("AddStock")]
-		public ActionResult AddStockInvestment([FromBody] JsonDocument reqBody) {
-			var body = reqBody.Deserialize<OptionsDict>();
-			if(body == null) {
+		[Route("Add")]
+		public ActionResult AddInvestment([FromBody] JsonDocument requestBody) {
+			var body = requestBody.Deserialize<OptionsDict>();
+			if (body == null) {
 				return BadRequest();
 			}
-			var newInvestment = new StockInvestment(body["analysisType"]) {
-				InvestmentName = body["investmentName"],
-				StockPrice = Decimal.Parse(body["stockPrice"]),
-				StockQuantity = Decimal.Parse(body["stockQuantity"]),
-				StockTicker = body["stockTicker"],
-				StockPurchaseDate = DateOnly.FromDateTime(DateTime.Parse(body["stockPurchaseDate"]))
-			};
 
-			//TODO Don't Preset values
-			newInvestment.InvestmentData["stockDividendPercent"] = body["stockDividendPercent"];
-			newInvestment.InvestmentData["stockDividendDistributionInterval"] = body["stockDividendDistributionInterval"];
-			newInvestment.InvestmentData["stockDividendDistributionMethod"] = body["stockDividendDistributionMethod"];
-			newInvestment.InvestmentData["stockDividendFirstPaymentDate"] = body["stockDividendFirstPaymentDate"];
+			//Must have a investmentType defined, we check if type is valid in API call
+			if (!body.ContainsKey("investmentType")) {
+				return BadRequest("investmentType not defined");
+			}
 
-			newInvestment.AnalysisOptionsOverrides["analysisLength"] = body["analysisLength"];
-			newInvestment.AnalysisOptionsOverrides["simCount"] = body["simCount"];
-			newInvestment.AnalysisOptionsOverrides["RandomVariableMu"] = body["randomVariableMu"];
-			newInvestment.AnalysisOptionsOverrides["RandomVariableSigma"] = body["randomVariableSigma"];
-			newInvestment.AnalysisOptionsOverrides["RandomVariableScaleFactor"] = body["randomVariableScaleFactor"];
+			try {
+				var type = body["investmentType"];
+				body.Remove("investmentType");
 
-			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
-			mainPortfolio.Investments.Add(newInvestment);
+				var id = _investmentApi.Add(type, body);
 
-			_context.SaveChanges();
+				//Check if we got analysis parameters
+				if (body.Keys.Any(k => k.StartsWith("analysis_"))) {
+					var analysisOptions =
+						body.Where(kvp => kvp.Key.StartsWith("analysis_"))
+							.ToDictionary(kvp => kvp.Key.Remove(0, 9), kvp => kvp.Value);
+					_investmentApi.UpdateAnalysisOptions(id, analysisOptions);
+				}
 
-			return Ok();
+				return Ok();
+			}
+			catch (ArgumentException) {
+				return BadRequest("Specified type of investment is not supported");
+			}
 		}
 
 		[HttpPost]
-		[Route("AddRandomStock")]
-		public ActionResult AddRandomStockInvestment() {
-			var newInvestment = new StockInvestment("testAnalysis") {
-				StockPrice = (_rand.NextDecimal() * 1000).Round(2),
-				StockQuantity = _rand.Next(5000),
-				StockTicker = MakeRandomTicker(),
-				StockPurchaseDate = DateOnly.FromDateTime(DateTime.Today)
-			};
+		[Route("Update/{id}")]
+		public ActionResult UpdateInvestment(int id, [FromBody] JsonDocument requestBody) {
+			var body = requestBody.Deserialize<OptionsDict>();
+			if (body == null) {
+				return BadRequest();
+			}
 
-			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
-			mainPortfolio.Investments.Add(newInvestment);
-			_context.SaveChangesAsync();
+			try {
+				_investmentApi.Update(id, body);
 
-			return Ok();
+				//Check if we got analysis parameters
+				if (body.Keys.Any(k => k.StartsWith("analysis_"))) {
+					var analysisOptions =
+						body.Where(kvp => kvp.Key.StartsWith("analysis_"))
+							.ToDictionary(kvp => kvp.Key.Remove(0, 9), kvp => kvp.Value);
+					_investmentApi.UpdateAnalysisOptions(id, analysisOptions);
+				}
+
+				return Ok();
+			}
+			catch (ArgumentException) {
+				return NotFound("Investment not found");
+			}
 		}
 
-		private string MakeRandomTicker() {
-			//yoinked from stackoverflow for demo purposes
-			//https://stackoverflow.com/questions/1344221/how-can-i-generate-random-alphanumeric-strings
-			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-			return new string(Enumerable.Repeat(chars, 4)
-				.Select(s => s[_rand.Next(s.Length)]).ToArray());
+		[HttpDelete]
+		[Route("Delete/{id}")]
+		public ActionResult DeleteInvestment(int id) {
+			try {
+				_investmentApi.Remove(id);
+				return Ok();
+			}
+			catch (ArgumentException) {
+				return NotFound("Investment not found");
+			}
+			catch (InvalidOperationException) {
+				return BadRequest("Investment cannot be deleted. Check if it still has dependents");
+			}
 		}
 
 	}
