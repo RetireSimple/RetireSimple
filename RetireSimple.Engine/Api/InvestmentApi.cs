@@ -81,39 +81,6 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Updates the specified parameter in that specific investment. For simplicity, this method
-		/// does not validate if the specified investment has such a parameter, rather it is inserted/overwritten
-		/// directly to the internal <see cref="InvestmentBase.InvestmentData"/> with <paramref name="param"/>
-		/// as a key and <paramref name="value"/> as the value. Values cannot be null, and keys will not be
-		/// removable from this dictionary.
-		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="param"></param>
-		/// <param name="value"></param>
-		/// <exception cref="ArgumentException">If the specified investment does not exist</exception>
-		public void Update(int id, string param, string value) {
-			//TODO This code is not to doc specs, reimplement
-			throw new NotImplementedException();
-			// {
-			// 	if(_context.Investment.First(i => i.InvestmentId == id) == null) {
-			// 		throw new NotImplementedException("Investment not found");
-			// 	}
-
-			// 	switch(param) {
-			// 		case "investmentName":
-			// 			_context.Investment.First(i => i.InvestmentId == id).InvestmentName = value;
-			// 			_context.SaveChanges();
-			// 		case "investmentType":
-			// 			_context.Investment.First(i => i.InvestmentId == id).InvestmentType = value;
-			// 			_context.SaveChanges();
-			// 		case "analysisType":
-			// 			_context.Investment.First(i => i.InvestmentId == id).AnalysisType = value;
-			// 			_context.SaveChanges();
-			// 	}
-			// }
-		}
-
-		/// <summary>
 		/// Updates many parameters in a specific investment based on the values defined in <paramref name="parameters"/>
 		/// For simplicity, this method does not validate if the specified investment has such a parameter,
 		/// rather it is inserted/overwritten directly to the internal <see cref="InvestmentBase.InvestmentData"/>
@@ -123,16 +90,25 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="parameters"></param>
 		/// <exception cref="ArgumentException">If the specified investment does not exist</exception>
 		public void Update(int id, OptionsDict parameters) {
-			//TODO This code is not to doc specs, reimplement
-			throw new NotImplementedException();
-			// {
-			// 	if(_context.Investment.First(i => i.InvestmentId == id) == null) {
-			// 		throw new NotImplementedException("Investment not found");
-			// 	}
+			if (!_context.Investment.Any(i => i.InvestmentId == id)) {
+				throw new ArgumentException("Investment not found");
+			}
 
-			// 	_context.Investment.First(i => i.InvestmentId == id).InvestmentData = parameters;
-			// 	_context.SaveChanges();
-			// }
+			var investment = _context.Investment.First(i => i.InvestmentId == id);
+			//Only investmentName should be set via Property
+			if (parameters.ContainsKey("investmentName")) {
+				investment.InvestmentName = parameters["investmentName"];
+				parameters.Remove("investmentName");
+			}
+
+			foreach (var (key, value) in parameters) {
+				//Only update existing keys
+				if (investment.InvestmentData.ContainsKey(key)) {
+					investment.InvestmentData[key] = value;
+				}
+			}
+
+			_context.SaveChanges();
 		}
 
 		/// <summary>

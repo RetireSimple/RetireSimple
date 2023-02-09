@@ -301,6 +301,56 @@ namespace RetireSimple.Tests.Api {
 			Action act = () => api.Remove(1);
 			act.Should().Throw<InvalidOperationException>();
 		}
+
+		[Fact]
+		public void UpdateInvestmentNotFoundThrows() {
+			Action act = () => api.Update(1, new OptionsDict());
+			act.Should().Throw<ArgumentException>();
+		}
+
+		[Fact]
+		public void UpdateInvestmentOnlyExistingValues() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.Update(1, new OptionsDict {
+				{"stockTicker", "MSFT"},
+			});
+
+			context.Investment.Should().ContainSingle();
+			var investment = context.Investment.First();
+			investment.InvestmentData["stockTicker"].Should().Be("MSFT");
+		}
+
+		[Fact]
+		public void UpdateInvestmentHandlesNameSeparately() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.Update(1, new OptionsDict {
+				{"stockTicker", "MSFT"},
+				{"investmentName", "My Investment"},
+			});
+
+			context.Investment.Should().ContainSingle();
+			var investment = context.Investment.First();
+			investment.InvestmentData["stockTicker"].Should().Be("MSFT");
+			investment.InvestmentData.Should().NotContainKey("investmentName");
+			investment.InvestmentName.Should().Be("My Investment");
+		}
+
+		[Fact]
+		public void UpdateInvestmentIgnoresUnknownKeys() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.Update(1, new OptionsDict{
+				{"unknownKey", "value"},
+				{"stockTicker", "MSFT"},
+			});
+
+			context.Investment.Should().ContainSingle();
+			var investment = context.Investment.First();
+			investment.InvestmentData["stockTicker"].Should().Be("MSFT");
+			investment.InvestmentData.Should().NotContainKey("unknownKey");
+		}
 	}
 
 }
