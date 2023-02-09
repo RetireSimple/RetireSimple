@@ -1,6 +1,6 @@
 import {Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select} from '@mui/material';
 import React from 'react';
-import {Controller, FormProvider, useFormContext} from 'react-hook-form';
+import {Controller, FormProvider, useFormContext, useWatch} from 'react-hook-form';
 import {FormTextField} from './Inputs';
 import {BondForm} from './investment/BondForm';
 import {StockForm} from './investment/StockForm';
@@ -14,10 +14,11 @@ export interface InvestmentDataFormProps {
 ///Allows for parents to retrieve data from the form context
 
 export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
-
-	const [investmentType, setInvestmentType] = React.useState<string>("StockInvestment");
 	const formContext = useFormContext();
-
+	const investmentType = useWatch({
+		name: 'investmentType',
+		control: formContext.control,
+		defaultValue: 'StockInvestment'});
 	const {errors} = formContext.formState;
 
 	const investmentTypeSubform = React.useMemo(() => {
@@ -48,19 +49,13 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 			control={formContext.control}
 			defaultValue='StockInvestment'
 			render={({field}) => (
-				<FormControl
-					error={!!errors.investmentType}
+				<FormControl error={!!errors.investmentType}
 					fullWidth
 					size='small'>
 					<InputLabel id='investmentType'>Investment Type</InputLabel>
 					<Select
+						{...field}
 						label='Investment Type'
-						value={investmentType}
-						onChange={(e) => {
-							setInvestmentType(e.target.value as string);
-							field.onChange(e);
-						}}
-						inputRef={formContext.register('investmentType').ref}
 					>
 						<MenuItem value='StockInvestment'>Stock</MenuItem>
 						<MenuItem value='BondInvestment'>Bond</MenuItem>

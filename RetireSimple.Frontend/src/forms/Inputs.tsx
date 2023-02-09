@@ -1,4 +1,6 @@
 import {FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField} from '@mui/material';
+import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import React from 'react'
 import {Control, Controller} from 'react-hook-form';
 
@@ -10,7 +12,7 @@ export interface FormTextFieldProps {
 }
 
 export const FormTextField = (props: FormTextFieldProps) => {
-	const memo = React.useMemo(() => (
+	return(
 		<Controller
 			name={props.name}
 			control={props.control}
@@ -22,9 +24,7 @@ export const FormTextField = (props: FormTextFieldProps) => {
 					size='small'
 					error={!!props.errorField}
 					helperText={props.errorField?.message as string} />
-			)} />), [props.name, props.label, props.control, props.errorField]);
-
-	return (memo)
+			)} />)
 }
 
 export interface FormSelectFieldProps {
@@ -37,7 +37,7 @@ export interface FormSelectFieldProps {
 }
 
 export const FormSelectField = (props: FormSelectFieldProps) => {
-	const memo = React.useMemo(() => (
+	return(
 		<Controller
 			name={props.name}
 			control={props.control}
@@ -61,8 +61,34 @@ export const FormSelectField = (props: FormSelectFieldProps) => {
 						{props.errorField?.message as string}
 					</FormHelperText>
 				</FormControl>
-			)} />),
-	[props.name, props.label, props.control, props.errorField, props.options, props.defaultOption]);
+			)} />)
+}
 
-	return (memo)
+export interface FormDatePickerProps {
+	name: string;
+	label:string;
+	control: Control
+	errorField: any;
+	defaultValue: string;
+}
+
+export const FormDatePicker = (props: FormDatePickerProps) => {
+	return (<Controller
+		name={props.name}
+		control={props.control}
+		defaultValue={props.defaultValue ?? ''}
+		render={({field}) => (
+			<LocalizationProvider dateAdapter={AdapterDayjs}>
+				<DatePicker
+					{...field}
+					label={props.label}
+					renderInput={(params) =>
+						<TextField {...params}
+							size='small'
+							error={!!props.errorField}
+							helperText={props.errorField?.message as string}
+						/>}
+				/>
+			</LocalizationProvider>
+		)} />);
 }

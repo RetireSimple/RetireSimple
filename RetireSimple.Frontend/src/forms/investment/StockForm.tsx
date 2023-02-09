@@ -3,8 +3,8 @@ import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 
 import React from 'react';
-import {Controller, FormProvider, useFormContext} from 'react-hook-form';
-import {FormSelectField, FormTextField} from '../Inputs';
+import {Controller, FormProvider, useFormContext, useWatch} from 'react-hook-form';
+import {FormDatePicker, FormSelectField, FormTextField} from '../Inputs';
 import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
 
 //Type aliases to shorten names
@@ -15,7 +15,10 @@ export interface StockFormProps {
 
 export const StockForm = (props: StockFormProps) => {
 	const formContext = useFormContext();
-	const [analysisType, setAnalysisType] = React.useState<string>(props.defaultValues?.analysisType ?? 'MonteCarlo_NormalDist');
+	const analysisType = useWatch({
+		name: 'analysisType',
+		control: formContext.control,
+		defaultValue: props.defaultValues?.analysisType ?? 'MonteCarlo_NormalDist'});
 
 	const {errors} = formContext.formState;
 
@@ -109,24 +112,14 @@ export const StockForm = (props: StockFormProps) => {
 		/>);
 
 	const stockDividendFirstPaymentDateField = (
-		<Controller
+		<FormDatePicker
 			name='stockDividendFirstPaymentDate'
+			label='First Payment Date'
 			control={formContext.control}
+			errorField={errors.stockDividendFirstPaymentDate}
 			defaultValue={props.defaultValues?.stockDividendFirstPaymentDate ?? ''}
-			render={({field}) => (
-				<LocalizationProvider dateAdapter={AdapterDayjs}>
-					<DatePicker
-						{...field}
-						label='First Payment Date'
-						renderInput={(params) =>
-							<TextField {...params}
-								size='small'
-								error={!!errors.stockDividendFirstPaymentDate}
-								helperText={errors.stockDividendFirstPaymentDate?.message as string}
-							/>}
-					/>
-				</LocalizationProvider>
-			)} />);
+		/>);
+
 
 	const analysisTypeField = (
 		<Controller
@@ -137,11 +130,6 @@ export const StockForm = (props: StockFormProps) => {
 				<FormControl fullWidth size='small'>
 					<InputLabel id='analysisType'>Analysis Type</InputLabel>
 					<Select {...field}
-						value={field.value}
-						onChange={e => {
-							setAnalysisType(e.target.value);
-							formContext.setValue('analysisType', e.target.value);
-						}}
 						label='Analysis Type'>
 						<MenuItem value='testAnalysis'>Test Analysis</MenuItem>
 						<MenuItem value='MonteCarlo_NormalDist'>Monte Carlo - Normal Dist.</MenuItem>
@@ -155,9 +143,7 @@ export const StockForm = (props: StockFormProps) => {
 			<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
 				<Typography variant='subtitle2'>Stock Information</Typography>
 				<Grid container spacing={2}>
-					<Grid item xs={2}>
-						{stockTickerField}
-					</Grid>
+					<Grid item xs={2}>{stockTickerField}</Grid>
 					<Grid item xs={2}>{stockPriceField}</Grid>
 					<Grid item xs={2}>{stockQuantityField}</Grid>
 					<Grid item xs={4}>{stockPurchaseDateField}</Grid>
@@ -177,9 +163,7 @@ export const StockForm = (props: StockFormProps) => {
 					</Grid>
 					<Grid item xs={4}>{analysisTypeField}</Grid>
 					<Grid item xs={12}>
-
 						{analysisSubForm()}
-
 					</Grid>
 				</Grid>
 			</Box>

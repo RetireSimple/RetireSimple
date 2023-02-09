@@ -7,17 +7,6 @@ export const MonteCarloAnalysisForm = () => {
 	const formContext = useFormContext();
 	const {errors} = formContext.formState;
 
-	React.useEffect(() => {
-		return () => {
-			formContext.unregister('analysisLength');
-			formContext.unregister('simCount');
-			formContext.unregister('randomVariableMu');
-			formContext.unregister('randomVariableSigma');
-			formContext.unregister('randomVariableScaleFactor');
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	//==============================================
 	//Field definitions (To reduce indent depth)
 	//==============================================
