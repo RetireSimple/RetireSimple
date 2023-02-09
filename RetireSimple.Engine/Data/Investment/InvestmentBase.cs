@@ -10,7 +10,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
-	//
 	public delegate InvestmentModel AnalysisModule<T>(T investment, OptionsDict options) where T : InvestmentBase;
 
 
@@ -32,7 +31,6 @@ namespace RetireSimple.Engine.Data.Investment {
 		/// Check the discriminator configuration in <see cref="InvestmentBaseConfiguration"/> for valid discriminator values.
 		/// </summary>
 		public string InvestmentType { get; set; }
-
 
 		/// <summary>
 		/// This is the easiest way to store data while maintaining type safety.<br/>

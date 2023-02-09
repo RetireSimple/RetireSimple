@@ -351,7 +351,61 @@ namespace RetireSimple.Tests.Api {
 			investment.InvestmentData["stockTicker"].Should().Be("MSFT");
 			investment.InvestmentData.Should().NotContainKey("unknownKey");
 		}
-	}
 
+		[Fact]
+		public void UpdateAnalysisOptionInvestmentNotFoundThrows() {
+			Action act = () => api.UpdateAnalysisOptions(1, new OptionsDict());
+			act.Should().Throw<ArgumentException>();
+		}
+
+		[Fact]
+		public void UpdateAnalysisOptionAddsNewKeys() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.UpdateAnalysisOptions(1, new OptionsDict {
+				{"analysisLength", "60"},
+				{"simCount", "10000"},
+			});
+
+			var investment = context.Investment.First();
+			investment.AnalysisOptionsOverrides["analysisLength"].Should().Be("60");
+			investment.AnalysisOptionsOverrides["simCount"].Should().Be("10000");
+		}
+
+		[Fact]
+		public void UpdateAnalysisOptionRemovesKeysWithEmptyString() {
+			api.Add("StockInvestment"); //Using defaults
+			var investment = context.Investment.First();
+			investment.AnalysisOptionsOverrides["analysisLength"] = "60";
+			investment.AnalysisOptionsOverrides["simCount"] = "10000";
+			context.SaveChanges();
+
+			api.UpdateAnalysisOptions(1, new OptionsDict {
+				{"analysisLength", ""},
+			});
+
+			investment.AnalysisOptionsOverrides.Should().NotContainKey("analysisLength");
+			investment.AnalysisOptionsOverrides.Should().ContainKey("simCount");
+		}
+
+		[Fact]
+		public void UpdateAnalysisOptionsUpdatesExistingKeys(){
+			api.Add("StockInvestment"); //Using defaults
+			var investment = context.Investment.First();
+			investment.AnalysisOptionsOverrides["analysisLength"] = "60";
+			investment.AnalysisOptionsOverrides["simCount"] = "10000";
+			context.SaveChanges();
+
+			api.UpdateAnalysisOptions(1, new OptionsDict {
+				{"analysisLength", "120"},
+			});
+
+			investment.AnalysisOptionsOverrides["analysisLength"].Should().Be("120");
+			investment.AnalysisOptionsOverrides["simCount"].Should().Be("10000");
+		}
+
+
+
+	}
 }
 

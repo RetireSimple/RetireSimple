@@ -114,29 +114,30 @@ namespace RetireSimple.Engine.Api {
 		/// <summary>
 		/// Updates the <see cref="InvestmentBase.AnalysisOptionsOverrides"/> with the
 		/// specified analysis option and option value. No actual validation of the value with
-		/// respect to the analysis option is performed in this method. If <paramref name="value"/>
-		/// is null and the option exists, it gets removed from the analysis overrides for the
-		/// vehicle.
+		/// respect to the analysis option is performed in this method.
+		/// If a key exists in <paramref name="options"/> and also exists in the current overrides,
+		/// the value is overwritten. If a key in <paramref name="options"/>
+		/// has its value as an empty string, the key is removed from the overrides if the key exists.
+		/// If a key in <paramref name="options"/> does not exist in the current overrides, it is added.
 		/// </summary>
-		/// <param name="vehicleId"></param>
-		/// <param name="option"></param>
-		/// <param name="value"></param>
-		/// <exception cref="ArgumentException">If the specified option does not exist yet in the
-		/// overrides and <paramref name="value"/> is null</exception>
-		public void UpdateAnalysisOption(int id, string param, string? value) {
-			//TODO This code is not to doc specs, reimplement
-			throw new NotImplementedException();
-			// {
-			// 	if(_context.Investment.First(i => i.InvestmentId == id) == null) {
-			// 		throw new NotImplementedException("Investment not found");
-			// 	}
+		/// <param name="id"></param>
+		/// <param name="options"></param>
+		public void UpdateAnalysisOptions(int id, OptionsDict options) {
+			if (!_context.Investment.Any(i => i.InvestmentId == id)) {
+				throw new ArgumentException("Investment not found");
+			}
 
-			// 	if(_context.Investment.First(i => i.InvestmentId == id).AnalysisOptionsOverrides == null) {
-			// 	}
-			// 	//1.check parameter exists
-			// 	//2. value is null
-			// 	_context.SaveChanges();
-			// }
+			var investment = _context.Investment.First(i => i.InvestmentId == id);
+			foreach (var (key, value) in options) {
+				if (value == "") {
+					investment.AnalysisOptionsOverrides.Remove(key);
+				}
+				else {
+					investment.AnalysisOptionsOverrides[key] = value;
+				}
+			}
+
+			_context.SaveChanges();
 		}
 
 		/// <summary>

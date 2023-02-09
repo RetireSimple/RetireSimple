@@ -30,7 +30,7 @@ namespace RetireSimple.Engine.Data.User {
 		/// <summary>
 		/// TODO Not Implemented Yet
 		/// </summary>
-		public void GenerateFullAnalysis() { }
+		public void GenerateFullAnalysis() => throw new NotImplementedException();
 	}
 
 	public class PortfolioConfig : IEntityTypeConfiguration<Portfolio> {
