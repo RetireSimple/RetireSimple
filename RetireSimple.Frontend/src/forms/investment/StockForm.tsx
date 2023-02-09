@@ -1,9 +1,7 @@
-import {Box, Grid, TextField, Typography} from '@mui/material';
-import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
+import {Box, Grid, Typography} from '@mui/material';
 
 import React from 'react';
-import {Controller, useFormContext, useWatch} from 'react-hook-form';
+import {useFormContext, useWatch} from 'react-hook-form';
 import {FormDatePicker, FormSelectField, FormTextField} from '../Inputs';
 import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
 
@@ -58,19 +56,13 @@ export const StockForm = (props: StockFormProps) => {
 		/>);
 
 	const stockPurchaseDateField = (
-		<Controller
+		<FormDatePicker
 			name='stockPurchaseDate'
+			label='Purchase Date'
 			control={formContext.control}
-			defaultValue={props.defaultValues?.stockPurchaseDate ?? ''}
-			render={({field}) => (
-				<LocalizationProvider dateAdapter={AdapterDayjs}>
-					<DatePicker
-						{...field}
-						label='Purchase Date'
-						renderInput={(params) => <TextField {...params} size='small' />}
-					/>
-				</LocalizationProvider>
-			)} />);
+			errorField={errors.stockPurchaseDate}
+			defaultValue={props.defaultValues?.stockPurchaseDate}
+		/>);
 
 	const stockDividendPercentField = (
 		<FormTextField
