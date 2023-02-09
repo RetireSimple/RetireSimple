@@ -165,21 +165,24 @@ namespace RetireSimple.Engine.Api {
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
 		public InvestmentModel GetAnalysis(int id, OptionsDict? options = null) {
-			//TODO This code is not to doc specs, reimplement
-			throw new NotImplementedException();
-			// {
-			// 	if(_context.InvestmentModel.First(i => i.InvestmentModelId == id) == null) {
-			// 		throw new NotImplementedException("Investment not found");
-			// 	}
+			if (!_context.Investment.Any(i => i.InvestmentId == id)) {
+				throw new ArgumentException("Investment not found");
+			}
 
-			// 	if(options == null) {
-			// 		//check if investment model is null
-			// 		return _context.Investment.First(i => i.InvestmentId == id).InvestmentModel;
-			// 	} else {
-			// 		//invoke analysis
-			// 		_context.Investment.First(i => i.InvestmentId == id).InvokeAnalysis(options);
-			// 	}
-			// }
+			var investment = _context.Investment.First(i => i.InvestmentId == id);
+			if ((options is not null && options.Count > 0) ||
+					investment.InvestmentModel is null ||
+					investment.LastAnalysis > investment.InvestmentModel.LastUpdated) {
+				var model = investment.InvokeAnalysis(options ?? new OptionsDict() { });
+				var updateTime = DateTime.Now;
+				investment.InvestmentModel = model;
+				investment.LastAnalysis = updateTime;
+				model.LastUpdated = updateTime;
+				_context.SaveChanges();
+				return model;
+			}
+
+			return investment.InvestmentModel;
 		}
 	}
 }

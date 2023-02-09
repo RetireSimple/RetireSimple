@@ -437,6 +437,111 @@ namespace RetireSimple.Tests.Api {
 			investments.Should().HaveCount(3);
 			investments.Should().NotContain(i => i.InvestmentId == 1);
 		}
+
+		[Fact]
+		public void GetAnalysisCurrentModelOnlyReturns() {
+			api.Add("StockInvestment");
+			var investment = context.Investment.First();
+			var invokeTime = DateTime.Now;
+			var model = new InvestmentModel() {
+				InvestmentId = investment.InvestmentId,
+				LastUpdated = invokeTime,
+				MinModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				AvgModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				MaxModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+			};
+			investment.InvestmentModel = model;
+			investment.LastAnalysis = invokeTime;
+			context.SaveChanges();
+
+			var analysis = api.GetAnalysis(investment.InvestmentId);
+			analysis.Should().NotBeNull();
+			analysis.Should().Be(model);
+		}
+
+		//These tests purely checks if the analysis is run, not if the results are correct.
+		//This is especially important since we set the AnalysisMethod to null, and validate
+		//if an InvalidOperationException is thrown as the call to InvokeAnalysis should throw
+		//under these conditions.
+		//Analysis valididy should be done in separate test
+		[Fact]
+		public void GetAnalysisOutdatedModelRunsAnalysis() {
+			api.Add("StockInvestment");
+			var investment = context.Investment.First();
+			investment.ResolveAnalysisDelegate("");
+			var invokeTime = DateTime.Now;
+			investment.LastAnalysis = invokeTime;
+			var model = new InvestmentModel() {
+				InvestmentId = investment.InvestmentId,
+				LastUpdated = invokeTime.AddDays(-1d),
+				MinModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				AvgModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				MaxModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+			};
+			investment.InvestmentModel = model;
+			context.SaveChanges();
+
+			Action act = () => api.GetAnalysis(investment.InvestmentId);
+			act.Should().Throw<InvalidOperationException>();
+		}
+
+		[Fact]
+		public void GetAnalysisNoModelRunsAnalysis() {
+			api.Add("StockInvestment");
+			var investment = context.Investment.First();
+			investment.ResolveAnalysisDelegate("");
+			context.SaveChanges();
+
+			Action act = () => api.GetAnalysis(investment.InvestmentId);
+			act.Should().Throw<InvalidOperationException>();
+		}
+
+		[Fact]
+		public void GetAnalysisGivenEmptyOptionsDoesNotRunAnalysis() {
+			api.Add("StockInvestment");
+			var investment = context.Investment.First();
+			investment.ResolveAnalysisDelegate("");
+			var invokeTime = DateTime.Now;
+			investment.LastAnalysis = invokeTime;
+			var model = new InvestmentModel() {
+				InvestmentId = investment.InvestmentId,
+				LastUpdated = invokeTime,
+				MinModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				AvgModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				MaxModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+			};
+			investment.InvestmentModel = model;
+			context.SaveChanges();
+
+			Action act = () => api.GetAnalysis(investment.InvestmentId, new OptionsDict());
+			act.Should().NotThrow<InvalidOperationException>();
+
+			var result = api.GetAnalysis(investment.InvestmentId, new OptionsDict());
+			result.Should().Be(model);
+		}
+
+		[Fact]
+		public void GetAnalysisGivenOptionsRunsAnalysis() {
+			api.Add("StockInvestment");
+			var investment = context.Investment.First();
+			investment.ResolveAnalysisDelegate("");
+			var invokeTime = DateTime.Now;
+			investment.LastAnalysis = invokeTime;
+			var model = new InvestmentModel() {
+				InvestmentId = investment.InvestmentId,
+				LastUpdated = invokeTime.AddDays(-1d),
+				MinModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				AvgModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				MaxModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+			};
+			investment.InvestmentModel = model;
+			context.SaveChanges();
+
+			Action act = () => api.GetAnalysis(investment.InvestmentId, new OptionsDict(){
+				{ "test", "test" }
+			});
+			act.Should().Throw<InvalidOperationException>();
+		}
 	}
 }
 
