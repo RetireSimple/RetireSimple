@@ -1,6 +1,5 @@
 ﻿using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Investment;
-using RetireSimple.Engine.Data.InvestmentVehicle;
 
 namespace RetireSimple.Engine.Api {
 	public class InvestmentApi {
@@ -12,11 +11,24 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Gets a list of <see cref="InvestmentBase"/> objects that are not
+		/// Gets a list of all<see cref="InvestmentBase"/> objects </summary>
+		/// <returns></returns>
+		public List<InvestmentBase> GetAllInvestments() => _context.Portfolio.First().Investments.ToList();
+
+		/// <summary>
+		/// Gets a list of all<see cref="InvestmentBase"/> objects that are not
 		/// associated with an <see cref="Data.InvestmentVehicle.InvestmentVehicleBase"/>.
 		/// </summary>
 		/// <returns></returns>
-		public List<InvestmentBase> GetAllInvestments() => throw new NotImplementedException();
+		public List<InvestmentBase> GetSingluarInvestments() {
+			var vehicleInvestments = _context.Portfolio.First()
+											.InvestmentVehicles
+											.SelectMany(v => v.Investments);
+
+			return _context.Portfolio.First()
+					.Investments
+					.Except(vehicleInvestments).ToList();
+		}
 
 		/// <summary>
 		/// Adds a new investment of the specified type, with investment-specific parameters set
@@ -41,10 +53,13 @@ namespace RetireSimple.Engine.Api {
 		public int Add(string type, OptionsDict? parameters = null) {
 			//TODO Refactor
 			parameters ??= new OptionsDict();
-			var newInvestment = type switch {
-				"StockInvestment" => CreateStock(parameters),
+			InvestmentBase newInvestment = type switch {
+				"StockInvestment" => InvestmentApiUtil.CreateStock(parameters),
+				"BondInvestment" => InvestmentApiUtil.CreateBond(parameters),
 				_ => throw new ArgumentException("The specified investment type was not found"),
 			};
+			newInvestment.InvestmentName = parameters.GetValueOrDefault("investmentName", "");
+
 
 			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
 			mainPortfolio.Investments.Add(newInvestment);
@@ -52,26 +67,6 @@ namespace RetireSimple.Engine.Api {
 			_context.SaveChanges();
 
 			return _context.Investment.First(i => i.Equals(newInvestment)).InvestmentId;
-		}
-
-		//TODO implement this and for other investments
-		private static StockInvestment CreateStock(OptionsDict parameters) {
-			//Filter Dictionary for Analysis Option Overrides
-			//TODO require Analysis Options to have prefix
-			// var analysisOptions = parameters.Where(kvp => kvp.Key.StartsWith("AnalysisOption_")).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-			return new StockInvestment("") {
-				InvestmentName = parameters.GetValueOrDefault("investmentName", ""),
-				InvestmentType = "StockInvestment",
-				StockPrice = Decimal.Parse(parameters.GetValueOrDefault("stockPrice", "0.0")),
-				StockQuantity = Decimal.Parse(parameters.GetValueOrDefault("stockQuantity", "0.0")),
-				StockTicker = parameters.GetValueOrDefault("stockTicker", "0.0"),
-				StockPurchaseDate = DateTime.Parse(parameters.GetValueOrDefault("stockPurchaseDate", "1/1/1970")),
-				StockDividendDistributionInterval = parameters.GetValueOrDefault("stockDividendDistributionInterval", "Month"),
-				StockDividendDistributionMethod = parameters.GetValueOrDefault("stockDividendDistributionMethod", "Stock"),
-				StockDividendFirstPaymentDate = DateTime.Parse(parameters.GetValueOrDefault("stockDividendFirstPaymentDate", "1/1/1970")),
-				AnalysisOptionsOverrides = parameters.Where(kvp => kvp.Key.StartsWith("AnalysisOption_")).ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
-			};
 		}
 
 		/// <summary>
@@ -86,52 +81,16 @@ namespace RetireSimple.Engine.Api {
 		/// <exception cref="InvalidOperationException">If the remove occurs while the investment still has
 		/// some <see cref="InvestmentTransfer"/> objects related to it.</exception>
 		public void Remove(int id) {
-			//TODO This code is not to doc specs, reimplement
-			// if(_context.InvestmentTransfer.First(it => it.SourceInvestmentId == id) != null
-			// 	|| _context.InvestmentTransfer.First(it => it.DestinationInvestmentId == id) == null) {
-			// 	throw new InvalidOperationException("Investment Transfer has objects related to deleted investment");
-			// } else if(_context.Investment.First(i => i.InvestmentId == id) == null) {
-			// 	throw new ArgumentException("ID does not exist");
-			// } else {
-			// 	_context.Remove(_context.Investment.First(i => i.InvestmentId == id));
-			// 	_context.SaveChanges();
-			// 	_context.Remove(_context.InvestmentModel.All(im => im.InvestmentId == id));
-			// 	_context.SaveChanges();
-			// 	_context.Remove(_context.Expense.All(e => e.SourceInvestmentId == id));
-			// 	_context.SaveChanges();
-			// }
-		}
-		/// <summary>
-		/// Updates the specified parameter in that specific investment. For simplicity, this method
-		/// does not validate if the specified investment has such a parameter, rather it is inserted/overwritten
-		/// directly to the internal <see cref="InvestmentBase.InvestmentData"/> with <paramref name="param"/>
-		/// as a key and <paramref name="value"/> as the value. Values cannot be null, and keys will not be
-		/// removable from this dictionary.
-		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="param"></param>
-		/// <param name="value"></param>
-		/// <exception cref="ArgumentException">If the specified investment does not exist</exception>
-		public void Update(int id, string param, string value) {
-			//TODO This code is not to doc specs, reimplement
-			throw new NotImplementedException();
-			// {
-			// 	if(_context.Investment.First(i => i.InvestmentId == id) == null) {
-			// 		throw new NotImplementedException("Investment not found");
-			// 	}
+			if (!_context.Investment.Any(i => i.InvestmentId == id)) {
+				throw new ArgumentException("Investment not found");
+			}
+			if (_context.InvestmentTransfer.Any(t => t.SourceInvestmentId == id
+												|| t.DestinationInvestmentId == id)) {
+				throw new InvalidOperationException("Cannot remove investment while it still has transfers");
+			}
 
-			// 	switch(param) {
-			// 		case "investmentName":
-			// 			_context.Investment.First(i => i.InvestmentId == id).InvestmentName = value;
-			// 			_context.SaveChanges();
-			// 		case "investmentType":
-			// 			_context.Investment.First(i => i.InvestmentId == id).InvestmentType = value;
-			// 			_context.SaveChanges();
-			// 		case "analysisType":
-			// 			_context.Investment.First(i => i.InvestmentId == id).AnalysisType = value;
-			// 			_context.SaveChanges();
-			// 	}
-			// }
+			_context.Investment.Remove(_context.Investment.First(i => i.InvestmentId == id));
+			_context.SaveChanges();
 		}
 
 		/// <summary>
@@ -144,44 +103,54 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="parameters"></param>
 		/// <exception cref="ArgumentException">If the specified investment does not exist</exception>
 		public void Update(int id, OptionsDict parameters) {
-			//TODO This code is not to doc specs, reimplement
-			throw new NotImplementedException();
-			// {
-			// 	if(_context.Investment.First(i => i.InvestmentId == id) == null) {
-			// 		throw new NotImplementedException("Investment not found");
-			// 	}
+			if (!_context.Investment.Any(i => i.InvestmentId == id)) {
+				throw new ArgumentException("Investment not found");
+			}
 
-			// 	_context.Investment.First(i => i.InvestmentId == id).InvestmentData = parameters;
-			// 	_context.SaveChanges();
-			// }
+			var investment = _context.Investment.First(i => i.InvestmentId == id);
+			//Only investmentName should be set via Property
+			if (parameters.ContainsKey("investmentName")) {
+				investment.InvestmentName = parameters["investmentName"];
+				parameters.Remove("investmentName");
+			}
+
+			foreach (var (key, value) in parameters) {
+				//Only update existing keys
+				if (investment.InvestmentData.ContainsKey(key)) {
+					investment.InvestmentData[key] = value;
+				}
+			}
+
+			_context.SaveChanges();
 		}
 
 		/// <summary>
 		/// Updates the <see cref="InvestmentBase.AnalysisOptionsOverrides"/> with the
 		/// specified analysis option and option value. No actual validation of the value with
-		/// respect to the analysis option is performed in this method. If <paramref name="value"/>
-		/// is null and the option exists, it gets removed from the analysis overrides for the
-		/// vehicle.
+		/// respect to the analysis option is performed in this method.
+		/// If a key exists in <paramref name="options"/> and also exists in the current overrides,
+		/// the value is overwritten. If a key in <paramref name="options"/>
+		/// has its value as an empty string, the key is removed from the overrides if the key exists.
+		/// If a key in <paramref name="options"/> does not exist in the current overrides, it is added.
 		/// </summary>
-		/// <param name="vehicleId"></param>
-		/// <param name="option"></param>
-		/// <param name="value"></param>
-		/// <exception cref="ArgumentException">If the specified option does not exist yet in the
-		/// overrides and <paramref name="value"/> is null</exception>
-		public void UpdateAnalysisOption(int id, string param, string? value) {
-			//TODO This code is not to doc specs, reimplement
-			throw new NotImplementedException();
-			// {
-			// 	if(_context.Investment.First(i => i.InvestmentId == id) == null) {
-			// 		throw new NotImplementedException("Investment not found");
-			// 	}
+		/// <param name="id"></param>
+		/// <param name="options"></param>
+		public void UpdateAnalysisOptions(int id, OptionsDict options) {
+			if (!_context.Investment.Any(i => i.InvestmentId == id)) {
+				throw new ArgumentException("Investment not found");
+			}
 
-			// 	if(_context.Investment.First(i => i.InvestmentId == id).AnalysisOptionsOverrides == null) {
-			// 	}
-			// 	//1.check parameter exists
-			// 	//2. value is null
-			// 	_context.SaveChanges();
-			// }
+			var investment = _context.Investment.First(i => i.InvestmentId == id);
+			foreach (var (key, value) in options) {
+				if (value == "") {
+					investment.AnalysisOptionsOverrides.Remove(key);
+				}
+				else {
+					investment.AnalysisOptionsOverrides[key] = value;
+				}
+			}
+
+			_context.SaveChanges();
 		}
 
 		/// <summary>
@@ -196,21 +165,24 @@ namespace RetireSimple.Engine.Api {
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
 		public InvestmentModel GetAnalysis(int id, OptionsDict? options = null) {
-			//TODO This code is not to doc specs, reimplement
-			throw new NotImplementedException();
-			// {
-			// 	if(_context.InvestmentModel.First(i => i.InvestmentModelId == id) == null) {
-			// 		throw new NotImplementedException("Investment not found");
-			// 	}
+			if (!_context.Investment.Any(i => i.InvestmentId == id)) {
+				throw new ArgumentException("Investment not found");
+			}
 
-			// 	if(options == null) {
-			// 		//check if investment model is null
-			// 		return _context.Investment.First(i => i.InvestmentId == id).InvestmentModel;
-			// 	} else {
-			// 		//invoke analysis
-			// 		_context.Investment.First(i => i.InvestmentId == id).InvokeAnalysis(options);
-			// 	}
-			// }
+			var investment = _context.Investment.First(i => i.InvestmentId == id);
+			if ((options is not null && options.Count > 0) ||
+					investment.InvestmentModel is null ||
+					investment.LastAnalysis > investment.InvestmentModel.LastUpdated) {
+				var model = investment.InvokeAnalysis(options ?? new OptionsDict() { });
+				var updateTime = DateTime.Now;
+				investment.InvestmentModel = model;
+				investment.LastAnalysis = updateTime;
+				model.LastUpdated = updateTime;
+				_context.SaveChanges();
+				return model;
+			}
+
+			return investment.InvestmentModel;
 		}
 	}
 }

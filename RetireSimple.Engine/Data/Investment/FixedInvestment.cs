@@ -20,7 +20,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public AnalysisDelegate<FixedInvestment>? AnalysisMethod { get; private set; }
+		public AnalysisModule<FixedInvestment>? AnalysisMethod { get; private set; }
 
 		public override void ResolveAnalysisDelegate(string analysisType) {
 			AnalysisMethod = analysisType switch {

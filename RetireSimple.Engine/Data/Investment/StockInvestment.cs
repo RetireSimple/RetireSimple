@@ -38,9 +38,9 @@ namespace RetireSimple.Engine.Data.Investment {
 		/// The date the stock was purchased. Stores as a Date-Time, but only the date is used. May change before formal release
 		/// </summary>
 		[JsonIgnore, NotMapped]
-		public DateTime StockPurchaseDate {
-			get => DateTime.Parse(InvestmentData["stockPurchaseDate"]);
-			set => InvestmentData["stockPurchaseDate"] = value.ToString();
+		public DateOnly StockPurchaseDate {
+			get => DateOnly.Parse(InvestmentData["stockPurchaseDate"]);
+			set => InvestmentData["stockPurchaseDate"] = value.ToString("yyyy-MM-dd");
 		}
 
 		/// <summary>
@@ -76,13 +76,13 @@ namespace RetireSimple.Engine.Data.Investment {
 		/// A date to project the Dividend Payment months (Simplified to reduce information needed)
 		/// </summary>
 		[JsonIgnore, NotMapped]
-		public DateTime StockDividendFirstPaymentDate {
-			get => DateTime.Parse(InvestmentData["stockDividendFirstPaymentDate"]);
-			set => InvestmentData["stockDividendFirstPaymentDate"] = value.ToString();
+		public DateOnly StockDividendFirstPaymentDate {
+			get => DateOnly.Parse(InvestmentData["stockDividendFirstPaymentDate"]);
+			set => InvestmentData["stockDividendFirstPaymentDate"] = value.ToString("yyyy-MM-dd");
 		}
 
 		[JsonIgnore, NotMapped]
-		public AnalysisDelegate<StockInvestment>? AnalysisMethod { get; private set; }
+		public AnalysisModule<StockInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
 		public StockInvestment(string analysisType) : base() {

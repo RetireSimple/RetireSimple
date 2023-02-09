@@ -44,7 +44,7 @@ namespace RetireSimple.Backend.Controllers {
 				StockPrice = Decimal.Parse(body["stockPrice"]),
 				StockQuantity = Decimal.Parse(body["stockQuantity"]),
 				StockTicker = body["stockTicker"],
-				StockPurchaseDate = DateTime.Parse(body["stockPurchaseDate"])
+				StockPurchaseDate = DateOnly.FromDateTime(DateTime.Parse(body["stockPurchaseDate"]))
 			};
 
 			//TODO Don't Preset values
@@ -74,7 +74,7 @@ namespace RetireSimple.Backend.Controllers {
 				StockPrice = (_rand.NextDecimal() * 1000).Round(2),
 				StockQuantity = _rand.Next(5000),
 				StockTicker = MakeRandomTicker(),
-				StockPurchaseDate = DateTime.Today
+				StockPurchaseDate = DateOnly.FromDateTime(DateTime.Today)
 			};
 
 			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);

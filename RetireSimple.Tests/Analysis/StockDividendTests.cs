@@ -5,7 +5,7 @@
 
 		//First Payment List shared across tests. Typing required for using xUnit theory
 		public static readonly IEnumerable<object[]> FirstPaymentList =
-			Enumerable.Range(1, 12).Select(x => new object[] { new DateTime(2022, x, 1) });
+			Enumerable.Range(1, 12).Select(x => new object[] { new DateOnly(2022, x, 1) });
 
 		private readonly ITestOutputHelper output;
 
@@ -22,7 +22,7 @@
 
 		[Theory]
 		[MemberData(nameof(FirstPaymentList))]
-		public void TestStockDividendMonthlyStockDistribution(DateTime firstPayment) {
+		public void TestStockDividendMonthlyStockDistribution(DateOnly firstPayment) {
 			TestInvestment.StockDividendDistributionInterval = "Month";
 			TestInvestment.StockDividendFirstPaymentDate = firstPayment;
 
@@ -31,14 +31,14 @@
 			var expectedQuantity = TestInvestment.StockQuantity;
 			//Assert.Equal(expectedQuantity, dividendList[0]);
 			for (int i = 0; i < dividendList.Count; i++) {
-				expectedQuantity += (expectedQuantity * TestInvestment.StockDividendPercent);
+				expectedQuantity += expectedQuantity * TestInvestment.StockDividendPercent;
 				Assert.Equal(expectedQuantity, dividendList[i]);
 			}
 		}
 
 		[Theory]
 		[MemberData(nameof(FirstPaymentList))]
-		public void TestStockDividendQuarterlyStockDistribution(DateTime firstPayment) {
+		public void TestStockDividendQuarterlyStockDistribution(DateOnly firstPayment) {
 			TestInvestment.StockDividendDistributionInterval = "Quarter";
 			TestInvestment.StockDividendFirstPaymentDate = firstPayment;
 
@@ -52,12 +52,12 @@
 			var currentSimMonth = DateTime.Now.Month;
 			for (int i = 0; i < dividendList.Count; i++) {
 				if ((currentSimMonth - firstPayment.Month) % 3 == 0) {
-					expectedQuantity += (expectedQuantity * TestInvestment.StockDividendPercent);
+					expectedQuantity += expectedQuantity * TestInvestment.StockDividendPercent;
 
 				}
 
 				Assert.Equal(expectedQuantity, dividendList[i]);
-				if ((currentSimMonth++) % 12 == 0) {
+				if (currentSimMonth++ % 12 == 0) {
 					currentSimMonth = 1;
 				}
 			}
@@ -65,7 +65,7 @@
 
 		[Theory]
 		[MemberData(nameof(FirstPaymentList))]
-		public void TestStockDividendAnnualStockDistribution(DateTime firstPayment) {
+		public void TestStockDividendAnnualStockDistribution(DateOnly firstPayment) {
 			TestInvestment.StockDividendDistributionInterval = "Annual";
 			TestInvestment.StockDividendFirstPaymentDate = firstPayment;
 
@@ -79,12 +79,12 @@
 			var currentSimMonth = DateTime.Now.Month;
 			for (int i = 0; i < dividendList.Count; i++) {
 				if ((currentSimMonth - firstPayment.Month) % 12 == 0) {
-					expectedQuantity += (expectedQuantity * TestInvestment.StockDividendPercent);
+					expectedQuantity += expectedQuantity * TestInvestment.StockDividendPercent;
 
 				}
 
 				Assert.Equal(expectedQuantity, dividendList[i]);
-				if ((currentSimMonth++) % 12 == 0) {
+				if (currentSimMonth++ % 12 == 0) {
 					currentSimMonth = 1;
 				}
 			}

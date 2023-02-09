@@ -21,25 +21,527 @@ namespace RetireSimple.Tests.Api {
 			context.Dispose();
 		}
 
-		// [Fact(Skip = "Not Implemented")]
-		// public void AddInvestmentUnknownTypeThrowsException()
-		// {
-		// 	//TODO Implement me
-		// }
+		[Fact]
+		public void AddInvestmentUnknownTypeThrowsException() {
+			Action act = () => { api.Add("test"); };
+
+			act.Should().Throw<ArgumentException>();
+		}
+
+		[Fact]
+		public void AddInvestmentStockAllDefaults() {
+			var result = api.Add("StockInvestment");
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("StockInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"stockTicker", "N/A"},
+					{"stockQuantity", "0"},
+					{"stockPrice", "0"},
+					{"stockPurchaseDate", DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")},
+					{"stockDividendPercent", "0"},
+					{"stockDividendDistributionInterval", "Month"},
+					{"stockDividendDistributionMethod", "Stock"},
+					{"stockDividendFirstPaymentDate",DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")}
+				});
+		}
+
+		[Fact]
+		public void AddInvestmentStockWithValues() {
+			var result = api.Add("StockInvestment", new OptionsDict {
+				{"stockTicker", "AAPL"},
+				{"stockQuantity", "10"},
+				{"stockPrice", "100"},
+				{"stockPurchaseDate", "2020-01-01"},
+				{"stockDividendPercent", "0.5"},
+				{"stockDividendDistributionInterval", "Quarter"},
+				{"stockDividendDistributionMethod", "Cash"},
+				{"stockDividendFirstPaymentDate", "2020-01-01"}
+			});
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("StockInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"stockTicker", "AAPL"},
+					{"stockQuantity", "10"},
+					{"stockPrice", "100"},
+					{"stockPurchaseDate", "2020-01-01"},
+					{"stockDividendPercent", "0.5"},
+					{"stockDividendDistributionInterval", "Quarter"},
+					{"stockDividendDistributionMethod", "Cash"},
+					{"stockDividendFirstPaymentDate", "2020-01-01"}
+				});
+		}
+
+		[Fact]
+		public void AddInvestmentStockWithValuesAndName() {
+			var result = api.Add("StockInvestment", new OptionsDict {
+				{"investmentName", "Apple Stock"},
+				{"stockTicker", "AAPL"},
+				{"stockQuantity", "10"},
+				{"stockPrice", "100"},
+				{"stockPurchaseDate", "2020-01-01"},
+				{"stockDividendPercent", "0.5"},
+				{"stockDividendDistributionInterval", "Quarter"},
+				{"stockDividendDistributionMethod", "Cash"},
+				{"stockDividendFirstPaymentDate", "2020-01-01"}
+			});
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("StockInvestment");
+			investment.InvestmentName.Should().Be("Apple Stock");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"stockTicker", "AAPL"},
+					{"stockQuantity", "10"},
+					{"stockPrice", "100"},
+					{"stockPurchaseDate", "2020-01-01"},
+					{"stockDividendPercent", "0.5"},
+					{"stockDividendDistributionInterval", "Quarter"},
+					{"stockDividendDistributionMethod", "Cash"},
+					{"stockDividendFirstPaymentDate", "2020-01-01"}
+				});
+		}
+
+		[Fact]
+		public void AddInvestmentStockPartialValues() {
+			var result = api.Add("StockInvestment", new OptionsDict {
+				{"stockTicker", "AAPL"},
+				{"stockQuantity", "10"},
+				{"stockPrice", "100"},
+				{"stockPurchaseDate", "2020-01-01"},
+				{"stockDividendPercent", "0.5"},
+				{"stockDividendDistributionInterval", "Quarter"},
+				{"stockDividendDistributionMethod", "Cash"}
+			});
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("StockInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"stockTicker", "AAPL"},
+					{"stockQuantity", "10"},
+					{"stockPrice", "100"},
+					{"stockPurchaseDate", "2020-01-01"},
+					{"stockDividendPercent", "0.5"},
+					{"stockDividendDistributionInterval", "Quarter"},
+					{"stockDividendDistributionMethod", "Cash"},
+					{"stockDividendFirstPaymentDate", DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")}
+				});
+		}
+
+		[Fact]
+		public void AddInvestmentBondAllDefaults() {
+			var result = api.Add("BondInvestment");
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("BondInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+			new OptionsDict() {
+				["bondTicker"] = "N/A",
+				["bondCouponRate"] = "0.05",
+				["bondYieldToMaturity"] = "0.05",
+				["bondMaturityDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
+				["bondPurchasePrice"] = "0",
+				["bondPurchaseDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
+				["bondCurrentPrice"] = "0",
+				["bondIsAnnual"] = "true",
+			});
+		}
+
+		[Fact]
+		public void AddInvestmentBondWithValues() {
+			var result = api.Add("BondInvestment", new OptionsDict {
+				{"bondTicker", "AAPL"},
+				{"bondCouponRate", "0.05"},
+				{"bondYieldToMaturity", "0.05"},
+				{"bondMaturityDate", "2020-01-01"},
+				{"bondPurchasePrice", "100"},
+				{"bondPurchaseDate", "2020-01-01"},
+				{"bondCurrentPrice", "100"},
+				{"bondIsAnnual", "false"},
+			});
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("BondInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"bondTicker", "AAPL"},
+					{"bondCouponRate", "0.05"},
+					{"bondYieldToMaturity", "0.05"},
+					{"bondMaturityDate", "2020-01-01"},
+					{"bondPurchasePrice", "100"},
+					{"bondPurchaseDate", "2020-01-01"},
+					{"bondCurrentPrice", "100"},
+					{"bondIsAnnual", "false"},
+				});
+		}
+
+		[Fact]
+		public void AddInvestmentBondPartialValues() {
+			var result = api.Add("BondInvestment", new OptionsDict {
+				{"bondTicker", "AAPL"},
+				{"bondCouponRate", "0.05"},
+				{"bondYieldToMaturity", "0.05"},
+				{"bondMaturityDate", "2020-01-01"},
+				{"bondPurchasePrice", "100"},
+				{"bondPurchaseDate", "2020-01-01"},
+				{"bondCurrentPrice", "100"},
+			});
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("BondInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"bondTicker", "AAPL"},
+					{"bondCouponRate", "0.05"},
+					{"bondYieldToMaturity", "0.05"},
+					{"bondMaturityDate", "2020-01-01"},
+					{"bondPurchasePrice", "100"},
+					{"bondPurchaseDate", "2020-01-01"},
+					{"bondCurrentPrice", "100"},
+					{"bondIsAnnual", "true"},
+				});
+		}
+
+		[Fact]
+		public void RemoveInvestmentNotFoundThrows() {
+			Action act = () => api.Remove(1);
+			act.Should().Throw<ArgumentException>();
+		}
+
+		[Fact]
+		public void RemoveInvestment() {
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.SaveChanges();
+
+			api.Remove(1);
+
+			context.Investment.Should().ContainSingle();
+		}
+
+		[Fact]
+		public void RemoveInvestmentAllowsSpecificCascade() {
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.SaveChanges();
+
+			context.Investment.First().InvestmentModel = new InvestmentModel();
+			context.SaveChanges();
+
+			context.Expense.Add(new OneTimeExpense {
+				SourceInvestmentId = 1,
+			});
+			context.SaveChanges();
 
 
-		// //TODO Implement the following Tests
-		// [Theory(Skip = "Not Implemented"),
-		// InlineData(new object[] { "StockInvestment", typeof(StockInvestment) }),
-		// InlineData(new object[] { "BondInvestment", typeof(BondInvestment) }),
-		// InlineData(new object[] { "PensionInvestment", typeof(PensionInvestment) }),
-		// InlineData(new object[] { "CashInvestment", typeof(CashInvestment) }),]
-		// public void InvestmentAddStock(string type, Type expectedType)
-		// {
-		// 	//TODO Implement this test
-		// }
+			api.Remove(1);
 
+			context.Investment.Should().ContainSingle();
+			context.Expense.Should().BeEmpty();
+			context.InvestmentModel.Should().BeEmpty();
+		}
 
+		[Fact]
+		public void RemoveInvestmentIsTransferSourceThrows() {
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.SaveChanges();
 
+			context.InvestmentTransfer.Add(new InvestmentTransfer {
+				SourceInvestmentId = 1,
+				DestinationInvestmentId = 2,
+			});
+
+			Action act = () => api.Remove(1);
+			act.Should().Throw<InvalidOperationException>();
+		}
+
+		[Fact]
+		public void RemoveInvestmentIsTransferDestinationThrows() {
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.SaveChanges();
+
+			context.InvestmentTransfer.Add(new InvestmentTransfer {
+				SourceInvestmentId = 2,
+				DestinationInvestmentId = 1,
+			});
+
+			Action act = () => api.Remove(1);
+			act.Should().Throw<InvalidOperationException>();
+		}
+
+		[Fact]
+		public void UpdateInvestmentNotFoundThrows() {
+			Action act = () => api.Update(1, new OptionsDict());
+			act.Should().Throw<ArgumentException>();
+		}
+
+		[Fact]
+		public void UpdateInvestmentOnlyExistingValues() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.Update(1, new OptionsDict {
+				{"stockTicker", "MSFT"},
+			});
+
+			context.Investment.Should().ContainSingle();
+			var investment = context.Investment.First();
+			investment.InvestmentData["stockTicker"].Should().Be("MSFT");
+		}
+
+		[Fact]
+		public void UpdateInvestmentHandlesNameSeparately() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.Update(1, new OptionsDict {
+				{"stockTicker", "MSFT"},
+				{"investmentName", "My Investment"},
+			});
+
+			context.Investment.Should().ContainSingle();
+			var investment = context.Investment.First();
+			investment.InvestmentData["stockTicker"].Should().Be("MSFT");
+			investment.InvestmentData.Should().NotContainKey("investmentName");
+			investment.InvestmentName.Should().Be("My Investment");
+		}
+
+		[Fact]
+		public void UpdateInvestmentIgnoresUnknownKeys() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.Update(1, new OptionsDict{
+				{"unknownKey", "value"},
+				{"stockTicker", "MSFT"},
+			});
+
+			context.Investment.Should().ContainSingle();
+			var investment = context.Investment.First();
+			investment.InvestmentData["stockTicker"].Should().Be("MSFT");
+			investment.InvestmentData.Should().NotContainKey("unknownKey");
+		}
+
+		[Fact]
+		public void UpdateAnalysisOptionInvestmentNotFoundThrows() {
+			Action act = () => api.UpdateAnalysisOptions(1, new OptionsDict());
+			act.Should().Throw<ArgumentException>();
+		}
+
+		[Fact]
+		public void UpdateAnalysisOptionAddsNewKeys() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.UpdateAnalysisOptions(1, new OptionsDict {
+				{"analysisLength", "60"},
+				{"simCount", "10000"},
+			});
+
+			var investment = context.Investment.First();
+			investment.AnalysisOptionsOverrides["analysisLength"].Should().Be("60");
+			investment.AnalysisOptionsOverrides["simCount"].Should().Be("10000");
+		}
+
+		[Fact]
+		public void UpdateAnalysisOptionRemovesKeysWithEmptyString() {
+			api.Add("StockInvestment"); //Using defaults
+			var investment = context.Investment.First();
+			investment.AnalysisOptionsOverrides["analysisLength"] = "60";
+			investment.AnalysisOptionsOverrides["simCount"] = "10000";
+			context.SaveChanges();
+
+			api.UpdateAnalysisOptions(1, new OptionsDict {
+				{"analysisLength", ""},
+			});
+
+			investment.AnalysisOptionsOverrides.Should().NotContainKey("analysisLength");
+			investment.AnalysisOptionsOverrides.Should().ContainKey("simCount");
+		}
+
+		[Fact]
+		public void UpdateAnalysisOptionsUpdatesExistingKeys() {
+			api.Add("StockInvestment"); //Using defaults
+			var investment = context.Investment.First();
+			investment.AnalysisOptionsOverrides["analysisLength"] = "60";
+			investment.AnalysisOptionsOverrides["simCount"] = "10000";
+			context.SaveChanges();
+
+			api.UpdateAnalysisOptions(1, new OptionsDict {
+				{"analysisLength", "120"},
+			});
+
+			investment.AnalysisOptionsOverrides["analysisLength"].Should().Be("120");
+			investment.AnalysisOptionsOverrides["simCount"].Should().Be("10000");
+		}
+
+		[Fact]
+		public void GetSingluarInvestmentsNoVehicles() {
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
+
+			var investments = api.GetSingluarInvestments();
+			investments.Should().HaveCount(4);
+		}
+
+		[Fact]
+		public void GetSingularInvestmentsNoInvestments() {
+			var investments = api.GetSingluarInvestments();
+			investments.Should().BeEmpty();
+		}
+
+		[Fact]
+		public void GetSingularInvestmentsIgnoresVehicles() {
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
+			api.Add("StockInvestment");
+
+			context.Portfolio.First().InvestmentVehicles.Add(new Vehicle401k());
+			context.SaveChanges();
+			context.InvestmentVehicle.First().Investments.Add(context.Investment.First());
+			context.SaveChanges();
+
+			var investments = api.GetSingluarInvestments();
+			investments.Should().HaveCount(3);
+			investments.Should().NotContain(i => i.InvestmentId == 1);
+		}
+
+		[Fact]
+		public void GetAnalysisCurrentModelOnlyReturns() {
+			api.Add("StockInvestment");
+			var investment = context.Investment.First();
+			var invokeTime = DateTime.Now;
+			var model = new InvestmentModel() {
+				InvestmentId = investment.InvestmentId,
+				LastUpdated = invokeTime,
+				MinModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				AvgModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				MaxModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+			};
+			investment.InvestmentModel = model;
+			investment.LastAnalysis = invokeTime;
+			context.SaveChanges();
+
+			var analysis = api.GetAnalysis(investment.InvestmentId);
+			analysis.Should().NotBeNull();
+			analysis.Should().Be(model);
+		}
+
+		//These tests purely checks if the analysis is run, not if the results are correct.
+		//This is especially important since we set the AnalysisMethod to null, and validate
+		//if an InvalidOperationException is thrown as the call to InvokeAnalysis should throw
+		//under these conditions.
+		//Analysis valididy should be done in separate test
+		[Fact]
+		public void GetAnalysisOutdatedModelRunsAnalysis() {
+			api.Add("StockInvestment");
+			var investment = context.Investment.First();
+			investment.ResolveAnalysisDelegate("");
+			var invokeTime = DateTime.Now;
+			investment.LastAnalysis = invokeTime;
+			var model = new InvestmentModel() {
+				InvestmentId = investment.InvestmentId,
+				LastUpdated = invokeTime.AddDays(-1d),
+				MinModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				AvgModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				MaxModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+			};
+			investment.InvestmentModel = model;
+			context.SaveChanges();
+
+			Action act = () => api.GetAnalysis(investment.InvestmentId);
+			act.Should().Throw<InvalidOperationException>();
+		}
+
+		[Fact]
+		public void GetAnalysisNoModelRunsAnalysis() {
+			api.Add("StockInvestment");
+			var investment = context.Investment.First();
+			investment.ResolveAnalysisDelegate("");
+			context.SaveChanges();
+
+			Action act = () => api.GetAnalysis(investment.InvestmentId);
+			act.Should().Throw<InvalidOperationException>();
+		}
+
+		[Fact]
+		public void GetAnalysisGivenEmptyOptionsDoesNotRunAnalysis() {
+			api.Add("StockInvestment");
+			var investment = context.Investment.First();
+			investment.ResolveAnalysisDelegate("");
+			var invokeTime = DateTime.Now;
+			investment.LastAnalysis = invokeTime;
+			var model = new InvestmentModel() {
+				InvestmentId = investment.InvestmentId,
+				LastUpdated = invokeTime,
+				MinModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				AvgModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				MaxModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+			};
+			investment.InvestmentModel = model;
+			context.SaveChanges();
+
+			Action act = () => api.GetAnalysis(investment.InvestmentId, new OptionsDict());
+			act.Should().NotThrow<InvalidOperationException>();
+
+			var result = api.GetAnalysis(investment.InvestmentId, new OptionsDict());
+			result.Should().Be(model);
+		}
+
+		[Fact]
+		public void GetAnalysisGivenOptionsRunsAnalysis() {
+			api.Add("StockInvestment");
+			var investment = context.Investment.First();
+			investment.ResolveAnalysisDelegate("");
+			var invokeTime = DateTime.Now;
+			investment.LastAnalysis = invokeTime;
+			var model = new InvestmentModel() {
+				InvestmentId = investment.InvestmentId,
+				LastUpdated = invokeTime.AddDays(-1d),
+				MinModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				AvgModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+				MaxModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
+			};
+			investment.InvestmentModel = model;
+			context.SaveChanges();
+
+			Action act = () => api.GetAnalysis(investment.InvestmentId, new OptionsDict(){
+				{ "test", "test" }
+			});
+			act.Should().Throw<InvalidOperationException>();
+		}
 	}
 }
+

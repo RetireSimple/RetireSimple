@@ -7,59 +7,60 @@ namespace RetireSimple.Engine.Data.Investment {
 	public class BondInvestment : InvestmentBase {
 
 		[JsonIgnore, NotMapped]
+		public string BondTicker {
+			get => InvestmentData["bondTicker"];
+			set => InvestmentData["bondTicker"] = value;
+		}
+
+		[JsonIgnore, NotMapped]
 		// interest payment received by a bondholder from the date of issuance until the date of maturity
 		public double BondCouponRate {
-			get => double.Parse(InvestmentData["BondCouponRate"]);
-			set => InvestmentData["BondCouponRate"] = value.ToString();
+			get => double.Parse(InvestmentData["bondCouponRate"]);
+			set => InvestmentData["bondCouponRate"] = value.ToString();
 		}
 
 		[JsonIgnore, NotMapped]
 		// interest payment received by a bondholder from the date of issuance until the date of maturity
 		public decimal BondYTM {
-			get => decimal.Parse(InvestmentData["BondYieldToMaturity"]);
-			set => InvestmentData["BondYieldToMaturity"] = value.ToString();
+			get => decimal.Parse(InvestmentData["bondYieldToMaturity"]);
+			set => InvestmentData["bondYieldToMaturity"] = value.ToString();
 		}
 
 		[JsonIgnore, NotMapped]
 		public DateOnly BondMaturityDate {
-			get => DateOnly.Parse(InvestmentData["BondMaturityDate"]);
-			set => InvestmentData["BondMaturityDate"] = value.ToString();
+			get => DateOnly.Parse(InvestmentData["bondMaturityDate"]);
+			set => InvestmentData["bondMaturityDate"] = value.ToString("yyyy-MM-dd");
 		}
 
 		[JsonIgnore, NotMapped]
 		public decimal BondPurchasePrice {
-			get => decimal.Parse(InvestmentData["BondPurchasePrice"]);
-			set => InvestmentData["BondPurchasePrice"] = value.ToString();
+			get => decimal.Parse(InvestmentData["bondPurchasePrice"]);
+			set => InvestmentData["bondPurchasePrice"] = value.ToString();
 		}
 
 		[JsonIgnore, NotMapped]
 		public DateOnly BondPurchaseDate {
-			get => DateOnly.Parse(InvestmentData["BondPurchaseDate"]);
-			set => InvestmentData["BondPurchaseDate"] = value.ToString();
+			get => DateOnly.Parse(InvestmentData["bondPurchaseDate"]);
+			set => InvestmentData["bondPurchaseDate"] = value.ToString("yyyy-MM-dd");
 		}
 
 		[JsonIgnore, NotMapped]
 		public decimal BondCurrentPrice {
-			get => decimal.Parse(InvestmentData["BondCurrentPrice"]);
-			set => InvestmentData["BondCurrentPrice"] = value.ToString();
+			get => decimal.Parse(InvestmentData["bondCurrentPrice"]);
+			set => InvestmentData["bondCurrentPrice"] = value.ToString();
 		}
 
 		[JsonIgnore, NotMapped]
 		public bool BondIsAnnual {
-			get => ToBoolean(InvestmentData["BondIsAnnual"].ToString());
-			set => InvestmentData["BondIsAnnual"] = value.ToString();
+			get => ToBoolean(InvestmentData["bondIsAnnual"]);
+			set => InvestmentData["bondIsAnnual"] = value.ToString().ToLower();
 		}
 
-		private bool ToBoolean(string str) {
-			if(str.Equals("true")) {
-				return true;
-			} else {
-				return false;
-			}
-		}
+		private static bool ToBoolean(string str) => str.Equals("true");
+
 
 		[JsonIgnore, NotMapped]
-		public AnalysisDelegate<BondInvestment>? AnalysisMethod;
+		public AnalysisModule<BondInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
 		public BondInvestment(string analysisType) : base() {
