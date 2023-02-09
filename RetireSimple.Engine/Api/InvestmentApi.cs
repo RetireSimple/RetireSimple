@@ -1,6 +1,5 @@
 ﻿using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Investment;
-using RetireSimple.Engine.Data.InvestmentVehicle;
 
 namespace RetireSimple.Engine.Api {
 	public class InvestmentApi {
@@ -41,10 +40,13 @@ namespace RetireSimple.Engine.Api {
 		public int Add(string type, OptionsDict? parameters = null) {
 			//TODO Refactor
 			parameters ??= new OptionsDict();
-			var newInvestment = type switch {
-				"StockInvestment" => CreateStock(parameters),
+			InvestmentBase newInvestment = type switch {
+				"StockInvestment" => InvestmentApiUtil.CreateStock(parameters),
+				"BondInvestment" => InvestmentApiUtil.CreateBond(parameters),
 				_ => throw new ArgumentException("The specified investment type was not found"),
 			};
+			newInvestment.InvestmentName = parameters.GetValueOrDefault("investmentName", "");
+
 
 			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
 			mainPortfolio.Investments.Add(newInvestment);
@@ -54,25 +56,7 @@ namespace RetireSimple.Engine.Api {
 			return _context.Investment.First(i => i.Equals(newInvestment)).InvestmentId;
 		}
 
-		//TODO implement this and for other investments
-		private static StockInvestment CreateStock(OptionsDict parameters) {
-			//Filter Dictionary for Analysis Option Overrides
-			//TODO require Analysis Options to have prefix
-			// var analysisOptions = parameters.Where(kvp => kvp.Key.StartsWith("AnalysisOption_")).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-			return new StockInvestment("") {
-				InvestmentName = parameters.GetValueOrDefault("investmentName", ""),
-				InvestmentType = "StockInvestment",
-				StockPrice = Decimal.Parse(parameters.GetValueOrDefault("stockPrice", "0.0")),
-				StockQuantity = Decimal.Parse(parameters.GetValueOrDefault("stockQuantity", "0.0")),
-				StockTicker = parameters.GetValueOrDefault("stockTicker", "0.0"),
-				StockPurchaseDate = DateTime.Parse(parameters.GetValueOrDefault("stockPurchaseDate", "1/1/1970")),
-				StockDividendDistributionInterval = parameters.GetValueOrDefault("stockDividendDistributionInterval", "Month"),
-				StockDividendDistributionMethod = parameters.GetValueOrDefault("stockDividendDistributionMethod", "Stock"),
-				StockDividendFirstPaymentDate = DateTime.Parse(parameters.GetValueOrDefault("stockDividendFirstPaymentDate", "1/1/1970")),
-				AnalysisOptionsOverrides = parameters.Where(kvp => kvp.Key.StartsWith("AnalysisOption_")).ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
-			};
-		}
 
 		/// <summary>
 		/// Removes the investment with the specified ID. If the specified investment has any

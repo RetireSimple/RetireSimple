@@ -21,25 +21,218 @@ namespace RetireSimple.Tests.Api {
 			context.Dispose();
 		}
 
-		// [Fact(Skip = "Not Implemented")]
-		// public void AddInvestmentUnknownTypeThrowsException()
-		// {
-		// 	//TODO Implement me
-		// }
+		[Fact]
+		public void AddInvestmentUnknownTypeThrowsException() {
+			Action act = () => { api.Add("test"); };
 
+			act.Should().Throw<ArgumentException>();
+		}
 
-		// //TODO Implement the following Tests
-		// [Theory(Skip = "Not Implemented"),
-		// InlineData(new object[] { "StockInvestment", typeof(StockInvestment) }),
-		// InlineData(new object[] { "BondInvestment", typeof(BondInvestment) }),
-		// InlineData(new object[] { "PensionInvestment", typeof(PensionInvestment) }),
-		// InlineData(new object[] { "CashInvestment", typeof(CashInvestment) }),]
-		// public void InvestmentAddStock(string type, Type expectedType)
-		// {
-		// 	//TODO Implement this test
-		// }
+		[Fact]
+		public void AddInvestmentStockAllDefaults() {
+			var result = api.Add("StockInvestment");
 
+			context.Investment.Should().HaveCount(1);
 
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("StockInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"stockTicker", "N/A"},
+					{"stockQuantity", "0"},
+					{"stockPrice", "0"},
+					{"stockPurchaseDate", DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")},
+					{"stockDividendPercent", "0"},
+					{"stockDividendDistributionInterval", "Month"},
+					{"stockDividendDistributionMethod", "Stock"},
+					{"stockDividendFirstPaymentDate",DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")}
+				});
+		}
 
+		[Fact]
+		public void AddInvestmentStockWithValues() {
+			var result = api.Add("StockInvestment", new OptionsDict {
+				{"stockTicker", "AAPL"},
+				{"stockQuantity", "10"},
+				{"stockPrice", "100"},
+				{"stockPurchaseDate", "2020-01-01"},
+				{"stockDividendPercent", "0.5"},
+				{"stockDividendDistributionInterval", "Quarter"},
+				{"stockDividendDistributionMethod", "Cash"},
+				{"stockDividendFirstPaymentDate", "2020-01-01"}
+			});
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("StockInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"stockTicker", "AAPL"},
+					{"stockQuantity", "10"},
+					{"stockPrice", "100"},
+					{"stockPurchaseDate", "2020-01-01"},
+					{"stockDividendPercent", "0.5"},
+					{"stockDividendDistributionInterval", "Quarter"},
+					{"stockDividendDistributionMethod", "Cash"},
+					{"stockDividendFirstPaymentDate", "2020-01-01"}
+				});
+		}
+
+		[Fact]
+		public void AddInvestmentStockWithValuesAndName() {
+			var result = api.Add("StockInvestment", new OptionsDict {
+				{"investmentName", "Apple Stock"},
+				{"stockTicker", "AAPL"},
+				{"stockQuantity", "10"},
+				{"stockPrice", "100"},
+				{"stockPurchaseDate", "2020-01-01"},
+				{"stockDividendPercent", "0.5"},
+				{"stockDividendDistributionInterval", "Quarter"},
+				{"stockDividendDistributionMethod", "Cash"},
+				{"stockDividendFirstPaymentDate", "2020-01-01"}
+			});
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("StockInvestment");
+			investment.InvestmentName.Should().Be("Apple Stock");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"stockTicker", "AAPL"},
+					{"stockQuantity", "10"},
+					{"stockPrice", "100"},
+					{"stockPurchaseDate", "2020-01-01"},
+					{"stockDividendPercent", "0.5"},
+					{"stockDividendDistributionInterval", "Quarter"},
+					{"stockDividendDistributionMethod", "Cash"},
+					{"stockDividendFirstPaymentDate", "2020-01-01"}
+				});
+		}
+
+		[Fact]
+		public void AddInvestmentStockPartialValues() {
+			var result = api.Add("StockInvestment", new OptionsDict {
+				{"stockTicker", "AAPL"},
+				{"stockQuantity", "10"},
+				{"stockPrice", "100"},
+				{"stockPurchaseDate", "2020-01-01"},
+				{"stockDividendPercent", "0.5"},
+				{"stockDividendDistributionInterval", "Quarter"},
+				{"stockDividendDistributionMethod", "Cash"}
+			});
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("StockInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"stockTicker", "AAPL"},
+					{"stockQuantity", "10"},
+					{"stockPrice", "100"},
+					{"stockPurchaseDate", "2020-01-01"},
+					{"stockDividendPercent", "0.5"},
+					{"stockDividendDistributionInterval", "Quarter"},
+					{"stockDividendDistributionMethod", "Cash"},
+					{"stockDividendFirstPaymentDate", DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")}
+				});
+		}
+
+		[Fact]
+		public void AddInvestmentBondAllDefaults() {
+			var result = api.Add("BondInvestment");
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("BondInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+			new OptionsDict() {
+				["bondTicker"] = "N/A",
+				["bondCouponRate"] = "0.05",
+				["bondYieldToMaturity"] = "0.05",
+				["bondMaturityDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
+				["bondPurchasePrice"] = "0",
+				["bondPurchaseDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
+				["bondCurrentPrice"] = "0",
+				["bondIsAnnual"] = "true",
+			});
+		}
+
+		[Fact]
+		public void AddInvestmentBondWithValues() {
+			var result = api.Add("BondInvestment", new OptionsDict {
+				{"bondTicker", "AAPL"},
+				{"bondCouponRate", "0.05"},
+				{"bondYieldToMaturity", "0.05"},
+				{"bondMaturityDate", "2020-01-01"},
+				{"bondPurchasePrice", "100"},
+				{"bondPurchaseDate", "2020-01-01"},
+				{"bondCurrentPrice", "100"},
+				{"bondIsAnnual", "false"},
+			});
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("BondInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"bondTicker", "AAPL"},
+					{"bondCouponRate", "0.05"},
+					{"bondYieldToMaturity", "0.05"},
+					{"bondMaturityDate", "2020-01-01"},
+					{"bondPurchasePrice", "100"},
+					{"bondPurchaseDate", "2020-01-01"},
+					{"bondCurrentPrice", "100"},
+					{"bondIsAnnual", "false"},
+				});
+		}
+
+		[Fact]
+		public void AddInvestmentBondPartialValues() {
+			var result = api.Add("BondInvestment", new OptionsDict {
+				{"bondTicker", "AAPL"},
+				{"bondCouponRate", "0.05"},
+				{"bondYieldToMaturity", "0.05"},
+				{"bondMaturityDate", "2020-01-01"},
+				{"bondPurchasePrice", "100"},
+				{"bondPurchaseDate", "2020-01-01"},
+				{"bondCurrentPrice", "100"},
+			});
+
+			context.Investment.Should().HaveCount(1);
+
+			var investment = context.Investment.First();
+			investment.InvestmentType.Should().Be("BondInvestment");
+			investment.InvestmentName.Should().Be("");
+			investment.InvestmentId.Should().Be(result);
+			investment.InvestmentData.Should().BeEquivalentTo(
+				new OptionsDict {
+					{"bondTicker", "AAPL"},
+					{"bondCouponRate", "0.05"},
+					{"bondYieldToMaturity", "0.05"},
+					{"bondMaturityDate", "2020-01-01"},
+					{"bondPurchasePrice", "100"},
+					{"bondPurchaseDate", "2020-01-01"},
+					{"bondCurrentPrice", "100"},
+					{"bondIsAnnual", "true"},
+				});
+		}
 	}
+
 }
+

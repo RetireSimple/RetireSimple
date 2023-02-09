@@ -13,7 +13,5 @@
 		public string StockDividendDistributionInterval { get; set; }
 		public string StockDividendDistributionMethod { get; set; }
 		public string StockDividendFirstPaymentDate { get; set; }
-
-
 	}
 }
