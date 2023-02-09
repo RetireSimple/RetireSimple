@@ -78,6 +78,15 @@ namespace RetireSimple.Backend.Controllers {
 
 			try {
 				_investmentApi.Update(id, body);
+
+				//Check if we got analysis parameters
+				if (body.Keys.Any(k => k.StartsWith("analysis_"))) {
+					var analysisOptions =
+						body.Where(kvp => kvp.Key.StartsWith("analysis_"))
+							.ToDictionary(kvp => kvp.Key.Remove(0, 9), kvp => kvp.Value);
+					_investmentApi.UpdateAnalysisOptions(id, analysisOptions);
+				}
+
 				return Ok();
 			}
 			catch (ArgumentException) {
