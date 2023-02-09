@@ -1,7 +1,7 @@
-import {Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select} from '@mui/material';
+import {Box, Grid} from '@mui/material';
 import React from 'react';
-import {Controller, FormProvider, useFormContext, useWatch} from 'react-hook-form';
-import {FormTextField} from './Inputs';
+import {useFormContext, useWatch} from 'react-hook-form';
+import {FormSelectField, FormTextField} from './Inputs';
 import {BondForm} from './investment/BondForm';
 import {StockForm} from './investment/StockForm';
 
@@ -44,36 +44,25 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 		/>);
 
 	const investmentTypeField = (
-		<Controller
+		<FormSelectField
 			name='investmentType'
+			label='Investment Type'
 			control={formContext.control}
-			defaultValue='StockInvestment'
-			render={({field}) => (
-				<FormControl error={!!errors.investmentType}
-					fullWidth
-					size='small'>
-					<InputLabel id='investmentType'>Investment Type</InputLabel>
-					<Select
-						{...field}
-						label='Investment Type'
-					>
-						<MenuItem value='StockInvestment'>Stock</MenuItem>
-						<MenuItem value='BondInvestment'>Bond</MenuItem>
-					</Select>
-					<FormHelperText>{errors?.investmentType?.message as string}</FormHelperText>
-				</FormControl>
-			)} />);
+			errorField={errors.investmentType}
+			defaultOption='StockInvestment'
+			options={[
+				{value: 'StockInvestment', label: 'Stock'},
+				{value: 'BondInvestment', label: 'Bond'},
+			]}
+		/>);
 
 	return (<>
-
-		<FormProvider {...formContext}>
-			<Box>
-				<Grid container spacing={2}>
-					<Grid item xs={4}>{investmentNameField}</Grid>
-					<Grid item xs={4}>{investmentTypeField}</Grid>
-				</Grid>
-				{investmentTypeSubform}
-			</Box>
-		</FormProvider>
+		<Box>
+			<Grid container spacing={2}>
+				<Grid item xs={4}>{investmentNameField}</Grid>
+				<Grid item xs={4}>{investmentTypeField}</Grid>
+			</Grid>
+			{investmentTypeSubform}
+		</Box>
 	</>);
 };

@@ -3,11 +3,9 @@ import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 
 import React from 'react';
-import {Controller, FormProvider, useFormContext, useWatch} from 'react-hook-form';
+import {Controller, useFormContext, useWatch} from 'react-hook-form';
 import {FormDatePicker, FormSelectField, FormTextField} from '../Inputs';
 import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
-
-//Type aliases to shorten names
 
 export interface StockFormProps {
 	defaultValues?: any;
@@ -139,34 +137,32 @@ export const StockForm = (props: StockFormProps) => {
 			)} />);
 
 	return (
-		<FormProvider {...formContext}>
-			<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
-				<Typography variant='subtitle2'>Stock Information</Typography>
-				<Grid container spacing={2}>
-					<Grid item xs={2}>{stockTickerField}</Grid>
-					<Grid item xs={2}>{stockPriceField}</Grid>
-					<Grid item xs={2}>{stockQuantityField}</Grid>
-					<Grid item xs={4}>{stockPurchaseDateField}</Grid>
-					<Grid item xs={2}></Grid>
-					{/* Dividend Section */}
-					<Grid item xs={12}>
-						<Typography variant='subtitle2'>Dividend Information</Typography>
-					</Grid>
-					<Grid item xs={2}>{stockDividendPercentField}</Grid>
-					<Grid item xs={2}>{stockDividendDistributionIntervalField}</Grid>
-					<Grid item xs={2}>{stockDividendDistributionMethodField}</Grid>
-					<Grid item xs={4}>{stockDividendFirstPaymentDateField}</Grid>
-					<Grid item xs={2}></Grid>
-					{/* Analysis Section */}
-					<Grid item xs={12}>
-						<Typography variant='subtitle2'>Analysis Configuration</Typography>
-					</Grid>
-					<Grid item xs={4}>{analysisTypeField}</Grid>
-					<Grid item xs={12}>
-						{analysisSubForm()}
-					</Grid>
+		<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
+			<Typography variant='subtitle2'>Stock Information</Typography>
+			<Grid container spacing={2}>
+				<Grid item xs={2}>{stockTickerField}</Grid>
+				<Grid item xs={2}>{stockPriceField}</Grid>
+				<Grid item xs={2}>{stockQuantityField}</Grid>
+				<Grid item xs={4}>{stockPurchaseDateField}</Grid>
+				<Grid item xs={2}></Grid>
+				{/* Dividend Section */}
+				<Grid item xs={12}>
+					<Typography variant='subtitle2'>Dividend Information</Typography>
 				</Grid>
-			</Box>
-		</FormProvider>
+				<Grid item xs={2}>{stockDividendPercentField}</Grid>
+				<Grid item xs={2}>{stockDividendDistributionIntervalField}</Grid>
+				<Grid item xs={2}>{stockDividendDistributionMethodField}</Grid>
+				<Grid item xs={4}>{stockDividendFirstPaymentDateField}</Grid>
+				<Grid item xs={2}></Grid>
+				{/* Analysis Section */}
+				<Grid item xs={12}>
+					<Typography variant='subtitle2'>Analysis Configuration</Typography>
+				</Grid>
+				<Grid item xs={4}>{analysisTypeField}</Grid>
+				<Grid item xs={12}>
+					{analysisSubForm()}
+				</Grid>
+			</Grid>
+		</Box>
 	);
 };
