@@ -1,9 +1,5 @@
-﻿using MathNet.Numerics;
-using MathNet.Numerics.Random;
+﻿using Microsoft.AspNetCore.Mvc;
 
-using Microsoft.AspNetCore.Mvc;
-
-using RetireSimple.Backend.RequestBody;
 using RetireSimple.Engine.Api;
 using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Investment;
@@ -14,20 +10,16 @@ namespace RetireSimple.Backend.Controllers {
 	[Route("api/[controller]")]
 	[ApiController]
 	public class InvestmentController : ControllerBase {
-		// private readonly EngineDbContext _context;
 		private readonly InvestmentApi _investmentApi;
-		private readonly Random _rand;
 
 		public InvestmentController(EngineDbContext context) {
 			_investmentApi = new InvestmentApi(context);
-			_rand = new Random();
 		}
 
 		[HttpGet]
 		[Route("GetAllInvestments")]
 		public ActionResult<List<InvestmentBase>> GetInvestments() {
-			var investments = _investmentApi.GetAllInvestments();
-			return Ok(investments); //converts to JSON
+			return Ok(_investmentApi.GetAllInvestments());
 		}
 
 		[HttpGet]

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
+using RetireSimple.Engine.Api;
 using RetireSimple.Engine.Data;
 
 namespace RetireSimple.Backend.Controllers {
@@ -7,22 +9,26 @@ namespace RetireSimple.Backend.Controllers {
 	[Route("api/[controller]")]
 
 	public class AnalysisController : ControllerBase {
-		private readonly EngineDbContext _context;
+		private readonly InvestmentApi _investmentApi;
 
 		public AnalysisController(EngineDbContext context) {
-			_context = context;
+			_investmentApi = new(context);
 		}
 
 		[HttpPost]
-		[Route("GetAnalysis")]
-		public ActionResult GetAnalysis([FromQuery] int investmentID) {
-			var investment = _context.Investment.First(i => i.InvestmentId == investmentID);
-			//check has model
-			if(!_context.InvestmentModel.Any(m => investmentID == m.InvestmentId)) {
-				investment.InvestmentModel = investment.InvokeAnalysis(new OptionsDict());
-				_context.SaveChanges();
+		[Route("/Investment/GetAnalysis/{id}")]
+		public ActionResult GetAnalysis(int id, OptionsDict? options) {
+			try {
+				var model = _investmentApi.GetAnalysis(id, options);
+				return Ok(model);
 			}
-			return Ok(_context.InvestmentModel.First(m => m.InvestmentId == investmentID));
+			catch (InvalidOperationException) {
+				return NotFound("Investment not found or has an unknown analysis module defined");
+			}
 		}
+
+		// [HttpPost]
+		// [Route("/Investment/UpdateOverrides/{id}")]
+
 	}
 }

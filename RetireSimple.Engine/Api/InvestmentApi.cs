@@ -13,7 +13,7 @@ namespace RetireSimple.Engine.Api {
 		/// <summary>
 		/// Gets a list of all<see cref="InvestmentBase"/> objects </summary>
 		/// <returns></returns>
-		public List<InvestmentBase> GetAllInvestments() => _context.Portfolio.First().Investments.ToList();
+		public List<InvestmentBase> GetAllInvestments() => _context.Investment.ToList();
 
 		/// <summary>
 		/// Gets a list of all<see cref="InvestmentBase"/> objects that are not
