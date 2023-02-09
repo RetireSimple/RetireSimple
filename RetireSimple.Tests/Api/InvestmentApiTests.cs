@@ -232,6 +232,75 @@ namespace RetireSimple.Tests.Api {
 					{"bondIsAnnual", "true"},
 				});
 		}
+
+		[Fact]
+		public void RemoveInvestmentNotFoundThrows() {
+			Action act = () => api.Remove(1);
+			act.Should().Throw<ArgumentException>();
+		}
+
+		[Fact]
+		public void RemoveInvestment() {
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.SaveChanges();
+
+			api.Remove(1);
+
+			context.Investment.Should().ContainSingle();
+		}
+
+		[Fact]
+		public void RemoveInvestmentAllowsSpecificCascade() {
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.SaveChanges();
+
+			context.Investment.First().InvestmentModel = new InvestmentModel();
+			context.SaveChanges();
+
+			context.Expense.Add(new OneTimeExpense {
+				SourceInvestmentId = 1,
+			});
+			context.SaveChanges();
+
+
+			api.Remove(1);
+
+			context.Investment.Should().ContainSingle();
+			context.Expense.Should().BeEmpty();
+			context.InvestmentModel.Should().BeEmpty();
+		}
+
+		[Fact]
+		public void RemoveInvestmentIsTransferSourceThrows() {
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.SaveChanges();
+
+			context.InvestmentTransfer.Add(new InvestmentTransfer {
+				SourceInvestmentId = 1,
+				DestinationInvestmentId = 2,
+			});
+
+			Action act = () => api.Remove(1);
+			act.Should().Throw<InvalidOperationException>();
+		}
+
+		[Fact]
+		public void RemoveInvestmentIsTransferDestinationThrows() {
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.Portfolio.First().Investments.Add(new StockInvestment(""));
+			context.SaveChanges();
+
+			context.InvestmentTransfer.Add(new InvestmentTransfer {
+				SourceInvestmentId = 2,
+				DestinationInvestmentId = 1,
+			});
+
+			Action act = () => api.Remove(1);
+			act.Should().Throw<InvalidOperationException>();
+		}
 	}
 
 }

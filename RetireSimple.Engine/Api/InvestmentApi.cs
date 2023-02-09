@@ -56,8 +56,6 @@ namespace RetireSimple.Engine.Api {
 			return _context.Investment.First(i => i.Equals(newInvestment)).InvestmentId;
 		}
 
-
-
 		/// <summary>
 		/// Removes the investment with the specified ID. If the specified investment has any
 		/// <see cref="InvestmentModel"/> or <see cref="Backend.DomainModel.Data.Expense.ExpeseBase"/>
@@ -70,21 +68,18 @@ namespace RetireSimple.Engine.Api {
 		/// <exception cref="InvalidOperationException">If the remove occurs while the investment still has
 		/// some <see cref="InvestmentTransfer"/> objects related to it.</exception>
 		public void Remove(int id) {
-			//TODO This code is not to doc specs, reimplement
-			// if(_context.InvestmentTransfer.First(it => it.SourceInvestmentId == id) != null
-			// 	|| _context.InvestmentTransfer.First(it => it.DestinationInvestmentId == id) == null) {
-			// 	throw new InvalidOperationException("Investment Transfer has objects related to deleted investment");
-			// } else if(_context.Investment.First(i => i.InvestmentId == id) == null) {
-			// 	throw new ArgumentException("ID does not exist");
-			// } else {
-			// 	_context.Remove(_context.Investment.First(i => i.InvestmentId == id));
-			// 	_context.SaveChanges();
-			// 	_context.Remove(_context.InvestmentModel.All(im => im.InvestmentId == id));
-			// 	_context.SaveChanges();
-			// 	_context.Remove(_context.Expense.All(e => e.SourceInvestmentId == id));
-			// 	_context.SaveChanges();
-			// }
+			if (!_context.Investment.Any(i => i.InvestmentId == id)) {
+				throw new ArgumentException("Investment not found");
+			}
+			if (_context.InvestmentTransfer.Any(t => t.SourceInvestmentId == id
+												|| t.DestinationInvestmentId == id)) {
+				throw new InvalidOperationException("Cannot remove investment while it still has transfers");
+			}
+
+			_context.Investment.Remove(_context.Investment.First(i => i.InvestmentId == id));
+			_context.SaveChanges();
 		}
+
 		/// <summary>
 		/// Updates the specified parameter in that specific investment. For simplicity, this method
 		/// does not validate if the specified investment has such a parameter, rather it is inserted/overwritten
