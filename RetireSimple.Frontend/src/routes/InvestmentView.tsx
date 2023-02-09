@@ -9,7 +9,6 @@ import {Investment} from '../data/Interfaces';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
 
 export const InvestmentView = () => {
-
 	const currentInvestmentData = useLoaderData() as Investment
 
 	const investmentDataFormContext = useForm({
@@ -18,6 +17,7 @@ export const InvestmentView = () => {
 		defaultValues: InvestmentFormDefaults});
 	const {reset} = investmentDataFormContext;
 
+	//HACK React docs indicate this is problematic, should fix sometime
 	React.useEffect(() => {
 		reset(currentInvestmentData);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -26,7 +26,9 @@ export const InvestmentView = () => {
 	return (
 		<>
 			<FormProvider {...investmentDataFormContext}>
-				<InvestmentDataForm defaultValues={currentInvestmentData} />
+				<InvestmentDataForm
+					defaultValues={currentInvestmentData}
+					disableTypeSelect={true} />
 				<Divider />
 				<Box sx={{width: '100%', height: '100%'}}>
 					<InvestmentModelGraph investmentId={currentInvestmentData.investmentId} />

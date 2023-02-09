@@ -1,4 +1,4 @@
-import {Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography} from '@mui/material';
+import {Box, Grid, TextField, Typography} from '@mui/material';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -92,6 +92,7 @@ export const StockForm = (props: StockFormProps) => {
 				{value: 'Annual', label: 'Annual'},
 			]}
 			defaultOption='Month'
+			disable={false}
 		/>);
 
 
@@ -107,6 +108,7 @@ export const StockForm = (props: StockFormProps) => {
 				{value: 'DRIP', label: 'DRIP'},
 			]}
 			defaultOption='Stock'
+			disable={false}
 		/>);
 
 	const stockDividendFirstPaymentDateField = (
@@ -120,21 +122,19 @@ export const StockForm = (props: StockFormProps) => {
 
 
 	const analysisTypeField = (
-		<Controller
+		<FormSelectField
 			name='analysisType'
+			label='Analysis Type'
 			control={formContext.control}
-			defaultValue={"MonteCarlo_NormalDist"}
-			render={({field}) => (
-				<FormControl fullWidth size='small'>
-					<InputLabel id='analysisType'>Analysis Type</InputLabel>
-					<Select {...field}
-						label='Analysis Type'>
-						<MenuItem value='testAnalysis'>Test Analysis</MenuItem>
-						<MenuItem value='MonteCarlo_NormalDist'>Monte Carlo - Normal Dist.</MenuItem>
-						<MenuItem value='MonteCarlo_LogNormalDist'>Monte Carlo - Log Normal Dist.</MenuItem>
-					</Select>
-				</FormControl>
-			)} />);
+			errorField={errors.analysisType}
+			options={[
+				{value: 'MonteCarlo_NormalDist', label: 'Monte Carlo (Normal Dist)'},
+				{value: 'MonteCarlo_LogNormalDist', label: 'Monte Carlo (Log Normal Dist)'},
+			]}
+			defaultOption='MonteCarlo_NormalDist'
+			disable={false}
+		/>);
+
 
 	return (
 		<Box sx={{flexGrow: 1, marginTop: '1rem'}}>

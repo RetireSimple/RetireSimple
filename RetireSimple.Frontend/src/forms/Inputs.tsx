@@ -34,6 +34,7 @@ export interface FormSelectFieldProps {
 	defaultOption: string;	//Assert it is in options for easy programming
 	control: Control
 	errorField: any;
+	disable:boolean;
 }
 
 export const FormSelectField = (props: FormSelectFieldProps) => {
@@ -48,7 +49,7 @@ export const FormSelectField = (props: FormSelectFieldProps) => {
 					size='small'
 				>
 					<InputLabel id={props.name}>{props.label}</InputLabel>
-					<Select {...field} label={props.name}>
+					<Select {...field} label={props.name} disabled={props.disable}>
 						{props.options.map((option) => (
 							<MenuItem
 								key={option.value}
