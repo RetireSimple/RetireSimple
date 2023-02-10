@@ -3,6 +3,8 @@ import {number, object, string} from 'yup';
 const decimalValidation = (maxLen: number, value: number) =>
 	value ? new RegExp(`^\\d+(\\.\\d{1,${maxLen}})?$`).test(value.toString()) : false;
 
+const decimalErrorString = 'Must be a decimal';
+
 export const investmentFormSchema = object().shape({
 	investmentName: string().defined('Required').required(),
 	investmentType: string()
@@ -20,7 +22,7 @@ export const investmentFormSchema = object().shape({
 		})
 		.when('investmentType', {
 			is: 'BondInvestment',
-			then: (schema) => schema.oneOf(['']), //todo - add bond specific analysis types
+			then: (schema) => schema.oneOf(['example']), //todo - add bond specific analysis types
 		}),
 
 	//========================================
@@ -38,8 +40,8 @@ export const investmentFormSchema = object().shape({
 			schema
 				.defined('Required')
 				.positive()
-				.test('is-decimal', 'Price must be a decimal', (value) =>
-					value ? /^\d+(\.\d{1,2})?$/.test(value.toString()) : false,
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(2, value),
 				)
 				.required(),
 		otherwise: (schema) => schema.strip(),
@@ -50,8 +52,8 @@ export const investmentFormSchema = object().shape({
 			schema
 				.defined('Required')
 				.positive()
-				.test('is-decimal', 'Must be a decimal', (value) =>
-					value ? decimalValidation(4, value) : false,
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(4, value),
 				)
 				.required(),
 		otherwise: (schema) => schema.strip(),
@@ -67,8 +69,8 @@ export const investmentFormSchema = object().shape({
 			schema
 				.defined('Required')
 				.positive()
-				.test('is-decimal', 'Dividend Percent must be a decimal', (value) =>
-					value ? /^\d+(\.\d{1,4})?$/.test(value.toString()) : false,
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(4, value),
 				)
 				.required(),
 		otherwise: (schema) => schema.strip(),
@@ -104,8 +106,8 @@ export const investmentFormSchema = object().shape({
 			schema
 				.defined('Required')
 				.positive()
-				.test('is-decimal', 'Coupon Rate must be a decimal', (value) =>
-					value ? /^\d+(\.\d{1,4})?$/.test(value.toString()) : false,
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(4, value),
 				)
 				.required(),
 		otherwise: (schema) => schema.strip(),
@@ -116,8 +118,8 @@ export const investmentFormSchema = object().shape({
 			schema
 				.defined('Required')
 				.positive()
-				.test('is-decimal', 'Yield to Maturity must be a decimal', (value) =>
-					value ? /^\d+(\.\d{1,4})?$/.test(value.toString()) : false,
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(4, value),
 				)
 				.required(),
 		otherwise: (schema) => schema.strip(),
@@ -139,8 +141,8 @@ export const investmentFormSchema = object().shape({
 			schema
 				.defined('Required')
 				.positive()
-				.test('is-decimal', 'Must be a decimal', (value) =>
-					value ? /^\d+(\.\d{1,2})?$/.test(value.toString()) : false,
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(2, value),
 				)
 				.required(),
 		otherwise: (schema) => schema.strip(),
@@ -151,8 +153,8 @@ export const investmentFormSchema = object().shape({
 			schema
 				.defined('Required')
 				.positive()
-				.test('is-decimal', 'Purchase Price must be a decimal', (value) =>
-					value ? /^\d+(\.\d{1,2})?$/.test(value.toString()) : false,
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(2, value),
 				)
 				.required(),
 		otherwise: (schema) => schema.strip(),
@@ -178,8 +180,8 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.test('is-decimal', 'Must be a decimal', (value) =>
-					value ? /^\d+(\.\d{1,4})?$/.test(value.toString()) : false,
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(4, value),
 				)
 				.required(),
 		otherwise: (schema) => schema.strip(),
@@ -190,8 +192,8 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.test('is-decimal', 'Must be a decimal', (value) =>
-					value ? /^\d+(\.\d{1,4})?$/.test(value.toString()) : false,
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(4, value),
 				)
 				.required(),
 		otherwise: (schema) => schema.strip(),
@@ -202,8 +204,8 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.test('is-decimal', 'Must be a decimal', (value) =>
-					value ? /^\d+(\.\d{1,4})?$/.test(value.toString()) : false,
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(4, value),
 				)
 				.required(),
 		otherwise: (schema) => schema.strip(),
@@ -222,9 +224,9 @@ export const InvestmentFormDefaults = {
 	stockDividendDistributionMethod: '',
 	stockDividendFirstPaymentDate: '',
 	analysisType: 'MonteCarlo_NormalDist',
-	analysisLength: '60',
-	simCount: '10000',
-	randomVariableMu: '0.0',
-	randomVariableSigma: '1.0',
-	randomVariableScaleFactor: '1',
+	analysis_analysisLength: '60',
+	analysis_simCount: '10000',
+	analysis_randomVariableMu: '0.0',
+	analysis_randomVariableSigma: '1.0',
+	analysis_randomVariableScaleFactor: '1',
 };
