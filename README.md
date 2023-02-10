@@ -17,8 +17,11 @@ To compile/develop RetireSimple, the following tools are required:
 - .NET 6 (`dotnet` CLI)
 - `dotnet-ef` tools [(link)](https://learn.microsoft.com/en-us/ef/core/get-started/overview/install#get-the-entity-framework-core-tools)
 - Node.JS 16 (minimum compatible version, required for frontend build)
+- **IMPORTANT**`pnpm` v7 (install to global tools via `npm install -g pnpm`)
 
 The project can be opened in most modern IDEs and built using CLI tools, but was specifically constructed in Visual Studio which should provide the fullest compatibility with the project configuration.
+
+The `RetireSimple.Frontend` project uses pnpm over npm for dependency management and managing builds. There is no difference in how you would normally build/run the frontend, except for using `pnpm` (i.e. `pnpm run build`, `pnpm test`, `pnpm install`, etc.). For more information about pnpm, [visit their website](https://pnpm.io/).
 
 Windows machines are preferred for development as the `.esproj` format used by `dotnet` requires the use of .NET Framework 4.7 during build despite being a general wrapper over an Node project for Visual Studio. Development on other platforms is still viable, the use of the `--no-dependencies` flag with `dotnet build` will help in most cases.
 

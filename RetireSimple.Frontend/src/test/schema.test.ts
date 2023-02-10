@@ -23,8 +23,6 @@ describe('schema validation', () => {
 				analysis_randomVariableScaleFactor: '1.23',
 			};
 
-			console.log(schema.validateSync(data));
-
 			expect(schema.isValidSync(data)).toBeTruthy();
 		});
 
