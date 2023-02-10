@@ -45,16 +45,20 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: npm
-          cache-dependency-path: RetireSimple.Frontend/package-lock.json
+          cache: pnpm
+          cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
       - name: Init Frontend Dependencies
         run: |
           cd RetireSimple.Frontend
-          npm ci
+          pnpm install
           cd ..
       - name: Restore .NET Projects
         run: dotnet restore
@@ -66,20 +70,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: npm
-          cache-dependency-path: RetireSimple.Frontend/package-lock.json
+          cache: pnpm
+          cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
       - name: Build
         run: |
           cd RetireSimple.Frontend
-          npm ci
-          npm run
+          pnpm install
+          pnpm run build
           cd ..
       - name: Run Tests
         run: |
           cd RetireSimple.Frontend
-          npm run test
+          pnpm run test
           cd ..

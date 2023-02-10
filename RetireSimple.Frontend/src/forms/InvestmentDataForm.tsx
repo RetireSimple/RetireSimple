@@ -7,6 +7,7 @@ import {StockForm} from './investment/StockForm';
 
 export interface InvestmentDataFormProps {
 	defaultValues?: any;
+	disableTypeSelect?: boolean;
 }
 
 ///IMPORTANT CAVEAT: This form does not use a standard submit action
@@ -54,6 +55,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 				{value: 'StockInvestment', label: 'Stock'},
 				{value: 'BondInvestment', label: 'Bond'},
 			]}
+			disable={props.disableTypeSelect ?? false}
 		/>);
 
 	return (<>
