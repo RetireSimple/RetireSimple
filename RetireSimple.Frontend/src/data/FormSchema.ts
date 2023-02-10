@@ -30,7 +30,13 @@ export const investmentFormSchema = object().shape({
 	//========================================
 	stockTicker: string().when('investmentType', {
 		is: 'StockInvestment',
-		then: (schema) => schema.defined('Required').required().min(3).max(5).uppercase(),
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.required('Required')
+				.min(3)
+				.max(5)
+				.uppercase('Must be uppercase'),
 		otherwise: (schema) => schema.strip(),
 	}),
 
@@ -39,11 +45,13 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.positive()
+				.positive('Must be positive')
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(2, value),
 				)
-				.required(),
+				.required('Required')
+				.typeError('Must be a number'),
+
 		otherwise: (schema) => schema.strip(),
 	}),
 	stockQuantity: number().when('investmentType', {
@@ -51,16 +59,17 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.positive()
+				.positive('Must be positive')
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(4, value),
 				)
-				.required(),
+				.required('Required')
+				.typeError('Must be a number'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	stockPurchaseDate: string().when('investmentType', {
 		is: 'StockInvestment',
-		then: (schema) => schema.defined('Required').required(),
+		then: (schema) => schema.defined('Required').required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	stockDividendPercent: number().when('investmentType', {
@@ -68,27 +77,29 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.positive()
+				.positive('Must be positive')
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(4, value),
 				)
-				.required(),
+				.required('Required')
+				.typeError('Must be a number'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	stockDividendDistributionInterval: string().when('investmentType', {
 		is: 'StockInvestment',
 		then: (schema) =>
-			schema.defined('Required').oneOf(['Month', 'Quarter', 'Annual']).required(),
+			schema.defined('Required').oneOf(['Month', 'Quarter', 'Annual']).required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	stockDividendDistributionMethod: string().when('investmentType', {
 		is: 'StockInvestment',
-		then: (schema) => schema.defined('Required').oneOf(['Stock', 'Cash', 'DRIP']).required(),
+		then: (schema) =>
+			schema.defined('Required').oneOf(['Stock', 'Cash', 'DRIP']).required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	stockDividendFirstPaymentDate: string().when('investmentType', {
 		is: 'StockInvestment',
-		then: (schema) => schema.defined('Required').required(),
+		then: (schema) => schema.defined('Required').required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
 
@@ -97,7 +108,13 @@ export const investmentFormSchema = object().shape({
 	//========================================
 	bondTicker: string().when('investmentType', {
 		is: 'BondInvestment',
-		then: (schema) => schema.defined('Required').required().min(3).max(5).uppercase(),
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.required('Required')
+				.min(3)
+				.max(5)
+				.uppercase('Must be uppercase'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	bondCouponRate: number().when('investmentType', {
@@ -105,11 +122,12 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.positive()
+				.positive('Must be positive')
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(4, value),
 				)
-				.required(),
+				.required('Required')
+				.typeError('Must be a number'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	bondYieldToMaturity: number().when('investmentType', {
@@ -117,22 +135,23 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.positive()
+				.positive('Must be positive')
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(4, value),
 				)
-				.required(),
+				.required('Required')
+				.typeError('Must be a number'),
 		otherwise: (schema) => schema.strip(),
 	}),
 
 	bondPurchaseDate: string().when('investmentType', {
 		is: 'BondInvestment',
-		then: (schema) => schema.defined('Required').required(),
+		then: (schema) => schema.defined('Required').required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	bondMaturityDate: string().when('investmentType', {
 		is: 'BondInvestment',
-		then: (schema) => schema.defined('Required').required(),
+		then: (schema) => schema.defined('Required').required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	bondCurrentPrice: number().when('investmentType', {
@@ -140,11 +159,12 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.positive()
+				.positive('Must be positive')
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(2, value),
 				)
-				.required(),
+				.required('Required')
+				.typeError('Must be a number'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	bondPurchasePrice: number().when('investmentType', {
@@ -152,11 +172,12 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.positive()
+				.positive('Must be positive')
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(2, value),
 				)
-				.required(),
+				.required('Required')
+				.typeError('Must be a number'),
 		otherwise: (schema) => schema.strip(),
 	}),
 
