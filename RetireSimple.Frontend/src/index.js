@@ -6,7 +6,7 @@ import {
 	Route,
 	RouterProvider,
 } from 'react-router-dom';
-import {addStock, getInvestment, getInvestments} from './api/InvestmentApi';
+import {addStock, getInvestment, getInvestments, deleteInvestment} from './api/InvestmentApi';
 import {Layout} from './Layout';
 import {AddInvestmentDialog} from './components/dialogs/AddInvestmentDialog';
 import {flattenApiInvestment} from './data/ApiMapper';
@@ -21,15 +21,28 @@ const addInvestmentAction = async ({params, request}) => {
 	return addStock(requestData);
 };
 
+const updateInvestmentAction = async ({params, request}) => {
+	// const requestData = await request.json();
+	// return addStock(requestData);
+};
+
+const deleteInvestmentAction = async ({params, request}) => {
+	const id = params.id;
+	await deleteInvestment(id);
+	return new Response(null, {status: 302, headers: {'Location': '/'} });
+};
+
 const router = createBrowserRouter(
 	createRoutesFromElements([
-		<Route path='/' element={<Layout />} loader={async () => await getInvestments()}>
+		<Route path='/' element={<Layout />} id='root' loader={async () => await getInvestments()}>
 			<Route path='/' element={<Root />} />
 			<Route
 				path='investment/:id'
 				element={<InvestmentView />}
 				loader={async ({params}) => flattenApiInvestment(await getInvestment(params.id))}>
-				<Route path='add' element={<AddInvestmentDialog />} />
+				<Route path='add' action={addInvestmentAction} element={<AddInvestmentDialog />} />
+				<Route path='update' action={updateInvestmentAction} />
+				<Route path='delete' action={deleteInvestmentAction} />
 			</Route>
 			<Route path='add' action={addInvestmentAction} element={<AddInvestmentDialog />} />,
 		</Route>,

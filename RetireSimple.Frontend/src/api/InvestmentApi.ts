@@ -34,3 +34,9 @@ export const addStock = async (stock: any) => {
 		},
 	});
 };
+
+export const deleteInvestment = async (id: number) => {
+	await fetch(`${API_BASE_URL}/Investment/Delete/${id}`, {
+		method: 'DELETE',
+	});
+}

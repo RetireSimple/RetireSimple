@@ -15,11 +15,11 @@ namespace RetireSimple.Engine.Api {
 				StockPrice = decimal.Parse(parameters.GetValueOrDefault("stockPrice", defaults["stockPrice"])),
 				StockTicker = parameters.GetValueOrDefault("stockTicker", defaults["stockTicker"]),
 				StockQuantity = decimal.Parse(parameters.GetValueOrDefault("stockQuantity", defaults["stockQuantity"])),
-				StockPurchaseDate = DateOnly.Parse(parameters.GetValueOrDefault("stockPurchaseDate", defaults["stockPurchaseDate"])),
+				StockPurchaseDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("stockPurchaseDate", defaults["stockPurchaseDate"]))),
 				StockDividendPercent = decimal.Parse(parameters.GetValueOrDefault("stockDividendPercent", defaults["stockDividendPercent"])),
 				StockDividendDistributionInterval = parameters.GetValueOrDefault("stockDividendDistributionInterval", defaults["stockDividendDistributionInterval"]),
 				StockDividendDistributionMethod = parameters.GetValueOrDefault("stockDividendDistributionMethod", defaults["stockDividendDistributionMethod"]),
-				StockDividendFirstPaymentDate = DateOnly.Parse(parameters.GetValueOrDefault("stockDividendFirstPaymentDate", defaults["stockDividendFirstPaymentDate"])),
+				StockDividendFirstPaymentDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("stockDividendFirstPaymentDate", defaults["stockDividendFirstPaymentDate"]))),
 			};
 		}
 
@@ -31,9 +31,9 @@ namespace RetireSimple.Engine.Api {
 				BondTicker = parameters.GetValueOrDefault("bondTicker", defaults["bondTicker"]),
 				BondCouponRate = double.Parse(parameters.GetValueOrDefault("bondCouponRate", defaults["bondCouponRate"])),
 				BondYTM = decimal.Parse(parameters.GetValueOrDefault("bondYieldToMaturity", defaults["bondYieldToMaturity"])),
-				BondMaturityDate = DateOnly.Parse(parameters.GetValueOrDefault("bondMaturityDate", defaults["bondMaturityDate"])),
+				BondMaturityDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("bondMaturityDate", defaults["bondMaturityDate"]))),
 				BondPurchasePrice = decimal.Parse(parameters.GetValueOrDefault("bondPurchasePrice", defaults["bondPurchasePrice"])),
-				BondPurchaseDate = DateOnly.Parse(parameters.GetValueOrDefault("bondPurchaseDate", defaults["bondPurchaseDate"])),
+				BondPurchaseDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("bondPurchaseDate", defaults["bondPurchaseDate"]))),
 				BondCurrentPrice = decimal.Parse(parameters.GetValueOrDefault("bondCurrentPrice", defaults["bondCurrentPrice"])),
 				BondIsAnnual = bool.Parse(parameters.GetValueOrDefault("bondIsAnnual", defaults["bondIsAnnual"])),
 			};
