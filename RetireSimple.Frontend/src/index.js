@@ -6,19 +6,19 @@ import {
 	Route,
 	RouterProvider,
 } from 'react-router-dom';
-import {addStock, getInvestment, getInvestments, deleteInvestment} from './api/InvestmentApi';
-import {Layout} from './Layout';
-import {AddInvestmentDialog} from './components/dialogs/AddInvestmentDialog';
+import {deleteInvestment, getInvestment, getInvestments} from './api/InvestmentApi';
 import {flattenApiInvestment} from './data/ApiMapper';
 import './index.css';
+import {Layout} from './Layout';
 import {InvestmentView} from './routes/InvestmentView';
 import {Root} from './routes/Root';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-const addInvestmentAction = async ({params, request}) => {
-	const requestData = await request.json();
-	return addStock(requestData);
+const addInvestmentAction = async () => {
+	//Assert that the actual addition occured already
+	//Use this as a way to refresh loader data
+	return new Response(null, {status: 302, headers: {Location: '/'}});
 };
 
 const updateInvestmentAction = async ({params, request}) => {
@@ -26,10 +26,10 @@ const updateInvestmentAction = async ({params, request}) => {
 	// return addStock(requestData);
 };
 
-const deleteInvestmentAction = async ({params, request}) => {
+const deleteInvestmentAction = async ({params}) => {
 	const id = params.id;
 	await deleteInvestment(id);
-	return new Response(null, {status: 302, headers: {'Location': '/'} });
+	return new Response(null, {status: 302, headers: {Location: '/'}});
 };
 
 const router = createBrowserRouter(
@@ -40,11 +40,10 @@ const router = createBrowserRouter(
 				path='investment/:id'
 				element={<InvestmentView />}
 				loader={async ({params}) => flattenApiInvestment(await getInvestment(params.id))}>
-				<Route path='add' action={addInvestmentAction} element={<AddInvestmentDialog />} />
 				<Route path='update' action={updateInvestmentAction} />
 				<Route path='delete' action={deleteInvestmentAction} />
 			</Route>
-			<Route path='add' action={addInvestmentAction} element={<AddInvestmentDialog />} />,
+			<Route path='add' action={addInvestmentAction} />,
 		</Route>,
 	]),
 );
