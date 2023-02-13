@@ -23,11 +23,27 @@ export const getInvestment = async (id: number): Promise<Investment> => {
 	return await response.json();
 };
 
-export const addStock = async (stock: any) => {
-
+export const addInvestment = async (data: any) => {
 	await fetch(`${API_BASE_URL}/Investment/Add`, {
 		method: 'POST',
-		body: JSON.stringify(stock),
+		body: JSON.stringify(data),
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json; charset=utf-8',
+		},
+	});
+};
+
+export const deleteInvestment = async (id: number) => {
+	await fetch(`${API_BASE_URL}/Investment/Delete/${id}`, {
+		method: 'DELETE',
+	});
+};
+
+export const updateInvestment = async (id: number, data: any) => {
+	await fetch(`${API_BASE_URL}/Investment/Update/${id}`, {
+		method: 'POST',
+		body: JSON.stringify(data),
 		headers: {
 			Accept: 'application/json',
 			'Content-Type': 'application/json; charset=utf-8',
