@@ -120,6 +120,11 @@ namespace RetireSimple.Engine.Api {
 				parameters.Remove("investmentName");
 			}
 
+			if(parameters.ContainsKey("analysisType")) {
+				investment.AnalysisType = parameters["analysisType"];
+				parameters.Remove("AnalysisType");
+			}
+
 			foreach (var (key, value) in parameters) {
 				//Only update existing keys
 				if (investment.InvestmentData.ContainsKey(key)) {

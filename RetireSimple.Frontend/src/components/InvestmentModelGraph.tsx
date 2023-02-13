@@ -1,28 +1,30 @@
 import {Button} from '@mui/material';
 import {CategoryScale, Chart, Legend, LineElement, LinearScale, PointElement, Title, Tooltip} from 'chart.js';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Line} from 'react-chartjs-2';
+import {useNavigation} from 'react-router-dom';
 import {getInvestmentModel} from '../api/InvestmentApi';
 import {InvestmentModel} from '../data/Interfaces';
-import {useLocation} from 'react-router-dom';
 
 export interface InvestmentModelGraphProps {
-	// modelData?: InvestmentModel;
-	// dataLength?: number;
 	investmentId: number;
 }
 
-export const InvestmentModelGraph = (props: InvestmentModelGraphProps) => {
 
-	const [hasData, setHasData] = React.useState(false);
+export const InvestmentModelGraph = (props: InvestmentModelGraphProps) => {
+	const [hasInitialData, setHasInitialData] = React.useState(false);
 	const [modelData, setModelData] = React.useState<InvestmentModel>();
 	const [dataLength, setDataLength] = React.useState<number>();
 
-	const location = useLocation();
+	const navigation = useNavigation();
 
-	React.useEffect(() =>
-		setHasData(false)
-	,[location.pathname]);
+
+	React.useEffect(() =>{
+		if(navigation.state === 'loading') {
+			setHasInitialData(false);
+		}
+	}
+	,[navigation.state]);
 
 	const data =
 	React.useMemo(() =>
@@ -58,7 +60,7 @@ export const InvestmentModelGraph = (props: InvestmentModelGraphProps) => {
 			}
 	,[modelData, dataLength]);
 
-	const options = {
+	const options = useMemo(() => ({
 		responsive: true,
 		plugins: {
 			legend: {
@@ -69,13 +71,13 @@ export const InvestmentModelGraph = (props: InvestmentModelGraphProps) => {
 				text: 'Investment Model',
 			},
 		},
-	};
+	}),[]);
 
 	const getModelData = () => {
 		getInvestmentModel(props.investmentId).then((data: InvestmentModel) => {
 			setModelData(data);
 			setDataLength(data.minModelData.length);
-			setHasData(true);
+			setHasInitialData(true);
 		});
 	};
 
@@ -89,17 +91,16 @@ export const InvestmentModelGraph = (props: InvestmentModelGraphProps) => {
 		Legend,
 	);
 
-	const chart =React.useMemo(()=>
-		hasData ?
-			<Line options={options} data={data} /> :
-			<Button onClick={getModelData}>Get Model Data</Button>,
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	[hasData],
-
+	const chart = React.useMemo(()=>
+		hasInitialData ?
+			<Line options={options} data={data} />:
+			<div></div>,
+	[hasInitialData, options, data],
 	)
 
 	return (
 		<div>
+			<Button onClick={getModelData} disabled={hasInitialData}>Get Model Data</Button>
 			{chart}
 		</div>);
 };

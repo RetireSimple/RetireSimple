@@ -338,6 +338,22 @@ namespace RetireSimple.Tests.Api {
 		}
 
 		[Fact]
+		public void UpdateInvestmentHandlesAnalysisTypeSeparately() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.Update(1, new OptionsDict {
+				{"stockTicker", "MSFT"},
+				{"analysisType", "MonteCarlo_LogNormalDist"},
+			});
+
+			context.Investment.Should().ContainSingle();
+			var investment = context.Investment.First();
+			investment.InvestmentData["stockTicker"].Should().Be("MSFT");
+			investment.InvestmentData.Should().NotContainKey("analysisType");
+			investment.AnalysisType.Should().Be("MonteCarlo_LogNormalDist");
+		}
+
+		[Fact]
 		public void UpdateInvestmentIgnoresUnknownKeys() {
 			api.Add("StockInvestment"); //Using defaults
 
