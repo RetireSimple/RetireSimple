@@ -37,15 +37,12 @@ export const InvestmentView = () => {
 
 	const handleUpdate =
 		handleSubmit((data: FieldValues) => {
-			console.log('submitting')
 			const requestData: {[key: string]: string;} = {};
-
 			Object.entries(dirtyFields).forEach(([key, value])=> {
 				if(value === true) {
 					requestData[key] = data[key].toString()
 				}
 			});
-
 			updateInvestment(currentInvestmentData.investmentId, requestData).then(() => {
 				submit(null, {action: updateAction, method: 'post'});
 			});
