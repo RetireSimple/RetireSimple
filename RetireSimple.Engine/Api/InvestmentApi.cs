@@ -120,7 +120,7 @@ namespace RetireSimple.Engine.Api {
 				parameters.Remove("investmentName");
 			}
 
-			if(parameters.ContainsKey("analysisType")) {
+			if (parameters.ContainsKey("analysisType")) {
 				investment.AnalysisType = parameters["analysisType"];
 				parameters.Remove("AnalysisType");
 			}
@@ -205,7 +205,12 @@ namespace RetireSimple.Engine.Api {
 				_context.SaveChanges();
 			}
 
-			return investment.InvestmentModel;
+			var tempModel = investment.InvestmentModel;
+			tempModel.MinModelData = tempModel.MinModelData.Select(d => Math.Max(d, 0)).ToList();
+			tempModel.AvgModelData = tempModel.AvgModelData.Select(d => Math.Max(d, 0)).ToList();
+			tempModel.MaxModelData = tempModel.MaxModelData.Select(d => Math.Max(d, 0)).ToList();
+
+			return tempModel;
 		}
 	}
 }
