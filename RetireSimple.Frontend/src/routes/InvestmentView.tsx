@@ -1,5 +1,5 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import {Box, Button, Divider} from '@mui/material';
+import {Box, Button, Divider, Typography} from '@mui/material';
 import React from 'react';
 import {FormProvider, useForm, useFormState} from 'react-hook-form';
 import {FieldValues} from 'react-hook-form/dist/types';
@@ -37,15 +37,12 @@ export const InvestmentView = () => {
 
 	const handleUpdate =
 		handleSubmit((data: FieldValues) => {
-			console.log('submitting')
 			const requestData: {[key: string]: string;} = {};
-
 			Object.entries(dirtyFields).forEach(([key, value])=> {
 				if(value === true) {
 					requestData[key] = data[key].toString()
 				}
 			});
-
 			updateInvestment(currentInvestmentData.investmentId, requestData).then(() => {
 				submit(null, {action: updateAction, method: 'post'});
 			});
@@ -54,8 +51,11 @@ export const InvestmentView = () => {
 
 
 	return (
-		<>
+		<Box sx={{display: 'flex', flexDirection:'column'}}>
 			<Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
+				<Typography variant='h6' component='div' sx={{flexGrow: 1, marginBottom: '1rem'}}>
+					Investment Details: {currentInvestmentData.investmentName}
+				</Typography>
 				<FormProvider {...formContext}>
 					<InvestmentDataForm
 						defaultValues={currentInvestmentData}
@@ -72,6 +72,6 @@ export const InvestmentView = () => {
 			<Box sx={{width: '100%', height: '100%'}}>
 				<InvestmentModelGraph investmentId={currentInvestmentData.investmentId} />
 			</Box>
-		</>
+		</Box>
 	);
 };

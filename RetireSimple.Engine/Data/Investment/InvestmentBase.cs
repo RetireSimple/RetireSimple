@@ -74,7 +74,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		/// <summary>
 		/// Value of the last time the object was updated. Can be used with <see cref="InvestmentModel.LastUpdated"/> to determine if analysis needs to be run again.
 		/// </summary>
-		public DateTime? LastAnalysis { get; set; }
+		public DateTime? LastUpdated { get; set; }
 
 		/// <summary>
 		/// The created <see cref="InvestmentModel"/> for this investment based on the <see cref="AnalysisModule{T}"/> run. If analysis has not been run prevously, this will be null.
@@ -171,8 +171,10 @@ namespace RetireSimple.Engine.Data.Investment {
 			builder.Property(i => i.AnalysisType)
 					.HasColumnName("AnalysisType");
 
-			builder.Property(i => i.LastAnalysis)
+			builder.Property(i => i.LastUpdated)
 					.HasColumnType("datetime2(7)");
+
+			builder.Navigation(i => i.InvestmentModel).AutoInclude();
 
 
 		}

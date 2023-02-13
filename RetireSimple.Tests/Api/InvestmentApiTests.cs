@@ -338,6 +338,22 @@ namespace RetireSimple.Tests.Api {
 		}
 
 		[Fact]
+		public void UpdateInvestmentHandlesAnalysisTypeSeparately() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.Update(1, new OptionsDict {
+				{"stockTicker", "MSFT"},
+				{"analysisType", "MonteCarlo_LogNormalDist"},
+			});
+
+			context.Investment.Should().ContainSingle();
+			var investment = context.Investment.First();
+			investment.InvestmentData["stockTicker"].Should().Be("MSFT");
+			investment.InvestmentData.Should().NotContainKey("analysisType");
+			investment.AnalysisType.Should().Be("MonteCarlo_LogNormalDist");
+		}
+
+		[Fact]
 		public void UpdateInvestmentIgnoresUnknownKeys() {
 			api.Add("StockInvestment"); //Using defaults
 
@@ -350,6 +366,28 @@ namespace RetireSimple.Tests.Api {
 			var investment = context.Investment.First();
 			investment.InvestmentData["stockTicker"].Should().Be("MSFT");
 			investment.InvestmentData.Should().NotContainKey("unknownKey");
+		}
+
+		[Fact]
+		public void UpdateInvestmentChangesLastUpdateField() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.Update(1, new OptionsDict {
+				{"stockTicker", "MSFT"},
+			});
+
+			context.Investment.Should().ContainSingle();
+			var investment = context.Investment.First();
+			var prevTime = investment.LastUpdated ?? DateTime.Now;
+			investment.LastUpdated.Should().NotBeNull();
+
+			Thread.Sleep(1000); //Wait for a second to ensure LastUpdated changes
+
+			api.Update(1, new OptionsDict {
+				{"stockPrice", "123.23"},
+			});
+
+			investment.LastUpdated.Should().BeAfter(prevTime);
 		}
 
 		[Fact]
@@ -405,6 +443,28 @@ namespace RetireSimple.Tests.Api {
 		}
 
 		[Fact]
+		public void UpdateAnalysisOptionsChangesLastUpdateField() {
+			api.Add("StockInvestment"); //Using defaults
+
+			api.UpdateAnalysisOptions(1, new OptionsDict {
+				{"simCount", "10000"},
+			});
+
+			context.Investment.Should().ContainSingle();
+			var investment = context.Investment.First();
+			var prevTime = investment.LastUpdated ?? DateTime.Now;
+			investment.LastUpdated.Should().NotBeNull();
+
+			Thread.Sleep(1000); //Wait for a second to ensure LastUpdated changes
+
+			api.UpdateAnalysisOptions(1, new OptionsDict {
+				{"analysisLength", "60"},
+			});
+
+			investment.LastUpdated.Should().BeAfter(prevTime);
+		}
+
+		[Fact]
 		public void GetSingluarInvestmentsNoVehicles() {
 			api.Add("StockInvestment");
 			api.Add("StockInvestment");
@@ -451,7 +511,7 @@ namespace RetireSimple.Tests.Api {
 				MaxModelData = new List<decimal>() { 1m, 2m, 3m, 4m, 5m },
 			};
 			investment.InvestmentModel = model;
-			investment.LastAnalysis = invokeTime;
+			investment.LastUpdated = invokeTime;
 			context.SaveChanges();
 
 			var analysis = api.GetAnalysis(investment.InvestmentId);
@@ -470,7 +530,7 @@ namespace RetireSimple.Tests.Api {
 			var investment = context.Investment.First();
 			investment.ResolveAnalysisDelegate("");
 			var invokeTime = DateTime.Now;
-			investment.LastAnalysis = invokeTime;
+			investment.LastUpdated = invokeTime;
 			var model = new InvestmentModel() {
 				InvestmentId = investment.InvestmentId,
 				LastUpdated = invokeTime.AddDays(-1d),
@@ -502,7 +562,7 @@ namespace RetireSimple.Tests.Api {
 			var investment = context.Investment.First();
 			investment.ResolveAnalysisDelegate("");
 			var invokeTime = DateTime.Now;
-			investment.LastAnalysis = invokeTime;
+			investment.LastUpdated = invokeTime;
 			var model = new InvestmentModel() {
 				InvestmentId = investment.InvestmentId,
 				LastUpdated = invokeTime,
@@ -526,7 +586,7 @@ namespace RetireSimple.Tests.Api {
 			var investment = context.Investment.First();
 			investment.ResolveAnalysisDelegate("");
 			var invokeTime = DateTime.Now;
-			investment.LastAnalysis = invokeTime;
+			investment.LastUpdated = invokeTime;
 			var model = new InvestmentModel() {
 				InvestmentId = investment.InvestmentId,
 				LastUpdated = invokeTime.AddDays(-1d),

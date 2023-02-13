@@ -57,11 +57,13 @@ export const Layout = () => {
 				<Typography variant='h6'
 					component='div' sx={{flexGrow: 1}}>RetireSimple</Typography>
 			</AppBar>
-			<Box sx={{marginTop: '0.5rem', display: 'flex', flexDirection: 'row', width: '100vh'}}>
+			<Box sx={{marginTop: '0.5rem', display: 'flex', flexDirection: 'row'}}>
 				<Box sx={{marginRight: '2rem'}}>
 					{contents}
 				</Box>
-				<Outlet />
+				<Box sx={{display: 'flex', marginY: '0.5rem', marginLeft: '1rem', maxWidth: '100vh'}}>
+					<Outlet />
+				</Box>
 			</Box>
 			<AddInvestmentDialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)} />
 		</div>

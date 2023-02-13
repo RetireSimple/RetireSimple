@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using RetireSimple.Engine.Api;
 using RetireSimple.Engine.Data;
@@ -15,9 +16,10 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpPost]
-		[Route("/Investment/{id}")]
-		public ActionResult GetAnalysis(int id, [FromBody] OptionsDict? options) {
+		[Route("Investment/{id}")]
+		public ActionResult GetAnalysis(int id, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] OptionsDict? options) {
 			try {
+				if (options is null || options.Count == 0) options = null;
 				var model = _investmentApi.GetAnalysis(id, options);
 				return Ok(model);
 			}

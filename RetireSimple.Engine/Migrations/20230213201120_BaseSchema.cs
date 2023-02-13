@@ -81,7 +81,7 @@ namespace RetireSimple.Engine.Migrations
                     InvestmentData = table.Column<string>(type: "TEXT", nullable: false),
                     AnalysisOptionsOverrides = table.Column<string>(type: "TEXT", nullable: false),
                     AnalysisType = table.Column<string>(type: "TEXT", nullable: true),
-                    LastAnalysis = table.Column<DateTime>(type: "datetime2(7)", nullable: true),
+                    LastUpdated = table.Column<DateTime>(type: "datetime2(7)", nullable: true),
                     PortfolioId = table.Column<int>(type: "INTEGER", nullable: false),
                     InvestmentVehicleBaseInvestmentVehicleId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
@@ -157,7 +157,8 @@ namespace RetireSimple.Engine.Migrations
                 name: "InvestmentModel",
                 columns: table => new
                 {
-                    InvestmentModelId = table.Column<int>(type: "INTEGER", nullable: false),
+                    InvestmentModelId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     InvestmentId = table.Column<int>(type: "INTEGER", nullable: false),
                     MaxModelData = table.Column<string>(type: "TEXT", nullable: false),
                     MinModelData = table.Column<string>(type: "TEXT", nullable: false),
@@ -166,7 +167,7 @@ namespace RetireSimple.Engine.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InvestmentModel", x => new { x.InvestmentModelId, x.InvestmentId });
+                    table.PrimaryKey("PK_InvestmentModel", x => x.InvestmentModelId);
                     table.ForeignKey(
                         name: "FK_InvestmentModel_Investments_InvestmentId",
                         column: x => x.InvestmentId,

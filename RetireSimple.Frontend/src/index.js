@@ -43,6 +43,7 @@ const router = createBrowserRouter(
 				<Route path='delete' action={deleteInvestmentAction} />
 			</Route>
 			<Route path='add' action={addInvestmentAction} />,
+			<Route path='*' element={<div>404</div>} />
 		</Route>,
 	]),
 );

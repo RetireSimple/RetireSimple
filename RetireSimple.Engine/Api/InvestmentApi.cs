@@ -120,12 +120,19 @@ namespace RetireSimple.Engine.Api {
 				parameters.Remove("investmentName");
 			}
 
+			if (parameters.ContainsKey("analysisType")) {
+				investment.AnalysisType = parameters["analysisType"];
+				parameters.Remove("AnalysisType");
+			}
+
 			foreach (var (key, value) in parameters) {
 				//Only update existing keys
 				if (investment.InvestmentData.ContainsKey(key)) {
 					investment.InvestmentData[key] = value;
 				}
 			}
+
+			investment.LastUpdated = DateTime.Now;
 
 			_context.SaveChanges();
 		}
@@ -155,6 +162,7 @@ namespace RetireSimple.Engine.Api {
 					investment.AnalysisOptionsOverrides[key] = value;
 				}
 			}
+			investment.LastUpdated = DateTime.Now;
 
 			_context.SaveChanges();
 		}
@@ -178,17 +186,31 @@ namespace RetireSimple.Engine.Api {
 			var investment = _context.Investment.First(i => i.InvestmentId == id);
 			if ((options is not null && options.Count > 0) ||
 					investment.InvestmentModel is null ||
-					investment.LastAnalysis > investment.InvestmentModel.LastUpdated) {
+					investment.LastUpdated > investment.InvestmentModel.LastUpdated) {
 				var model = investment.InvokeAnalysis(options ?? new OptionsDict() { });
 				var updateTime = DateTime.Now;
-				investment.InvestmentModel = model;
-				investment.LastAnalysis = updateTime;
-				model.LastUpdated = updateTime;
+				if (investment.InvestmentModel is not null) {
+					investment.InvestmentModel.MinModelData = model.MinModelData;
+					investment.InvestmentModel.AvgModelData = model.AvgModelData;
+					investment.InvestmentModel.MaxModelData = model.MaxModelData;
+					investment.InvestmentModel.LastUpdated = updateTime;
+				}
+				else {
+					model.InvestmentId = investment.InvestmentId;
+					investment.InvestmentModel = model;
+
+					model.LastUpdated = updateTime;
+				}
+				investment.LastUpdated = updateTime;
 				_context.SaveChanges();
-				return model;
 			}
 
-			return investment.InvestmentModel;
+			var tempModel = investment.InvestmentModel;
+			tempModel.MinModelData = tempModel.MinModelData.Select(d => Math.Max(d, 0)).ToList();
+			tempModel.AvgModelData = tempModel.AvgModelData.Select(d => Math.Max(d, 0)).ToList();
+			tempModel.MaxModelData = tempModel.MaxModelData.Select(d => Math.Max(d, 0)).ToList();
+
+			return tempModel;
 		}
 	}
 }

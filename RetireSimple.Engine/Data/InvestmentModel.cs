@@ -50,7 +50,7 @@ namespace RetireSimple.Engine.Data {
 		};
 		public void Configure(EntityTypeBuilder<InvestmentModel> builder) {
 			builder.ToTable("InvestmentModel");
-			builder.HasKey(i => new { i.InvestmentModelId, i.InvestmentId });
+			builder.HasKey(i => new { i.InvestmentModelId });
 			builder.HasOne(i => i.Investment)
 					.WithOne(i => i.InvestmentModel)
 					.HasForeignKey<InvestmentModel>(i => i.InvestmentId)
