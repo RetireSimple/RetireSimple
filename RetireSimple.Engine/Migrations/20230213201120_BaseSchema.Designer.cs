@@ -11,7 +11,7 @@ using RetireSimple.Engine.Data;
 namespace RetireSimple.Engine.Migrations
 {
     [DbContext(typeof(EngineDbContext))]
-    [Migration("20230213193326_BaseSchema")]
+    [Migration("20230213201120_BaseSchema")]
     partial class BaseSchema
     {
         /// <inheritdoc />
@@ -80,7 +80,7 @@ namespace RetireSimple.Engine.Migrations
                     b.Property<int?>("InvestmentVehicleBaseInvestmentVehicleId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("LastAnalysis")
+                    b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime2(7)");
 
                     b.Property<int>("PortfolioId")

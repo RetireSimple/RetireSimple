@@ -81,7 +81,7 @@ namespace RetireSimple.Engine.Migrations
                     InvestmentData = table.Column<string>(type: "TEXT", nullable: false),
                     AnalysisOptionsOverrides = table.Column<string>(type: "TEXT", nullable: false),
                     AnalysisType = table.Column<string>(type: "TEXT", nullable: true),
-                    LastAnalysis = table.Column<DateTime>(type: "datetime2(7)", nullable: true),
+                    LastUpdated = table.Column<DateTime>(type: "datetime2(7)", nullable: true),
                     PortfolioId = table.Column<int>(type: "INTEGER", nullable: false),
                     InvestmentVehicleBaseInvestmentVehicleId = table.Column<int>(type: "INTEGER", nullable: true)
                 },

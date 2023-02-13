@@ -60,7 +60,7 @@ namespace RetireSimple.Tests.DomainModel {
 				Context.SaveChanges();
 			};
 
-			act.Should().Throw<InvalidOperationException>();
+			act.Should().Throw<DbUpdateException>();
 		}
 	}
 }

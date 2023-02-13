@@ -77,7 +77,7 @@ namespace RetireSimple.Engine.Migrations
                     b.Property<int?>("InvestmentVehicleBaseInvestmentVehicleId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("LastAnalysis")
+                    b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime2(7)");
 
                     b.Property<int>("PortfolioId")

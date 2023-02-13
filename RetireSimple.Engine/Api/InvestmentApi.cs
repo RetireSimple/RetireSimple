@@ -127,6 +127,8 @@ namespace RetireSimple.Engine.Api {
 				}
 			}
 
+			investment.LastUpdated = DateTime.Now;
+
 			_context.SaveChanges();
 		}
 
@@ -155,6 +157,7 @@ namespace RetireSimple.Engine.Api {
 					investment.AnalysisOptionsOverrides[key] = value;
 				}
 			}
+			investment.LastUpdated = DateTime.Now;
 
 			_context.SaveChanges();
 		}
@@ -178,7 +181,7 @@ namespace RetireSimple.Engine.Api {
 			var investment = _context.Investment.First(i => i.InvestmentId == id);
 			if ((options is not null && options.Count > 0) ||
 					investment.InvestmentModel is null ||
-					investment.LastAnalysis > investment.InvestmentModel.LastUpdated) {
+					investment.LastUpdated > investment.InvestmentModel.LastUpdated) {
 				var model = investment.InvokeAnalysis(options ?? new OptionsDict() { });
 				var updateTime = DateTime.Now;
 				if (investment.InvestmentModel is not null) {
@@ -193,7 +196,7 @@ namespace RetireSimple.Engine.Api {
 
 					model.LastUpdated = updateTime;
 				}
-				investment.LastAnalysis = updateTime;
+				investment.LastUpdated = updateTime;
 				_context.SaveChanges();
 			}
 
