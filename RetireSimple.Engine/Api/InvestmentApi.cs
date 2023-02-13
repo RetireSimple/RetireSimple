@@ -181,11 +181,20 @@ namespace RetireSimple.Engine.Api {
 					investment.LastAnalysis > investment.InvestmentModel.LastUpdated) {
 				var model = investment.InvokeAnalysis(options ?? new OptionsDict() { });
 				var updateTime = DateTime.Now;
-				investment.InvestmentModel = model;
+				if (investment.InvestmentModel is not null) {
+					investment.InvestmentModel.MinModelData = model.MinModelData;
+					investment.InvestmentModel.AvgModelData = model.AvgModelData;
+					investment.InvestmentModel.MaxModelData = model.MaxModelData;
+					investment.InvestmentModel.LastUpdated = updateTime;
+				}
+				else {
+					model.InvestmentId = investment.InvestmentId;
+					investment.InvestmentModel = model;
+
+					model.LastUpdated = updateTime;
+				}
 				investment.LastAnalysis = updateTime;
-				model.LastUpdated = updateTime;
 				_context.SaveChanges();
-				return model;
 			}
 
 			return investment.InvestmentModel;

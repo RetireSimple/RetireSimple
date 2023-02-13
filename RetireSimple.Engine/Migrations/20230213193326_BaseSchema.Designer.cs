@@ -11,7 +11,7 @@ using RetireSimple.Engine.Data;
 namespace RetireSimple.Engine.Migrations
 {
     [DbContext(typeof(EngineDbContext))]
-    [Migration("20230125030625_BaseSchema")]
+    [Migration("20230213193326_BaseSchema")]
     partial class BaseSchema
     {
         /// <inheritdoc />
@@ -102,14 +102,15 @@ namespace RetireSimple.Engine.Migrations
             modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentModel", b =>
                 {
                     b.Property<int>("InvestmentModelId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("InvestmentId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("AvgModelData")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("InvestmentId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
@@ -122,7 +123,7 @@ namespace RetireSimple.Engine.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("InvestmentModelId", "InvestmentId");
+                    b.HasKey("InvestmentModelId");
 
                     b.HasIndex("InvestmentId")
                         .IsUnique();

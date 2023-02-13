@@ -174,6 +174,8 @@ namespace RetireSimple.Engine.Data.Investment {
 			builder.Property(i => i.LastAnalysis)
 					.HasColumnType("datetime2(7)");
 
+			builder.Navigation(i => i.InvestmentModel).AutoInclude();
+
 
 		}
 	}

@@ -54,7 +54,7 @@ export const InvestmentView = () => {
 
 
 	return (
-		<>
+		<Box sx={{display: 'flex', flexDirection:'column'}}>
 			<Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
 				<FormProvider {...formContext}>
 					<InvestmentDataForm
@@ -72,6 +72,6 @@ export const InvestmentView = () => {
 			<Box sx={{width: '100%', height: '100%'}}>
 				<InvestmentModelGraph investmentId={currentInvestmentData.investmentId} />
 			</Box>
-		</>
+		</Box>
 	);
 };
