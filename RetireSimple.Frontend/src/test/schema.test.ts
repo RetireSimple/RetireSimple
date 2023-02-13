@@ -1,6 +1,23 @@
-import {investmentFormSchema} from '../data/FormSchema';
+import {decimalValidation, investmentFormSchema} from '../data/FormSchema';
 
 describe('schema validation', () => {
+	describe('decimal validation', () => {
+		test('normal validation 1', () => {
+			expect(decimalValidation(2, 1)).toBeTruthy();
+			expect(decimalValidation(2, 1.1)).toBeTruthy();
+			expect(decimalValidation(3, 1.123)).toBeTruthy();
+			expect(decimalValidation(4, 1.1234)).toBeTruthy();
+			expect(decimalValidation(5, 1.12345)).toBeTruthy();
+			expect(decimalValidation(5, 1.123456)).toBeFalsy();
+		});
+
+		test('validation with zero', () => {
+			expect(decimalValidation(2, 0)).toBeTruthy();
+			expect(decimalValidation(2, 0.0)).toBeTruthy();
+			expect(decimalValidation(2, 0.00)).toBeTruthy();
+		});
+	});
+
 	describe('investmentType: StockInvestment', () => {
 		test('MonteCarlo_NormalDist_Valid', () => {
 			const schema = investmentFormSchema;

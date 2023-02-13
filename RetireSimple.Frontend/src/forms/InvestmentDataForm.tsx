@@ -8,6 +8,7 @@ import {StockForm} from './investment/StockForm';
 export interface InvestmentDataFormProps {
 	defaultValues?: any;
 	disableTypeSelect?: boolean;
+	children?: React.ReactNode;
 }
 
 ///IMPORTANT CAVEAT: This form does not use a standard submit action
@@ -58,13 +59,15 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 			disable={props.disableTypeSelect ?? false}
 		/>);
 
-	return (<>
-		<Box>
-			<Grid container spacing={2}>
-				<Grid item xs={4}>{investmentNameField}</Grid>
-				<Grid item xs={4}>{investmentTypeField}</Grid>
-			</Grid>
-			{investmentTypeSubform}
-		</Box>
-	</>);
+	return (
+		<>
+			<Box>
+				<Grid container spacing={2}>
+					<Grid item xs={4}>{investmentNameField}</Grid>
+					<Grid item xs={4}>{investmentTypeField}</Grid>
+				</Grid>
+				{investmentTypeSubform}
+			</Box>
+			{props.children}
+		</>);
 };

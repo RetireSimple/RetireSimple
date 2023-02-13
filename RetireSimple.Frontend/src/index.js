@@ -22,8 +22,7 @@ const addInvestmentAction = async () => {
 };
 
 const updateInvestmentAction = async ({params, request}) => {
-	// const requestData = await request.json();
-	// return addStock(requestData);
+	return new Response(null, {status: 302, headers: {Location: `/investment/${params.id}`}});
 };
 
 const deleteInvestmentAction = async ({params}) => {

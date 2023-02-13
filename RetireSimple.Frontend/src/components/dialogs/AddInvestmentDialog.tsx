@@ -40,12 +40,14 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 				maxWidth='md'>
 				<DialogTitle>Add Investment</DialogTitle>
 				<Box sx={{padding: '2rem'}}>
-					<InvestmentDataForm />
+					<InvestmentDataForm>
+						<DialogActions>
+							<Button onClick={props.onClose}>Cancel</Button>
+							<Button onClick={formContext.handleSubmit(handleAdd)}>Add</Button>
+						</DialogActions>
+					</InvestmentDataForm>
 				</Box>
-				<DialogActions>
-					<Button onClick={props.onClose}>Cancel</Button>
-					<Button onClick={formContext.handleSubmit(handleAdd)}>Add</Button>
-				</DialogActions>
+
 			</Dialog>
 		</FormProvider>
 	);

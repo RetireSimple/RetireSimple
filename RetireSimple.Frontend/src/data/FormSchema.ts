@@ -1,7 +1,9 @@
 import {number, object, string} from 'yup';
 
-const decimalValidation = (maxLen: number, value: number) =>
-	value ? new RegExp(`^\\d+(\\.\\d{1,${maxLen}})?$`).test(value.toString()) : false;
+export const decimalValidation = (maxLen: number, value: number) =>
+	value === 0 || value
+		? new RegExp(`^\\d+(\\.\\d{1,${maxLen}})?$`).test(value.toString())
+		: false;
 
 const decimalErrorString = 'Must be a decimal';
 
@@ -45,7 +47,7 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.positive('Must be positive')
+				.min(0, 'Must be positive')
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(2, value),
 				)
@@ -135,7 +137,8 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.positive('Must be positive')
+				// .positive('Must be positive')
+				.min(0, 'Must be positive')
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(4, value),
 				)

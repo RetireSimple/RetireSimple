@@ -42,11 +42,11 @@ describe('apiMapper', () => {
 				stockDividendDistributionInterval: 'Month',
 				stockDividendDistributionMethod: 'Stock',
 				stockDividendFirstPaymentDate: '1/1/2020',
-				analysisLength: '60',
-				simCount: '1000',
-				randomVariableMu: '0.05',
-				randomVariableSigma: '0.1',
-				randomVariableScaleFactor: '1',
+				analysis_analysisLength: '60',
+				analysis_simCount: '1000',
+				analysis_randomVariableMu: '0.05',
+				analysis_randomVariableSigma: '0.1',
+				analysis_randomVariableScaleFactor: '1',
 				analysisType: 'MonteCarlo_LogNormalDist',
 			};
 

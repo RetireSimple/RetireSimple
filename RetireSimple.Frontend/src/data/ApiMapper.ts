@@ -11,7 +11,17 @@ export const flattenApiInvestment = (investment: Investment) => {
 	result['analysisType'] = investment.analysisType;
 
 	Object.assign(result, investment.investmentData);
-	Object.assign(result, investment.analysisOptionsOverrides);
+
+	const renamedOverrides = Object.keys(investment.analysisOptionsOverrides).reduce(
+		(acc, key) => {
+			acc[`analysis_${key}`] = investment.analysisOptionsOverrides[key];
+			return acc;
+		},
+		{} as {[key: string]: any},
+	);
+
+
+	Object.assign(result, renamedOverrides);
 
 	return result;
 };

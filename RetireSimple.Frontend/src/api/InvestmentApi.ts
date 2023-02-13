@@ -38,15 +38,15 @@ export const deleteInvestment = async (id: number) => {
 	await fetch(`${API_BASE_URL}/Investment/Delete/${id}`, {
 		method: 'DELETE',
 	});
-}
+};
 
-export const updateInvestment = async (data: any) => {
-	await fetch(`${API_BASE_URL}/Investment/Update`, {
-		method: 'PUT',
+export const updateInvestment = async (id: number, data: any) => {
+	await fetch(`${API_BASE_URL}/Investment/Update/${id}`, {
+		method: 'POST',
 		body: JSON.stringify(data),
 		headers: {
 			Accept: 'application/json',
 			'Content-Type': 'application/json; charset=utf-8',
 		},
 	});
-}
+};
