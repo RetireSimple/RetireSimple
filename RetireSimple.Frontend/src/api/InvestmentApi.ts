@@ -1,6 +1,6 @@
 import {Investment, InvestmentModel} from '../data/Interfaces';
 
-export const API_BASE_URL = 'https://localhost:3000/api';
+export const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 export const getInvestmentModel = async (id: number): Promise<InvestmentModel> => {
 	const response = await fetch(`${API_BASE_URL}/Analysis/Investment/${id}`, {
