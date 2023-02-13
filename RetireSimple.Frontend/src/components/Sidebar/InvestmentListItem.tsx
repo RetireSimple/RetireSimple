@@ -4,7 +4,7 @@ import {Investment} from '../../data/Interfaces';
 
 export interface InvestmentListItemProps {
 	investmentName: string;
-	investmentNumberValue: number;	//The raw dollar value
+	investmentNumberValue: string;	//The raw dollar value
 	investmentValue: string;	//Can be different depending on the investment given
 	investmentTicker?: string;
 	investmentType: string;
@@ -18,7 +18,7 @@ export const mapListItemProps = (investment: Investment) => {
 		return {
 			investmentName: investment.investmentName,
 			investmentNumberValue: (Number.parseFloat(investment.investmentData["stockPrice"])
-					* Number.parseFloat(investment.investmentData["stockQuantity"])),
+					* Number.parseFloat(investment.investmentData["stockQuantity"])).toFixed(2),
 			investmentValue: `${investment.investmentData["stockQuantity"]} @ $${investment.investmentData["stockPrice"]}`,
 			investmentTicker: investment.investmentData["stockTicker"],
 			investmentType: investment.investmentType,
@@ -27,7 +27,7 @@ export const mapListItemProps = (investment: Investment) => {
 	default:
 		return {
 			investmentName: "Unknown Investment",
-			investmentNumberValue: 0,
+			investmentNumberValue: "0",
 			investmentValue: "Unknown Investment",
 			investmentTicker: "Unknown Investment",
 			investmentType: "Unknown Investment",

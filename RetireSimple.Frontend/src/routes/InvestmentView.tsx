@@ -1,5 +1,5 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import {Box, Button, Divider} from '@mui/material';
+import {Box, Button, Divider, Typography} from '@mui/material';
 import React from 'react';
 import {FormProvider, useForm, useFormState} from 'react-hook-form';
 import {FieldValues} from 'react-hook-form/dist/types';
@@ -53,6 +53,9 @@ export const InvestmentView = () => {
 	return (
 		<Box sx={{display: 'flex', flexDirection:'column'}}>
 			<Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
+				<Typography variant='h6' component='div' sx={{flexGrow: 1, marginBottom: '1rem'}}>
+					Investment Details: {currentInvestmentData.investmentName}
+				</Typography>
 				<FormProvider {...formContext}>
 					<InvestmentDataForm
 						defaultValues={currentInvestmentData}

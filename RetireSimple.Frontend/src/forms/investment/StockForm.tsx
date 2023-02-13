@@ -130,8 +130,10 @@ export const StockForm = (props: StockFormProps) => {
 
 	return (
 		<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
-			<Typography variant='subtitle2'>Stock Information</Typography>
 			<Grid container spacing={2}>
+				<Grid item xs={12}>
+					<Typography variant='subtitle2'>Stock Information</Typography>
+				</Grid>
 				<Grid item xs={2}>{stockTickerField}</Grid>
 				<Grid item xs={2}>{stockPriceField}</Grid>
 				<Grid item xs={2}>{stockQuantityField}</Grid>
