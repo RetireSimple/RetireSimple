@@ -6,12 +6,26 @@
 		<Nullable>enable</Nullable>
 		<Title>RetireSimple Engine</Title>
 		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<IncludeSymbols>False</IncludeSymbols>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<AnalysisMode>Recommended</AnalysisMode>
 		<AnalysisModeGlobalization>None</AnalysisModeGlobalization>
+		<Company></Company>
+		<RepositoryType>git</RepositoryType>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<RepositoryUrl>https://github.com/rhit-westeraj/RetireSimple.git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/rhit-westeraj/RetireSimple</PackageProjectUrl>
+		<Description>Engine component of the RetireSimple project.</Description>
+		<Authors>Alex Westerman, Ryan Nikolic</Authors>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\LICENSE">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="MathNet.Numerics" Version="5.0.0" />
