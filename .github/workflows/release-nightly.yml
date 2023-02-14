@@ -1,0 +1,94 @@
+name: Nightly Releaser
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-exec:
+    name: Build Executable (Windows)
+    runs-on: windows-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - name: "Windows x64"
+            platform: "win-x64"
+          - name: "Windows x86"
+            platform: "win-x86"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.x
+      - name: Restore NuGet Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+          cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
+      - name: Init Frontend Dependencies
+        run: |
+          cd RetireSimple.Frontend
+          pnpm install
+          cd ..
+      - name: Retore .NET Projects
+        run: dotnet restore
+      - name: Build Executable
+        run: dotnet publish ./RetireSimple.Backend/RetireSimple.Backend.csproj
+          --no-restore
+          --configuration Release
+          --runtime ${{ matrix.platform }}
+          --output ./publish/RetireSimple-${{ matrix.platform }}
+          -p:PublishProfile=./RetireSimple.Backend/Properties/PublishProfiles/FolderProfile.pubxml
+          -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
+          -p:VersionSuffix=nightly
+      # - name: Build Engine NuGet Package
+      #   run: dotnet pack ./RetireSimple.Engine/RetireSimple.Engine.csproj
+      #     --no-restore
+      #     --configuration Release
+      #     --output ./publish
+      #     -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
+      #     -p:VersionSuffix=nightly
+      - name: Zip Executable
+        run: 7z a -tzip publish/RetireSimple-${{ matrix.platform }}.zip publish/RetireSimple-${{ matrix.platform }}
+      - name: Upload Artifact for Release Job
+        uses: actions/upload-artifact@v2
+        with:
+          name: RetireSimple-${{ matrix.platform }}
+          path: publish/RetireSimple-${{ matrix.platform }}.zip
+          retention-days: 1
+
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: build-exec
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          path: publish
+      - name: Update GitHub Release
+        uses: "marvinpinto/action-automatic-releases@v1.2.1"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "nightly"
+          prerelease: true
+          title: "Nightly"
+
+          files: |
+            publish/RetireSimple-win-x64.zip
+            publish/RetireSimple-win-x86.zip
+
