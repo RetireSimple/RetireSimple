@@ -33,15 +33,15 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public decimal BondPurchasePrice {
-			get => decimal.Parse(InvestmentData["bondPurchasePrice"]);
-			set => InvestmentData["bondPurchasePrice"] = value.ToString();
-		}
-
-		[JsonIgnore, NotMapped]
 		public DateOnly BondPurchaseDate {
 			get => DateOnly.Parse(InvestmentData["bondPurchaseDate"]);
 			set => InvestmentData["bondPurchaseDate"] = value.ToString("yyyy-MM-dd");
+		}
+
+		[JsonIgnore, NotMapped]
+		public decimal BondFaceValue {
+			get => decimal.Parse(InvestmentData["bondFaceValue"]);
+			set => InvestmentData["bondFaceValue"] = value.ToString();
 		}
 
 		[JsonIgnore, NotMapped]
@@ -51,13 +51,10 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public bool BondIsAnnual {
-			get => ToBoolean(InvestmentData["bondIsAnnual"]);
-			set => InvestmentData["bondIsAnnual"] = value.ToString().ToLower();
+		public string BondIsAnnual {
+			get => InvestmentData["BondIsAnnual"];
+			set => InvestmentData["BondIsAnnual"] = value;
 		}
-
-		private static bool ToBoolean(string str) => str.Equals("true");
-
 
 		[JsonIgnore, NotMapped]
 		public AnalysisModule<BondInvestment>? AnalysisMethod { get; private set; }

@@ -19,42 +19,39 @@ namespace RetireSimple.Engine.Analysis {
 		}
 
 		public static readonly OptionsDict DefaultBondAnalysisOptions = new() {
-			["AnalysisLength"] = "60",                          //Number of months to project
+			["AnalysisLength"] = "240",                          //Number of months to project
 			["isAnnual"] = "true",
 		};
-		// Coupon value = sum (future cash flow / (1 + yeild to maturity)^number of periods)
-		// Ex. bond: face value of $1,000 and annual coupon of three percent and a maturity date in 30 years.
-		// company or country that owes the bond will pay the bondholder three percent of the face value of $1,000 ($30) every year
-		// for 30 years, at which point they will pay the bondholder the full $1,000 face value.
-		// You would have a series of 30 cash flows (one each year of $30) and then one cash flow (30 years from now, of $1,000)
-		public static double PeriodicCashFlow(BondInvestment investment, OptionsDict options) {
-			double couponRate = investment.BondCouponRate;
 
-			if (investment.BondIsAnnual) {
-				return (double)investment.BondPurchasePrice * couponRate;
+		public static List<decimal> BondValuation(BondInvestment investment, OptionsDict options) {
+			var bondVals = new List<decimal>();
+			int monthsApart = Math.Abs(12 * (investment.BondPurchaseDate.Year - investment.BondMaturityDate.Year) + investment.BondPurchaseDate.Month - investment.BondMaturityDate.Month);
+			int monthInterval = 12;
+			decimal faceVal = investment.BondFaceValue;
+			int n = 1;
+			int k = 1;
+			decimal discountRate = investment.BondYTM;
+			decimal cashFlow = faceVal * (decimal)investment.BondCouponRate;
+			decimal presentVal = 0;
+		
+			if (!(investment.BondIsAnnual.Equals("Annual"))) {
+				monthInterval = 6;
 			}
-			else { //Bond is semi-annual
-				return (double)investment.BondPurchasePrice * (couponRate / 2);
+
+			while(n < monthsApart+1) { 
+				if (n % monthInterval == 0) { 
+					if(n-monthsApart==0) { 
+						cashFlow += faceVal;
+					}
+					presentVal += (decimal)((double)cashFlow/ Math.Pow(1 + (double)discountRate, k));
+					bondVals.Add(presentVal);
+					k++;
+				}
+				n++;
 			}
+
+			return bondVals;
 		}
-
-		// Face value = bond face value / (1 + yeild to maturity)^Time to maturity
-		public static double CurrentBondValue(BondInvestment investment, OptionsDict options) {
-			DateTime MaturityDateTime = investment.BondMaturityDate.ToDateTime(TimeOnly.Parse("10:00 PM"));
-			DateTime StartDateTime = investment.BondPurchaseDate.ToDateTime(TimeOnly.Parse("10:00 PM"));
-			int yearsToMaturity = MaturityDateTime.Subtract(StartDateTime).Days % 365;
-			int numMaturityPeriods = yearsToMaturity;
-			double faceVal = (double)investment.BondPurchasePrice;
-			double discountRate = yearsToMaturity;
-
-			if (!investment.BondIsAnnual) { //Bond is semi-annual
-				numMaturityPeriods = yearsToMaturity * 2;
-				discountRate = (double)yearsToMaturity / 2;
-			}
-
-			return faceVal / Math.Pow(1 + discountRate, numMaturityPeriods);
-		}
-
 
 		public static OptionsDict MergeAnalysisOption(BondInvestment investment, OptionsDict dict) {
 			var newDict = new OptionsDict(dict);
