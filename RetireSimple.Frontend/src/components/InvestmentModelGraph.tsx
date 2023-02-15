@@ -1,7 +1,7 @@
 import {Button} from '@mui/material';
 import React from 'react';
 import {useNavigation} from 'react-router-dom';
-import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
+import {CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 import {getInvestmentModel} from '../api/InvestmentApi';
 import {convertInvestmentModelData} from '../data/ApiMapper';
 import {InvestmentModel} from '../data/Interfaces';
@@ -36,8 +36,13 @@ export const InvestmentModelGraph = (props: InvestmentModelGraphProps) => {
 			{hasInitialData ? (
 				<ResponsiveContainer width='100%' height={400}>
 					<LineChart data={modelData}>
-						<XAxis dataKey='year' label='Months from Today' />
-						<YAxis />
+						<XAxis dataKey='year'>
+							<Label value='Months' offset={-5} position={"bottom"} />
+						</XAxis>
+						<YAxis tickCount={10} allowDecimals={false}
+							type={'number'} tickFormatter={(value)=>value.toFixed(0)}>
+							<Label value='$ Value (USD)' offset={0} position={"left"} angle={-90} />
+						</YAxis>
 						<CartesianGrid strokeDasharray='3 3' />
 						<Tooltip />
 						<Legend />
