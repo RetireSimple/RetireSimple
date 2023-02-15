@@ -80,7 +80,7 @@ jobs:
           pnpm install
           cd ..
       - name: Build Backend
-        run: dotnet build ./RetireSimple.Backend/RetireSimple.Backend.csproj --no-restore
+        run: dotnet build ./RetireSimple.Backend/RetireSimple.Backend.csproj
 
   frontend-build:
     name: RetireSimple.Frontend
