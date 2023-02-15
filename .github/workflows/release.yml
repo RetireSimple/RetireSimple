@@ -7,7 +7,6 @@ jobs:
   build-exec:
     name: Build Executable (Windows)
     runs-on: windows-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     strategy:
       fail-fast: true
       matrix:
