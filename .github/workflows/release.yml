@@ -74,7 +74,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ vars.VERSION_PREFIX }
+          tag: v${{ vars.VERSION_PREFIX }}
           name: EDIT ME
           allowUpdates: true
           draft: false
