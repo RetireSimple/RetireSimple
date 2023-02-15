@@ -53,17 +53,21 @@ export const convertPortfolioModelData = (model: PortfolioModel) => {
 	return result;
 };
 
-// export const createAggregateStackData = (investmentModels: {[key: string]: InvestmentModel}) => {
-// 	const result = [];
+export const createAggregateStackData = (investmentModels: {[key: string]: InvestmentModel}) => {
+	const result = [];
 
-// 	for (let i = 0; i < ; i++) {
-// 		result.push({
-// 			year: i,
-// 			[]: +model.avgModelData[i].toFixed(2),
-// 			min: +model.minModelData[i].toFixed(2),
-// 			max: +model.maxModelData[i].toFixed(2),
-// 		});
-// 	}
+	const exModel = Object.values(investmentModels)[0];
 
-// 	return result;
-// };
+	for (let i = 0; i < exModel.avgModelData.length; i++) {
+		const dataPoint: {[key: string]: number} = {month: i};
+
+		Object.keys(investmentModels).forEach((key) => {
+			const model = investmentModels[key];
+			dataPoint[key] = +model.avgModelData[i].toFixed(2);
+		});
+
+		result.push(dataPoint);
+	}
+
+	return result;
+};

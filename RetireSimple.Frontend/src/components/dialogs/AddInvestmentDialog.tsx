@@ -47,7 +47,6 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 						</DialogActions>
 					</InvestmentDataForm>
 				</Box>
-
 			</Dialog>
 		</FormProvider>
 	);
