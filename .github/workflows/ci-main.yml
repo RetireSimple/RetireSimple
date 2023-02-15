@@ -184,18 +184,18 @@ jobs:
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
-      - name: Clear old Nightly Release
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
-        continue-on-error: true
-        with:
-          tag_name: nightly
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Clear old Nightly Release
+      #   uses: dev-drprasad/delete-tag-and-release@v0.2.0
+      #   continue-on-error: true
+      #   with:
+      #     tag_name: nightly
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Nightly
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: nightly
+          tag: nightly-${{ needs.get-info.outputs.hash }}
           name: Nightly
           allowUpdates: true
           draft: false
