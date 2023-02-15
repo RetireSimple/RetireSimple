@@ -31,6 +31,14 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpPost]
+		[Route("Investment")]
+		public ActionResult GetAllInvestmentModels() {
+			var models  = _investmentApi.GetAllAnalysis();
+			return Ok(models);
+		}
+
+
+		[HttpPost]
 		[Route("Portfolio")]
 		public ActionResult GetPortfolioAnalysis() {
 			var analysis = _portfolioApi.GetAnalysis(1, null);

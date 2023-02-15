@@ -1,4 +1,4 @@
-import {Investment, InvestmentModel} from './Interfaces';
+import {Investment, InvestmentModel, PortfolioModel} from './Interfaces';
 
 //Flattens API Investment object for form use
 //todo: should we strip fields items?
@@ -37,3 +37,33 @@ export const convertInvestmentModelData = (model: InvestmentModel) => {
 
 	return result;
 };
+
+export const convertPortfolioModelData = (model: PortfolioModel) => {
+	const result = [];
+
+	for (let i = 0; i < model.avgModelData.length; i++) {
+		result.push({
+			year: i,
+			avg: +model.avgModelData[i].toFixed(2),
+			min: +model.minModelData[i].toFixed(2),
+			max: +model.maxModelData[i].toFixed(2),
+		});
+	}
+
+	return result;
+};
+
+// export const createAggregateStackData = (investmentModels: {[key: string]: InvestmentModel}) => {
+// 	const result = [];
+
+// 	for (let i = 0; i < ; i++) {
+// 		result.push({
+// 			year: i,
+// 			[]: +model.avgModelData[i].toFixed(2),
+// 			min: +model.minModelData[i].toFixed(2),
+// 			max: +model.maxModelData[i].toFixed(2),
+// 		});
+// 	}
+
+// 	return result;
+// };

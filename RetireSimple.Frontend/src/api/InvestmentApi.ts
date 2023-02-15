@@ -1,4 +1,4 @@
-import {Investment, InvestmentModel} from '../data/Interfaces';
+import {FullModelData, Investment, InvestmentModel} from '../data/Interfaces';
 
 export const API_BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -49,4 +49,24 @@ export const updateInvestment = async (id: number, data: any) => {
 			'Content-Type': 'application/json; charset=utf-8',
 		},
 	});
+};
+
+export const getAggregateModel = async (): Promise<FullModelData> => {
+	const portfolioResponse = await fetch(`${API_BASE_URL}/Analysis/Portfolio`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+	const invModelsResponse = await fetch(`${API_BASE_URL}/Analysis/Investment`, {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+	});
+
+	const result: FullModelData = {
+		portfolioModel: await portfolioResponse.json(),
+		investmentModels: await invModelsResponse.json(),
+	};
+
+	return result;
 };
