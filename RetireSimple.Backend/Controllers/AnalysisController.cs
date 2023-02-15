@@ -10,9 +10,11 @@ namespace RetireSimple.Backend.Controllers {
 	[Route("api/[controller]")]
 	public class AnalysisController : ControllerBase {
 		private readonly InvestmentApi _investmentApi;
+		private readonly PortfolioApi _portfolioApi;
 
 		public AnalysisController(EngineDbContext context) {
 			_investmentApi = new(context);
+			_portfolioApi = new(context);
 		}
 
 		[HttpPost]
@@ -28,5 +30,11 @@ namespace RetireSimple.Backend.Controllers {
 			}
 		}
 
+		[HttpPost]
+		[Route("Portfolio")]
+		public ActionResult GetPortfolioAnalysis() {
+			var analysis = _portfolioApi.GetAnalysis(1, null);
+			return Ok(analysis);
+		}
 	}
 }

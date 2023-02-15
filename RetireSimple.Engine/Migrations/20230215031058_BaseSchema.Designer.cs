@@ -11,7 +11,7 @@ using RetireSimple.Engine.Data;
 namespace RetireSimple.Engine.Migrations
 {
     [DbContext(typeof(EngineDbContext))]
-    [Migration("20230213201120_BaseSchema")]
+    [Migration("20230215031058_BaseSchema")]
     partial class BaseSchema
     {
         /// <inheritdoc />
@@ -243,11 +243,46 @@ namespace RetireSimple.Engine.Migrations
                     b.ToTable("InvestmentVehicleModel");
                 });
 
+            modelBuilder.Entity("RetireSimple.Engine.Data.PortfolioModel", b =>
+                {
+                    b.Property<int>("PortfolioModelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AvgModelData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MaxModelData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MinModelData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PortfolioId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("PortfolioModelId");
+
+                    b.HasIndex("PortfolioId")
+                        .IsUnique();
+
+                    b.ToTable("PortfolioModel", (string)null);
+                });
+
             modelBuilder.Entity("RetireSimple.Engine.Data.User.Portfolio", b =>
                 {
                     b.Property<int>("PortfolioId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PortfolioName")
                         .IsRequired()
@@ -498,6 +533,17 @@ namespace RetireSimple.Engine.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RetireSimple.Engine.Data.PortfolioModel", b =>
+                {
+                    b.HasOne("RetireSimple.Engine.Data.User.Portfolio", "Portfolio")
+                        .WithOne("PortfolioModel")
+                        .HasForeignKey("RetireSimple.Engine.Data.PortfolioModel", "PortfolioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Portfolio");
+                });
+
             modelBuilder.Entity("RetireSimple.Engine.Data.User.Portfolio", b =>
                 {
                     b.HasOne("RetireSimple.Engine.Data.User.Profile", "Profile")
@@ -532,6 +578,8 @@ namespace RetireSimple.Engine.Migrations
                     b.Navigation("InvestmentVehicles");
 
                     b.Navigation("Investments");
+
+                    b.Navigation("PortfolioModel");
                 });
 
             modelBuilder.Entity("RetireSimple.Engine.Data.User.Profile", b =>
