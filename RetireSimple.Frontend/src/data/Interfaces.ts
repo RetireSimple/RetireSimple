@@ -18,10 +18,18 @@ export interface InvestmentModel {
 	lastUpdated: string; //treat as a date later?
 }
 
-export interface StockInfo {
-	name: string;
-	ticker: string;
-	quantity: number;
-	price: number;
-	analysisType: string;
+
+export interface PortfolioModel {
+	portfolioModelId: number;
+	portfolioId: number;
+	maxModelData: number[];
+	minModelData: number[];
+	avgModelData: number[];
+	lastUpdated: string; //treat as a date later?
+}
+
+
+export interface FullModelData{
+	portfolioModel: PortfolioModel;
+	investmentModels: {[key: string]: InvestmentModel};
 }

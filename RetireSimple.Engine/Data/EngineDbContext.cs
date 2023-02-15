@@ -18,6 +18,7 @@ namespace RetireSimple.Engine.Data {
 		public DbSet<ExpenseBase> Expense { get; set; }
 		public DbSet<InvestmentTransfer> InvestmentTransfer { get; set; }
 		public DbSet<InvestmentVehicleModel> InvestmentVehicleModel { get; set; }
+		public DbSet<PortfolioModel> PortfolioModel { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.ApplyConfiguration(new InvestmentBaseConfiguration());
@@ -28,6 +29,7 @@ namespace RetireSimple.Engine.Data {
 			modelBuilder.ApplyConfiguration(new ExpenseBaseConfiguration());
 			modelBuilder.ApplyConfiguration(new InvestmentTransferConfiguration());
 			modelBuilder.ApplyConfiguration(new InvestmentVehicleModelConfiguration());
+			modelBuilder.ApplyConfiguration(new PortfolioModelConfiguration());
 		}
 	}
 

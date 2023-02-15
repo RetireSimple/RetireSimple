@@ -212,5 +212,17 @@ namespace RetireSimple.Engine.Api {
 
 			return tempModel;
 		}
+
+
+		//TODO fully document/Update as needed
+		public Dictionary<string, InvestmentModel> GetAllAnalysis() {
+			var investments = _context.Investment.ToList();
+			var models = new Dictionary<string, InvestmentModel>();
+			foreach (var investment in investments) {
+				models[investment.InvestmentName] = GetAnalysis(investment.InvestmentId);
+			}
+
+			return models;
+		}
 	}
 }
