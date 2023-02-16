@@ -1,4 +1,4 @@
-import {AppBar, Box, Divider, Icon, List, ListSubheader, MenuItem, Paper, Typography} from '@mui/material';
+import {AppBar, Box, Divider, Icon, IconButton, List, ListSubheader, MenuItem, Paper, Tooltip, Typography} from '@mui/material';
 import React from 'react';
 import {Link, Outlet, useLoaderData} from 'react-router-dom';
 import {InvestmentListItem, mapListItemProps} from './components/Sidebar/InvestmentListItem';
@@ -54,8 +54,16 @@ export const Layout = () => {
 	return (
 		<div>
 			<AppBar position='static' sx={{padding: '1rem'}}>
-				<Typography variant='h6'
-					component='div' sx={{flexGrow: 1}}>RetireSimple</Typography>
+				<Box sx={{display: 'flex'}}>
+					<Typography variant='h6'
+						component='div'>RetireSimple</Typography>
+					<Box component='span' sx={{flex: '1 1 auto'}} />
+					<Tooltip title='Report Bug/Issue on GitHub'>
+						<IconButton color='inherit' href='https://github.com/rhit-westeraj/RetireSimple/issues'>
+							<Icon baseClassName='material-icons'>bug_report</Icon>
+						</IconButton>
+					</Tooltip>
+				</Box>
 			</AppBar>
 			<Box sx={{marginTop: '0.5rem', display: 'flex', flexDirection: 'row'}}>
 				<Box sx={{marginRight: '2rem'}}>
