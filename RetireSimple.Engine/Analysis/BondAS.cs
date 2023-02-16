@@ -19,13 +19,18 @@ namespace RetireSimple.Engine.Analysis {
 		}
 
 		public static readonly OptionsDict DefaultBondAnalysisOptions = new() {
-			["AnalysisLength"] = "240",                          //Number of months to project
+			["AnalysisLength"] = "60",                    //Number of months to project
 			["isAnnual"] = "true",
 		};
 
 		public static List<decimal> BondValuation(BondInvestment investment, OptionsDict options) {
 			var bondVals = new List<decimal>();
-			int monthsApart = Math.Abs(12 * (investment.BondPurchaseDate.Year - investment.BondMaturityDate.Year) + investment.BondPurchaseDate.Month - investment.BondMaturityDate.Month);
+			
+			DateOnly purchaseDate = investment.BondPurchaseDate;
+			DateOnly maturityDate = investment.BondMaturityDate;
+			DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+			int analysisLength = int.Parse(options["AnalysisLength"]);
+			int monthsApart = Math.Abs(12 * (purchaseDate.Year - maturityDate.Year) + (purchaseDate.Month - maturityDate.Month));
 			int monthInterval = 12;
 			decimal faceVal = investment.BondFaceValue;
 			int n = 1;
@@ -34,23 +39,38 @@ namespace RetireSimple.Engine.Analysis {
 			decimal cashFlow = faceVal * (decimal)investment.BondCouponRate;
 			decimal presentVal = 0;
 		
-			if (!(investment.BondIsAnnual.Equals("Annual"))) {
+			if (!bool.Parse(investment.AnalysisOptionsOverrides["isAnnual"])) {
 				monthInterval = 6;
 			}
 
-			while(n < monthsApart+1) { 
-				if (n % monthInterval == 0) { 
-					if(n-monthsApart==0) { 
+			while(n <= monthsApart) {
+				if (n % monthInterval == 0) {
+					if (n - monthsApart == 0) {
 						cashFlow += faceVal;
 					}
-					presentVal += (decimal)((double)cashFlow/ Math.Pow(1 + (double)discountRate, k));
-					bondVals.Add(presentVal);
+					presentVal += (decimal)((double)cashFlow / Math.Pow(1 + (double)discountRate, k));
 					k++;
 				}
+				bondVals.Add(presentVal);	
 				n++;
 			}
-
-			return bondVals;
+			var tempList = new List<decimal>();
+			
+			//Date Comparisons
+			if (purchaseDate <= currentDate) {
+				int dateDiff = Math.Abs(12 * (currentDate.Year - purchaseDate.Year) + (currentDate.Month - purchaseDate.Month));
+				tempList = bondVals.Take(new Range(dateDiff, analysisLength + dateDiff)).ToList();
+			} else if(purchaseDate > currentDate) {
+				int dateDiff = Math.Abs(12 * (purchaseDate.Year- currentDate.Year) + purchaseDate.Month- currentDate.Month);
+				var zeroList = new List<decimal>();
+				zeroList.AddRange(Enumerable.Repeat(0M, dateDiff));
+				zeroList.AddRange(bondVals);
+				tempList = zeroList.Take(new Range(0, analysisLength)).ToList();
+			}
+			if (tempList.Count < analysisLength) {
+				tempList.AddRange(Enumerable.Repeat(tempList.Last(), analysisLength - tempList.Count));
+			}
+			return tempList;
 		}
 
 		public static OptionsDict MergeAnalysisOption(BondInvestment investment, OptionsDict dict) {

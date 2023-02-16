@@ -9,9 +9,13 @@
 				BondCurrentPrice = 0,
 				BondFaceValue = 1000,
 				BondIsAnnual = "Annual",
+				AnalysisOptionsOverrides = new OptionsDict() {
+					["AnalysisLength"] = "60",
+					["isAnnual"] = "true",
+				},
 				BondYTM = 0.08M,
 				BondPurchaseDate = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
-				BondMaturityDate = new DateOnly(DateTime.Now.Year+3, DateTime.Now.Month, DateTime.Now.Day)
+				BondMaturityDate = new DateOnly(DateTime.Now.Year + 3, DateTime.Now.Month, DateTime.Now.Day)
 			};
 		}
 
@@ -31,24 +35,112 @@
 		//	Time	0		1		2		3
 		//	pv		0		92.59 +	85.73 +	873.21 = 1051.55	
 		[Fact]
-		public void TestBondCurrentValAnnual() {
+		public void TestBondAnnualCurrentEqualPurchase() {
 			var ListOfBondVal = BondAS.BondValuation(TestInvestment, BondAS.DefaultBondAnalysisOptions);
-			decimal[] actual = {92.59M, 178.33M, 1051.54M};
-			Assert.Equal(ListOfBondVal[0].ToString("#.##"), actual[0].ToString());
-			Assert.Equal(ListOfBondVal[1].ToString("#.##"), actual[1].ToString());
-			Assert.Equal(ListOfBondVal[2].ToString("#.##"), actual[2].ToString());
+			decimal[] actual = { 0M, 92.59M, 178.33M, 1051.54M };
+
+			Assert.Equal(ListOfBondVal[0], actual[0]);
+			Assert.Equal(ListOfBondVal[10], actual[0]);
+			Assert.Equal(ListOfBondVal[11].ToString("#.##"), actual[1].ToString());
+			Assert.Equal(ListOfBondVal[22].ToString("#.##"), actual[1].ToString());
+			Assert.Equal(ListOfBondVal[23].ToString("#.##"), actual[2].ToString());
+			Assert.Equal(ListOfBondVal[34].ToString("#.##"), actual[2].ToString());
+			Assert.Equal(ListOfBondVal[35].ToString("#.##"), actual[3].ToString());
 		}
+
 		[Fact]
-		public void TestBondCurrentValSemiannual() {
-			TestInvestment.BondIsAnnual = "SemiAnnual";
+		public void TestBondAnnualCurrentAfterPurchase() {
+			TestInvestment.BondPurchaseDate = new DateOnly(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day);
+			TestInvestment.BondMaturityDate = new DateOnly(DateTime.Now.Year + 2, DateTime.Now.Month, DateTime.Now.Day);
+
 			var ListOfBondVal = BondAS.BondValuation(TestInvestment, BondAS.DefaultBondAnalysisOptions);
-			decimal[] actual = {92.59M, 178.33M, 257.71M, 331.21M, 399.27M, 1092.46M};
+			decimal[] actual = { 92.59M, 178.33M, 1051.54M };
 			Assert.Equal(ListOfBondVal[0].ToString("#.##"), actual[0].ToString());
-			Assert.Equal(ListOfBondVal[1].ToString("#.##"), actual[1].ToString());
-			Assert.Equal(ListOfBondVal[2].ToString("#.##"), actual[2].ToString());
-			Assert.Equal(ListOfBondVal[3].ToString("#.##"), actual[3].ToString());
-			Assert.Equal(ListOfBondVal[4].ToString("#.##"), actual[4].ToString());
-			Assert.Equal(ListOfBondVal[5].ToString("#.##"), actual[5].ToString());
+			Assert.Equal(ListOfBondVal[11].ToString("#.##"), actual[1].ToString());
+			Assert.Equal(ListOfBondVal[23].ToString("#.##"), actual[2].ToString());
+			Assert.Equal(ListOfBondVal[35].ToString("#.##"), actual[2].ToString());
+			Assert.Equal(ListOfBondVal[59].ToString("#.##"), actual[2].ToString());
+		}
+
+		[Fact]
+		public void TestBondAnnualCurrentBeforePurchase() {
+			TestInvestment.BondPurchaseDate = new DateOnly(DateTime.Now.Year + 1, DateTime.Now.Month, DateTime.Now.Day);
+			TestInvestment.BondMaturityDate = new DateOnly(DateTime.Now.Year + 4, DateTime.Now.Month, DateTime.Now.Day);
+
+			var ListOfBondVal = BondAS.BondValuation(TestInvestment, BondAS.DefaultBondAnalysisOptions);
+			decimal[] actual = { 0M, 92.59M, 178.33M, 1051.54M };
+			Assert.Equal(ListOfBondVal[0], actual[0]);
+			Assert.Equal(ListOfBondVal[11], actual[0]);
+			Assert.Equal(ListOfBondVal[22], actual[0]);
+			Assert.Equal(ListOfBondVal[23].ToString("#.##"), actual[1].ToString());
+			Assert.Equal(ListOfBondVal[34].ToString("#.##"), actual[1].ToString());
+			Assert.Equal(ListOfBondVal[35].ToString("#.##"), actual[2].ToString());
+			Assert.Equal(ListOfBondVal[46].ToString("#.##"), actual[2].ToString());
+			Assert.Equal(ListOfBondVal[47].ToString("#.##"), actual[3].ToString());
+			Assert.Equal(ListOfBondVal[59].ToString("#.##"), actual[3].ToString());
+		}
+
+
+
+		[Fact]
+		public void TestBondSemiannualCurrentEqualPurchase() {
+			TestInvestment.AnalysisOptionsOverrides["isAnnual"] = "false";
+			var ListOfBondVal = BondAS.BondValuation(TestInvestment, BondAS.DefaultBondAnalysisOptions);
+			decimal[] actual = { 0, 92.59M, 178.33M, 257.71M, 331.21M, 399.27M, 1092.46M };
+			Assert.Equal(ListOfBondVal[0], actual[0]);
+			Assert.Equal(ListOfBondVal[4], actual[0]);
+			Assert.Equal(ListOfBondVal[9].ToString("#.##"), actual[1].ToString());
+			Assert.Equal(ListOfBondVal[10].ToString("#.##"), actual[1].ToString());
+			Assert.Equal(ListOfBondVal[11].ToString("#.##"), actual[2].ToString());
+			Assert.Equal(ListOfBondVal[16].ToString("#.##"), actual[2].ToString());
+			Assert.Equal(ListOfBondVal[17].ToString("#.##"), actual[3].ToString());
+			Assert.Equal(ListOfBondVal[22].ToString("#.##"), actual[3].ToString());
+			Assert.Equal(ListOfBondVal[23].ToString("#.##"), actual[4].ToString());
+			Assert.Equal(ListOfBondVal[28].ToString("#.##"), actual[4].ToString());
+			Assert.Equal(ListOfBondVal[29].ToString("#.##"), actual[5].ToString());
+			Assert.Equal(ListOfBondVal[34].ToString("#.##"), actual[5].ToString());
+			Assert.Equal(ListOfBondVal[35].ToString("#.##"), actual[6].ToString());
+		}
+
+		[Fact]
+		public void TestBondSemiAnnualCurrentAfterPurchase() {
+			TestInvestment.BondPurchaseDate = new DateOnly(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day);
+			TestInvestment.BondMaturityDate = new DateOnly(DateTime.Now.Year + 2, DateTime.Now.Month, DateTime.Now.Day);
+			TestInvestment.AnalysisOptionsOverrides["isAnnual"] = "false";
+
+			var ListOfBondVal = BondAS.BondValuation(TestInvestment, BondAS.DefaultBondAnalysisOptions);
+			decimal[] actual = {178.33M, 257.71M, 331.21M, 399.27M, 1092.46M };
+			Assert.Equal(ListOfBondVal[0].ToString("#.##"), actual[0].ToString());
+			Assert.Equal(ListOfBondVal[5].ToString("#.##"), actual[1].ToString());
+			Assert.Equal(ListOfBondVal[11].ToString("#.##"), actual[2].ToString());
+			Assert.Equal(ListOfBondVal[17].ToString("#.##"), actual[3].ToString());
+			Assert.Equal(ListOfBondVal[23].ToString("#.##"), actual[4].ToString());
+			Assert.Equal(ListOfBondVal[29].ToString("#.##"), actual[4].ToString());
+			Assert.Equal(ListOfBondVal[35].ToString("#.##"), actual[4].ToString());
+			Assert.Equal(ListOfBondVal[41].ToString("#.##"), actual[4].ToString());
+			Assert.Equal(ListOfBondVal[47].ToString("#.##"), actual[4].ToString());
+			Assert.Equal(ListOfBondVal[53].ToString("#.##"), actual[4].ToString());
+			Assert.Equal(ListOfBondVal[59].ToString("#.##"), actual[4].ToString());
+		}
+
+		[Fact]
+		public void TestBondSemiAnnualCurrentBeforePurchase() {
+			TestInvestment.BondPurchaseDate = new DateOnly(DateTime.Now.Year + 1, DateTime.Now.Month, DateTime.Now.Day);
+			TestInvestment.BondMaturityDate = new DateOnly(DateTime.Now.Year + 4, DateTime.Now.Month, DateTime.Now.Day);
+			TestInvestment.AnalysisOptionsOverrides["isAnnual"] = "false";
+			var ListOfBondVal = BondAS.BondValuation(TestInvestment, BondAS.DefaultBondAnalysisOptions);
+			decimal[] actual = { 0, 92.59M, 178.33M, 257.71M, 331.21M, 399.27M, 1092.46M };
+			Assert.Equal(ListOfBondVal[0], actual[0]);
+			Assert.Equal(ListOfBondVal[5], actual[0]);
+			Assert.Equal(ListOfBondVal[11], actual[0]);
+			Assert.Equal(ListOfBondVal[17].ToString("#.##"), actual[1].ToString());
+			Assert.Equal(ListOfBondVal[23].ToString("#.##"), actual[2].ToString());
+			Assert.Equal(ListOfBondVal[29].ToString("#.##"), actual[3].ToString());
+			Assert.Equal(ListOfBondVal[35].ToString("#.##"), actual[4].ToString());
+			Assert.Equal(ListOfBondVal[41].ToString("#.##"), actual[5].ToString());
+			Assert.Equal(ListOfBondVal[47].ToString("#.##"), actual[6].ToString());
+			Assert.Equal(ListOfBondVal[53].ToString("#.##"), actual[6].ToString());
+			Assert.Equal(ListOfBondVal[59].ToString("#.##"), actual[6].ToString());
 		}
 	}
 }

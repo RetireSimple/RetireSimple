@@ -17,10 +17,9 @@ export interface InvestmentDataFormProps {
 
 export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 	const formContext = useFormContext();
-	const investmentType = useWatch({
-		name: 'investmentType',
-		control: formContext.control,
-		defaultValue: 'StockInvestment'});
+
+	const investmentType = useWatch();
+
 	const {errors} = formContext.formState;
 
 	const investmentTypeSubform = React.useMemo(() => {
