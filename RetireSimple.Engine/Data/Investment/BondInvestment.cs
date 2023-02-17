@@ -68,7 +68,7 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		public override void ResolveAnalysisDelegate(string analysisType) {
 			AnalysisMethod = analysisType switch {
-				"testAnalysis" => BondAS.DefaultBondAnalysis,
+				"bondValuationAnalysis" => BondAS.DefaultBondAnalysis,
 				_ => null,
 			};
 

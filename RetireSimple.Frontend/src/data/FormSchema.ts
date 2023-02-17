@@ -1,4 +1,4 @@
-import {number, object, string} from 'yup';
+import { number, object, string } from 'yup';
 
 export const decimalValidation = (maxLen: number, value: number) =>
 	value === 0 || value
@@ -24,7 +24,7 @@ export const investmentFormSchema = object().shape({
 		})
 		.when('investmentType', {
 			is: 'BondInvestment',
-			then: (schema) => schema.oneOf(['example']), //todo - add bond specific analysis types
+			then: (schema) => schema.oneOf(['bondValuationAnalysis']), //todo - add bond specific analysis types
 		}),
 
 	//========================================
@@ -232,6 +232,13 @@ export const investmentFormSchema = object().shape({
 					isNaN(value) ? false : decimalValidation(4, value),
 				)
 				.required(),
+		otherwise: (schema) => schema.strip(),
+	}),
+	analysis_isAnnual: string().when('analysisType', {
+		is: (value: string) =>
+			value === 'bondValuationAnalysis',
+		then: (schema) =>
+			schema.defined().required().oneOf(['true', 'false']),
 		otherwise: (schema) => schema.strip(),
 	}),
 });

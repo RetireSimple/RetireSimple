@@ -1,7 +1,7 @@
 import {Grid, Typography} from '@mui/material';
 import React from 'react';
 import {useFormContext} from 'react-hook-form';
-import {FormTextField} from '../Inputs';
+import {FormSelectField, FormTextField} from '../Inputs';
 
 export const BondValuationAnalysisForm = () => {
 	const formContext = useFormContext();
@@ -15,8 +15,20 @@ export const BondValuationAnalysisForm = () => {
 			name='analysis_analysisLength'
 			label='Analysis Length (Months)'
 			control={formContext.control}
-			errorField={errors.analysisLength}
+			errorField={errors.analysis_analysisLength}
 		/>);
+	const analysisIsAnnualField = (
+		<FormSelectField
+			name='analysis_isAnnual'
+			label='Analysis is Annual'
+			control={formContext.control}
+			options={[
+				{ value: 'true', label: 'Annual' },
+				{ value: 'false', label: 'Semi Annual' },
+			]}
+			defaultOption={'true'}
+			disable={false} 
+			errorField={errors.analysis_isAnnual} />);
 
 	return (
 		<Grid container spacing={2}>
@@ -24,9 +36,7 @@ export const BondValuationAnalysisForm = () => {
 				<Typography variant='subtitle2'>Bond Valuation Parameters</Typography>
 			</Grid>
 			<Grid item xs={4}>{analysisLengthField}</Grid>
-			<Grid item xs={12}>
-				<Typography variant='subtitle2'> s ss s </Typography>
-			</Grid>
+			<Grid item xs={4}>{analysisIsAnnualField}</Grid>
 		</Grid>
 	);
 };

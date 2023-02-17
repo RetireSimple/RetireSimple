@@ -1,7 +1,8 @@
 import React from 'react';
 import {useFormContext} from 'react-hook-form';
-import {FormDatePicker, FormTextField} from '../Inputs';
-import {Grid} from '@mui/material';
+import {FormDatePicker, FormSelectField, FormTextField} from '../Inputs';
+import {Grid, Typography} from '@mui/material';
+import { BondValuationAnalysisForm } from '../analysis/BondValuationAnalysisForm';
 
 export interface BondFormProps {
 	defaultValues?: any;
@@ -73,6 +74,19 @@ export const BondForm = (props:BondFormProps) => {
 			errorField={errors.bondCurrentPrice}
 		/>);
 
+	const analysisTypeField = (
+		<FormSelectField
+			name='analysisType'
+			label='Analysis Type'
+			control={formContext.control}
+			errorField={errors.analysisType}
+			options={[
+				{ value: 'bondValuationAnalysis', label: 'Bond Valuation' },
+			]}
+			defaultOption='bondValuationAnalysis'
+			disable={false}
+		/>);
+
 	return(
 		<>
 			<Grid container spacing={2}>
@@ -83,6 +97,12 @@ export const BondForm = (props:BondFormProps) => {
 				<Grid item xs={12} sm={6}>{bondPurchasePriceField}</Grid>
 				<Grid item xs={12} sm={6}>{bondPurchaseDateField}</Grid>
 				<Grid item xs={12} sm={6}>{bondCurrentPriceField}</Grid>
+				{/* Analysis Section */}
+				<Grid item xs={12}>
+					<Typography variant='subtitle2'>Analysis Configuration</Typography>
+				</Grid>
+				<Grid item xs={4}>{analysisTypeField}</Grid>
+				<BondValuationAnalysisForm />
 			</Grid>
 		</>
 	)

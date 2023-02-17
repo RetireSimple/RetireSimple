@@ -15,7 +15,14 @@ namespace RetireSimple.Engine.Analysis {
 	public class BondAS {
 
 		public static InvestmentModel DefaultBondAnalysis(BondInvestment investment, OptionsDict options) {
-			throw new NotImplementedException();
+			var list = BondValuation(investment, options);
+			return new InvestmentModel() {
+				MinModelData = list,
+				AvgModelData = list,
+				MaxModelData = list,
+				InvestmentId = investment.InvestmentId,
+				LastUpdated = DateTime.Now,
+			};
 		}
 
 		public static readonly OptionsDict DefaultBondAnalysisOptions = new() {

@@ -16,7 +16,7 @@ export const mapListItemProps = (investment: Investment) => {
 	case 'BondInvestment':
 		return {
 			investmentName: investment.investmentName,
-			investmentNumberValue: (Number.parseFloat(investment.investmentData["bondFaceValue"])),
+			investmentNumberValue: (Number.parseFloat(investment.investmentData["bondFaceValue"])).toFixed(2),
 			investmentValue: `${investment.investmentData["bondFaceValue"]}`,
 			investmentTicker: investment.investmentData["bondTicker"],
 			investmentType: investment.investmentType,
