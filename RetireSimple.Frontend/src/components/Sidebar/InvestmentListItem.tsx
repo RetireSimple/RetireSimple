@@ -9,7 +9,6 @@ export interface InvestmentListItemProps {
 	investmentTicker?: string;
 	investmentType: string;
 	investmentId: number;
-
 }
 
 export const mapListItemProps = (investment: Investment) => {
