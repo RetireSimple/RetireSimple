@@ -51,12 +51,6 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public string BondIsAnnual {
-			get => InvestmentData["BondIsAnnual"];
-			set => InvestmentData["BondIsAnnual"] = value;
-		}
-
-		[JsonIgnore, NotMapped]
 		public AnalysisModule<BondInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF

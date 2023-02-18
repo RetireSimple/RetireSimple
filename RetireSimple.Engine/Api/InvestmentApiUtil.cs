@@ -32,10 +32,10 @@ namespace RetireSimple.Engine.Api {
 				BondCouponRate = double.Parse(parameters.GetValueOrDefault("bondCouponRate", defaults["bondCouponRate"])),
 				BondYTM = decimal.Parse(parameters.GetValueOrDefault("bondYieldToMaturity", defaults["bondYieldToMaturity"])),
 				BondMaturityDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("bondMaturityDate", defaults["bondMaturityDate"]))),
-				BondFaceValue = decimal.Parse(parameters.GetValueOrDefault("bondPurchasePrice", defaults["bondPurchasePrice"])),
+				BondFaceValue = decimal.Parse(parameters.GetValueOrDefault("bondFaceValue", defaults["bondFaceValue"])),
 				BondPurchaseDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("bondPurchaseDate", defaults["bondPurchaseDate"]))),
 				BondCurrentPrice = decimal.Parse(parameters.GetValueOrDefault("bondCurrentPrice", defaults["bondCurrentPrice"])),
-				BondIsAnnual = parameters.GetValueOrDefault("bondIsAnnual", defaults["bondIsAnnual"]),
+				// BondIsAnnual = parameters.GetValueOrDefault("bondIsAnnual", defaults["bondIsAnnual"]),
 			};
 		}
 

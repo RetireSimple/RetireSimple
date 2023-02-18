@@ -22,19 +22,9 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 		name: 'investmentType',
 		control: formContext.control,
 		defaultValue: 'StockInvestment',
+
 	});
 	const { errors } = formContext.formState;
-
-	const investmentTypeSubform = React.useMemo(() => {
-		switch (investmentType) {
-		case 'StockInvestment':
-			return <StockForm />;
-		case 'BondInvestment':
-			return <BondForm />;
-		default:
-			return <div>Unknown investment type</div>;
-		}
-	}, [investmentType]);
 
 	//==============================================
 	//Field definitions (To reduce indent depth)
@@ -60,6 +50,44 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 			]}
 			disable={props.disableTypeSelect ?? false}
 		/>);
+
+
+
+	const investmentTypeSubform = React.useMemo(() => {
+		switch (investmentType) {
+		case 'StockInvestment':
+			return <StockForm analysisTypeField={
+				<FormSelectField
+					name='analysisType'
+					label='Analysis Type'
+					control={formContext.control}
+					errorField={errors.analysisType}
+					options={[
+						{value: 'MonteCarlo_NormalDist', label: 'Monte Carlo (Normal Dist)'},
+						{value: 'MonteCarlo_LogNormalDist', label: 'Monte Carlo (Log Normal Dist)'},
+					]}
+					defaultOption=''
+					disable={false}
+				/>
+			} />;
+		case 'BondInvestment':
+			return <BondForm analyisisTypeField={
+				<FormSelectField
+					name='analysisType'
+					label='Analysis Type'
+					control={formContext.control}
+					errorField={errors.analysisType}
+					options={[
+						{ value: 'bondValuationAnalysis', label: 'Bond Valuation' },
+					]}
+					defaultOption=''
+					disable={false}
+				/>
+			} />;
+		default:
+			return <div>Unknown investment type</div>;
+		}
+	}, [investmentType, formContext.control, errors]);
 
 	return (
 		<>
