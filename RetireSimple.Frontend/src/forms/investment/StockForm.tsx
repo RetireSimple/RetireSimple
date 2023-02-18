@@ -7,6 +7,7 @@ import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
 
 export interface StockFormProps {
 	defaultValues?: any;
+	analysisTypeField: React.ReactNode;
 }
 
 export const StockForm = (props: StockFormProps) => {
@@ -112,22 +113,6 @@ export const StockForm = (props: StockFormProps) => {
 			defaultValue={props.defaultValues?.stockDividendFirstPaymentDate ?? ''}
 		/>);
 
-
-	const analysisTypeField = (
-		<FormSelectField
-			name='analysisType'
-			label='Analysis Type'
-			control={formContext.control}
-			errorField={errors.analysisType}
-			options={[
-				{value: 'MonteCarlo_NormalDist', label: 'Monte Carlo (Normal Dist)'},
-				{value: 'MonteCarlo_LogNormalDist', label: 'Monte Carlo (Log Normal Dist)'},
-			]}
-			defaultOption='MonteCarlo_NormalDist'
-			disable={false}
-		/>);
-
-
 	return (
 		<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
 			<Grid container spacing={2}>
@@ -152,7 +137,7 @@ export const StockForm = (props: StockFormProps) => {
 				<Grid item xs={12}>
 					<Typography variant='subtitle2'>Analysis Configuration</Typography>
 				</Grid>
-				<Grid item xs={4}>{analysisTypeField}</Grid>
+				<Grid item xs={4}>{props.analysisTypeField}</Grid>
 				<Grid item xs={12}>
 					{analysisSubForm()}
 				</Grid>

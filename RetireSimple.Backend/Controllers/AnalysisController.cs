@@ -20,14 +20,14 @@ namespace RetireSimple.Backend.Controllers {
 		[HttpPost]
 		[Route("Investment/{id}")]
 		public ActionResult GetAnalysis(int id, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] OptionsDict? options) {
-			try {
+			//try {
 				if (options is null || options.Count == 0) options = null;
 				var model = _investmentApi.GetAnalysis(id, options);
 				return Ok(model);
-			}
-			catch (InvalidOperationException) {
-				return NotFound("Investment not found or has an unknown analysis module defined");
-			}
+			//}
+			//catch (InvalidOperationException) {
+			//	return NotFound("Investment not found or has an unknown analysis module defined");
+			//}
 		}
 
 		[HttpPost]

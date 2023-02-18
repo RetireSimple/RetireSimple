@@ -9,11 +9,19 @@ export interface InvestmentListItemProps {
 	investmentTicker?: string;
 	investmentType: string;
 	investmentId: number;
-
 }
 
 export const mapListItemProps = (investment: Investment) => {
 	switch (investment.investmentType) {
+	case 'BondInvestment':
+		return {
+			investmentName: investment.investmentName,
+			investmentNumberValue: (Number.parseFloat(investment.investmentData["bondFaceValue"])).toFixed(2),
+			investmentValue: `${investment.investmentData["bondFaceValue"]}`,
+			investmentTicker: investment.investmentData["bondTicker"],
+			investmentType: investment.investmentType,
+			investmentId: investment.investmentId, 
+		};
 	case 'StockInvestment':
 		return {
 			investmentName: investment.investmentName,

@@ -33,15 +33,15 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public decimal BondPurchasePrice {
-			get => decimal.Parse(InvestmentData["bondPurchasePrice"]);
-			set => InvestmentData["bondPurchasePrice"] = value.ToString();
-		}
-
-		[JsonIgnore, NotMapped]
 		public DateOnly BondPurchaseDate {
 			get => DateOnly.Parse(InvestmentData["bondPurchaseDate"]);
 			set => InvestmentData["bondPurchaseDate"] = value.ToString("yyyy-MM-dd");
+		}
+
+		[JsonIgnore, NotMapped]
+		public decimal BondFaceValue {
+			get => decimal.Parse(InvestmentData["bondFaceValue"]);
+			set => InvestmentData["bondFaceValue"] = value.ToString();
 		}
 
 		[JsonIgnore, NotMapped]
@@ -49,15 +49,6 @@ namespace RetireSimple.Engine.Data.Investment {
 			get => decimal.Parse(InvestmentData["bondCurrentPrice"]);
 			set => InvestmentData["bondCurrentPrice"] = value.ToString();
 		}
-
-		[JsonIgnore, NotMapped]
-		public bool BondIsAnnual {
-			get => ToBoolean(InvestmentData["bondIsAnnual"]);
-			set => InvestmentData["bondIsAnnual"] = value.ToString().ToLower();
-		}
-
-		private static bool ToBoolean(string str) => str.Equals("true");
-
 
 		[JsonIgnore, NotMapped]
 		public AnalysisModule<BondInvestment>? AnalysisMethod { get; private set; }
@@ -71,7 +62,7 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		public override void ResolveAnalysisDelegate(string analysisType) {
 			AnalysisMethod = analysisType switch {
-				"testAnalysis" => BondAS.DefaultBondAnalysis,
+				"bondValuationAnalysis" => BondAS.DefaultBondAnalysis,
 				_ => null,
 			};
 

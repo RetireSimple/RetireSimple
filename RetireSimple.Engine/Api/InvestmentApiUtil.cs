@@ -32,10 +32,10 @@ namespace RetireSimple.Engine.Api {
 				BondCouponRate = double.Parse(parameters.GetValueOrDefault("bondCouponRate", defaults["bondCouponRate"])),
 				BondYTM = decimal.Parse(parameters.GetValueOrDefault("bondYieldToMaturity", defaults["bondYieldToMaturity"])),
 				BondMaturityDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("bondMaturityDate", defaults["bondMaturityDate"]))),
-				BondPurchasePrice = decimal.Parse(parameters.GetValueOrDefault("bondPurchasePrice", defaults["bondPurchasePrice"])),
+				BondFaceValue = decimal.Parse(parameters.GetValueOrDefault("bondFaceValue", defaults["bondFaceValue"])),
 				BondPurchaseDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("bondPurchaseDate", defaults["bondPurchaseDate"]))),
 				BondCurrentPrice = decimal.Parse(parameters.GetValueOrDefault("bondCurrentPrice", defaults["bondCurrentPrice"])),
-				BondIsAnnual = bool.Parse(parameters.GetValueOrDefault("bondIsAnnual", defaults["bondIsAnnual"])),
+				// BondIsAnnual = parameters.GetValueOrDefault("bondIsAnnual", defaults["bondIsAnnual"]),
 			};
 		}
 
@@ -56,10 +56,9 @@ namespace RetireSimple.Engine.Api {
 			["bondCouponRate"] = "0.05",
 			["bondYieldToMaturity"] = "0.05",
 			["bondMaturityDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
-			["bondPurchasePrice"] = "0",
+			["bondFaceValue"] = "0",
 			["bondPurchaseDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
 			["bondCurrentPrice"] = "0",
-			["bondIsAnnual"] = "true",
 		};
 	}
 
