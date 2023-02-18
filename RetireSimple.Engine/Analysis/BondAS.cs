@@ -26,18 +26,18 @@ namespace RetireSimple.Engine.Analysis {
 		}
 
 		public static readonly OptionsDict DefaultBondAnalysisOptions = new() {
-			["AnalysisLength"] = "60",                    //Number of months to project
+			["analysisLength"] = "60",                    //Number of months to project
 			["isAnnual"] = "true",
 		};
 
 		public static List<decimal> BondValuation(BondInvestment investment, OptionsDict options) {
 			var bondVals = new List<decimal>();
-			
+
 			DateOnly purchaseDate = investment.BondPurchaseDate;
 			DateOnly maturityDate = investment.BondMaturityDate;
 			DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
-			int analysisLength = int.Parse(options["AnalysisLength"]);
-			int monthsApart = Math.Abs(12 * (purchaseDate.Year - maturityDate.Year) + (purchaseDate.Month - maturityDate.Month));
+			int analysisLength = int.Parse(investment.AnalysisOptionsOverrides["analysisLength"]);
+			int monthsApart = Math.Abs(12 * ((purchaseDate.Year - maturityDate.Year) + (purchaseDate.Month - maturityDate.Month)));
 			int monthInterval = 12;
 			decimal faceVal = investment.BondFaceValue;
 			int n = 1;
@@ -45,7 +45,7 @@ namespace RetireSimple.Engine.Analysis {
 			decimal discountRate = investment.BondYTM;
 			decimal cashFlow = faceVal * (decimal)investment.BondCouponRate;
 			decimal presentVal = 0;
-		
+
 			if (!bool.Parse(investment.AnalysisOptionsOverrides["isAnnual"])) {
 				monthInterval = 6;
 			}
@@ -58,11 +58,11 @@ namespace RetireSimple.Engine.Analysis {
 					presentVal += (decimal)((double)cashFlow / Math.Pow(1 + (double)discountRate, k));
 					k++;
 				}
-				bondVals.Add(presentVal);	
+				bondVals.Add(presentVal);
 				n++;
 			}
 			var tempList = new List<decimal>();
-			
+
 			//Date Comparisons
 			if (purchaseDate <= currentDate) {
 				int dateDiff = Math.Abs(12 * (currentDate.Year - purchaseDate.Year) + (currentDate.Month - purchaseDate.Month));

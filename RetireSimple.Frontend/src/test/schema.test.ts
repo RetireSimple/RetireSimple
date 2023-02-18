@@ -144,13 +144,14 @@ describe('schema validation', () => {
 					investmentType: 'BondInvestment',
 					bondTicker: 'TEST',
 					bondYieldToMaturity: '0.05',
-					bondPurchasePrice: '123.45',
+					bondFaceValue: '123.45',
 					bondPurchaseDate: '2023-01-30',
 					bondCurrentPrice: '123.45',
 					bondCouponRate: '0.05',
 					bondMaturityDate: '2023-01-30',
-					analysisType: 'example',
+					analysisType: 'bondValuationAnalysis',
 					analysis_analysisLength: '60',
+					analysis_isAnnual: 'true',
 				};
 
 				expect(schema.isValidSync(data)).toBeTruthy();

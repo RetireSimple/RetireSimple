@@ -163,10 +163,9 @@ namespace RetireSimple.Tests.Api {
 				["bondCouponRate"] = "0.05",
 				["bondYieldToMaturity"] = "0.05",
 				["bondMaturityDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
-				["bondPurchasePrice"] = "0",
+				["bondFaceValue"] = "0",
 				["bondPurchaseDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
 				["bondCurrentPrice"] = "0",
-				["bondIsAnnual"] = "true",
 			});
 		}
 
@@ -177,7 +176,7 @@ namespace RetireSimple.Tests.Api {
 				{"bondCouponRate", "0.05"},
 				{"bondYieldToMaturity", "0.05"},
 				{"bondMaturityDate", "2020-01-01"},
-				{"bondPurchasePrice", "100"},
+				{"bondFaceValue", "100"},
 				{"bondPurchaseDate", "2020-01-01"},
 				{"bondCurrentPrice", "100"},
 				{"bondIsAnnual", "false"},
@@ -195,10 +194,9 @@ namespace RetireSimple.Tests.Api {
 					{"bondCouponRate", "0.05"},
 					{"bondYieldToMaturity", "0.05"},
 					{"bondMaturityDate", "2020-01-01"},
-					{"bondPurchasePrice", "100"},
+					{"bondFaceValue", "100"},
 					{"bondPurchaseDate", "2020-01-01"},
 					{"bondCurrentPrice", "100"},
-					{"bondIsAnnual", "false"},
 				});
 		}
 
@@ -209,7 +207,7 @@ namespace RetireSimple.Tests.Api {
 				{"bondCouponRate", "0.05"},
 				{"bondYieldToMaturity", "0.05"},
 				{"bondMaturityDate", "2020-01-01"},
-				{"bondPurchasePrice", "100"},
+				{"bondFaceValue", "100"},
 				{"bondPurchaseDate", "2020-01-01"},
 				{"bondCurrentPrice", "100"},
 			});
@@ -226,10 +224,9 @@ namespace RetireSimple.Tests.Api {
 					{"bondCouponRate", "0.05"},
 					{"bondYieldToMaturity", "0.05"},
 					{"bondMaturityDate", "2020-01-01"},
-					{"bondPurchasePrice", "100"},
+					{"bondFaceValue", "100"},
 					{"bondPurchaseDate", "2020-01-01"},
 					{"bondCurrentPrice", "100"},
-					{"bondIsAnnual", "true"},
 				});
 		}
 

@@ -170,7 +170,7 @@ export const investmentFormSchema = object().shape({
 				.typeError('Must be a number'),
 		otherwise: (schema) => schema.strip(),
 	}),
-	bondPurchasePrice: number().when('investmentType', {
+	bondFaceValue: number().when('investmentType', {
 		is: 'BondInvestment',
 		then: (schema) =>
 			schema

@@ -8,9 +8,8 @@
 				BondCouponRate = 0.10,
 				BondCurrentPrice = 0,
 				BondFaceValue = 1000,
-				BondIsAnnual = "Annual",
 				AnalysisOptionsOverrides = new OptionsDict() {
-					["AnalysisLength"] = "60",
+					["analysisLength"] = "60",
 					["isAnnual"] = "true",
 				},
 				BondYTM = 0.08M,
