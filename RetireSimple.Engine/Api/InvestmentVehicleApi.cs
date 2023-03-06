@@ -16,7 +16,7 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Returns all investment vehicle objects currently tracked by EF. 
+		/// Returns all investment vehicle objects currently tracked by EF.
 		/// </summary>
 		/// <returns></returns>
 		public List<InvestmentVehicleBase> GetInvestmentVehicles() {
@@ -24,7 +24,7 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Gest a specific investment vehicle by its ID. This is useful 
+		/// Gest a specific investment vehicle by its ID. This is useful
 		/// for retreiving a specific vehicle after it goes through multiple updates
 		/// </summary>
 		/// <param name="vehicleId"></param>
@@ -37,9 +37,38 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Creates a new InvestmentVehicle. During the creation process, 
-		/// a <see cref="CashInvestment"/> is created and bound to the internal 
-		/// relationship fields. 
+		///	Returns a dictionary showing which investments are contained in a vehicle. Does not
+		/// include individual investments. Keys of the dictionary are the IDs of the vehicles,
+		/// </summary>
+		/// <returns></returns>
+		public Dictionary<int, List<InvestmentBase>> GetAllVehicleInvestments() {
+			var dict = new Dictionary<int, List<InvestmentBase>>();
+
+			if (_context.InvestmentVehicle.Any()) {
+				foreach (var vehicle in _context.InvestmentVehicle) {
+					dict.Add(vehicle.InvestmentVehicleId, vehicle.Investments.ToList());
+				}
+			}
+
+			return dict;
+		}
+
+		/// <summary>
+		/// Returns all the investments associated with a vehicle. Best used for getting the vehicle after
+		/// updating it. Throws an <see cref="ArgumentException"/> if the vehicle does not exist.
+		/// </summary>
+		/// <param name="vehicleId"></param>
+		/// <returns></returns>
+		public List<InvestmentBase> GetVehicleInvestments(int vehicleId) {
+			return _context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)
+				? _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId).Investments.ToList()
+				: throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
+		}
+
+		/// <summary>
+		/// Creates a new InvestmentVehicle. During the creation process,
+		/// a <see cref="CashInvestment"/> is created and bound to the internal
+		/// relationship fields.
 		/// </summary>
 		public int Add(string type, string name) {
 			InvestmentVehicleBase vehicle = type switch {
@@ -59,7 +88,7 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Adds an investment to the vehicle. The investment must exist in the database 
+		/// Adds an investment to the vehicle. The investment must exist in the database
 		/// before this operation, otherwise an <see cref="ArgumentException"/> is thrown.
 		/// </summary>
 		/// <param name="vehicleId">ID of the InvestmentVehicleBase object</param>
@@ -117,8 +146,8 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Updates the <see cref="InvestmentVehicleBase.AnalysisOptionsOverrides"/> with the 
-		/// specified analysis option and option value. No actual validation of the value with 
+		/// Updates the <see cref="InvestmentVehicleBase.AnalysisOptionsOverrides"/> with the
+		/// specified analysis option and option value. No actual validation of the value with
 		/// respect to the analysis option is performed in this method. If <paramref name="value"/>
 		/// is null and the option exists, it gets removed from the analysis overrides for the
 		/// vehicle.

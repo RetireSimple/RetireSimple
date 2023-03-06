@@ -229,5 +229,78 @@ namespace RetireSimple.Tests.Api {
 			vehicle.AnalysisOptionsOverrides.ContainsKey("test").Should().BeFalse();
 
 		}
+
+		[Fact]
+		public void InvestmentVehicleGetVehicleInvestmentsThrowsIfNoVehicle() {
+			Action act = () => {
+				api.GetVehicleInvestments(1);
+			};
+
+			act.Should().Throw<ArgumentException>();
+		}
+
+		[Fact]
+		public void InvestmentVehicleGetVehicleInvestmentsReturnsInvestmentList(){
+			var vehicleId = api.Add("401k", "test");
+			var tempInvestment = new StockInvestment("");
+			context.Portfolio.First().Investments.Add(tempInvestment);
+			context.SaveChanges();
+			api.AddInvestmentToVehicle(vehicleId, tempInvestment.InvestmentId);
+
+			var result = api.GetVehicleInvestments(vehicleId);
+
+			result.Should().ContainSingle();
+			result.First().Should().Be(tempInvestment);
+		}
+
+		[Fact]
+		public void InvestmentVehicleGetAllVehicleInvestmentsNoVehiclesReturnsEmptyDictionary(){
+			var result = api.GetAllVehicleInvestments();
+
+			result.Should().BeEmpty();
+		}
+
+
+		[Fact]
+		public void InvestmentVehicleGetAllVehicleInvestmentsSingleVehicleReturnsDictionaryWithInvestments(){
+			var vehicleId = api.Add("401k", "test");
+			var tempInvestment = new StockInvestment("");
+			context.Portfolio.First().Investments.Add(tempInvestment);
+			context.SaveChanges();
+			api.AddInvestmentToVehicle(vehicleId, tempInvestment.InvestmentId);
+
+			var result = api.GetAllVehicleInvestments();
+
+			result.Should().ContainSingle();
+			result.ContainsKey(vehicleId).Should().BeTrue();
+			result[vehicleId].Should().ContainSingle();
+			result[vehicleId].First().Should().Be(tempInvestment);
+		}
+
+		[Fact]
+		public void InvestmentVehicleGetAllVehicleInvestmentsMultipleVehiclesReturnsDictionaryWithInvestments(){
+			var vehicleId = api.Add("401k", "test");
+			var tempInvestment = new StockInvestment("");
+			context.Portfolio.First().Investments.Add(tempInvestment);
+			context.SaveChanges();
+			api.AddInvestmentToVehicle(vehicleId, tempInvestment.InvestmentId);
+
+			var vehicleId2 = api.Add("401k", "test2");
+			var tempInvestment2 = new StockInvestment("");
+			context.Portfolio.First().Investments.Add(tempInvestment2);
+			context.SaveChanges();
+			api.AddInvestmentToVehicle(vehicleId2, tempInvestment2.InvestmentId);
+
+			var result = api.GetAllVehicleInvestments();
+
+			result.Should().HaveCount(2);
+			result.ContainsKey(vehicleId).Should().BeTrue();
+			result[vehicleId].Should().ContainSingle();
+			result[vehicleId].First().Should().Be(tempInvestment);
+			result.ContainsKey(vehicleId2).Should().BeTrue();
+			result[vehicleId2].Should().ContainSingle();
+			result[vehicleId2].First().Should().Be(tempInvestment2);
+
+		}
 	}
 }
