@@ -50,7 +50,7 @@ namespace RetireSimple.Backend.Controllers {
 				var type = body["vehicleType"];
 				body.Remove("vehicleType");
 
-				// var id = _vehicleApi.Add(type, body);
+				var id = _vehicleApi.Add(type, body);
 
 				//Check if we got analysis parameters
 				if (body.Keys.Any(k => k.StartsWith("analysis_"))) {
@@ -58,7 +58,7 @@ namespace RetireSimple.Backend.Controllers {
 						body.Where(kvp => kvp.Key.StartsWith("analysis_"))
 							.ToDictionary(kvp => kvp.Key.Remove(0, 9), kvp => kvp.Value);
 
-					// _vehicleApi.SetAnalysisOptions(id, analysisOptions);
+					_vehicleApi.Update(id, analysisOptions);
 				}
 
 				// return Ok(id);
@@ -114,14 +114,14 @@ namespace RetireSimple.Backend.Controllers {
 			}
 
 			try {
-				// _vehicleApi.Update(id, body);
 				if (body.Keys.Any(k => k.StartsWith("analysis_"))) {
 					var analysisOptions =
 						body.Where(kvp => kvp.Key.StartsWith("analysis_"))
 							.ToDictionary(kvp => kvp.Key.Remove(0, 9), kvp => kvp.Value);
-
-					// _vehicleApi.UpdateAnalysisOptions(id, analysisOptions);
+					_vehicleApi.UpdateAnalysisOverrides(id, analysisOptions);
 				}
+
+				_vehicleApi.Update(id, body);	//This is fine, all unknown fields are currently ignored per API spec
 
 				return Ok();
 			}

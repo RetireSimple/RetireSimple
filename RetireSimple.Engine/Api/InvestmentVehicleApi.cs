@@ -70,7 +70,7 @@ namespace RetireSimple.Engine.Api {
 		/// a <see cref="CashInvestment"/> is created and bound to the internal
 		/// relationship fields.
 		/// </summary>
-		public int Add(string type, string name) {
+		public int Add(string type, OptionsDict options) {
 			InvestmentVehicleBase vehicle = type switch {
 				"401k" => new Vehicle401k(),
 				"403b" => new Vehicle403b(),
@@ -80,7 +80,8 @@ namespace RetireSimple.Engine.Api {
 				_ => throw new ArgumentException("Unknown Investment Vehicle type")
 			};
 
-			vehicle.InvestmentVehicleName = name;
+			vehicle.InvestmentVehicleName = options["name"];
+			vehicle.CashHoldings = decimal.Parse(options.GetValueOrDefault("cashHoldings", "0"));
 			_context.Portfolio.First().InvestmentVehicles.Add(vehicle);
 			_context.SaveChanges();
 
@@ -94,7 +95,6 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="vehicleId">ID of the InvestmentVehicleBase object</param>
 		/// <param name="investmentId">ID of the InvestmentBase object</param>
 		public void AddInvestmentToVehicle(int vehicleId, int investmentId) {
-			//TODO Inline validation (eventually)
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
 				throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
 			}
@@ -115,7 +115,6 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="investmentId"></param>
 		/// <exception cref="ArgumentException">If the investment or investment vehicle does not exist, or if the investment is not found in the investment vehicle</exception>
 		public void RemoveInvestmentFromVehicle(int vehicleId, int investmentId) {
-			//TODO Inline validation (eventually)
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
 				throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
 			}
@@ -134,8 +133,11 @@ namespace RetireSimple.Engine.Api {
 			_context.SaveChanges();
 		}
 
+		/// <summary>
+		/// Removes an Investment Vehicle, along with all associated investments, models, and cash holdings.
+		/// </summary>
+		/// <param name="vehicleId"></param>
 		public void Remove(int vehicleId) {
-			//TODO Inline validation (eventually)
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
 				throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
 			}
@@ -146,34 +148,39 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		///	Updates the name of the investment vehicle. Throws an <see cref="ArgumentException"/>
-		/// if the vehicle does not exist.
+		///	Updates the name/cash holdings of the investment vehicle. Throws an <see cref="ArgumentException"/>
+		/// if the vehicle does not exist. Ignores unkonwn fields present in <paramref name="options"/>.
 		/// </summary>
 		/// <param name="vehicleId"></param>
 		/// <param name="name">The new name of the Vehicle </param>
-		public void UpdateName(int vehicleId, string name) {
+		public void Update(int vehicleId, OptionsDict options) {
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
 				throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
 			}
 
 			var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
-			vehicle.InvestmentVehicleName = name;
-			_context.SaveChanges();
-		}
 
-		/// <summary>
-		///	Updates the cash contributions in the investment vehicle. Throws an <see cref="ArgumentException"/>
-		/// if the vehicle does not exist.
-		/// </summary>
-		/// <param name="vehicleId"></param>
-		/// <param name="amount"></param>
-		public void UpdateCashContributions(int vehicleId, decimal amount) {
-			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
-				throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
+			//NOTE For now there are only two effective fields that can be updated, all other fields are
+			//NOTE ignored. This is somewhat by intention.
+
+			if (options.ContainsKey("name")) {
+				if (!string.IsNullOrWhiteSpace(options["name"])) {
+					vehicle.InvestmentVehicleName = options["name"];
+				}
+				else {
+					throw new ArgumentException("Name cannot be empty");
+				}
 			}
 
-			var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
-			vehicle.CashHoldings = amount;
+			if (options.ContainsKey("cashHoldings")) {
+				if (!string.IsNullOrWhiteSpace(options["cashHoldings"])) {
+					vehicle.CashHoldings = decimal.Parse(options["cashHoldings"]);
+				}
+				else {
+					throw new ArgumentException("Cash Holdings cannot be empty");
+				}
+			}
+
 			_context.SaveChanges();
 		}
 
