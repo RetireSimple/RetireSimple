@@ -146,6 +146,38 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
+		///	Updates the name of the investment vehicle. Throws an <see cref="ArgumentException"/>
+		/// if the vehicle does not exist.
+		/// </summary>
+		/// <param name="vehicleId"></param>
+		/// <param name="name">The new name of the Vehicle </param>
+		public void UpdateName(int vehicleId, string name) {
+			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
+				throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
+			}
+
+			var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
+			vehicle.InvestmentVehicleName = name;
+			_context.SaveChanges();
+		}
+
+		/// <summary>
+		///	Updates the cash contributions in the investment vehicle. Throws an <see cref="ArgumentException"/>
+		/// if the vehicle does not exist.
+		/// </summary>
+		/// <param name="vehicleId"></param>
+		/// <param name="amount"></param>
+		public void UpdateCashContributions(int vehicleId, decimal amount) {
+			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
+				throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
+			}
+
+			var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
+			vehicle.CashHoldings = amount;
+			_context.SaveChanges();
+		}
+
+		/// <summary>
 		/// Updates the <see cref="InvestmentVehicleBase.AnalysisOptionsOverrides"/> with the
 		/// specified analysis option and option value. No actual validation of the value with
 		/// respect to the analysis option is performed in this method. If <paramref name="value"/>
@@ -157,25 +189,21 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="value"></param>
 		/// <exception cref="ArgumentException">If the specified option does not exist yet in
 		/// the overrides and <paramref name="value"/> is null</exception>
-		public void UpdateAnalysisOverrides(int vehicleId, string option, string? value) {
-			//TODO Inline validation (eventually)
+		public void UpdateAnalysisOverrides(int vehicleId, OptionsDict options) {
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
-				throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
+				throw new ArgumentException("Investment not found");
 			}
 
-			var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
-
-			if (!vehicle.AnalysisOptionsOverrides.ContainsKey(option) && value is null) {
-				throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not have the analysis option {option} set, so it cannot be removed!");
+			var investmentVehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
+			foreach (var (key, value) in options) {
+				if (value == "") {
+					investmentVehicle.AnalysisOptionsOverrides.Remove(key);
+				}
+				else {
+					investmentVehicle.AnalysisOptionsOverrides[key] = value;
+				}
 			}
-
-			if (value is null) {
-				vehicle.AnalysisOptionsOverrides.Remove(option);
-			}
-			else {
-
-				vehicle.AnalysisOptionsOverrides[option] = value;
-			}
+			investmentVehicle.LastUpdated = DateTime.Now;
 
 			_context.SaveChanges();
 		}

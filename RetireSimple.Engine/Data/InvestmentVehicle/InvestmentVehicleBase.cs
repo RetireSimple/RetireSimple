@@ -22,8 +22,16 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 		public int? InvestmentVehicleModelId { get; set; }
 		[JsonIgnore] public InvestmentVehicleModel? InvestmentVehicleModel { get; set; }
 
-		//A specialized field to hold cash that is not allocated to a specific investment in the vehicle.
-		public decimal CashHoldings { get; set; }
+		public OptionsDict InvestmentVehicleData { get; set; } = new OptionsDict();
+
+		// A specialized field to hold cash that is not allocated to a specific investment in the vehicle.
+		[NotMapped, JsonIgnore]
+		public decimal CashHoldings {
+			get => decimal.Parse(this.InvestmentVehicleData["cashHoldings"]);
+			set => this.InvestmentVehicleData["cashHoldings"] = value.ToString();
+		}
+
+		public DateTime LastUpdated { get; set; }
 
 		public OptionsDict AnalysisOptionsOverrides { get; set; } = new OptionsDict();
 
@@ -74,7 +82,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 
 		private List<InvestmentModel> GetContainedInvestmentModels(OptionsDict options) {
 			var models = new List<InvestmentModel>();
-			foreach(var investment in Investments) {
+			foreach (var investment in Investments) {
 				models.Add(investment.InvokeAnalysis(options));
 			}
 
@@ -84,11 +92,11 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 		private OptionsDict MergeOverrideOptions(OptionsDict manualOptions) {
 			var mergedOptions = new OptionsDict(manualOptions);
 
-			foreach(var key in AnalysisOptionsOverrides.Keys) {
+			foreach (var key in AnalysisOptionsOverrides.Keys) {
 				mergedOptions.TryAdd(key, AnalysisOptionsOverrides[key]);
 			}
 
-			foreach(var key in DefaultInvestmentVehicleOptions.Keys) {
+			foreach (var key in DefaultInvestmentVehicleOptions.Keys) {
 				mergedOptions.TryAdd(key, DefaultInvestmentVehicleOptions[key]);
 			}
 
@@ -113,7 +121,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 										models.Select(m => m.AvgModelData[model]).Sum());
 
 			//If cash-based contributions exist, transform all models to include them
-			if(cashContribution != null) {
+			if (cashContribution != null) {
 				minModel = minModel.Select((val, idx) => val + cashContribution[idx]);
 				maxModel = maxModel.Select((val, idx) => val + cashContribution[idx]);
 				avgModel = avgModel.Select((val, idx) => val + cashContribution[idx]);
@@ -168,7 +176,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 
 			//If cash-based contributions exist, transform all models to include them
 			//This version assumes that cash contributions are already taxed
-			if(cashContribution != null) {
+			if (cashContribution != null) {
 				minModel = minModel.Select((val, idx) => val + cashContribution[idx]);
 				maxModel = maxModel.Select((val, idx) => val + cashContribution[idx]);
 				avgModel = avgModel.Select((val, idx) => val + cashContribution[idx]);
@@ -236,11 +244,21 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 				.IsRequired(false)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			builder.Property(i => i.CashHoldings)
-				.IsRequired(true)
-				.HasDefaultValue(0.0m);
+			builder.Property(i => i.LastUpdated)
+				.HasColumnType("datetime2(7)");
 
 #pragma warning disable CS8604 // Possible null reference argument.
+			builder.Property(i => i.InvestmentVehicleData)
+				.HasConversion(
+					v => JsonSerializer.Serialize(v, options),
+					v => JsonSerializer.Deserialize<OptionsDict>(v, options) ?? new OptionsDict()
+				)
+				.Metadata.SetValueComparer(new ValueComparer<OptionsDict>(
+					(c1, c2) => c1.SequenceEqual(c2),
+					c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+					c => c.ToDictionary(entry => entry.Key, entry => entry.Value)
+				));
+
 			builder.Property(i => i.AnalysisOptionsOverrides)
 				.HasConversion(
 					v => JsonSerializer.Serialize(v, options),
