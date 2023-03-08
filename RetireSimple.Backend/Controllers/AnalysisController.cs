@@ -44,9 +44,9 @@ namespace RetireSimple.Backend.Controllers {
 		public ActionResult GetVehicleAnalysis(int id, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] OptionsDict? options) {
 			//try {
 			if (options is null || options.Count == 0) options = null;
-			// var model = _vehicleApi.GetAnalysis(id, options);
-			//return Ok(model);
-			return Ok();
+			var model = _vehicleApi.GetAnalysis(id, options);
+			return Ok(model);
+			// return Ok();
 			//}
 			//catch (InvalidOperationException) {
 			//	return NotFound("Investment not found or has an unknown analysis module defined");

@@ -155,9 +155,9 @@ namespace RetireSimple.Tests.Analysis {
 																	decimal initialHoldings,
 																	InvestmentModel expected) {
 			var vehicle = new Vehicle401k { CashHoldings = initialHoldings };
-			var cashSim = vehicle.SimulateCashContributionsDefaultAfterTax(options);
+			var cashSim = VehicleDefaultAS.SimulateCashContributionsDefaultAfterTax(vehicle, options);
 
-			var result = InvestmentVehicleBase.GeneratePreTaxModelDefaultAfterTaxVehicle(options, models, cashSim);
+			var result = VehicleDefaultAS.GeneratePreTaxModelDefaultAfterTaxVehicle(options, models, cashSim);
 
 			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
 			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
@@ -222,9 +222,10 @@ namespace RetireSimple.Tests.Analysis {
 																	decimal initialHoldings,
 																	InvestmentModel expected) {
 			var vehicle = new Vehicle401k { CashHoldings = initialHoldings };
-			var cashSim = vehicle.SimulateCashContributionsDefaultAfterTax(options);
+			var cashSim = VehicleDefaultAS.SimulateCashContributionsDefaultAfterTax(vehicle, options);
 
-			var result = InvestmentVehicleBase.GeneratePostTaxModelDefaultAfterTaxVehicle(options, models, cashSim);
+
+			var result = VehicleDefaultAS.GeneratePostTaxModelDefaultAfterTaxVehicle(options, models, cashSim);
 
 			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
 			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
@@ -272,9 +273,9 @@ namespace RetireSimple.Tests.Analysis {
 																	decimal initialHoldings,
 																	InvestmentModel expected) {
 			var vehicle = new Vehicle401k { CashHoldings = initialHoldings };
-			var cashSim = vehicle.SimulateCashContributionsDefaultAfterTax(options);
+			var cashSim = VehicleDefaultAS.SimulateCashContributionsDefaultAfterTax(vehicle, options);
 
-			var result = InvestmentVehicleBase.GeneratePreTaxModelDefaultPreTaxVehicle(options, models, cashSim);
+			var result = VehicleDefaultAS.GeneratePreTaxModelDefaultPreTaxVehicle(options, models, cashSim);
 
 			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
 			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);

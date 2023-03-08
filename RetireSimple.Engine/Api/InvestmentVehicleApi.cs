@@ -227,6 +227,7 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="id"></param>
 		/// <param name="options"></param>
 		/// <returns></returns>
+		//TODO Need to figure out how to add testing (is based on InvestmentApi logic that works)
 		public InvestmentVehicleModel GetAnalysis(int id, OptionsDict? options = null) {
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == id)) {
 				throw new ArgumentException("Investment Vehicle not found");
@@ -272,26 +273,28 @@ namespace RetireSimple.Engine.Api {
 
 		//TODO: Implement Later when adding vehicle breakdowns
 		public List<InvestmentModel> GetVehicleInvestmentModels(int vehicleId, OptionsDict? options = null) {
-			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
-				throw new ArgumentException("Investment Vehicle not found");
-			}
+			// if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
+			// 	throw new ArgumentException("Investment Vehicle not found");
+			// }
 
-			var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
-			var modelList = new List<InvestmentModel>();
+			// var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
+			// var modelList = new List<InvestmentModel>();
 
-			if(vehicle.Investments.Any()){
-				foreach(var investment in vehicle.Investments){
-					if(investment.InvestmentModel is not null){
-						modelList.Add(investment.InvestmentModel);
-					} else {
-						var model = investment.InvokeAnalysis(options ?? new OptionsDict());
-						investment.InvestmentModel = model;
-						modelList.Add(model);
-					}
-				}
-			}
+			// if(vehicle.Investments.Any()){
+			// 	foreach(var investment in vehicle.Investments){
+			// 		if(investment.InvestmentModel is not null){
+			// 			modelList.Add(investment.InvestmentModel);
+			// 		} else {
+			// 			var model = investment.InvokeAnalysis(options ?? new OptionsDict());
+			// 			investment.InvestmentModel = model;
+			// 			modelList.Add(model);
+			// 		}
+			// 	}
+			// }
 
-			return modelList;
+			// return modelList;
+
+			throw new NotImplementedException();
 		}
 
 	}
