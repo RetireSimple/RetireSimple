@@ -247,6 +247,9 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 			builder.Property(i => i.LastUpdated)
 				.HasColumnType("datetime2(7)");
 
+			builder.Navigation(i => i.Investments)
+				.AutoInclude();
+
 #pragma warning disable CS8604 // Possible null reference argument.
 			builder.Property(i => i.InvestmentVehicleData)
 				.HasConversion(

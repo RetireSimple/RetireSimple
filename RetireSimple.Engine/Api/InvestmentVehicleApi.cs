@@ -198,7 +198,7 @@ namespace RetireSimple.Engine.Api {
 		/// the overrides and <paramref name="value"/> is null</exception>
 		public void UpdateAnalysisOverrides(int vehicleId, OptionsDict options) {
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
-				throw new ArgumentException("Investment not found");
+				throw new ArgumentException("Investment Vehicle not found");
 			}
 
 			var investmentVehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
@@ -216,5 +216,84 @@ namespace RetireSimple.Engine.Api {
 		}
 
 
+		/// <summary>
+		/// Returns a model of the vehicle's value and based on the vehicle's defined analysis, set options, and (optionally)
+		/// any parameters that should be used as an override. If an existing <see cref="InvestmentVehicleModel"/>
+		/// already exists and the investment's last change is before the time the model was generated, no analysis
+		/// is executed and the existing model is returned. If <paramref name="options"/> is passed with a non-null
+		/// value, the analysis is re-executed regardless if the model is up-to-date.
+		///
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="options"></param>
+		/// <returns></returns>
+		public InvestmentVehicleModel GetAnalysis(int id, OptionsDict? options = null) {
+			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == id)) {
+				throw new ArgumentException("Investment Vehicle not found");
+			}
+
+			var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == id);
+			if ((options is not null && options.Count > 0) ||
+			vehicle.InvestmentVehicleModel is null ||
+			vehicle.LastUpdated > vehicle.InvestmentVehicleModel.LastUpdated) {
+				var vehicleModel = vehicle.GenerateAnalysis(options ?? new OptionsDict());
+				vehicle.InvestmentVehicleModel = vehicleModel;
+				var updateTime = DateTime.Now;
+				if (vehicle.InvestmentVehicleModel is not null) {
+					vehicle.InvestmentVehicleModel.LastUpdated = updateTime;
+					vehicle.InvestmentVehicleModel.MinModelData = vehicleModel.MinModelData;
+					vehicle.InvestmentVehicleModel.AvgModelData = vehicleModel.AvgModelData;
+					vehicle.InvestmentVehicleModel.MaxModelData = vehicleModel.MaxModelData;
+					vehicle.InvestmentVehicleModel.TaxDeductedMinModelData = vehicleModel.TaxDeductedMinModelData;
+					vehicle.InvestmentVehicleModel.TaxDeductedAvgModelData = vehicleModel.TaxDeductedAvgModelData;
+					vehicle.InvestmentVehicleModel.TaxDeductedMaxModelData = vehicleModel.TaxDeductedMaxModelData;
+				}
+				else {
+					vehicleModel.InvestmentVehicleId = vehicle.InvestmentVehicleId;
+					vehicleModel.LastUpdated = updateTime;
+					vehicle.InvestmentVehicleModel = vehicleModel;
+				}
+
+				vehicle.LastUpdated = updateTime;
+				_context.SaveChanges();
+			}
+
+			//Zero Floor Data
+			var tempModel = vehicle.InvestmentVehicleModel;
+			tempModel.MinModelData = tempModel.MinModelData.Select(d => Math.Max(d, 0)).ToList();
+			tempModel.AvgModelData = tempModel.AvgModelData.Select(d => Math.Max(d, 0)).ToList();
+			tempModel.MaxModelData = tempModel.MaxModelData.Select(d => Math.Max(d, 0)).ToList();
+			tempModel.TaxDeductedMinModelData = tempModel.TaxDeductedMinModelData.Select(d => Math.Max(d, 0)).ToList();
+			tempModel.TaxDeductedAvgModelData = tempModel.TaxDeductedAvgModelData.Select(d => Math.Max(d, 0)).ToList();
+			tempModel.TaxDeductedMaxModelData = tempModel.TaxDeductedMaxModelData.Select(d => Math.Max(d, 0)).ToList();
+
+			return tempModel;
+		}
+
+		//TODO: Implement Later when adding vehicle breakdowns
+		public List<InvestmentModel> GetVehicleInvestmentModels(int vehicleId, OptionsDict? options = null) {
+			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
+				throw new ArgumentException("Investment Vehicle not found");
+			}
+
+			var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
+			var modelList = new List<InvestmentModel>();
+
+			if(vehicle.Investments.Any()){
+				foreach(var investment in vehicle.Investments){
+					if(investment.InvestmentModel is not null){
+						modelList.Add(investment.InvestmentModel);
+					} else {
+						var model = investment.InvokeAnalysis(options ?? new OptionsDict());
+						investment.InvestmentModel = model;
+						modelList.Add(model);
+					}
+				}
+			}
+
+			return modelList;
+		}
+
 	}
 }
+

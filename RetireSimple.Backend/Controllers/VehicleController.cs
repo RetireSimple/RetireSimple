@@ -32,7 +32,6 @@ namespace RetireSimple.Backend.Controllers {
 			}
 		}
 
-		//TODO Not Finished
 		[HttpPost]
 		[Route("Add")]
 		public ActionResult AddVehicle([FromBody] JsonDocument requestBody) {
