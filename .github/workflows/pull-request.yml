@@ -1,0 +1,94 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  engine-build:
+    name: RetireSimple.Engine
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.x
+      - name: Restore NuGet Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Restore .NET Projects
+        run: dotnet restore
+      - name: Build Engine
+        run: dotnet build ./RetireSimple.Engine/RetireSimple.Engine.csproj --no-restore --no-dependencies
+      - name: Build Test Project
+        run: dotnet build ./RetireSimple.Tests/RetireSimple.Tests.csproj --no-restore --no-dependencies
+      - name: Execute Tests
+        run: dotnet test --no-build --verbosity normal
+
+  # Verify Cross-Platform Build Compatibility
+  backend-build:
+    name: RetireSimple.Backend
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: windows-latest
+    needs: engine-build
+    steps:
+      - uses: actions/checkout@v3
+      - name: Restore NuGet Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+          cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
+      - name: Init Frontend Dependencies
+        run: |
+          cd RetireSimple.Frontend
+          pnpm install
+          cd ..
+      - name: Build Backend
+        run: dotnet build ./RetireSimple.Backend/RetireSimple.Backend.csproj
+
+  frontend-build:
+    name: RetireSimple.Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+          cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
+      - name: Build
+        run: |
+          cd RetireSimple.Frontend
+          pnpm install
+          pnpm run build
+          cd ..
+      - name: Run Tests
+        run: |
+          cd RetireSimple.Frontend
+          pnpm run test
+          cd ..
