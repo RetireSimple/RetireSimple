@@ -147,7 +147,7 @@ jobs:
   build-macos:
     name: MacOS Build
     runs-on: macos-latest
-    needs: [frontend-build, get-info]
+    needs: [get-info]
     strategy:
       fail-fast: true
       matrix:
