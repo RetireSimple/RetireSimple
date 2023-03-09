@@ -21,7 +21,6 @@ jobs:
         id: commithash
         run: echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-  # Backend build is done in publish, so only rely on engine and do it on push to main
   build-win:
     name: Build Executable (Windows)
     runs-on: windows-latest
@@ -137,6 +136,7 @@ jobs:
       - name: Zip Executable
         run: |
           cd publish/RetireSimple-${{ matrix.platform }}
+          chmod +x RetireSimple.Backend
           7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip .
       - name: Upload Artifact for Release Job
         uses: actions/upload-artifact@v3
@@ -204,7 +204,7 @@ jobs:
           sudo ln -s /usr/local/Cellar/platypus/5.3/share/platypus /usr/local/share/platypus
         # Unfortunately, the platypus executable expects its resources in /usr/local/share/platypus
         # and not the homebrew cellar. But my god symlinks are based
-      - name: Prepare to Create Bundled App
+      - name: Create MacOS App Bundle
         run: |
           cd publish/RetireSimple-${{ matrix.platform }}
           echo "Creating Init Script"
@@ -232,7 +232,7 @@ jobs:
       - name: Zip Bundled Executable
         run: |
           cd publish/RetireSimple-${{ matrix.platform }}
-          7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip .
+          7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip RetireSimple.app
       - name: Upload Artifact for Release Job
         uses: actions/upload-artifact@v3
         with:
