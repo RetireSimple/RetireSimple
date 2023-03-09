@@ -20,7 +20,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\RetireSimple.Engine\RetireSimple.Engine.csproj" />
-		<ProjectReference Include="..\RetireSimple.Frontend\RetireSimple.Frontend.esproj">
+		<ProjectReference Include="..\RetireSimple.Frontend\RetireSimple.Frontend.esproj" Condition="'$(OS)' == 'Windows NT'">
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 		</ProjectReference>
 	</ItemGroup>
