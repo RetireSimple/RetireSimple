@@ -11,19 +11,21 @@ namespace RetireSimple.Backend.Controllers {
 	public class AnalysisController : ControllerBase {
 		private readonly InvestmentApi _investmentApi;
 		private readonly PortfolioApi _portfolioApi;
+		private readonly InvestmentVehicleApi _vehicleApi;
 
 		public AnalysisController(EngineDbContext context) {
 			_investmentApi = new(context);
 			_portfolioApi = new(context);
+			_vehicleApi = new(context);
 		}
 
 		[HttpPost]
 		[Route("Investment/{id}")]
 		public ActionResult GetAnalysis(int id, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] OptionsDict? options) {
 			//try {
-				if (options is null || options.Count == 0) options = null;
-				var model = _investmentApi.GetAnalysis(id, options);
-				return Ok(model);
+			if (options is null || options.Count == 0) options = null;
+			var model = _investmentApi.GetAnalysis(id, options);
+			return Ok(model);
 			//}
 			//catch (InvalidOperationException) {
 			//	return NotFound("Investment not found or has an unknown analysis module defined");
@@ -33,8 +35,22 @@ namespace RetireSimple.Backend.Controllers {
 		[HttpPost]
 		[Route("Investment")]
 		public ActionResult GetAllInvestmentModels() {
-			var models  = _investmentApi.GetAllAnalysis();
+			var models = _investmentApi.GetAllAnalysis();
 			return Ok(models);
+		}
+
+		[HttpPost]
+		[Route("Vehicle/{id}")]
+		public ActionResult GetVehicleAnalysis(int id, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] OptionsDict? options) {
+			//try {
+			if (options is null || options.Count == 0) options = null;
+			var model = _vehicleApi.GetAnalysis(id, options);
+			return Ok(model);
+			// return Ok();
+			//}
+			//catch (InvalidOperationException) {
+			//	return NotFound("Investment not found or has an unknown analysis module defined");
+			//}
 		}
 
 

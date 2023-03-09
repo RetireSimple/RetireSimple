@@ -21,10 +21,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Include="..\LICENSE">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -35,5 +35,11 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>RetireSimple.Tests</_Parameter1>
+		</AssemblyAttribute>
 	</ItemGroup>
 </Project>

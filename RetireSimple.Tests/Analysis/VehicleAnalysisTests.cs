@@ -1,12 +1,96 @@
 namespace RetireSimple.Tests.Analysis {
-	public class VehicleAnalysisTests {
-		//The purpose of these tests are to check if the default models are aggregated properly
-		//set of provide a set of mock models to aggregate for simplicity
 
+	public class VehicleAnalysisTests {
+
+		[Theory,
+		MemberData(nameof(VehicleAnalysisTestData.CashSimVars),
+					MemberType = typeof(VehicleAnalysisTestData))]
+		public void SimulateCashContributions_DefaultAfterTaxReturnsValues(OptionsDict options, decimal initialHoldings, List<decimal> expected) {
+			var vehicle = new Vehicle401k { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+
+			var result = vehicle.SimulateCashContributions(options);
+
+			result.Should().HaveSameCount(expected);
+			result.Should().BeEquivalentTo(expected);
+		}
+
+		[Theory,
+		MemberData(nameof(VehicleAnalysisTestData.CashSimVars_PostTax),
+					MemberType = typeof(VehicleAnalysisTestData))]
+		public void SimulateCashContributions_DefaultPreTaxReturnsValues(OptionsDict options, decimal initialHoldings, List<decimal> expected) {
+			var vehicle = new VehicleRothIRA { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+
+			var result = vehicle.SimulateCashContributions(options);
+
+			result.Should().HaveSameCount(expected);
+			result.Should().BeEquivalentTo(expected);
+		}
+
+		[Theory,
+		MemberData(nameof(VehicleAnalysisTestData.AggregateSimVars_PreTax),
+					MemberType = typeof(VehicleAnalysisTestData))]
+		public void GeneratePreTaxModel_DefaultAfterTaxReturnsValues(List<InvestmentModel> models,
+																	OptionsDict options,
+																	decimal initialHoldings,
+																	InvestmentModel expected) {
+			var vehicle = new Vehicle401k { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+			var combinedOptions = vehicle.MergeOverrideOptions(options);    //Done in the GenerateAnalysis() call
+			var cashSim = VehicleDefaultAS.SimulateCashContributionsDefaultAfterTax(vehicle, combinedOptions);
+
+			var result = VehicleDefaultAS.GeneratePreTaxModelDefaultAfterTaxVehicle(combinedOptions, models, cashSim);
+
+			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
+			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
+			result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
+		}
+
+
+		[Theory,
+		MemberData(nameof(VehicleAnalysisTestData.AggregateSimVars_PostTax),
+			MemberType = typeof(VehicleAnalysisTestData))]
+		public void GeneratePostTaxModel_DefaultAfterTaxReturnsValues(List<InvestmentModel> models,
+																	OptionsDict options,
+																	decimal initialHoldings,
+																	InvestmentModel expected) {
+			var vehicle = new Vehicle401k { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+			var combinedOptions = vehicle.MergeOverrideOptions(options);
+			var cashSim = VehicleDefaultAS.SimulateCashContributionsDefaultAfterTax(vehicle, combinedOptions);
+
+			var result = VehicleDefaultAS.GeneratePostTaxModelDefaultAfterTaxVehicle(combinedOptions, models, cashSim);
+
+			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
+			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
+			result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
+		}
+
+
+		[Theory(Skip = "Needs Fixing"),
+		MemberData(nameof(VehicleAnalysisTestData.AggregateSimVarsPreTaxVehicle_PreTax),
+					MemberType = typeof(VehicleAnalysisTestData))]
+		public void GeneratePreTaxModel_DefaultPreTaxReturnsValues(List<InvestmentModel> models,
+																	OptionsDict options,
+																	decimal initialHoldings,
+																	InvestmentModel expected) {
+			var vehicle = new Vehicle401k { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+			var combinedOptions = vehicle.MergeOverrideOptions(options);
+			var cashSim = VehicleDefaultAS.SimulateCashContributionsDefaultAfterTax(vehicle, combinedOptions);
+
+			var result = VehicleDefaultAS.GeneratePreTaxModelDefaultPreTaxVehicle(combinedOptions, models, cashSim);
+
+			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
+			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
+			result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
+		}
+	}
+
+	static class VehicleAnalysisTestData {
+		/********************************************************
+		 * Defaults + Mock Data
+		 ********************************************************/
 		public static readonly OptionsDict DefaultOptions = new() {
-			["AnalysisLength"] = "10",
-			["CashContribution"] = "0",
-			["VehicleTaxPercentage"] = "0.3",
+			["analysisLength"] = "10",
+			["cashContribution"] = "0",
+			["vehicleTaxPercentage"] = "0.3",
 		};
 
 		public static readonly List<InvestmentModel> MockModels = new(){
@@ -55,64 +139,47 @@ namespace RetireSimple.Tests.Analysis {
 			},
 		};
 
+
+		/********************************************************
+		 * 		 Test Parameters
+		 ********************************************************/
 		public static readonly IEnumerable<object[]> CashSimVars = new List<object[]> {
 			new object[] {
-				new OptionsDict(DefaultOptions){ ["CashContribution"] = "0" },
+				new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" },
 				0.0m,
-				new List<decimal>(){0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+				Enumerable.Repeat(0m, 10).ToList(),
 			},
 			new object[] {
-				new OptionsDict(DefaultOptions){ ["CashContribution"] = "10" },
+				new OptionsDict(DefaultOptions){ ["cashContribution"] = "10" },
 				0.0m,
 				new List<decimal>(){0, 10, 20, 30, 40, 50, 60, 70, 80, 90}
 			},
 			new object[] {
-				new OptionsDict(DefaultOptions){ ["CashContribution"] = "0" },
+				new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" },
 				100.0m,
-				new List<decimal>(){100.0m, 100.0m, 100.0m, 100.0m, 100.0m, 100.0m, 100.0m, 100.0m, 100.0m, 100.0m}
+				Enumerable.Repeat(100m, 10).ToList()
 			},
 			new object[] {
-				new OptionsDict(DefaultOptions){ ["CashContribution"] = "10"},
+				new OptionsDict(DefaultOptions){ ["cashContribution"] = "10"},
 				100.0m,
 				new List<decimal>(){100m, 110m, 120m, 130m, 140m, 150m, 160m, 170m, 180m, 190m}
 			}
 		};
-		[Theory,
-		MemberData(nameof(CashSimVars))]
-		public void SimulateCashContributions_DefaultAfterTaxReturnsValues(OptionsDict options, decimal initialHoldings, List<decimal> expected) {
-			var vehicle = new Vehicle401k { CashHoldings = initialHoldings };
-
-			var result = vehicle.SimulateCashContributions(options);
-
-			result.Should().HaveSameCount(expected);
-			result.Should().BeEquivalentTo(expected);
-		}
 
 		public static readonly IEnumerable<object[]> CashSimVars_PostTax = new List<object[]> {
-			new object[] { new OptionsDict(DefaultOptions){ ["CashContribution"] = "0" }, 0.0m,
+			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" }, 0.0m,
 				new List<decimal>(){0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 			},
-			new object[] { new OptionsDict(DefaultOptions){ ["CashContribution"] = "10" }, 0.0m,
+			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "10" }, 0.0m,
 				new List<decimal>(){0, 7,14, 21, 28, 35, 42, 49, 56, 63}
 			},
-			new object[] { new OptionsDict(DefaultOptions){ ["CashContribution"] = "0" }, 100.0m,
+			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" }, 100.0m,
 				new List<decimal>(){100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, }
 			},
-			new object[] { new OptionsDict(DefaultOptions){ ["CashContribution"] = "10" }, 100.0m,
+			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "10" }, 100.0m,
 				new List<decimal>(){100m, 107m, 114m, 121m, 128m, 135m, 142m, 149m, 156m, 163m}
 			}
 		};
-		[Theory,
-		MemberData(nameof(CashSimVars_PostTax))]
-		public void SimulateCashContributions_DefaultPreTaxReturnsValues(OptionsDict options, decimal initialHoldings, List<decimal> expected) {
-			var vehicle = new VehicleRothIRA { CashHoldings = initialHoldings };
-
-			var result = vehicle.SimulateCashContributions(options);
-
-			result.Should().HaveSameCount(expected);
-			result.Should().BeEquivalentTo(expected);
-		}
-
 
 		public static readonly IEnumerable<object[]> AggregateSimVars_PreTax = new List<object[]> {
 			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m, ExpectedMockModels[0] },
@@ -148,22 +215,6 @@ namespace RetireSimple.Tests.Analysis {
 				}
 			},
 		};
-		[Theory,
-			MemberData(nameof(AggregateSimVars_PreTax))]
-		public void GeneratePreTaxModel_DefaultAfterTaxReturnsValues(List<InvestmentModel> models,
-																	OptionsDict options,
-																	decimal initialHoldings,
-																	InvestmentModel expected) {
-			var vehicle = new Vehicle401k { CashHoldings = initialHoldings };
-			var cashSim = vehicle.SimulateCashContributionsDefaultAfterTax(options);
-
-			var result = InvestmentVehicleBase.GeneratePreTaxModelDefaultAfterTaxVehicle(options, models, cashSim);
-
-			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
-			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
-			result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
-		}
-
 
 		public static readonly IEnumerable<object[]> AggregateSimVars_PostTax = new List<object[]> {
 			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m,
@@ -215,21 +266,6 @@ namespace RetireSimple.Tests.Analysis {
 					MaxModelData = ExpectedMockModels[3].MaxModelData.Select(x => (x+100) * 0.7m).ToList(),
 				}},
 		};
-		[Theory,
-			MemberData(nameof(AggregateSimVars_PostTax))]
-		public void GeneratePostTaxModel_DefaultAfterTaxReturnsValues(List<InvestmentModel> models,
-																	OptionsDict options,
-																	decimal initialHoldings,
-																	InvestmentModel expected) {
-			var vehicle = new Vehicle401k { CashHoldings = initialHoldings };
-			var cashSim = vehicle.SimulateCashContributionsDefaultAfterTax(options);
-
-			var result = InvestmentVehicleBase.GeneratePostTaxModelDefaultAfterTaxVehicle(options, models, cashSim);
-
-			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
-			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
-			result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
-		}
 
 		public static readonly IEnumerable<object[]> AggregateSimVarsPreTaxVehicle_PreTax = new List<object[]> {
 			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m, ExpectedMockModels[0] },
@@ -265,21 +301,6 @@ namespace RetireSimple.Tests.Analysis {
 				}
 			},
 		};
-		[Theory(Skip = "Needs Fixing"),
-			MemberData(nameof(AggregateSimVarsPreTaxVehicle_PreTax))]
-		public void GeneratePreTaxModel_DefaultPreTaxReturnsValues(List<InvestmentModel> models,
-																	OptionsDict options,
-																	decimal initialHoldings,
-																	InvestmentModel expected) {
-			var vehicle = new Vehicle401k { CashHoldings = initialHoldings };
-			var cashSim = vehicle.SimulateCashContributionsDefaultAfterTax(options);
-
-			var result = InvestmentVehicleBase.GeneratePreTaxModelDefaultPreTaxVehicle(options, models, cashSim);
-
-			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
-			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
-			result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
-		}
 	}
 }
 

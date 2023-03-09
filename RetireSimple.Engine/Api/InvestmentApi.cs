@@ -177,7 +177,6 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="id"></param>
 		/// <param name="options"></param>
 		/// <returns></returns>
-		/// <exception cref="NotImplementedException"></exception>
 		public InvestmentModel GetAnalysis(int id, OptionsDict? options = null) {
 			if (!_context.Investment.Any(i => i.InvestmentId == id)) {
 				throw new ArgumentException("Investment not found");
@@ -194,8 +193,7 @@ namespace RetireSimple.Engine.Api {
 					investment.InvestmentModel.AvgModelData = model.AvgModelData;
 					investment.InvestmentModel.MaxModelData = model.MaxModelData;
 					investment.InvestmentModel.LastUpdated = updateTime;
-				}
-				else {
+				} else {
 					model.InvestmentId = investment.InvestmentId;
 					investment.InvestmentModel = model;
 
