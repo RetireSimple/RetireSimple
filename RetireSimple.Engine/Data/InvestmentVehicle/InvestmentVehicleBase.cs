@@ -91,7 +91,8 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 			return models;
 		}
 
-		private OptionsDict MergeOverrideOptions(OptionsDict manualOptions) {
+		//Internal because used in testing
+		internal OptionsDict MergeOverrideOptions(OptionsDict manualOptions) {
 			var mergedOptions = new OptionsDict(manualOptions);
 			foreach (var key in AnalysisOptionsOverrides.Keys) {
 				mergedOptions.TryAdd(key, AnalysisOptionsOverrides[key]);

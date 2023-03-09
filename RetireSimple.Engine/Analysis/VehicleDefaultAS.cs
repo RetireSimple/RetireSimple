@@ -14,11 +14,11 @@ namespace RetireSimple.Engine.Analysis {
 
 			var taxPercentage = decimal.Parse(options["vehicleTaxPercentage"]);
 			var postTaxModel = new InvestmentModel() {
-				MinModelData = preTaxModel.MinModelData.Select(v => v * (0 - taxPercentage))
+				MinModelData = preTaxModel.MinModelData.Select(v => v * (1 - taxPercentage))
 					.ToList(),
-				MaxModelData = preTaxModel.MaxModelData.Select(v => v * (0 - taxPercentage))
+				MaxModelData = preTaxModel.MaxModelData.Select(v => v * (1 - taxPercentage))
 					.ToList(),
-				AvgModelData = preTaxModel.AvgModelData.Select(v => v * (0 - taxPercentage))
+				AvgModelData = preTaxModel.AvgModelData.Select(v => v * (1 - taxPercentage))
 					.ToList()
 			};
 			return postTaxModel;
