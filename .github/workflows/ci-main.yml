@@ -209,7 +209,7 @@ jobs:
           cd publish/RetireSimple-${{ matrix.platform }}
           echo "Creating Init Script"
           echo '#!/bin/sh' > init.sh
-          echo "./RetireSimple.Backend" > init.sh
+          echo './RetireSimple.Backend' > init.sh
           chmod +x init.sh
           chmod +x RetireSimple.Backend
           platypus \
@@ -219,7 +219,6 @@ jobs:
             --author 'Alex Westerman, Ryan Nikolic' \
             --app-version ${{ vars.VERSION_PREFIX }}-nightly-${{ needs.get-info.output.hash }} \
             --overwrite \
-            --quit-after-execution \
             --bundle-identifier org.RetireSimple.RetireSimple \
             --bundled-file './appsettings.Development.json' \
             --bundled-file './appsettings.json' \
