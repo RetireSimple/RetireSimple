@@ -6,10 +6,19 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 
+//For Production builds, move DB to respective local appdata folder
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddCommandLine(args);
 builder.Configuration["Provider"] ??= "sqlite";
+var dbPath ="EngineDB.db";
+
+if(builder.Environment.IsProduction()){
+	dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RetireSimple", "EngineDB.db");
+	builder.Configuration["Provider"] = "sqlite";
+}
+
 
 builder.Services.AddControllers()
 	.AddJsonOptions(options => {
@@ -23,7 +32,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<EngineDbContext>(options => _ =
 	builder.Configuration["Provider"] switch {
 		"sqlite" =>
-			options.UseSqlite("Data Source=EngineDB.db"),
+			options.UseSqlite("Data Source=" + dbPath),
 		_ => throw new ArgumentException("Invalid provider")
 	});
 
