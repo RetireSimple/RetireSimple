@@ -75,42 +75,42 @@ jobs:
         run: |
           mkdir -p publish/RetireSimple-${{ matrix.platform }}/wwwroot
           cp -r RetireSimple.Frontend/build/* publish/RetireSimple-${{ matrix.platform }}/wwwroot
-      - name: Install + Setup Platypus
-        run: |
-          brew install platypus
-          sudo ln -s /usr/local/Cellar/platypus/5.3/share/platypus /usr/local/share/platypus
-        # Unfortunately, the platypus executable expects its resources in /usr/local/share/platypus
-        # and not the homebrew cellar. But my god symlinks are based
-      - name: Create MacOS App Bundle
-        run: |
-          cd publish/RetireSimple-${{ matrix.platform }}
-          echo "Creating Init Script"
-          echo '#!/bin/sh' > init.sh
-          echo './RetireSimple.Backend' > init.sh
-          chmod +x init.sh
-          chmod +x RetireSimple.Backend
-          platypus \
-            --name 'RetireSimple' \
-            --interface-type 'Text Window' \
-            --interpreter '/bin/sh' \
-            --author 'Alex Westerman, Ryan Nikolic' \
-            --app-version ${{ vars.VERSION_PREFIX }}-nightly-${{ needs.get-info.output.hash }} \
-            --overwrite \
-            --bundle-identifier org.RetireSimple.RetireSimple \
-            --bundled-file './appsettings.Development.json' \
-            --bundled-file './appsettings.json' \
-            --bundled-file './libe_sqlite3.dylib' \
-            --bundled-file './packages.lock.json' \
-            --bundled-file './RetireSimple.Backend' \
-            --bundled-file './wwwroot' \
-            './init.sh'
-          cd ../..
-      - name: Ad-hoc sign to allow FS access?
-        run: codesign --force -s - publish/RetireSimple-${{ matrix.platform }}/RetireSimple.app
+      # - name: Install + Setup Platypus
+      #   run: |
+      #     brew install platypus
+      #     sudo ln -s /usr/local/Cellar/platypus/5.3/share/platypus /usr/local/share/platypus
+      #   # Unfortunately, the platypus executable expects its resources in /usr/local/share/platypus
+      #   # and not the homebrew cellar. But my god symlinks are based
+      # - name: Create MacOS App Bundle
+      #   run: |
+      #     cd publish/RetireSimple-${{ matrix.platform }}
+      #     echo "Creating Init Script"
+      #     echo '#!/bin/sh' > init.sh
+      #     echo './RetireSimple.Backend' > init.sh
+      #     chmod +x init.sh
+      #     chmod +x RetireSimple.Backend
+      #     platypus \
+      #       --name 'RetireSimple' \
+      #       --interface-type 'Text Window' \
+      #       --interpreter '/bin/sh' \
+      #       --author 'Alex Westerman, Ryan Nikolic' \
+      #       --app-version ${{ vars.VERSION_PREFIX }}-nightly-${{ needs.get-info.output.hash }} \
+      #       --overwrite \
+      #       --bundle-identifier org.RetireSimple.RetireSimple \
+      #       --bundled-file './appsettings.Development.json' \
+      #       --bundled-file './appsettings.json' \
+      #       --bundled-file './libe_sqlite3.dylib' \
+      #       --bundled-file './packages.lock.json' \
+      #       --bundled-file './RetireSimple.Backend' \
+      #       --bundled-file './wwwroot' \
+      #       './init.sh'
+      #     cd ../..
+      # - name: Ad-hoc sign to allow FS access?
+      #   run: codesign --force -s - publish/RetireSimple-${{ matrix.platform }}/RetireSimple.app
       - name: Zip Bundled Executable
         run: |
           cd publish/RetireSimple-${{ matrix.platform }}
-          7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip RetireSimple.app
+          7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip .
       - name: Upload Artifact for Release Job
         uses: actions/upload-artifact@v3
         with:
