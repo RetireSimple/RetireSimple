@@ -105,6 +105,8 @@ jobs:
             --bundled-file './wwwroot' \
             './init.sh'
           cd ../..
+      - name: Ad-hoc sign to allow FS access?
+        run: codesign --force -s - publish/RetireSimple-${{ matrix.platform }}/RetireSimple.app
       - name: Zip Bundled Executable
         run: |
           cd publish/RetireSimple-${{ matrix.platform }}
