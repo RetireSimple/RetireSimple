@@ -14,8 +14,8 @@
 		<Company></Company>
 		<RepositoryType>git</RepositoryType>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<RepositoryUrl>https://github.com/rhit-westeraj/RetireSimple.git</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/rhit-westeraj/RetireSimple</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/RetireSimple/RetireSimple.git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/RetireSimple/RetireSimple</PackageProjectUrl>
 		<Description>Engine component of the RetireSimple project.</Description>
 		<Authors>Alex Westerman, Ryan Nikolic</Authors>
 	</PropertyGroup>

@@ -20,9 +20,23 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\RetireSimple.Engine\RetireSimple.Engine.csproj" />
-		<ProjectReference Include="..\RetireSimple.Frontend\RetireSimple.Frontend.esproj">
+		<ProjectReference Include="..\RetireSimple.Frontend\RetireSimple.Frontend.esproj" Condition="'$(OS)' == 'Windows NT'">
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 		</ProjectReference>
 	</ItemGroup>
+
+
+	<!--Linux/MacOS Configurations to simplify build process-->
+	<Target Name="PublishFrontend" AfterTargets="Publish" Condition="'$(OS)' == 'UNIX'">
+		<ItemGroup>
+			<CompiledFrontendResources Include="$(MSBuildProjectDirectory)/../RetireSimple.Frontend/build/**/*" />
+		</ItemGroup>
+		
+		<Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)/../RetireSimple.Frontend" />
+		<Exec Command="pnpm build" WorkingDirectory="$(MSBuildProjectDirectory)/../RetireSimple.Frontend" />
+		<Copy SourceFiles="@(CompiledFrontendResources)" DestinationFolder="$(PublishDir)/wwwroot" />
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/../RetireSimple.Frontend/build" />
+	</Target>
+
 
 </Project>
