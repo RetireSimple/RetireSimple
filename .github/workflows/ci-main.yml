@@ -129,10 +129,6 @@ jobs:
           -p:PublishProfile=./RetireSimple.Backend/Properties/PublishProfiles/FolderProfile.pubxml
           -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
           -p:VersionSuffix=nightly-${{ needs.get-info.outputs.hash }}
-      - name: Copy Frontend Resources
-        run: |
-          mkdir -p publish/RetireSimple-${{ matrix.platform }}/wwwroot
-          cp -r RetireSimple.Frontend/build/* publish/RetireSimple-${{ matrix.platform }}/wwwroot
       - name: Zip Executable
         run: |
           cd publish/RetireSimple-${{ matrix.platform }}
@@ -145,6 +141,47 @@ jobs:
           path: publish/RetireSimple-${{ matrix.platform }}.zip
           retention-days: 1
   
+  build-nuget:
+    runs-on: ubuntu-latest
+    needs: [get-info]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.x
+      - name: Restore NuGet Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Build NuGet Package
+        run: dotnet pack ./RetireSimple.Backend/RetireSimple.Backend.csproj
+          --configuration Release
+          --output ./publish
+          -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
+          -p:VersionSuffix=nightly-${{ needs.get-info.outputs.hash }}
+      - name: Add GitHub Packages Source
+        run: dotnet nuget add source 
+          --username USERNAME
+          --password ${{ secrets.GITHUB_TOKEN }} 
+          --store-password-in-clear-text 
+          --name github 
+          "https://nuget.pkg.github.com/RetireSimple/index.json"
+      - name: Push NuGet Package
+        run: dotnet nuget push ./publish/RetireSimple.Engine.*.nupkg
+          --api-key ${{ secrets.GITHUB_TOKEN }}
+          --source github
+      - name: Upload Artifact for Release Job
+        uses: actions/upload-artifact@v3
+        with:
+          name: RetireSimple-Engine-NuGet
+          path: publish/RetireSimple.Engine.*.nupkg
+          retention-days: 1
+
+          
   ###############################################################
   # DISABLED BECAUSE MACOS CROSS-MACHINE RELEASE BUILDS BE BROKEY
   ###############################################################
@@ -245,7 +282,7 @@ jobs:
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
-    needs: [build-win, build-linux, get-info]
+    needs: [build-win, build-linux, build-nuget, get-info]
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
@@ -258,7 +295,9 @@ jobs:
           allowUpdates: true
           draft: false
           prerelease: true
-          artifacts: RetireSimple-*/RetireSimple-*.zip
+          artifacts: | 
+            RetireSimple-*/RetireSimple-*.zip
+            RetireSimple-*/RetireSimple.Engine.*.nupkg
           body: |
             The latest code of the project, automatically uploaded by Github Actions, on each change.
             While we do try and test everything, we don't guarantee that this build is bug-free, so **use at your own risk**!
