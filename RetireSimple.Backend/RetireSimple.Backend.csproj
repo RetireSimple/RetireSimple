@@ -10,6 +10,7 @@
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<AnalysisMode>Recommended</AnalysisMode>
 		<AnalysisModeGlobalization>None</AnalysisModeGlobalization>
+		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -20,22 +21,22 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\RetireSimple.Engine\RetireSimple.Engine.csproj" />
-		<ProjectReference Include="..\RetireSimple.Frontend\RetireSimple.Frontend.esproj" Condition="'$(OS)' == 'Windows NT'">
+		<ProjectReference Include="..\RetireSimple.Frontend\RetireSimple.Frontend.esproj" Condition="'$(IsWindows)' == 'true'">
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 		</ProjectReference>
 	</ItemGroup>
 
 
 	<!--Linux/MacOS Configurations to simplify build process-->
-	<Target Name="FrontendClean" AfterTargets="Clean" Condition="'$(OS)' == 'UNIX'">
+	<Target Name="FrontendClean" AfterTargets="Clean" Condition="'$(IsWindows)' == 'false'">
 		<Exec Command="pnpm clean" WorkingDirectory="$(MSBuildProjectDirectory)/../RetireSimple.Frontend" />
 	</Target>
-	
-	<Target Name="PublishFrontend" AfterTargets="AfterPublish" Condition="'$(OS)' == 'UNIX'">
+
+	<Target Name="PublishFrontend" AfterTargets="AfterPublish" Condition="'$(IsWindows)' == 'false'">
 		<Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)/../RetireSimple.Frontend" />
 		<Exec Command="pnpm build" WorkingDirectory="$(MSBuildProjectDirectory)/../RetireSimple.Frontend" />
 		<Copy SourceFiles="$(MSBuildProjectDirectory)/../RetireSimple.Frontend/build" DestinationFolder="$(PublishDir)/wwwroot" />
 	</Target>
 
-	
+
 </Project>
