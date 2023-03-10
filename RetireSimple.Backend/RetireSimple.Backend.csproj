@@ -27,10 +27,6 @@
 
 
 	<!--Linux/MacOS Configurations to simplify build process-->
-	<Target Name="FrontendClean" AfterTargets="Clean" Condition="'$(OS)' == 'UNIX'">
-		<Exec Command="pnpm clean" WorkingDirectory="$(MSBuildProjectDirectory)/../RetireSimple.Frontend" />
-	</Target>
-
 	<Target Name="PublishFrontend" AfterTargets="Publish" Condition="'$(OS)' == 'UNIX'">
 		<ItemGroup>
 			<CompiledFrontendResources Include="$(MSBuildProjectDirectory)/../RetireSimple.Frontend/build/**/*" />
@@ -39,6 +35,7 @@
 		<Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)/../RetireSimple.Frontend" />
 		<Exec Command="pnpm build" WorkingDirectory="$(MSBuildProjectDirectory)/../RetireSimple.Frontend" />
 		<Copy SourceFiles="@(CompiledFrontendResources)" DestinationFolder="$(PublishDir)/wwwroot" />
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/../RetireSimple.Frontend/build" />
 	</Target>
 
 
