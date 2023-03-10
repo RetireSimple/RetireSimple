@@ -15,6 +15,8 @@ jobs:
             platform: "win-x64"
           - name: "Windows x86"
             platform: "win-x86"
+          - name: "Windows ARM64"
+            platform: "win-arm64"
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
