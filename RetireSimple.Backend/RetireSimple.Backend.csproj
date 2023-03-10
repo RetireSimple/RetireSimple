@@ -32,9 +32,13 @@
 	</Target>
 
 	<Target Name="PublishFrontend" AfterTargets="Publish" Condition="'$(OS)' == 'UNIX'">
+		<ItemGroup>
+			<CompiledFrontendResources Include="$(MSBuildProjectDirectory)/../RetireSimple.Frontend/build/**/*" />
+		</ItemGroup>
+		
 		<Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)/../RetireSimple.Frontend" />
 		<Exec Command="pnpm build" WorkingDirectory="$(MSBuildProjectDirectory)/../RetireSimple.Frontend" />
-		<Copy SourceFiles="$(MSBuildProjectDirectory)/../RetireSimple.Frontend/build" DestinationFolder="$(PublishDir)/wwwroot" />
+		<Copy SourceFiles="@(CompiledFrontendResources)" DestinationFolder="$(PublishDir)/wwwroot" />
 	</Target>
 
 
