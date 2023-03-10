@@ -123,6 +123,7 @@ jobs:
           retention-days: 1
 
   build-nuget:
+    name: Build NuGet Package
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -138,16 +139,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
       - name: Build NuGet Package
-        run: dotnet pack ./RetireSimple.Backend/RetireSimple.Backend.csproj
+        run: dotnet pack ./RetireSimple.Engine/RetireSimple.Engine.csproj
           --configuration Release
           --output ./publish
           -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
       - name: Add GitHub Packages Source
-        run: dotnet nuget add source 
+        run: dotnet nuget add source
           --username USERNAME
-          --password ${{ secrets.GITHUB_TOKEN }} 
-          --store-password-in-clear-text 
-          --name github 
+          --password ${{ secrets.GITHUB_TOKEN }}
+          --store-password-in-clear-text
+          --name github
           "https://nuget.pkg.github.com/RetireSimple/index.json"
       - name: Push NuGet Package
         run: dotnet nuget push ./publish/RetireSimple.Engine.*.nupkg
@@ -159,8 +160,8 @@ jobs:
           name: RetireSimple.Backend.nupkg
           path: publish/RetireSimple.Engine.*.nupkg
           retention-days: 1
-          
-          
+
+
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
