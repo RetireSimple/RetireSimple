@@ -259,7 +259,7 @@
         }
       }
     },
-    "net6.0/osx.13-arm64": {
+    "net6.0/win-x86": {
       "SQLitePCLRaw.lib.e_sqlite3": {
         "type": "Transitive",
         "resolved": "2.1.2",
