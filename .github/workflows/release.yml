@@ -125,6 +125,9 @@ jobs:
   build-nuget:
     name: Build NuGet Package
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
@@ -138,22 +141,22 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-      - name: Build NuGet Package
+      - name: Build Engine
+        run: dotnet build ./RetireSimple.Engine/RetireSimple.Engine.csproj
+          --configuration Release
+          -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
+      - name: Package Engine
         run: dotnet pack ./RetireSimple.Engine/RetireSimple.Engine.csproj
           --configuration Release
+          --include-source
+          --include-symbols
           --output ./publish
           -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
-      - name: Add GitHub Packages Source
-        run: dotnet nuget add source
-          --username USERNAME
-          --password ${{ secrets.GITHUB_TOKEN }}
-          --store-password-in-clear-text
-          --name github
-          "https://nuget.pkg.github.com/RetireSimple/index.json"
       - name: Push NuGet Package
         run: dotnet nuget push ./publish/RetireSimple.Engine.*.nupkg
+          --source "https://nuget.pkg.github.com/RetireSimple/index.json"
           --api-key ${{ secrets.GITHUB_TOKEN }}
-          --source github
+          --skip-duplicate
       - name: Upload Artifact for Release Job
         uses: actions/upload-artifact@v3
         with:
