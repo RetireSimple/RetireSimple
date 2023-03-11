@@ -69,7 +69,7 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpDelete]
-		[Route("Delete/{id}")]
+		[Route("{id}")]
 		public ActionResult DeleteVehicle(int id) {
 			try {
 				_vehicleApi.Remove(id);
@@ -105,7 +105,7 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpPost]
-		[Route("Update/{id}")]
+		[Route("{id}")]
 		public ActionResult UpdateVehicle(int id, [FromBody] JsonDocument requestBody) {
 			var body = requestBody.Deserialize<OptionsDict>();
 			if (body == null) {

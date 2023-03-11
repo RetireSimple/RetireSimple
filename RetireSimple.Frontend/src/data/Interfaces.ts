@@ -18,7 +18,6 @@ export interface InvestmentModel {
 	lastUpdated: string; //treat as a date later?
 }
 
-
 export interface PortfolioModel {
 	portfolioModelId: number;
 	portfolioId: number;
@@ -28,8 +27,19 @@ export interface PortfolioModel {
 	lastUpdated: string; //treat as a date later?
 }
 
-
-export interface FullModelData{
+export interface FullModelData {
 	portfolioModel: PortfolioModel;
 	investmentModels: {[key: string]: InvestmentModel};
+}
+
+export interface InvestmentVehicle {
+	portfolioId: number;
+	investmentVehicleId: number;
+	investmentVehicleName: string;
+	investmentVehicleType: string;
+	investments: Investment[];
+	investmentVehicleModelId?: number;
+	investmentVehicleData: {[key: string]: string};
+	lastUpdated: string; //treat as a date later?
+	analysisOptionsOverrides: {[key: string]: string};
 }
