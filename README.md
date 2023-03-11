@@ -16,15 +16,15 @@ We have a general release plan with some of the rationale in the following excel
 
 We provide the following versions main RetireSimple Executable (which launches a web server and launches your browser to our Frontend):
 
-| OS | Release Suffix | Supported |
-| --- | --- | --- |
-| Windows 32-bit | `win-x86` | :white_check_mark: |
-| Windows 64-bit | `win-x64` | :white_check_mark: |
-| Windows ARM64 | `win-arm64` | :white_check_mark: |
-| Linux 64-bit | `linux-x64` | :white_check_mark: |
-| Linux ARM64 | `linux-arm64` | :white_check_mark: |
-| MacOS 11+ Intel | `osx.11-x64` | :x: |
-| MacOS 11+ Apple Silicon | `osx.11-arm64` | :x: |
+| OS | Release Suffix | DIY Build | Prebuilt Binary |
+| --- | --- | --- | --- |
+| Windows 32-bit | `win-x86` | :white_check_mark: | :white_check_mark: |
+| Windows 64-bit | `win-x64` | :white_check_mark: | :white_check_mark: |
+| Windows ARM64 | `win-arm64` | :white_check_mark: | :white_check_mark: |
+| Linux 64-bit | `linux-x64` | :white_check_mark: | :white_check_mark: |
+| Linux ARM64 | `linux-arm64` | :white_check_mark: | :white_check_mark: |
+| MacOS 11+ Intel | `osx.11-x64` | :white_check_mark: | :x: |
+| MacOS 11+ Apple Silicon | `osx.11-arm64` | :white_check_mark: | :x: |
 
 > For more information about MacOS Release Limitations, checkout the respective wiki page: TBD
 
@@ -47,7 +47,9 @@ The project can be opened in most modern IDEs and built using CLI tools, but was
 
 The `RetireSimple.Frontend` project uses pnpm over npm for dependency management and managing builds. There is no difference in how you would normally build/run the frontend, except for using `pnpm` (i.e. `pnpm run build`, `pnpm test`, `pnpm install`, etc.). For more information about pnpm, [visit their website](https://pnpm.io/).
 
-A local release of RetireSimple can be built with `dotnet publish` on the `RetireSimple.Backend` project. We provide a publish profile with settings to optimize the build, so the recommend way to execute this build at the root of the repository is:
+### Building the Release
+
+A local release of RetireSimple can be built with `dotnet publish` on the `RetireSimple.Backend` project. We provide a publish profile with settings to optimize the build, so the recommended way to execute this build at the root of the repository is:
 
 ```shell
 dotnet publish RetireSimple.Backend/Retiresimple.Backend.csproj -p:PublishProfile=RetireSimple.Backend/Properties/PublishProfiles/FolderProfiles.pubxml
