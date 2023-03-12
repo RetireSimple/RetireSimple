@@ -1,12 +1,30 @@
-import {AppBar, Box, Divider, Icon, IconButton, List, ListSubheader, MenuItem, Paper, Tooltip, Typography} from '@mui/material';
+import {
+	AppBar,
+	Box,
+	Divider,
+	Icon,
+	IconButton,
+	List,
+	ListSubheader,
+	MenuItem,
+	Paper,
+	Tooltip,
+	Typography,
+} from '@mui/material';
 import React from 'react';
 import {Link, Outlet, useLoaderData} from 'react-router-dom';
-import {InvestmentListItem, mapListItemProps} from './components/Sidebar/InvestmentListItem';
+import {
+	InvestmentListItem,
+	SidebarInvestment,
+	mapListItemProps,
+} from './components/Sidebar/InvestmentListItem';
 import {AddInvestmentDialog} from './components/dialogs/AddInvestmentDialog';
-import {Investment} from './data/Interfaces';
+import {Investment, Portfolio} from './data/Interfaces';
+import {VehicleListItem} from './components/Sidebar/VehicleListItem';
 
 export const Layout = () => {
-	const investments = useLoaderData() as Investment[];
+	const portfolio = useLoaderData() as Portfolio;
+	const {investments, investmentVehicles: vehicles} = portfolio;
 
 	const [addDialogOpen, setAddDialogOpen] = React.useState(false);
 
@@ -16,29 +34,44 @@ export const Layout = () => {
 				<List>
 					<MenuItem component={Link} to='/'>
 						<Icon baseClassName='material-icons'>home</Icon>
-						<Typography variant='body1'
-							component='div'
-							sx={{marginLeft: '10px'}}>Home</Typography>
+						<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+							Home
+						</Typography>
 					</MenuItem>
 					<Divider />
 					<ListSubheader>Investments</ListSubheader>
 					{investments.map((investment: Investment) => (
-						<MenuItem component={Link}
-							to={`/investment/${investment.investmentId}`}
-							key={investment.investmentId}>
-							<InvestmentListItem {...mapListItemProps(investment)} />
-						</MenuItem>))}
+						<SidebarInvestment investment={investment} key={investment.investmentId} />
+					))}
 					<Divider />
 					<ListSubheader>Vehicles</ListSubheader>
-					<MenuItem component={'div'}>
-						Not Implemented Yet!
-					</MenuItem>
+					{vehicles.map((vehicle) => (
+						<Box>
+							<MenuItem
+								component={Link}
+								to={`/vehicle/${vehicle.investmentVehicleId}`}
+								key={vehicle.investmentVehicleId}>
+								<VehicleListItem
+									vehicleName={vehicle.investmentVehicleName}
+									vehicleType={vehicle.investmentVehicleName}
+								/>
+							</MenuItem>
+							<Box sx={{marginLeft: '2rem'}}>
+								{vehicle.investments.map((investment: Investment) => (
+									<SidebarInvestment
+										investment={investment}
+										key={investment.investmentId}
+									/>
+								))}
+							</Box>
+						</Box>
+					))}
 					<Divider />
 					<MenuItem onClick={() => setAddDialogOpen(true)}>
 						<Icon baseClassName='material-icons'>add_circle</Icon>
-						<Typography variant='body1'
-							component='div'
-							sx={{marginLeft: '10px'}}>Add Investment</Typography>
+						<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+							Add Investment
+						</Typography>
 					</MenuItem>
 				</List>
 			</Box>
@@ -46,35 +79,41 @@ export const Layout = () => {
 	};
 
 	let contents = (
-		<Paper
-			elevation={2}
-			sx={{marginX: '1rem', height: '90vh', width: '100%'}}
-		>{renderInvestmentsTable(investments)}</Paper>);
+		<Paper elevation={2} sx={{marginX: '1rem', height: '90vh', width: '100%'}}>
+			{renderInvestmentsTable(investments)}
+		</Paper>
+	);
 
 	return (
 		<div>
 			<AppBar position='static' sx={{padding: '1rem'}}>
 				<Box sx={{display: 'flex'}}>
-					<Typography variant='h6'
-						component='div'>RetireSimple</Typography>
+					<Typography variant='h6' component='div'>
+						RetireSimple
+					</Typography>
 					<Box component='span' sx={{flex: '1 1 auto'}} />
 					<Tooltip title='Report Bug/Issue on GitHub'>
-						<IconButton color='inherit' href='https://github.com/rhit-westeraj/RetireSimple/issues'>
+						<IconButton
+							color='inherit'
+							href='https://github.com/rhit-westeraj/RetireSimple/issues'>
 							<Icon baseClassName='material-icons'>bug_report</Icon>
 						</IconButton>
 					</Tooltip>
 				</Box>
 			</AppBar>
 			<Box sx={{marginTop: '0.5rem', display: 'flex', flexDirection: 'row'}}>
-				<Box sx={{marginRight: '2rem'}}>
-					{contents}
-				</Box>
-				<Box sx={{display: 'flex', marginY: '0.5rem', marginLeft: '1rem', maxWidth: '100vh'}}>
+				<Box sx={{marginRight: '2rem'}}>{contents}</Box>
+				<Box
+					sx={{
+						display: 'flex',
+						marginY: '0.5rem',
+						marginLeft: '1rem',
+						maxWidth: '100vh',
+					}}>
 					<Outlet />
 				</Box>
 			</Box>
 			<AddInvestmentDialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)} />
 		</div>
-
 	);
 };

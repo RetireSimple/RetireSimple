@@ -43,3 +43,13 @@ export interface InvestmentVehicle {
 	lastUpdated: string; //treat as a date later?
 	analysisOptionsOverrides: {[key: string]: string};
 }
+
+export interface Portfolio {
+	portfolioId: number;
+	portfolioName: string;
+	profileId: number;
+	investments: Investment[];
+	investmentVehicles: InvestmentVehicle[];
+	portfolioModel: PortfolioModel;
+	lastUpdated: string; //treat as a date later?
+}

@@ -6,12 +6,13 @@ import {
 	Route,
 	RouterProvider,
 } from 'react-router-dom';
-import {deleteInvestment, getInvestment, getInvestments} from './api/InvestmentApi';
-import {flattenApiInvestment} from './data/ApiMapper';
+import { getPortfolio } from './api/ApiCommon';
+import { deleteInvestment, getInvestment } from './api/InvestmentApi';
+import { flattenApiInvestment } from './data/ApiMapper';
 import './index.css';
-import {Layout} from './Layout';
-import {InvestmentView} from './routes/InvestmentView';
-import {Root} from './routes/Root';
+import { Layout } from './Layout';
+import { InvestmentView } from './routes/InvestmentView';
+import { Root } from './routes/Root';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -33,7 +34,7 @@ const deleteInvestmentAction = async ({params}) => {
 
 const router = createBrowserRouter(
 	createRoutesFromElements([
-		<Route path='/' element={<Layout />} id='root' loader={async () => await getInvestments()}>
+		<Route path='/' element={<Layout />} id='root' loader={async () => await getPortfolio()}>
 			<Route path='/' element={<Root />} />
 			<Route
 				path='investment/:id'

@@ -1,4 +1,5 @@
 ﻿using RetireSimple.Engine.Data;
+using RetireSimple.Engine.Data.User;
 
 namespace RetireSimple.Engine.Api {
 	public class PortfolioApi {
@@ -38,6 +39,18 @@ namespace RetireSimple.Engine.Api {
 			tempModel.MaxModelData = tempModel.MaxModelData.Select(d => Math.Max(d, 0)).ToList();
 
 			return tempModel;
+		}
+
+		public Portfolio GetPortfolio(int id) {
+			var portfolio = _context.Portfolio.Find(id);
+			if (portfolio is null) throw new InvalidOperationException("Portfolio not found");
+
+			//Make sure investments only contain non-vehicle investments
+			var vehicleInvestments = portfolio.InvestmentVehicles.SelectMany(v => v.Investments).ToList();
+			portfolio.Investments = portfolio.Investments.Except(vehicleInvestments).ToList();
+
+			//DO NOT SAVE CHANGES HERE
+			return portfolio;
 		}
 	}
 }
