@@ -9,6 +9,7 @@ import {InvestmentDataForm} from '../../forms/InvestmentDataForm';
 export interface AddInvestmentDialogProps {
 	open: boolean;
 	onClose: () => void;
+	// vehicleTarget: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
@@ -51,3 +52,4 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 		</FormProvider>
 	);
 };
+

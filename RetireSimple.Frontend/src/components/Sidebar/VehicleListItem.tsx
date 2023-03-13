@@ -16,3 +16,4 @@ export const VehicleListItem = (props: VehicleListItemProps) => {
 		</Typography>
 	</Box>;
 };
+

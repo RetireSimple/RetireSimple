@@ -13,14 +13,10 @@ import {
 } from '@mui/material';
 import React from 'react';
 import {Link, Outlet, useLoaderData} from 'react-router-dom';
-import {
-	InvestmentListItem,
-	SidebarInvestment,
-	mapListItemProps,
-} from './components/Sidebar/InvestmentListItem';
+import {SidebarInvestment} from './components/Sidebar/InvestmentListItem';
+import {VehicleListItem} from './components/Sidebar/VehicleListItem';
 import {AddInvestmentDialog} from './components/dialogs/AddInvestmentDialog';
 import {Investment, Portfolio} from './data/Interfaces';
-import {VehicleListItem} from './components/Sidebar/VehicleListItem';
 
 export const Layout = () => {
 	const portfolio = useLoaderData() as Portfolio;
@@ -43,6 +39,12 @@ export const Layout = () => {
 					{investments.map((investment: Investment) => (
 						<SidebarInvestment investment={investment} key={investment.investmentId} />
 					))}
+					<MenuItem onClick={() => setAddDialogOpen(true)}>
+						<Icon baseClassName='material-icons'>add_circle</Icon>
+						<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+							Add Investment
+						</Typography>
+					</MenuItem>
 					<Divider />
 					<ListSubheader>Vehicles</ListSubheader>
 					{vehicles.map((vehicle) => (
@@ -53,7 +55,7 @@ export const Layout = () => {
 								key={vehicle.investmentVehicleId}>
 								<VehicleListItem
 									vehicleName={vehicle.investmentVehicleName}
-									vehicleType={vehicle.investmentVehicleName}
+									vehicleType={vehicle.investmentVehicleType}
 								/>
 							</MenuItem>
 							<Box sx={{marginLeft: '2rem'}}>
@@ -63,16 +65,29 @@ export const Layout = () => {
 										key={investment.investmentId}
 									/>
 								))}
+								{/* TODO CHANGE DIALOG TARGET */}
+								<MenuItem onClick={() => setAddDialogOpen(true)}>
+									<Icon baseClassName='material-icons'>add_circle</Icon>
+									<Typography
+										variant='body1'
+										component='div'
+										sx={{marginLeft: '10px'}}>
+										Add Investment to Vehicle
+									</Typography>
+								</MenuItem>
 							</Box>
+							<MenuItem onClick={() => setAddDialogOpen(true)}>
+								<Icon baseClassName='material-icons'>add_circle</Icon>
+								<Typography
+									variant='body1'
+									component='div'
+									sx={{marginLeft: '10px'}}>
+									Add Vehicle
+								</Typography>
+							</MenuItem>
 						</Box>
 					))}
 					<Divider />
-					<MenuItem onClick={() => setAddDialogOpen(true)}>
-						<Icon baseClassName='material-icons'>add_circle</Icon>
-						<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
-							Add Investment
-						</Typography>
-					</MenuItem>
 				</List>
 			</Box>
 		);
