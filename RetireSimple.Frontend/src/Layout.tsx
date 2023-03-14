@@ -25,6 +25,12 @@ export const Layout = () => {
 
 	const [invAddDialogOpen, setInvAddDialogOpen] = React.useState(false);
 	const [vehicleAddDialogOpen, setVehicleAddDialogOpen] = React.useState(false);
+	const [vehicleAddInvTarget, setVehicleAddInvTarget] = React.useState<number>(-1); //by default, adds as individual investment
+
+	const openAddInvDialog = (vehicleId: number) => {
+		setVehicleAddInvTarget(vehicleId);
+		setInvAddDialogOpen(true);
+	};
 
 	const renderInvestmentsTable = (investments: Investment[]) => {
 		return (
@@ -41,7 +47,7 @@ export const Layout = () => {
 					{investments.map((investment: Investment) => (
 						<SidebarInvestment investment={investment} key={investment.investmentId} />
 					))}
-					<MenuItem onClick={() => setInvAddDialogOpen(true)}>
+					<MenuItem onClick={() => openAddInvDialog(-1)}>
 						<Icon baseClassName='material-icons'>add_circle</Icon>
 						<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 							Add Investment
@@ -68,7 +74,8 @@ export const Layout = () => {
 									/>
 								))}
 								{/* TODO CHANGE DIALOG TARGET */}
-								<MenuItem onClick={() => setInvAddDialogOpen(true)}>
+								<MenuItem
+									onClick={() => openAddInvDialog(vehicle.investmentVehicleId)}>
 									<Icon baseClassName='material-icons'>add_circle</Icon>
 									<Typography
 										variant='body1'
@@ -130,6 +137,7 @@ export const Layout = () => {
 			<AddInvestmentDialog
 				open={invAddDialogOpen}
 				onClose={() => setInvAddDialogOpen(false)}
+				vehicleTarget={vehicleAddInvTarget}
 			/>
 			<AddVehicleDialog
 				open={vehicleAddDialogOpen}

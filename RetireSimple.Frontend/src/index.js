@@ -14,7 +14,7 @@ import { Layout } from './Layout';
 import { InvestmentView } from './routes/InvestmentView';
 import { Root } from './routes/Root';
 import { VehicleView } from './routes/VehicleView';
-import { getVehicle } from './api/VehicleApi';
+import { deleteVehicle, getVehicle } from './api/VehicleApi';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -40,6 +40,16 @@ const addVehicleAction = async () => {
 	return new Response(null, {status: 302, headers: {Location: '/'}});
 };
 
+const updateVehicleAction = async ({params, request}) => {
+	return new Response(null, {status: 302, headers: {Location: `/vehicle/${params.id}`}});
+};
+
+const deleteVehicleAction = async ({params}) => {
+	const id = params.id;
+	await deleteVehicle(id);
+	return new Response(null, {status: 302, headers: {Location: '/'}});
+}
+
 const router = createBrowserRouter(
 	createRoutesFromElements([
 		<Route path='/' element={<Layout />} id='root'
@@ -56,8 +66,8 @@ const router = createBrowserRouter(
 				path='vehicle/:id'
 				element={<VehicleView />}
 				loader={async({params}) => getFlatVehicleData(await getVehicle(params.id))}>
-				<Route path='update' action={updateInvestmentAction} />
-				<Route path='delete' action={deleteInvestmentAction} />
+				<Route path='update' action={updateVehicleAction} />
+				<Route path='delete' action={deleteVehicleAction} />
 			</Route>
 			<Route path='addVehicle' action={addVehicleAction} />
 			<Route path='add' action={addInvestmentAction} />

@@ -5,10 +5,12 @@ import {useFormAction, useSubmit} from 'react-router-dom';
 import {addInvestment} from '../../api/InvestmentApi';
 import {investmentFormSchema} from '../../data/FormSchema';
 import {InvestmentDataForm} from '../../forms/InvestmentDataForm';
+import {addInvestmentToVehicle} from '../../api/VehicleApi';
 
 export interface AddInvestmentDialogProps {
 	open: boolean;
 	onClose: () => void;
+	vehicleTarget: number;
 }
 
 export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
@@ -27,7 +29,10 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 			.map(([key, value]) => [key, value.toString()])
 			.forEach(([key, value]) => (requestData[key] = value));
 
-		addInvestment(requestData).then(() => {
+		addInvestment(requestData).then((investmentId) => {
+			if (props.vehicleTarget > -1) {
+				addInvestmentToVehicle(props.vehicleTarget, Number.parseInt(investmentId));
+			} //Add investment to vehicle
 			props.onClose();
 			submit(null, {method: 'post', action: addAction});
 		});
@@ -36,7 +41,9 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 	return (
 		<FormProvider {...formContext}>
 			<Dialog open={props.open} maxWidth='md'>
-				<DialogTitle>Add Investment</DialogTitle>
+				<DialogTitle>
+					{props.vehicleTarget > -1 ? 'Add Investment to Vehicle' : 'Add Investment'}
+				</DialogTitle>
 				<Box sx={{padding: '2rem'}}>
 					<InvestmentDataForm>
 						<DialogActions>

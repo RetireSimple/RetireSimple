@@ -34,7 +34,6 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpPost]
-		[Route("Add")]
 		public ActionResult AddInvestment([FromBody] JsonDocument requestBody) {
 			var body = requestBody.Deserialize<OptionsDict>();
 			if (body == null) {
@@ -60,7 +59,7 @@ namespace RetireSimple.Backend.Controllers {
 					_investmentApi.UpdateAnalysisOptions(id, analysisOptions);
 				}
 
-				return Ok();
+				return Ok(id);
 			}
 			catch (ArgumentException) {
 				return BadRequest("Specified type of investment is not supported");

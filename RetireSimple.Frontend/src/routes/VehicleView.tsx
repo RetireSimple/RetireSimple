@@ -6,6 +6,7 @@ import {useFormAction, useLoaderData, useSubmit} from 'react-router-dom';
 import {VehicleFormDefaults, vehicleFormSchema} from '../data/FormSchema';
 import {FormVehicle} from '../data/Interfaces';
 import {VehicleDataForm} from '../forms/VehicleDataForm';
+import {updateVehicle} from '../api/VehicleApi';
 
 export const VehicleView = () => {
 	const vehicleData = useLoaderData() as FormVehicle;
@@ -39,6 +40,9 @@ export const VehicleView = () => {
 			}
 		});
 
+		updateVehicle(vehicleData.investmentVehicleId, requestData).then(() => {
+			submit(null, {action: updateAction, method: 'post'});
+		});
 	});
 
 	return (
