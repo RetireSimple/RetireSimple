@@ -3,8 +3,8 @@ import {Box, Button, Divider, Typography} from '@mui/material';
 import React from 'react';
 import {FieldValues, FormProvider, useForm, useFormState} from 'react-hook-form';
 import {useFormAction, useLoaderData, useSubmit} from 'react-router-dom';
-import {VehicleFormDefaults, vehicleFormSchema} from '../data/FormSchema';
-import {FormVehicle} from '../data/Interfaces';
+import {VehicleFormDefaults, vehicleFormSchema} from '../forms/FormSchema';
+import {FormVehicle} from '../Interfaces';
 import {VehicleDataForm} from '../forms/VehicleDataForm';
 import {updateVehicle} from '../api/VehicleApi';
 

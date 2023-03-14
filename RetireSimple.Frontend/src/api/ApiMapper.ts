@@ -1,4 +1,10 @@
-import {FormVehicle, Investment, InvestmentModel, InvestmentVehicle, PortfolioModel} from './Interfaces';
+import {
+	FormVehicle,
+	Investment,
+	InvestmentModel,
+	InvestmentVehicle,
+	PortfolioModel,
+} from '../Interfaces';
 
 //Flattens API Investment object for form use
 //todo: should we strip fields items?
@@ -84,4 +90,4 @@ export const getFlatVehicleData = (vehicle: InvestmentVehicle): FormVehicle => {
 	};
 
 	return result;
-}
+};

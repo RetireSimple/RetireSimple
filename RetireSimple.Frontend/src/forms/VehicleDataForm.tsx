@@ -1,6 +1,6 @@
 import {Box, Grid} from '@mui/material';
 import {useFormContext} from 'react-hook-form';
-import {FormSelectField, FormTextField} from './Inputs';
+import {FormSelectField, FormTextField} from '../components/InputComponents';
 
 export interface VehicleDataFormProps {
 	defaultValues?: any;

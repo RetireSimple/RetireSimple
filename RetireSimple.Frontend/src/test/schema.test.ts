@@ -1,4 +1,4 @@
-import {decimalValidation, investmentFormSchema} from '../data/FormSchema';
+import {decimalValidation, investmentFormSchema} from '../forms/FormSchema';
 
 describe('schema validation', () => {
 	describe('decimal validation', () => {

@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import { getPortfolio } from './api/ApiCommon';
 import { deleteInvestment, getInvestment } from './api/InvestmentApi';
-import { flattenApiInvestment, getFlatVehicleData } from './data/ApiMapper';
+import { flattenApiInvestment, getFlatVehicleData } from './api/ApiMapper';
 import './index.css';
 import { Layout } from './Layout';
 import { InvestmentView } from './routes/InvestmentView';

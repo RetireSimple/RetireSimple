@@ -1,7 +1,7 @@
 import {Grid, Typography} from '@mui/material';
 import React from 'react';
 import {useFormContext} from 'react-hook-form';
-import {FormDatePicker, FormTextField} from '../Inputs';
+import {FormDatePicker, FormTextField} from '../../components/InputComponents';
 import {BondValuationAnalysisForm} from '../analysis/BondValuationAnalysisForm';
 
 export interface BondFormProps {
@@ -9,7 +9,7 @@ export interface BondFormProps {
 	analyisisTypeField: React.ReactNode;
 }
 
-export const BondForm = (props:BondFormProps) => {
+export const BondForm = (props: BondFormProps) => {
 	const formContext = useFormContext();
 	const {errors} = formContext.formState;
 
@@ -22,7 +22,8 @@ export const BondForm = (props:BondFormProps) => {
 			label='Ticker'
 			control={formContext.control}
 			errorField={errors.bondTicker}
-		/>);
+		/>
+	);
 
 	const bondCouponRateField = (
 		<FormTextField
@@ -30,7 +31,8 @@ export const BondForm = (props:BondFormProps) => {
 			label='Coupon Rate'
 			control={formContext.control}
 			errorField={errors.bondCouponRate}
-		/>);
+		/>
+	);
 
 	const bondYTMField = (
 		<FormTextField
@@ -38,7 +40,8 @@ export const BondForm = (props:BondFormProps) => {
 			label='Yield to Maturity'
 			control={formContext.control}
 			errorField={errors.bondYieldToMaturity}
-		/>);
+		/>
+	);
 
 	const bondMaturityDateField = (
 		<FormDatePicker
@@ -46,8 +49,9 @@ export const BondForm = (props:BondFormProps) => {
 			label='Maturity Date'
 			control={formContext.control}
 			errorField={errors.bondMaturityDate}
-			defaultValue={props.defaultValues?.bondMaturityDate ??''}
-		/>);
+			defaultValue={props.defaultValues?.bondMaturityDate ?? ''}
+		/>
+	);
 
 	const bondPurchasePriceField = (
 		<FormTextField
@@ -55,7 +59,8 @@ export const BondForm = (props:BondFormProps) => {
 			label='Face Value'
 			control={formContext.control}
 			errorField={errors.bondFaceValue}
-		/>);
+		/>
+	);
 
 	const bondPurchaseDateField = (
 		<FormDatePicker
@@ -63,8 +68,9 @@ export const BondForm = (props:BondFormProps) => {
 			label='Purchase Date'
 			control={formContext.control}
 			errorField={errors.bondPurchaseDate}
-			defaultValue={props.defaultValues?.bondPurchaseDate ??''}
-		/>);
+			defaultValue={props.defaultValues?.bondPurchaseDate ?? ''}
+		/>
+	);
 
 	const bondCurrentPriceField = (
 		<FormTextField
@@ -72,33 +78,44 @@ export const BondForm = (props:BondFormProps) => {
 			label='Current Price'
 			control={formContext.control}
 			errorField={errors.bondCurrentPrice}
-		/>);
+		/>
+	);
 
-
-
-	return(
+	return (
 		<>
 			<Grid container spacing={2}>
-				<Grid item xs={12} sm={6}>{bondTickerField}</Grid>
-				<Grid item xs={12} sm={6}>{bondCouponRateField}</Grid>
-				<Grid item xs={12} sm={6}>{bondYTMField}</Grid>
-				<Grid item xs={12} sm={6}>{bondMaturityDateField}</Grid>
-				<Grid item xs={12} sm={6}>{bondPurchasePriceField}</Grid>
-				<Grid item xs={12} sm={6}>{bondPurchaseDateField}</Grid>
-				<Grid item xs={12} sm={6}>{bondCurrentPriceField}</Grid>
+				<Grid item xs={12} sm={6}>
+					{bondTickerField}
+				</Grid>
+				<Grid item xs={12} sm={6}>
+					{bondCouponRateField}
+				</Grid>
+				<Grid item xs={12} sm={6}>
+					{bondYTMField}
+				</Grid>
+				<Grid item xs={12} sm={6}>
+					{bondMaturityDateField}
+				</Grid>
+				<Grid item xs={12} sm={6}>
+					{bondPurchasePriceField}
+				</Grid>
+				<Grid item xs={12} sm={6}>
+					{bondPurchaseDateField}
+				</Grid>
+				<Grid item xs={12} sm={6}>
+					{bondCurrentPriceField}
+				</Grid>
 				{/* Analysis Section */}
 				<Grid item xs={12}>
 					<Typography variant='subtitle2'>Analysis Configuration</Typography>
 				</Grid>
-				<Grid item xs={4}>{props.analyisisTypeField}</Grid>
+				<Grid item xs={4}>
+					{props.analyisisTypeField}
+				</Grid>
 				<Grid item xs={12}>
 					<BondValuationAnalysisForm />
 				</Grid>
 			</Grid>
 		</>
-	)
-
-
-}
-
-
+	);
+};

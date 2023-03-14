@@ -1,4 +1,4 @@
-import {FullModelData, Investment, InvestmentModel} from '../data/Interfaces';
+import {FullModelData, Investment, InvestmentModel} from '../Interfaces';
 import {API_BASE_URL} from './ApiCommon';
 
 export const getInvestmentModel = async (id: number): Promise<InvestmentModel> => {

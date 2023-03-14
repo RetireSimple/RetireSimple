@@ -1,4 +1,4 @@
-import {InvestmentVehicle} from '../data/Interfaces';
+import {InvestmentVehicle} from '../Interfaces';
 import {API_BASE_URL} from './ApiCommon';
 
 export const getVehicles = async (): Promise<InvestmentVehicle[]> => {

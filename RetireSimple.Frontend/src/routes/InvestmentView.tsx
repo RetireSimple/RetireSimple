@@ -5,9 +5,9 @@ import {FormProvider, useForm, useFormState} from 'react-hook-form';
 import {FieldValues} from 'react-hook-form/dist/types';
 import {useFormAction, useLoaderData, useSubmit} from 'react-router-dom';
 import {updateInvestment} from '../api/InvestmentApi';
-import {InvestmentModelGraph} from '../components/InvestmentModelGraph';
-import {InvestmentFormDefaults, investmentFormSchema} from '../data/FormSchema';
-import {Investment} from '../data/Interfaces';
+import {InvestmentModelGraph} from '../components/GraphComponents';
+import {InvestmentFormDefaults, investmentFormSchema} from '../forms/FormSchema';
+import {Investment} from '../Interfaces';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
 
 export const InvestmentView = () => {
@@ -24,7 +24,6 @@ export const InvestmentView = () => {
 	const {reset, control, handleSubmit} = formContext;
 	const {isDirty, dirtyFields} = useFormState({control});
 
-
 	//HACK React docs indicate this is problematic, should fix sometime
 	React.useEffect(() => {
 		formContext.reset(currentInvestmentData, {keepErrors: true});
@@ -35,23 +34,20 @@ export const InvestmentView = () => {
 		submit(null, {action: deleteAction, method: 'delete'});
 	};
 
-	const handleUpdate =
-		handleSubmit((data: FieldValues) => {
-			const requestData: {[key: string]: string;} = {};
-			Object.entries(dirtyFields).forEach(([key, value])=> {
-				if(value === true) {
-					requestData[key] = data[key].toString()
-				}
-			});
-			updateInvestment(currentInvestmentData.investmentId, requestData).then(() => {
-				submit(null, {action: updateAction, method: 'post'});
-			});
-		},
-		);
-
+	const handleUpdate = handleSubmit((data: FieldValues) => {
+		const requestData: {[key: string]: string} = {};
+		Object.entries(dirtyFields).forEach(([key, value]) => {
+			if (value === true) {
+				requestData[key] = data[key].toString();
+			}
+		});
+		updateInvestment(currentInvestmentData.investmentId, requestData).then(() => {
+			submit(null, {action: updateAction, method: 'post'});
+		});
+	});
 
 	return (
-		<Box sx={{display: 'flex', flexDirection:'column'}}>
+		<Box sx={{display: 'flex', flexDirection: 'column'}}>
 			<Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
 				<Typography variant='h6' component='div' sx={{flexGrow: 1, marginBottom: '1rem'}}>
 					Investment Details: {currentInvestmentData.investmentName}
@@ -60,11 +56,20 @@ export const InvestmentView = () => {
 					<InvestmentDataForm
 						defaultValues={currentInvestmentData}
 						disableTypeSelect={true}>
-						<Divider sx={{paddingY:'5px'}} />
-						<Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
+						<Divider sx={{paddingY: '5px'}} />
+						<Box
+							sx={{
+								display: 'flex',
+								flexDirection: 'row',
+								justifyContent: 'flex-end',
+							}}>
 							<Button onClick={() => reset(currentInvestmentData)}>Reset</Button>
-							<Button color='error' onClick={handleDelete}>Delete</Button>
-							<Button onClick={handleUpdate} disabled={!isDirty}>Update</Button>
+							<Button color='error' onClick={handleDelete}>
+								Delete
+							</Button>
+							<Button onClick={handleUpdate} disabled={!isDirty}>
+								Update
+							</Button>
 						</Box>
 					</InvestmentDataForm>
 				</FormProvider>

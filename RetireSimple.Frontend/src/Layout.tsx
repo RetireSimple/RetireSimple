@@ -13,11 +13,9 @@ import {
 } from '@mui/material';
 import React from 'react';
 import {Link, Outlet, useLoaderData} from 'react-router-dom';
-import {SidebarInvestment} from './components/Sidebar/InvestmentListItem';
-import {VehicleListItem} from './components/Sidebar/VehicleListItem';
-import {AddInvestmentDialog} from './components/dialogs/AddInvestmentDialog';
-import {Investment, Portfolio} from './data/Interfaces';
-import {AddVehicleDialog} from './components/dialogs/AddVehicleDialog';
+import {Investment, Portfolio} from './Interfaces';
+import {SidebarInvestment, VehicleListItem} from './components/SidebarComponents';
+import {AddInvestmentDialog, AddVehicleDialog} from './components/DialogComponents';
 
 export const Layout = () => {
 	const portfolio = useLoaderData() as Portfolio;
@@ -32,76 +30,74 @@ export const Layout = () => {
 		setInvAddDialogOpen(true);
 	};
 
-	const renderInvestmentsTable = (investments: Investment[]) => {
-		return (
-			<Box sx={{width: '100%', alignSelf: 'start'}}>
-				<List>
-					<MenuItem component={Link} to='/'>
-						<Icon baseClassName='material-icons'>home</Icon>
-						<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
-							Home
-						</Typography>
-					</MenuItem>
-					<Divider />
-					<ListSubheader>Investments</ListSubheader>
-					{investments.map((investment: Investment) => (
-						<SidebarInvestment investment={investment} key={investment.investmentId} />
-					))}
-					<MenuItem onClick={() => openAddInvDialog(-1)}>
-						<Icon baseClassName='material-icons'>add_circle</Icon>
-						<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
-							Add Investment
-						</Typography>
-					</MenuItem>
-					<Divider />
-					<ListSubheader>Vehicles</ListSubheader>
-					{vehicles.map((vehicle) => (
-						<Box key={vehicle.investmentVehicleId}>
-							<MenuItem
-								component={Link}
-								to={`/vehicle/${vehicle.investmentVehicleId}`}
-								key={vehicle.investmentVehicleId}>
-								<VehicleListItem
-									vehicleName={vehicle.investmentVehicleName}
-									vehicleType={vehicle.investmentVehicleType}
+	const renderInvestmentsTable = (
+		<Box sx={{width: '100%', alignSelf: 'start'}}>
+			<List>
+				<MenuItem component={Link} to='/'>
+					<Icon baseClassName='material-icons'>home</Icon>
+					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+						Home
+					</Typography>
+				</MenuItem>
+				<Divider />
+				<ListSubheader>Investments</ListSubheader>
+				{investments.map((investment: Investment) => (
+					<SidebarInvestment investment={investment} key={investment.investmentId} />
+				))}
+				<MenuItem onClick={() => openAddInvDialog(-1)}>
+					<Icon baseClassName='material-icons'>add_circle</Icon>
+					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+						Add Investment
+					</Typography>
+				</MenuItem>
+				<Divider />
+				<ListSubheader>Vehicles</ListSubheader>
+				{vehicles.map((vehicle) => (
+					<Box key={vehicle.investmentVehicleId}>
+						<MenuItem
+							component={Link}
+							to={`/vehicle/${vehicle.investmentVehicleId}`}
+							key={vehicle.investmentVehicleId}>
+							<VehicleListItem
+								vehicleName={vehicle.investmentVehicleName}
+								vehicleType={vehicle.investmentVehicleType}
+							/>
+						</MenuItem>
+						<Box sx={{marginLeft: '2rem'}}>
+							{vehicle.investments.map((investment: Investment) => (
+								<SidebarInvestment
+									investment={investment}
+									key={investment.investmentId}
 								/>
+							))}
+							<MenuItem onClick={() => openAddInvDialog(vehicle.investmentVehicleId)}>
+								<Icon baseClassName='material-icons'>add_circle</Icon>
+								<Typography
+									variant='body1'
+									component='div'
+									sx={{marginLeft: '10px'}}>
+									Add Investment to Vehicle
+								</Typography>
 							</MenuItem>
-							<Box sx={{marginLeft: '2rem'}}>
-								{vehicle.investments.map((investment: Investment) => (
-									<SidebarInvestment
-										investment={investment}
-										key={investment.investmentId}
-									/>
-								))}
-								{/* TODO CHANGE DIALOG TARGET */}
-								<MenuItem
-									onClick={() => openAddInvDialog(vehicle.investmentVehicleId)}>
-									<Icon baseClassName='material-icons'>add_circle</Icon>
-									<Typography
-										variant='body1'
-										component='div'
-										sx={{marginLeft: '10px'}}>
-										Add Investment to Vehicle
-									</Typography>
-								</MenuItem>
-							</Box>
 						</Box>
-					))}
-					<MenuItem onClick={() => setVehicleAddDialogOpen(true)}>
-						<Icon baseClassName='material-icons'>add_circle</Icon>
-						<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
-							Add Vehicle
-						</Typography>
-					</MenuItem>
-					<Divider />
-				</List>
-			</Box>
-		);
-	};
+					</Box>
+				))}
+				<MenuItem onClick={() => setVehicleAddDialogOpen(true)}>
+					<Icon baseClassName='material-icons'>add_circle</Icon>
+					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+						Add Vehicle
+					</Typography>
+				</MenuItem>
+				<Divider />
+			</List>
+		</Box>
+	);
 
 	let contents = (
-		<Paper elevation={2} sx={{marginX: '1rem', height: '90vh', width: '100%'}}>
-			{renderInvestmentsTable(investments)}
+		<Paper
+			elevation={2}
+			sx={{marginX: '1rem', height: '90vh', width: '100%', overflow: 'auto'}}>
+			{renderInvestmentsTable}
 		</Paper>
 	);
 

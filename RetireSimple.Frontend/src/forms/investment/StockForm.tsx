@@ -2,7 +2,7 @@ import {Box, Grid, Typography} from '@mui/material';
 
 import React from 'react';
 import {useFormContext, useWatch} from 'react-hook-form';
-import {FormDatePicker, FormSelectField, FormTextField} from '../Inputs';
+import {FormDatePicker, FormSelectField, FormTextField} from '../../components/InputComponents';
 import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
 
 export interface StockFormProps {
@@ -15,17 +15,20 @@ export const StockForm = (props: StockFormProps) => {
 	const analysisType = useWatch({
 		name: 'analysisType',
 		control: formContext.control,
-		defaultValue: props.defaultValues?.analysisType ?? 'MonteCarlo_NormalDist'});
+		defaultValue: props.defaultValues?.analysisType ?? 'MonteCarlo_NormalDist',
+	});
 
 	const {errors} = formContext.formState;
 
 	const analysisSubForm = React.useCallback(() => {
 		switch (analysisType) {
-		case 'MonteCarlo_NormalDist':
-		case 'MonteCarlo_LogNormalDist':
-			return <MonteCarloAnalysisForm />;
-		default:
-			return <Typography variant='subtitle2'>No analysis parameters available</Typography>;
+			case 'MonteCarlo_NormalDist':
+			case 'MonteCarlo_LogNormalDist':
+				return <MonteCarloAnalysisForm />;
+			default:
+				return (
+					<Typography variant='subtitle2'>No analysis parameters available</Typography>
+				);
 		}
 	}, [analysisType]);
 
@@ -38,7 +41,8 @@ export const StockForm = (props: StockFormProps) => {
 			label='Ticker'
 			control={formContext.control}
 			errorField={errors.stockTicker}
-		/>);
+		/>
+	);
 
 	const stockPriceField = (
 		<FormTextField
@@ -46,7 +50,8 @@ export const StockForm = (props: StockFormProps) => {
 			label='Price'
 			control={formContext.control}
 			errorField={errors.stockPrice}
-		/>);
+		/>
+	);
 
 	const stockQuantityField = (
 		<FormTextField
@@ -54,7 +59,8 @@ export const StockForm = (props: StockFormProps) => {
 			label='Quantity'
 			control={formContext.control}
 			errorField={errors.stockQuantity}
-		/>);
+		/>
+	);
 
 	const stockPurchaseDateField = (
 		<FormDatePicker
@@ -63,7 +69,8 @@ export const StockForm = (props: StockFormProps) => {
 			control={formContext.control}
 			errorField={errors.stockPurchaseDate}
 			defaultValue={props.defaultValues?.stockPurchaseDate}
-		/>);
+		/>
+	);
 
 	const stockDividendPercentField = (
 		<FormTextField
@@ -71,7 +78,8 @@ export const StockForm = (props: StockFormProps) => {
 			label='Dividend %'
 			control={formContext.control}
 			errorField={errors.stockDividendPercent}
-		/>);
+		/>
+	);
 
 	const stockDividendDistributionIntervalField = (
 		<FormSelectField
@@ -86,8 +94,8 @@ export const StockForm = (props: StockFormProps) => {
 			]}
 			defaultOption='Month'
 			disable={false}
-		/>);
-
+		/>
+	);
 
 	const stockDividendDistributionMethodField = (
 		<FormSelectField
@@ -102,7 +110,8 @@ export const StockForm = (props: StockFormProps) => {
 			]}
 			defaultOption='Stock'
 			disable={false}
-		/>);
+		/>
+	);
 
 	const stockDividendFirstPaymentDateField = (
 		<FormDatePicker
@@ -111,7 +120,8 @@ export const StockForm = (props: StockFormProps) => {
 			control={formContext.control}
 			errorField={errors.stockDividendFirstPaymentDate}
 			defaultValue={props.defaultValues?.stockDividendFirstPaymentDate ?? ''}
-		/>);
+		/>
+	);
 
 	return (
 		<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
@@ -119,25 +129,43 @@ export const StockForm = (props: StockFormProps) => {
 				<Grid item xs={12}>
 					<Typography variant='subtitle2'>Stock Information</Typography>
 				</Grid>
-				<Grid item xs={2}>{stockTickerField}</Grid>
-				<Grid item xs={2}>{stockPriceField}</Grid>
-				<Grid item xs={2}>{stockQuantityField}</Grid>
-				<Grid item xs={4}>{stockPurchaseDateField}</Grid>
+				<Grid item xs={2}>
+					{stockTickerField}
+				</Grid>
+				<Grid item xs={2}>
+					{stockPriceField}
+				</Grid>
+				<Grid item xs={2}>
+					{stockQuantityField}
+				</Grid>
+				<Grid item xs={4}>
+					{stockPurchaseDateField}
+				</Grid>
 				<Grid item xs={2}></Grid>
 				{/* Dividend Section */}
 				<Grid item xs={12}>
 					<Typography variant='subtitle2'>Dividend Information</Typography>
 				</Grid>
-				<Grid item xs={2}>{stockDividendPercentField}</Grid>
-				<Grid item xs={2}>{stockDividendDistributionIntervalField}</Grid>
-				<Grid item xs={2}>{stockDividendDistributionMethodField}</Grid>
-				<Grid item xs={4}>{stockDividendFirstPaymentDateField}</Grid>
+				<Grid item xs={2}>
+					{stockDividendPercentField}
+				</Grid>
+				<Grid item xs={2}>
+					{stockDividendDistributionIntervalField}
+				</Grid>
+				<Grid item xs={2}>
+					{stockDividendDistributionMethodField}
+				</Grid>
+				<Grid item xs={4}>
+					{stockDividendFirstPaymentDateField}
+				</Grid>
 				<Grid item xs={2}></Grid>
 				{/* Analysis Section */}
 				<Grid item xs={12}>
 					<Typography variant='subtitle2'>Analysis Configuration</Typography>
 				</Grid>
-				<Grid item xs={4}>{props.analysisTypeField}</Grid>
+				<Grid item xs={4}>
+					{props.analysisTypeField}
+				</Grid>
 				<Grid item xs={12}>
 					{analysisSubForm()}
 				</Grid>
