@@ -97,7 +97,9 @@
 					"ignoreComments": true,
 					"ignoreStrings": true,
 					"ignoreTemplateLiterals": true,
-					"ignoreRegExpLiterals": true
+					"ignoreRegExpLiterals": true,
+					"ignorePattern": "^import\\s.+\\sfrom\\s.+;$",
+					"ignoreUrls": true
 				}
 			]
 		}
