@@ -65,7 +65,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 	const cashContributionField = (
 		<FormTextField
 			name='analysis_cashContribution'
-			label='Cash Contribution'
+			label='Contribution Amount (Monthly)'
 			control={formContext.control}
 			errorField={errors.analysis_cashContribution}
 		/>

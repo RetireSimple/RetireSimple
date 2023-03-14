@@ -50,7 +50,7 @@ export interface FormVehicle {
 	investmentVehicleType: string;
 	cashHoldings: string;
 	analysis_analysisLength: string;
-	analysis_CashContribution: string;
+	analysis_cashContribution: string;
 	analysis_vehicleTaxPercentage: string;
 }
 
