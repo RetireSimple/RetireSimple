@@ -262,7 +262,7 @@ export const InvestmentFormDefaults = {
 
 export const vehicleFormSchema = object().shape({
 	investmentVehicleName: string().defined('Required').required('Required').max(50),
-	investmetnVehicleType: string()
+	investmentVehicleType: string()
 		.defined('Required')
 		.required('Required')
 		.oneOf(['401k', 'IRA', 'RothIRA', '403b', '457']),
@@ -272,7 +272,10 @@ export const vehicleFormSchema = object().shape({
 	// Analysis Related Fields
 	//========================================
 	analysis_analysisLength: number().defined('Required').positive().required('Required'),
-	analysis_cashContribution: number().defined('Required').positive('Must be positive'),
+	analysis_cashContribution: number()
+		.defined('Required')
+		.positive('Must be positive')
+		.required('Required'),
 	analysis_vehicleTaxPercentage: number().defined('Required').positive('Must be positive'),
 });
 

@@ -34,6 +34,12 @@ const deleteInvestmentAction = async ({params}) => {
 	return new Response(null, {status: 302, headers: {Location: '/'}});
 };
 
+const addVehicleAction = async () => {
+	//Assert that the actual addition occured already
+	//Use this as a way to refresh loader data
+	return new Response(null, {status: 302, headers: {Location: '/'}});
+};
+
 const router = createBrowserRouter(
 	createRoutesFromElements([
 		<Route path='/' element={<Layout />} id='root'
@@ -53,7 +59,7 @@ const router = createBrowserRouter(
 				<Route path='update' action={updateInvestmentAction} />
 				<Route path='delete' action={deleteInvestmentAction} />
 			</Route>
-
+			<Route path='addVehicle' action={addVehicleAction} />
 			<Route path='add' action={addInvestmentAction} />
 			<Route path='*' element={<div>404</div>} />
 		</Route>,

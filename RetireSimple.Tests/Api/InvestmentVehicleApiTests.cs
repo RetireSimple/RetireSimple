@@ -30,7 +30,7 @@ namespace RetireSimple.Tests.Api {
 		 InlineData("IRA"),
 		 InlineData("RothIRA")]
 		public void InvestmentVehicleAdd(string type) {
-			var result = api.Add(type, new OptionsDict { ["name"] = "test", ["cashHoldings"] = "10" });
+			var result = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test", ["cashHoldings"] = "10" });
 
 			context.InvestmentVehicle.Should().HaveCount(1);
 
@@ -49,7 +49,7 @@ namespace RetireSimple.Tests.Api {
 		 InlineData("IRA"),
 		 InlineData("RothIRA")]
 		public void InvestmentVehicleAddWithNoCashSpecifiedUsesZero(string type) {
-			var result = api.Add(type, new OptionsDict { ["name"] = "test" });
+			var result = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test" });
 
 			context.InvestmentVehicle.Should().HaveCount(1);
 
@@ -68,7 +68,7 @@ namespace RetireSimple.Tests.Api {
 		 InlineData("IRA"),
 		 InlineData("RothIRA")]
 		public void InvestmentVehicleAddIgnoresInvalidKeys(string type) {
-			var result = api.Add(type, new OptionsDict { ["name"] = "test", ["cashHoldings"] = "10", ["invalid"] = "test" });
+			var result = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test", ["cashHoldings"] = "10", ["invalid"] = "test" });
 
 			context.InvestmentVehicle.Should().HaveCount(1);
 
@@ -96,7 +96,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleAddInvestmentThrowsIfNoInvestment() {
-			api.Add("401k", new OptionsDict { ["name"] = "test" });
+			api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 
 			Action act = () => {
 				api.AddInvestmentToVehicle(1, 1);
@@ -112,7 +112,7 @@ namespace RetireSimple.Tests.Api {
 		 InlineData("IRA"),
 		 InlineData("RothIRA")]
 		public void InvestmentVehicleAddInvestmentCreatesRelationship(string type) {
-			var vehicleId = api.Add(type, new OptionsDict { ["name"] = "test" });
+			var vehicleId = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment);
 			context.SaveChanges();
@@ -139,7 +139,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleRemoveInvestmentThrowsIfNoInvestment() {
-			api.Add("401k", new OptionsDict { ["name"] = "test" });
+			api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 
 			Action act = () => {
 				api.RemoveInvestmentFromVehicle(1, 1);
@@ -150,7 +150,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleRemoveInvestmentThrowsIfInvestmentNotInVehicle() {
-			api.Add("401k", new OptionsDict { ["name"] = "test" });
+			api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment);
 			context.SaveChanges();
@@ -169,7 +169,7 @@ namespace RetireSimple.Tests.Api {
 		 InlineData("IRA"),
 		 InlineData("RothIRA")]
 		public void InvestmentVehicleRemoveInvestmentDeletesInvestment(string type) {
-			var vehicleId = api.Add(type, new OptionsDict { ["name"] = "test" });
+			var vehicleId = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment);
 			context.SaveChanges();
@@ -198,7 +198,7 @@ namespace RetireSimple.Tests.Api {
 		InlineData("IRA"),
 		InlineData("RothIRA")]
 		public void InvestmentVehicleRemoveCascadeDeletesDependents(string type) {
-			var vehicleId = api.Add(type, new OptionsDict { ["name"] = "test" });
+			var vehicleId = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment);
 			context.SaveChanges();
@@ -226,7 +226,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateAnalysisOverridesAddsOptionIfNotExist() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["name"] = "test" });
+			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			api.UpdateAnalysisOverrides(vehicleId, new OptionsDict { ["test"] = "test" });
 
 			var vehicle = context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
@@ -237,7 +237,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateAnalysisOverridesUpdatesOptionIfExist() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["name"] = "test" });
+			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			api.UpdateAnalysisOverrides(vehicleId, new OptionsDict { ["test"] = "test" });
 			api.UpdateAnalysisOverrides(vehicleId, new OptionsDict { ["test"] = "test2" });
 
@@ -249,7 +249,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateAnalysisOverridesRemovesOptionIfExistAndNullValue() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["name"] = "test" });
+			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			api.UpdateAnalysisOverrides(vehicleId, new OptionsDict { ["test"] = "test" });
 			api.UpdateAnalysisOverrides(vehicleId, new OptionsDict { ["test"] = "" });
 
@@ -270,7 +270,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleGetVehicleInvestmentsReturnsInvestmentList() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["name"] = "test" });
+			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment);
 			context.SaveChanges();
@@ -292,7 +292,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleGetAllVehicleInvestmentsSingleVehicleReturnsDictionaryWithInvestments() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["name"] = "test" });
+			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment);
 			context.SaveChanges();
@@ -308,13 +308,13 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleGetAllVehicleInvestmentsMultipleVehiclesReturnsDictionaryWithInvestments() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["name"] = "test" });
+			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment);
 			context.SaveChanges();
 			api.AddInvestmentToVehicle(vehicleId, tempInvestment.InvestmentId);
 
-			var vehicleId2 = api.Add("401k", new OptionsDict { ["name"] = "test2" });
+			var vehicleId2 = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test2" });
 			var tempInvestment2 = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment2);
 			context.SaveChanges();
@@ -335,7 +335,7 @@ namespace RetireSimple.Tests.Api {
 		[Fact]
 		public void InvestmentVehicleUpdateNameThrowsIfNoVehicle() {
 			Action act = () => {
-				api.Update(1, new OptionsDict { ["name"] = "test" });
+				api.Update(1, new OptionsDict { ["investmentVehicleName"] = "test" });
 			};
 
 			act.Should().Throw<ArgumentException>();
@@ -343,8 +343,8 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateNameOnlyUpdatesName() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["name"] = "test" });
-			api.Update(vehicleId, new OptionsDict { ["name"] = "test2" });
+			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			api.Update(vehicleId, new OptionsDict { ["investmentVehicleName"] = "test2" });
 
 			var vehicle = context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
 			vehicle.InvestmentVehicleName.Should().Be("test2");
@@ -353,7 +353,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateCashHoldingsOnlyUpdatesCashHoldings() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["name"] = "test" });
+			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			api.Update(vehicleId, new OptionsDict { ["cashHoldings"] = "100" });
 
 			var vehicle = context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
@@ -362,8 +362,8 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateMultipleOptionsOnlyUpdatesSpecifiedOptions() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["name"] = "test" });
-			api.Update(vehicleId, new OptionsDict { ["cashHoldings"] = "100", ["name"] = "test2" });
+			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			api.Update(vehicleId, new OptionsDict { ["cashHoldings"] = "100", ["investmentVehicleName"] = "test2" });
 
 			var vehicle = context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
 			vehicle.CashHoldings.Should().Be(100);
@@ -372,8 +372,8 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateInvalidOptionsAreIgnored() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["name"] = "test" });
-			api.Update(vehicleId, new OptionsDict { ["cashHoldings"] = "100", ["name"] = "test2", ["test"] = "test" });
+			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			api.Update(vehicleId, new OptionsDict { ["cashHoldings"] = "100", ["investmentVehicleName"] = "test2", ["test"] = "test" });
 
 			var vehicle = context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
 			vehicle.CashHoldings.Should().Be(100);

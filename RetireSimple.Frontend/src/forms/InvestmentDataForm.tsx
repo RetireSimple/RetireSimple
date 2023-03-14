@@ -11,10 +11,6 @@ export interface InvestmentDataFormProps {
 	children?: React.ReactNode;
 }
 
-///IMPORTANT CAVEAT: This form does not use a standard submit action
-///Data should be validated by calling trigger, then true promise calls getValues()
-///Allows for parents to retrieve data from the form context
-
 export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 	const formContext = useFormContext();
 

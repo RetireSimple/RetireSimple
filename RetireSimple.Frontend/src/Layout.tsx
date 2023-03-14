@@ -17,12 +17,14 @@ import {SidebarInvestment} from './components/Sidebar/InvestmentListItem';
 import {VehicleListItem} from './components/Sidebar/VehicleListItem';
 import {AddInvestmentDialog} from './components/dialogs/AddInvestmentDialog';
 import {Investment, Portfolio} from './data/Interfaces';
+import {AddVehicleDialog} from './components/dialogs/AddVehicleDialog';
 
 export const Layout = () => {
 	const portfolio = useLoaderData() as Portfolio;
 	const {investments, investmentVehicles: vehicles} = portfolio;
 
-	const [addDialogOpen, setAddDialogOpen] = React.useState(false);
+	const [invAddDialogOpen, setInvAddDialogOpen] = React.useState(false);
+	const [vehicleAddDialogOpen, setVehicleAddDialogOpen] = React.useState(false);
 
 	const renderInvestmentsTable = (investments: Investment[]) => {
 		return (
@@ -39,7 +41,7 @@ export const Layout = () => {
 					{investments.map((investment: Investment) => (
 						<SidebarInvestment investment={investment} key={investment.investmentId} />
 					))}
-					<MenuItem onClick={() => setAddDialogOpen(true)}>
+					<MenuItem onClick={() => setInvAddDialogOpen(true)}>
 						<Icon baseClassName='material-icons'>add_circle</Icon>
 						<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 							Add Investment
@@ -48,7 +50,7 @@ export const Layout = () => {
 					<Divider />
 					<ListSubheader>Vehicles</ListSubheader>
 					{vehicles.map((vehicle) => (
-						<Box>
+						<Box key={vehicle.investmentVehicleId}>
 							<MenuItem
 								component={Link}
 								to={`/vehicle/${vehicle.investmentVehicleId}`}
@@ -66,7 +68,7 @@ export const Layout = () => {
 									/>
 								))}
 								{/* TODO CHANGE DIALOG TARGET */}
-								<MenuItem onClick={() => setAddDialogOpen(true)}>
+								<MenuItem onClick={() => setInvAddDialogOpen(true)}>
 									<Icon baseClassName='material-icons'>add_circle</Icon>
 									<Typography
 										variant='body1'
@@ -76,17 +78,14 @@ export const Layout = () => {
 									</Typography>
 								</MenuItem>
 							</Box>
-							<MenuItem onClick={() => setAddDialogOpen(true)}>
-								<Icon baseClassName='material-icons'>add_circle</Icon>
-								<Typography
-									variant='body1'
-									component='div'
-									sx={{marginLeft: '10px'}}>
-									Add Vehicle
-								</Typography>
-							</MenuItem>
 						</Box>
 					))}
+					<MenuItem onClick={() => setVehicleAddDialogOpen(true)}>
+						<Icon baseClassName='material-icons'>add_circle</Icon>
+						<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+							Add Vehicle
+						</Typography>
+					</MenuItem>
 					<Divider />
 				</List>
 			</Box>
@@ -128,7 +127,14 @@ export const Layout = () => {
 					<Outlet />
 				</Box>
 			</Box>
-			<AddInvestmentDialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)} />
+			<AddInvestmentDialog
+				open={invAddDialogOpen}
+				onClose={() => setInvAddDialogOpen(false)}
+			/>
+			<AddVehicleDialog
+				open={vehicleAddDialogOpen}
+				onClose={() => setVehicleAddDialogOpen(false)}
+			/>
 		</div>
 	);
 };

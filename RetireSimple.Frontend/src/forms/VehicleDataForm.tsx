@@ -8,10 +8,6 @@ export interface VehicleDataFormProps {
 	children?: React.ReactNode;
 }
 
-///IMPORTANT CAVEAT: This form does not use a standard submit action
-///Data should be validated by calling trigger, then true promise calls getValues()
-///Allows for parents to retrieve data from the form context
-
 export const VehicleDataForm = (props: VehicleDataFormProps) => {
 	const formContext = useFormContext();
 
@@ -26,7 +22,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 			name='investmentVehicleName'
 			label='Name'
 			control={formContext.control}
-			errorField={errors.vehicleName}
+			errorField={errors.investmentVehicleName}
 		/>
 	);
 
@@ -35,7 +31,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 			name='investmentVehicleType'
 			label='Vehicle Type'
 			control={formContext.control}
-			errorField={errors.vehicleType}
+			errorField={errors.investmentVehicleType}
 			defaultOption='401k'
 			options={[
 				{value: '401k', label: '401k'},
@@ -48,12 +44,21 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 		/>
 	);
 
+	const cashHoldingField = (
+		<FormTextField
+			name='cashHoldings'
+			label='Cash Holdings'
+			control={formContext.control}
+			errorField={errors.cashHoldings}
+		/>
+	);
+
 	const analysisLengthField = (
 		<FormTextField
 			name='analysis_analysisLength'
 			label='Analysis Length'
 			control={formContext.control}
-			errorField={errors.analysisLength}
+			errorField={errors.analysis_analysisLength}
 		/>
 	);
 
@@ -62,7 +67,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 			name='analysis_cashContribution'
 			label='Cash Contribution'
 			control={formContext.control}
-			errorField={errors.cashContribution}
+			errorField={errors.analysis_cashContribution}
 		/>
 	);
 
@@ -71,7 +76,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 			name='analysis_vehicleTaxPercentage'
 			label='Vehicle Tax Percentage'
 			control={formContext.control}
-			errorField={errors.vehicleTaxPercentage}
+			errorField={errors.analysis_vehicleTaxPercentage}
 		/>
 	);
 
@@ -86,6 +91,10 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 						{vehicleTypeField}
 					</Grid>
 					<Grid item xs={4} />
+					<Grid item xs={4}>
+						{cashHoldingField}
+					</Grid>
+					<Grid item xs={8} />
 					<Grid item xs={4}>
 						{analysisLengthField}
 					</Grid>

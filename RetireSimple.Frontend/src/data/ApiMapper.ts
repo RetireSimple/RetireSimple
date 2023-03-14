@@ -79,7 +79,7 @@ export const getFlatVehicleData = (vehicle: InvestmentVehicle): FormVehicle => {
 		investmentVehicleType: vehicle.investmentVehicleType,
 		cashHoldings: vehicle.investmentVehicleData['cashHoldings'],
 		analysis_analysisLength: vehicle.analysisOptionsOverrides['analysisLength'],
-		analysis_CashContribution: vehicle.analysisOptionsOverrides['CashContribution'],
+		analysis_CashContribution: vehicle.analysisOptionsOverrides['cashContribution'],
 		analysis_vehicleTaxPercentage: vehicle.analysisOptionsOverrides['vehicleTaxPercentage'],
 	};
 
