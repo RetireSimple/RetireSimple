@@ -1,24 +1,22 @@
 import {yupResolver} from '@hookform/resolvers/yup';
 import {Box, Button, Divider, Typography} from '@mui/material';
 import React from 'react';
-import {FormProvider, useForm, useFormState} from 'react-hook-form';
-import {FieldValues} from 'react-hook-form/dist/types';
+import {FieldValues, FormProvider, useForm, useFormState} from 'react-hook-form';
 import {useFormAction, useLoaderData, useSubmit} from 'react-router-dom';
-import {updateInvestment} from '../api/InvestmentApi';
-import {InvestmentModelGraph} from '../components/GraphComponents';
-import {InvestmentFormDefaults, investmentFormSchema} from '../forms/FormSchema';
-import {Investment} from '../Interfaces';
-import {InvestmentDataForm} from '../forms/InvestmentDataForm';
+import {VehicleFormDefaults, vehicleFormSchema} from '../forms/FormSchema';
+import {FormVehicle} from '../Interfaces';
+import {VehicleDataForm} from '../forms/VehicleDataForm';
+import {updateVehicle} from '../api/VehicleApi';
 
-export const InvestmentView = () => {
-	const currentInvestmentData = useLoaderData() as Investment;
+export const VehicleView = () => {
+	const vehicleData = useLoaderData() as FormVehicle;
 	const submit = useSubmit();
 	const deleteAction = useFormAction('delete');
 	const updateAction = useFormAction('update');
 	const formContext = useForm({
 		shouldUnregister: true,
-		resolver: yupResolver(investmentFormSchema),
-		defaultValues: InvestmentFormDefaults,
+		resolver: yupResolver(vehicleFormSchema),
+		defaultValues: VehicleFormDefaults,
 	});
 
 	const {reset, control, handleSubmit} = formContext;
@@ -26,9 +24,9 @@ export const InvestmentView = () => {
 
 	//HACK React docs indicate this is problematic, should fix sometime
 	React.useEffect(() => {
-		formContext.reset(currentInvestmentData, {keepErrors: true});
+		formContext.reset(vehicleData, {keepErrors: true});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentInvestmentData]);
+	}, [vehicleData]);
 
 	const handleDelete = () => {
 		submit(null, {action: deleteAction, method: 'delete'});
@@ -41,7 +39,8 @@ export const InvestmentView = () => {
 				requestData[key] = data[key].toString();
 			}
 		});
-		updateInvestment(currentInvestmentData.investmentId, requestData).then(() => {
+
+		updateVehicle(vehicleData.investmentVehicleId, requestData).then(() => {
 			submit(null, {action: updateAction, method: 'post'});
 		});
 	});
@@ -50,12 +49,10 @@ export const InvestmentView = () => {
 		<Box sx={{display: 'flex', flexDirection: 'column'}}>
 			<Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
 				<Typography variant='h6' component='div' sx={{flexGrow: 1, marginBottom: '1rem'}}>
-					Investment Details: {currentInvestmentData.investmentName}
+					Vehicle Details: {vehicleData.investmentVehicleName}
 				</Typography>
 				<FormProvider {...formContext}>
-					<InvestmentDataForm
-						defaultValues={currentInvestmentData}
-						disableTypeSelect={true}>
+					<VehicleDataForm defaultValues={vehicleData} disableTypeSelect={true}>
 						<Divider sx={{paddingY: '5px'}} />
 						<Box
 							sx={{
@@ -63,7 +60,7 @@ export const InvestmentView = () => {
 								flexDirection: 'row',
 								justifyContent: 'flex-end',
 							}}>
-							<Button onClick={() => reset(currentInvestmentData)}>Reset</Button>
+							<Button onClick={() => reset(vehicleData)}>Reset</Button>
 							<Button color='error' onClick={handleDelete}>
 								Delete
 							</Button>
@@ -71,12 +68,10 @@ export const InvestmentView = () => {
 								Update
 							</Button>
 						</Box>
-					</InvestmentDataForm>
+					</VehicleDataForm>
 				</FormProvider>
 			</Box>
-			<Box sx={{width: '100%', height: '100%'}}>
-				<InvestmentModelGraph investmentId={currentInvestmentData.investmentId} />
-			</Box>
+			<Box sx={{width: '100%', height: '100%'}}></Box>
 		</Box>
 	);
 };

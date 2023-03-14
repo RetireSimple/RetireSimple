@@ -1,5 +1,5 @@
-import {convertInvestmentModelData, flattenApiInvestment} from '../data/ApiMapper';
-import {Investment, InvestmentModel} from '../data/Interfaces';
+import {convertInvestmentModelData, flattenApiInvestment} from '../api/ApiMapper';
+import {Investment, InvestmentModel} from '../Interfaces';
 
 describe('flattenApiInvestment', () => {
 	test('should flatten an investment object - stock version', () => {

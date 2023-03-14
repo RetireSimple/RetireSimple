@@ -33,7 +33,6 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpPost]
-		[Route("Add")]
 		public ActionResult AddVehicle([FromBody] JsonDocument requestBody) {
 			var body = requestBody.Deserialize<OptionsDict>();
 			if (body == null) {
@@ -41,13 +40,13 @@ namespace RetireSimple.Backend.Controllers {
 			}
 
 			//Must have a vehicleType defined, we check if type is valid in API call
-			if (!body.ContainsKey("vehicleType")) {
-				return BadRequest("vehicleType not defined");
+			if (!body.ContainsKey("investmentVehicleType")) {
+				return BadRequest("investmentVehicleType not defined");
 			}
 
 			try {
-				var type = body["vehicleType"];
-				body.Remove("vehicleType");
+				var type = body["investmentVehicleType"];
+				body.Remove("investmentVehicleType");
 
 				var id = _vehicleApi.Add(type, body);
 
@@ -57,7 +56,7 @@ namespace RetireSimple.Backend.Controllers {
 						body.Where(kvp => kvp.Key.StartsWith("analysis_"))
 							.ToDictionary(kvp => kvp.Key.Remove(0, 9), kvp => kvp.Value);
 
-					_vehicleApi.Update(id, analysisOptions);
+					_vehicleApi.UpdateAnalysisOverrides(id, analysisOptions);
 				}
 
 				// return Ok(id);
@@ -69,7 +68,7 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpDelete]
-		[Route("Delete/{id}")]
+		[Route("{id}")]
 		public ActionResult DeleteVehicle(int id) {
 			try {
 				_vehicleApi.Remove(id);
@@ -105,7 +104,7 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpPost]
-		[Route("Update/{id}")]
+		[Route("{id}")]
 		public ActionResult UpdateVehicle(int id, [FromBody] JsonDocument requestBody) {
 			var body = requestBody.Deserialize<OptionsDict>();
 			if (body == null) {

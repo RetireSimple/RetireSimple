@@ -41,10 +41,11 @@ namespace RetireSimple.Engine.Data.User {
 
 			//TODO: This is a bit of a hack, but it works for now
 			if (!models.Any(m => m is null || m.MaxModelData == null || m.MinModelData == null || m.AvgModelData == null)) {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
 				var minAggregate = models.Select(m => m.MinModelData).Aggregate((a, b) => a.Zip(b, (x, y) => x + y).ToList());
 				var maxAggregate = models.Select(m => m.MaxModelData).Aggregate((a, b) => a.Zip(b, (x, y) => x + y).ToList());
 				var avgAggregate = models.Select(m => m.AvgModelData).Aggregate((a, b) => a.Zip(b, (x, y) => x + y).ToList());
-
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 				return new PortfolioModel() {
 					PortfolioId = PortfolioId,
 					Portfolio = this,

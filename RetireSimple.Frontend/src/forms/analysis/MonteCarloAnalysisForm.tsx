@@ -1,7 +1,7 @@
 import {Grid, Typography} from '@mui/material';
 import React from 'react';
 import {useFormContext} from 'react-hook-form';
-import {FormTextField} from '../Inputs';
+import {FormTextField} from '../../components/InputComponents';
 
 export const MonteCarloAnalysisForm = () => {
 	const formContext = useFormContext();
@@ -16,7 +16,8 @@ export const MonteCarloAnalysisForm = () => {
 			label='Analysis Length (Months)'
 			control={formContext.control}
 			errorField={errors.analysisLength}
-		/>);
+		/>
+	);
 
 	const simCountField = (
 		<FormTextField
@@ -24,7 +25,8 @@ export const MonteCarloAnalysisForm = () => {
 			label='Simulation Count'
 			control={formContext.control}
 			errorField={errors.analysis_simCount}
-		/>);
+		/>
+	);
 
 	const randomVariableMuField = (
 		<FormTextField
@@ -32,7 +34,8 @@ export const MonteCarloAnalysisForm = () => {
 			label='Mu'
 			control={formContext.control}
 			errorField={errors.analysis_randomVariableMu}
-		/>);
+		/>
+	);
 
 	const randomVariableSigmaField = (
 		<FormTextField
@@ -40,7 +43,8 @@ export const MonteCarloAnalysisForm = () => {
 			label='Sigma'
 			control={formContext.control}
 			errorField={errors.analysis_randomVariableSigma}
-		/>);
+		/>
+	);
 
 	const randomVariableScaleFactorField = (
 		<FormTextField
@@ -48,21 +52,32 @@ export const MonteCarloAnalysisForm = () => {
 			label='Scale Factor'
 			control={formContext.control}
 			errorField={errors.analysis_randomVariableScaleFactor}
-		/>);
+		/>
+	);
 
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
 				<Typography variant='subtitle2'>Monte Carlo Analysis Parameters</Typography>
 			</Grid>
-			<Grid item xs={4}>{analysisLengthField}</Grid>
-			<Grid item xs={4}>{simCountField}</Grid>
+			<Grid item xs={4}>
+				{analysisLengthField}
+			</Grid>
+			<Grid item xs={4}>
+				{simCountField}
+			</Grid>
 			<Grid item xs={12}>
 				<Typography variant='subtitle2'>Random Variable Parameters (Normal)</Typography>
 			</Grid>
-			<Grid item xs={2}>{randomVariableMuField}</Grid>
-			<Grid item xs={2}>{randomVariableSigmaField}</Grid>
-			<Grid item xs={2}>{randomVariableScaleFactorField}</Grid>
+			<Grid item xs={2}>
+				{randomVariableMuField}
+			</Grid>
+			<Grid item xs={2}>
+				{randomVariableSigmaField}
+			</Grid>
+			<Grid item xs={2}>
+				{randomVariableScaleFactorField}
+			</Grid>
 		</Grid>
 	);
 };

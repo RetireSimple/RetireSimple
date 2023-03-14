@@ -80,7 +80,7 @@ namespace RetireSimple.Engine.Api {
 				_ => throw new ArgumentException("Unknown Investment Vehicle type")
 			};
 
-			vehicle.InvestmentVehicleName = options["name"];
+			vehicle.InvestmentVehicleName = options["investmentVehicleName"];
 			vehicle.CashHoldings = decimal.Parse(options.GetValueOrDefault("cashHoldings", "0"));
 			_context.Portfolio.First().InvestmentVehicles.Add(vehicle);
 			_context.SaveChanges();
@@ -163,9 +163,9 @@ namespace RetireSimple.Engine.Api {
 			//NOTE For now there are only two effective fields that can be updated, all other fields are
 			//NOTE ignored. This is somewhat by intention.
 
-			if (options.ContainsKey("name")) {
-				if (!string.IsNullOrWhiteSpace(options["name"])) {
-					vehicle.InvestmentVehicleName = options["name"];
+			if (options.ContainsKey("investmentVehicleName")) {
+				if (!string.IsNullOrWhiteSpace(options["investmentVehicleName"])) {
+					vehicle.InvestmentVehicleName = options["investmentVehicleName"];
 				}
 				else {
 					throw new ArgumentException("Name cannot be empty");

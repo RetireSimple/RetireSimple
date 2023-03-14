@@ -1,6 +1,5 @@
-import {FullModelData, Investment, InvestmentModel} from '../data/Interfaces';
-
-export const API_BASE_URL = process.env.REACT_APP_API_URL;
+import {FullModelData, Investment, InvestmentModel} from '../Interfaces';
+import {API_BASE_URL} from './ApiCommon';
 
 export const getInvestmentModel = async (id: number): Promise<InvestmentModel> => {
 	const response = await fetch(`${API_BASE_URL}/Analysis/Investment/${id}`, {
@@ -14,17 +13,17 @@ export const getInvestmentModel = async (id: number): Promise<InvestmentModel> =
 };
 
 export const getInvestments = async (): Promise<Investment[]> => {
-	const response = await fetch(`${API_BASE_URL}/Investment/GetAllInvestments`);
+	const response = await fetch(`${API_BASE_URL}/Investment`);
 	return await response.json();
 };
 
 export const getInvestment = async (id: number): Promise<Investment> => {
-	const response = await fetch(`${API_BASE_URL}/Investment/GetInvestment/${id}`);
+	const response = await fetch(`${API_BASE_URL}/Investment/${id}`);
 	return await response.json();
 };
 
-export const addInvestment = async (data: any) => {
-	await fetch(`${API_BASE_URL}/Investment/Add`, {
+export const addInvestment = async (data: any): Promise<string> => {
+	const response = await fetch(`${API_BASE_URL}/Investment`, {
 		method: 'POST',
 		body: JSON.stringify(data),
 		headers: {
@@ -32,16 +31,18 @@ export const addInvestment = async (data: any) => {
 			'Content-Type': 'application/json; charset=utf-8',
 		},
 	});
+
+	return response.text();
 };
 
 export const deleteInvestment = async (id: number) => {
-	await fetch(`${API_BASE_URL}/Investment/Delete/${id}`, {
+	await fetch(`${API_BASE_URL}/Investment/${id}`, {
 		method: 'DELETE',
 	});
 };
 
 export const updateInvestment = async (id: number, data: any) => {
-	await fetch(`${API_BASE_URL}/Investment/Update/${id}`, {
+	await fetch(`${API_BASE_URL}/Investment/${id}`, {
 		method: 'POST',
 		body: JSON.stringify(data),
 		headers: {

@@ -17,13 +17,12 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpGet]
-		[Route("GetAllInvestments")]
 		public ActionResult<List<InvestmentBase>> GetInvestments() {
-			return Ok(_investmentApi.GetAllInvestments());
+			return Ok(_investmentApi.GetSingluarInvestments());
 		}
 
 		[HttpGet]
-		[Route("GetInvestment/{id}")]
+		[Route("{id}")]
 		public ActionResult<InvestmentBase> GetInvestment(int id) {
 			try {
 				var investment = _investmentApi.GetInvestment(id);
@@ -35,7 +34,6 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpPost]
-		[Route("Add")]
 		public ActionResult AddInvestment([FromBody] JsonDocument requestBody) {
 			var body = requestBody.Deserialize<OptionsDict>();
 			if (body == null) {
@@ -61,7 +59,7 @@ namespace RetireSimple.Backend.Controllers {
 					_investmentApi.UpdateAnalysisOptions(id, analysisOptions);
 				}
 
-				return Ok();
+				return Ok(id);
 			}
 			catch (ArgumentException) {
 				return BadRequest("Specified type of investment is not supported");
@@ -69,7 +67,7 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpPost]
-		[Route("Update/{id}")]
+		[Route("{id}")]
 		public ActionResult UpdateInvestment(int id, [FromBody] JsonDocument requestBody) {
 			var body = requestBody.Deserialize<OptionsDict>();
 			if (body == null) {
@@ -95,7 +93,7 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpDelete]
-		[Route("Delete/{id}")]
+		[Route("{id}")]
 		public ActionResult DeleteInvestment(int id) {
 			try {
 				_investmentApi.Remove(id);

@@ -56,7 +56,10 @@
 			],
 			"indent": [
 				"error",
-				"tab"
+				"tab",
+				{
+					"SwitchCase": 1
+				}
 			],
 			"brace-style": [
 				"error",
@@ -94,7 +97,9 @@
 					"ignoreComments": true,
 					"ignoreStrings": true,
 					"ignoreTemplateLiterals": true,
-					"ignoreRegExpLiterals": true
+					"ignoreRegExpLiterals": true,
+					"ignorePattern": "^import\\s.+\\sfrom\\s.+;$",
+					"ignoreUrls": true
 				}
 			]
 		}

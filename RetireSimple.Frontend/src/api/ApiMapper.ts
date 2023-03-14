@@ -1,4 +1,10 @@
-import {Investment, InvestmentModel, PortfolioModel} from './Interfaces';
+import {
+	FormVehicle,
+	Investment,
+	InvestmentModel,
+	InvestmentVehicle,
+	PortfolioModel,
+} from '../Interfaces';
 
 //Flattens API Investment object for form use
 //todo: should we strip fields items?
@@ -68,6 +74,20 @@ export const createAggregateStackData = (investmentModels: {[key: string]: Inves
 
 		result.push(dataPoint);
 	}
+
+	return result;
+};
+
+export const getFlatVehicleData = (vehicle: InvestmentVehicle): FormVehicle => {
+	const result: FormVehicle = {
+		investmentVehicleId: vehicle.investmentVehicleId,
+		investmentVehicleName: vehicle.investmentVehicleName,
+		investmentVehicleType: vehicle.investmentVehicleType,
+		cashHoldings: vehicle.investmentVehicleData['cashHoldings'],
+		analysis_analysisLength: vehicle.analysisOptionsOverrides['analysisLength'],
+		analysis_cashContribution: vehicle.analysisOptionsOverrides['cashContribution'],
+		analysis_vehicleTaxPercentage: vehicle.analysisOptionsOverrides['vehicleTaxPercentage'],
+	};
 
 	return result;
 };

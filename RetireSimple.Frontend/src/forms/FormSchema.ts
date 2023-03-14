@@ -1,4 +1,4 @@
-import { number, object, string } from 'yup';
+import {number, object, string} from 'yup';
 
 export const decimalValidation = (maxLen: number, value: number) =>
 	value === 0 || value
@@ -235,10 +235,8 @@ export const investmentFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_isAnnual: string().when('analysisType', {
-		is: (value: string) =>
-			value === 'bondValuationAnalysis',
-		then: (schema) =>
-			schema.defined().required().oneOf(['true', 'false']),
+		is: (value: string) => value === 'bondValuationAnalysis',
+		then: (schema) => schema.defined().required().oneOf(['true', 'false']),
 		otherwise: (schema) => schema.strip(),
 	}),
 });
@@ -260,4 +258,32 @@ export const InvestmentFormDefaults = {
 	analysis_randomVariableMu: '0.0',
 	analysis_randomVariableSigma: '1.0',
 	analysis_randomVariableScaleFactor: '1',
+};
+
+export const vehicleFormSchema = object().shape({
+	investmentVehicleName: string().defined('Required').required('Required').max(50),
+	investmentVehicleType: string()
+		.defined('Required')
+		.required('Required')
+		.oneOf(['401k', 'IRA', 'RothIRA', '403b', '457']),
+	cashHoldings: number().defined('Required').positive('Must be positive'),
+
+	//========================================
+	// Analysis Related Fields
+	//========================================
+	analysis_analysisLength: number().defined('Required').positive().required('Required'),
+	analysis_cashContribution: number()
+		.defined('Required')
+		.positive('Must be positive')
+		.required('Required'),
+	analysis_vehicleTaxPercentage: number().defined('Required').positive('Must be positive'),
+});
+
+export const VehicleFormDefaults = {
+	investmentVehicleName: '',
+	investmentvehicleType: '401k',
+	cashHoldings: '',
+	analysis_analysisLength: '60',
+	analysis_cashContribution: '',
+	analysis_vehicleTaxPercentage: '',
 };
