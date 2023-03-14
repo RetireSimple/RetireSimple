@@ -12,13 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddCommandLine(args);
 builder.Configuration["Provider"] ??= "sqlite";
-var dbPath ="EngineDB.db";
+var dbPath = "EngineDB.db";
 
-if(builder.Environment.IsProduction()){
+if (builder.Environment.IsProduction()) {
 	dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RetireSimple", "EngineDB.db");
 	builder.Configuration["Provider"] = "sqlite";
 }
-
 
 builder.Services.AddControllers()
 	.AddJsonOptions(options => {
@@ -50,8 +49,6 @@ if (app.Configuration["Provider"] == "sqlite") {
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
-
-
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
