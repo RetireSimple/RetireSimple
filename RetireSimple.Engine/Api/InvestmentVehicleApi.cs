@@ -236,7 +236,8 @@ namespace RetireSimple.Engine.Api {
 			var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == id);
 			if ((options is not null && options.Count > 0) ||
 			vehicle.InvestmentVehicleModel is null ||
-			vehicle.LastUpdated > vehicle.InvestmentVehicleModel.LastUpdated) {
+			vehicle.LastUpdated > vehicle.InvestmentVehicleModel.LastUpdated ||
+			vehicle.Investments.Any(i => i.LastUpdated > vehicle.InvestmentVehicleModel.LastUpdated)) {
 				var vehicleModel = vehicle.GenerateAnalysis(options ?? new OptionsDict());
 				vehicle.InvestmentVehicleModel = vehicleModel;
 				var updateTime = DateTime.Now;

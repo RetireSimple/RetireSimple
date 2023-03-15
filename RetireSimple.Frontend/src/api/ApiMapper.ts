@@ -3,6 +3,7 @@ import {
 	Investment,
 	InvestmentModel,
 	InvestmentVehicle,
+	InvestmentVehicleModel,
 	PortfolioModel,
 } from '../Interfaces';
 
@@ -57,6 +58,30 @@ export const convertPortfolioModelData = (model: PortfolioModel) => {
 	}
 
 	return result;
+};
+
+export const convertVehicleModelData = (model: InvestmentVehicleModel) => {
+	const result = [];
+	const taxedResult = [];
+
+	for (let i = 0; i < model.avgModelData.length; i++) {
+		result.push({
+			year: i,
+			avg: +model.avgModelData[i].toFixed(2),
+			min: +model.minModelData[i].toFixed(2),
+			max: +model.maxModelData[i].toFixed(2),
+		});
+		taxedResult.push({
+			year: i,
+			avg: +model.taxDeductedAvgModelData[i].toFixed(2),
+			min: +model.taxDeductedMinModelData[i].toFixed(2),
+			max: +model.taxDeductedMaxModelData[i].toFixed(2),
+		});
+	}
+	return {
+		base: result,
+		taxed: taxedResult,
+	};
 };
 
 export const createAggregateStackData = (investmentModels: {[key: string]: InvestmentModel}) => {

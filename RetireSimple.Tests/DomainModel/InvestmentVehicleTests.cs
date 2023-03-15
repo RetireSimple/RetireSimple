@@ -1,11 +1,8 @@
-namespace RetireSimple.Tests.DomainModel
-{
-	public class InvestmentVehicleTests : IDisposable
-	{
+namespace RetireSimple.Tests.DomainModel {
+	public class InvestmentVehicleTests : IDisposable {
 		EngineDbContext Context { get; set; }
 
-	public InvestmentVehicleTests()
-		{
+		public InvestmentVehicleTests() {
 			Context = new EngineDbContext(
 				new DbContextOptionsBuilder()
 					.UseSqlite("Data Source=testing_vehicle.db")
@@ -22,15 +19,13 @@ namespace RetireSimple.Tests.DomainModel
 			Context.SaveChanges();
 		}
 
-		public void Dispose()
-		{
+		public void Dispose() {
 			Context.Database.EnsureDeleted();
 			Context.Dispose();
 		}
 
 		[Fact]
-		public void TestInvestmentVehicleAdd()
-		{
+		public void TestInvestmentVehicleAdd() {
 			InvestmentVehicleBase vehicle = new Vehicle403b();
 			Context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
 			Context.SaveChanges();
@@ -41,8 +36,7 @@ namespace RetireSimple.Tests.DomainModel
 		}
 
 		[Fact]
-		public void TestInvestmentVehicleRemove()
-		{
+		public void TestInvestmentVehicleRemove() {
 			InvestmentVehicleBase vehicle = new Vehicle403b();
 			Context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
 			Context.SaveChanges();
@@ -56,12 +50,10 @@ namespace RetireSimple.Tests.DomainModel
 		}
 
 		[Fact]
-		public void TestInvestmentVehicleFKConstraintPortfolio()
-		{
+		public void TestInvestmentVehicleFKConstraintPortfolio() {
 			InvestmentVehicleBase vehicle = new Vehicle403b();
 
-			Action act = () =>
-			{
+			Action act = () => {
 				Context.InvestmentVehicle.Add(vehicle);
 				Context.SaveChanges();
 			};
@@ -70,15 +62,13 @@ namespace RetireSimple.Tests.DomainModel
 		}
 
 		[Fact]
-		public void TestInvestmentVehicleFKConstraintInvestmentDeleteCascades()
-		{
+		public void TestInvestmentVehicleFKConstraintInvestmentDeleteCascades() {
 			InvestmentVehicleBase vehicle = new Vehicle403b();
 			Context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
 			vehicle.Investments.Add(Context.Investment.First(i => i.InvestmentId == 1));
 			Context.SaveChanges();
 
-			Action act = () =>
-			{
+			Action act = () => {
 				Context.InvestmentVehicle.Remove(vehicle);
 				Context.SaveChanges();
 			};

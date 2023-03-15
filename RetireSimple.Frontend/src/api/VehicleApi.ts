@@ -1,4 +1,4 @@
-import {InvestmentVehicle} from '../Interfaces';
+import {InvestmentVehicle, InvestmentVehicleModel} from '../Interfaces';
 import {API_BASE_URL} from './ApiCommon';
 
 export const getVehicles = async (): Promise<InvestmentVehicle[]> => {
@@ -43,4 +43,15 @@ export const addInvestmentToVehicle = async (vehicleId: number, investmentId: nu
 	await fetch(`${API_BASE_URL}/Vehicle/InvestmentAdd/${vehicleId}?investmentId=${investmentId}`, {
 		method: 'POST',
 	});
+};
+
+export const getVehicleModel = async (id: number): Promise<InvestmentVehicleModel> => {
+	const response = await fetch(`${API_BASE_URL}/Analysis/Vehicle/${id}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+
+	return await response.json();
 };

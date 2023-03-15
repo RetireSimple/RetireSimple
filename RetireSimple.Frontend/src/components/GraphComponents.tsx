@@ -1,9 +1,9 @@
 import React from 'react';
 import {getInvestmentModel} from '../api/InvestmentApi';
-import {convertInvestmentModelData} from '../api/ApiMapper';
+import {convertInvestmentModelData, convertVehicleModelData} from '../api/ApiMapper';
 import {InvestmentModel} from '../Interfaces';
 import {useNavigation} from 'react-router-dom';
-import {Box, Button, Typography} from '@mui/material';
+import {Box, Button, FormControlLabel, FormGroup, Switch, Typography} from '@mui/material';
 import {
 	Area,
 	AreaChart,
@@ -17,6 +17,7 @@ import {
 	XAxis,
 	YAxis,
 } from 'recharts';
+import {getVehicleModel} from '../api/VehicleApi';
 
 const strokeColors = [
 	'#8884d8',
@@ -29,51 +30,107 @@ const strokeColors = [
 	'brown',
 ];
 
+export const MinMaxAvgGraph = (props: {modelData: any[]}) => {
+	return (
+		<ResponsiveContainer width='100%' height={400}>
+			<LineChart data={props.modelData}>
+				<XAxis dataKey='year'>
+					<Label value='Months' offset={-5} position={'bottom'} />
+				</XAxis>
+				<YAxis
+					tickCount={10}
+					allowDecimals={false}
+					type={'number'}
+					tickFormatter={(value) => value.toFixed(0)}>
+					<Label value='$ Value (USD)' offset={0} position={'left'} angle={-90} />
+				</YAxis>
+				<CartesianGrid strokeDasharray='3 3' />
+				<Tooltip />
+				<Legend />
+				<Line type='monotone' dataKey='min' stroke='#8884d8' />
+				<Line type='monotone' dataKey='avg' stroke='#82ca9d' />
+				<Line type='monotone' dataKey='max' stroke='#ff0000' />
+			</LineChart>
+		</ResponsiveContainer>
+	);
+};
+
 export const InvestmentModelGraph = (props: {investmentId: number}) => {
-	const [hasInitialData, setHasInitialData] = React.useState(false);
-	const [modelData, setModelData] = React.useState<any[]>();
+	const [modelData, setModelData] = React.useState<any[] | undefined>(undefined);
 
 	const navigation = useNavigation();
 
 	React.useEffect(() => {
 		if (navigation.state === 'loading') {
-			setHasInitialData(false);
+			setModelData(undefined);
 		}
 	}, [navigation.state]);
 
 	const getModelData = () => {
 		getInvestmentModel(props.investmentId).then((data: InvestmentModel) => {
 			setModelData(convertInvestmentModelData(data));
-			setHasInitialData(true);
 		});
 	};
 
 	return (
 		<div>
-			<Button onClick={getModelData} disabled={hasInitialData}>
+			<Button onClick={getModelData} disabled={modelData !== undefined}>
 				Get Model Data
 			</Button>
-			{hasInitialData ? (
-				<ResponsiveContainer width='100%' height={400}>
-					<LineChart data={modelData}>
-						<XAxis dataKey='year'>
-							<Label value='Months' offset={-5} position={'bottom'} />
-						</XAxis>
-						<YAxis
-							tickCount={10}
-							allowDecimals={false}
-							type={'number'}
-							tickFormatter={(value) => value.toFixed(0)}>
-							<Label value='$ Value (USD)' offset={0} position={'left'} angle={-90} />
-						</YAxis>
-						<CartesianGrid strokeDasharray='3 3' />
-						<Tooltip />
-						<Legend />
-						<Line type='monotone' dataKey='min' stroke='#8884d8' />
-						<Line type='monotone' dataKey='avg' stroke='#82ca9d' />
-						<Line type='monotone' dataKey='max' stroke='#ff0000' />
-					</LineChart>
-				</ResponsiveContainer>
+			{modelData ? <MinMaxAvgGraph modelData={modelData} /> : <div></div>}
+		</div>
+	);
+};
+
+export const VehicleModelGraph = (props: {vehicleId: number}) => {
+	const [modelData, setModelData] = React.useState<{base: any[]; taxed: any[]} | undefined>(
+		undefined,
+	);
+	const [showTaxedModel, setShowTaxedModel] = React.useState<boolean>(false);
+	const navigation = useNavigation();
+
+	React.useEffect(() => {
+		if (navigation.state === 'loading') {
+			setModelData(undefined);
+		}
+	}, [navigation.state]);
+
+	const getModelData = () => {
+		getVehicleModel(props.vehicleId).then((data: any) => {
+			setModelData(convertVehicleModelData(data));
+		});
+	};
+
+	return (
+		<div>
+			<Box>
+				<Button onClick={getModelData} disabled={modelData !== undefined}>
+					Get Model Data
+				</Button>
+				<FormGroup>
+					<FormControlLabel
+						control={
+							<Switch
+								checked={showTaxedModel}
+								onChange={() => setShowTaxedModel(!showTaxedModel)}
+							/>
+						}
+						label='Show Tax-Applied Model'
+					/>
+				</FormGroup>
+			</Box>
+			{modelData ? (
+				showTaxedModel ? (
+					<>
+						<Typography variant='h6'>Tax-Applied Model</Typography>
+						<MinMaxAvgGraph modelData={modelData.taxed} />
+					</>
+				) : (
+					<>
+						<Typography variant='h6'>Base Model</Typography>
+						<MinMaxAvgGraph modelData={modelData.base} />
+					</>
+				)
 			) : (
 				<div></div>
 			)}
