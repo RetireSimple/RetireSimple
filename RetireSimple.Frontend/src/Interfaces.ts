@@ -63,3 +63,15 @@ export interface Portfolio {
 	portfolioModel: PortfolioModel;
 	lastUpdated: string; //treat as a date later?
 }
+
+export interface InvestmentVehicleModel {
+	modelId: number;
+	investmentVehicleId: number;
+	lastUpdated: string;
+	maxModelData: number[];
+	minModelData: number[];
+	avgModelData: number[];
+	taxDeductedMaxModelData: number[];
+	taxDeductedMinModelData: number[];
+	taxDeductedAvgModelData: number[];
+}

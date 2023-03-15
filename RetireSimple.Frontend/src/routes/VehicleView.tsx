@@ -7,6 +7,7 @@ import {VehicleFormDefaults, vehicleFormSchema} from '../forms/FormSchema';
 import {FormVehicle} from '../Interfaces';
 import {VehicleDataForm} from '../forms/VehicleDataForm';
 import {updateVehicle} from '../api/VehicleApi';
+import {VehicleModelGraph} from '../components/GraphComponents';
 
 export const VehicleView = () => {
 	const vehicleData = useLoaderData() as FormVehicle;
@@ -71,7 +72,9 @@ export const VehicleView = () => {
 					</VehicleDataForm>
 				</FormProvider>
 			</Box>
-			<Box sx={{width: '100%', height: '100%'}}></Box>
+			<Box sx={{width: '100%', height: '100%'}}>
+				<VehicleModelGraph vehicleId={vehicleData.investmentVehicleId} />
+			</Box>
 		</Box>
 	);
 };
