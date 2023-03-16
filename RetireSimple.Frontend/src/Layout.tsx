@@ -112,7 +112,7 @@ export const Layout = () => {
 					<Tooltip title='Report Bug/Issue on GitHub'>
 						<IconButton
 							color='inherit'
-							href='https://github.com/rhit-westeraj/RetireSimple/issues'>
+							href='https://github.com/RetireSimple/RetireSimple/issues/new/choose'>
 							<Icon baseClassName='material-icons'>bug_report</Icon>
 						</IconButton>
 					</Tooltip>
