@@ -16,12 +16,13 @@ export const BondValuationAnalysisForm = () => {
 			label='Analysis Length (Months)'
 			control={formContext.control}
 			errorField={errors.analysis_analysisLength}
+			tooltip='The number of months starting from today to run the analysis for.'
 		/>
 	);
 	const analysisIsAnnualField = (
 		<FormSelectField
 			name='analysis_isAnnual'
-			label='Analysis is Annual'
+			label='Is Annual'
 			control={formContext.control}
 			options={[
 				{value: 'true', label: 'Annual'},

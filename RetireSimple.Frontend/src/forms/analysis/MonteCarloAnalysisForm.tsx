@@ -16,6 +16,7 @@ export const MonteCarloAnalysisForm = () => {
 			label='Analysis Length (Months)'
 			control={formContext.control}
 			errorField={errors.analysisLength}
+			tooltip='The number of months from today to run the analysis for.'
 		/>
 	);
 
@@ -25,6 +26,17 @@ export const MonteCarloAnalysisForm = () => {
 			label='Simulation Count'
 			control={formContext.control}
 			errorField={errors.analysis_simCount}
+			tooltip={
+				<>
+					<Typography variant='inherit'>
+						The number of Monte Carlo simulations to run.
+					</Typography>
+					<Typography variant='inherit'>
+						Higher numbers are more likely to determine a stable trend with a higher
+						resolution, but may take longer to run.
+					</Typography>
+				</>
+			}
 		/>
 	);
 
@@ -34,6 +46,16 @@ export const MonteCarloAnalysisForm = () => {
 			label='Mu'
 			control={formContext.control}
 			errorField={errors.analysis_randomVariableMu}
+			tooltip={
+				<>
+					<Typography variant='inherit'>
+						The mean parameter of the random variable.
+					</Typography>
+					<Typography variant='inherit'>
+						Can be considered the average increase in stock price per month.
+					</Typography>
+				</>
+			}
 		/>
 	);
 
@@ -43,6 +65,16 @@ export const MonteCarloAnalysisForm = () => {
 			label='Sigma'
 			control={formContext.control}
 			errorField={errors.analysis_randomVariableSigma}
+			tooltip={
+				<>
+					<Typography variant='inherit'>
+						The standard deviation parameter of the random variable.
+					</Typography>
+					<Typography variant='inherit'>
+						Can be considered the volatility of the stock price.
+					</Typography>
+				</>
+			}
 		/>
 	);
 
@@ -52,9 +84,22 @@ export const MonteCarloAnalysisForm = () => {
 			label='Scale Factor'
 			control={formContext.control}
 			errorField={errors.analysis_randomVariableScaleFactor}
+			tooltip={
+				<>
+					<Typography variant='inherit'>
+						The scale factor of random variable observations.
+					</Typography>
+					<Typography variant='inherit'>
+						Default is 1, and means that random variable observations are not scaled.
+					</Typography>
+					<Typography variant='inherit'>
+						Useful when Mu is 0 and Sigma is 1, and you want to assert that stock price
+						walks are distributed by the random variable.
+					</Typography>
+				</>
+			}
 		/>
 	);
-
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>

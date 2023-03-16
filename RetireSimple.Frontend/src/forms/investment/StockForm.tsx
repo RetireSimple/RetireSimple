@@ -41,6 +41,14 @@ export const StockForm = (props: StockFormProps) => {
 			label='Ticker'
 			control={formContext.control}
 			errorField={errors.stockTicker}
+			tooltip={
+				<>
+					<Typography variant='inherit'>The ticker symbol for this stock.</Typography>
+					<Typography variant='inherit'>
+						This is primarily used as another identifier for the stock.
+					</Typography>
+				</>
+			}
 		/>
 	);
 
@@ -50,6 +58,16 @@ export const StockForm = (props: StockFormProps) => {
 			label='Price'
 			control={formContext.control}
 			errorField={errors.stockPrice}
+			decoration='currency'
+			tooltip={
+				<>
+					<Typography variant='inherit'>The current price of the stock.</Typography>
+					<Typography variant='inherit'>
+						This does not have to reflect current prices and thus can be changed for
+						hypothetical scenarios.
+					</Typography>
+				</>
+			}
 		/>
 	);
 
@@ -59,6 +77,14 @@ export const StockForm = (props: StockFormProps) => {
 			label='Quantity'
 			control={formContext.control}
 			errorField={errors.stockQuantity}
+			tooltip={
+				<>
+					<Typography variant='inherit'>
+						The number of shares of this stock that you own.
+					</Typography>
+					<Typography variant='inherit'>Can be fractional.</Typography>
+				</>
+			}
 		/>
 	);
 
@@ -69,6 +95,16 @@ export const StockForm = (props: StockFormProps) => {
 			control={formContext.control}
 			errorField={errors.stockPurchaseDate}
 			defaultValue={props.defaultValues?.stockPurchaseDate}
+			tooltip={
+				<>
+					<Typography variant='inherit'>
+						The date that you purchased this stock.
+					</Typography>
+					<Typography variant='inherit'>
+						This is used in dividend calculations.
+					</Typography>
+				</>
+			}
 		/>
 	);
 
@@ -78,6 +114,16 @@ export const StockForm = (props: StockFormProps) => {
 			label='Dividend %'
 			control={formContext.control}
 			errorField={errors.stockDividendPercent}
+			tooltip={
+				<>
+					<Typography variant='inherit'>
+						The dividend percentage of this stock.
+					</Typography>
+					<Typography variant='inherit'>
+						This is inputted as a decimal (i.e. 0.05 for 5%).
+					</Typography>
+				</>
+			}
 		/>
 	);
 
@@ -92,8 +138,9 @@ export const StockForm = (props: StockFormProps) => {
 				{value: 'Quarter', label: 'Quarterly'},
 				{value: 'Annual', label: 'Annual'},
 			]}
-			defaultOption='Month'
+			defaultOption='Quarter'
 			disable={false}
+			tooltip='The interval at which dividends are paid out.'
 		/>
 	);
 
@@ -110,6 +157,17 @@ export const StockForm = (props: StockFormProps) => {
 			]}
 			defaultOption='Stock'
 			disable={false}
+			tooltip={
+				<>
+					<Typography variant='inherit'>
+						{' '}
+						The method in which dividends are paid out.
+					</Typography>
+					<Typography variant='inherit'>
+						Currently, only stock dividends are supported.
+					</Typography>
+				</>
+			}
 		/>
 	);
 
@@ -120,6 +178,17 @@ export const StockForm = (props: StockFormProps) => {
 			control={formContext.control}
 			errorField={errors.stockDividendFirstPaymentDate}
 			defaultValue={props.defaultValues?.stockDividendFirstPaymentDate ?? ''}
+			tooltip={
+				<>
+					<Typography variant='inherit'>
+						The payment date of the first dividend.
+					</Typography>
+					<Typography variant='inherit'>
+						This can be any date within the past as we predict future dividends based on
+						the dividend interval.
+					</Typography>
+				</>
+			}
 		/>
 	);
 
