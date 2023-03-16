@@ -30,6 +30,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 			label='Name'
 			control={formContext.control}
 			errorField={errors.investmentName}
+			tooltip='The name of this investmnet. Can be a personally identifiable name.'
 		/>
 	);
 
@@ -45,6 +46,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 				{value: 'BondInvestment', label: 'Bond'},
 			]}
 			disable={props.disableTypeSelect ?? false}
+			tooltip='The type of security this investment represents.'
 		/>
 	);
 
@@ -71,6 +73,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 								]}
 								defaultOption=''
 								disable={false}
+								tooltip='The type of analysis to run on this investment. Only Monte Carlo Simulations are currently supported.'
 							/>
 						}
 					/>
@@ -89,6 +92,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 								]}
 								defaultOption=''
 								disable={false}
+								tooltip='The type of analysis to run on this investment. Only standard bond valuation is currently supported.'
 							/>
 						}
 					/>

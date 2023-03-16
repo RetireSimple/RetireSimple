@@ -23,6 +23,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 			label='Name'
 			control={formContext.control}
 			errorField={errors.investmentVehicleName}
+			tooltip='The name of this investment vehicle. Usually a personally identifiable name.'
 		/>
 	);
 
@@ -41,6 +42,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 				{value: '457', label: '457'},
 			]}
 			disable={props.disableTypeSelect ?? false}
+			tooltip='The type of vehicle this is. This does alter how we determine the tax-applied model.'
 		/>
 	);
 
@@ -50,6 +52,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 			label='Cash Holdings'
 			control={formContext.control}
 			errorField={errors.cashHoldings}
+			tooltip='The amount of cash in the vehicle that is not invested in a security.'
 		/>
 	);
 
@@ -59,6 +62,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 			label='Analysis Length'
 			control={formContext.control}
 			errorField={errors.analysis_analysisLength}
+			tooltip='The number of months starting from today to run the analysis for.'
 		/>
 	);
 
@@ -68,6 +72,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 			label='Contribution Amount (Monthly)'
 			control={formContext.control}
 			errorField={errors.analysis_cashContribution}
+			tooltip='The amount of cash to contribute to the vehicle each month.'
 		/>
 	);
 
@@ -77,6 +82,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 			label='Vehicle Tax Percentage'
 			control={formContext.control}
 			errorField={errors.analysis_vehicleTaxPercentage}
+			tooltip='The percentage of the vehicle that is taxed. This is used to determine the tax applied model.'
 		/>
 	);
 

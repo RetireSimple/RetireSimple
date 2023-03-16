@@ -14,7 +14,7 @@ describe('schema validation', () => {
 		test('validation with zero', () => {
 			expect(decimalValidation(2, 0)).toBeTruthy();
 			expect(decimalValidation(2, 0.0)).toBeTruthy();
-			expect(decimalValidation(2, 0.00)).toBeTruthy();
+			expect(decimalValidation(2, 0.0)).toBeTruthy();
 		});
 	});
 
@@ -110,25 +110,6 @@ describe('schema validation', () => {
 				analysis_randomVariableMu: '1.23',
 				analysis_randomVariableSigma: '1.23',
 				analysis_randomVariableScaleFactor: '1.23',
-			};
-
-			expect(schema.isValidSync(data)).toBeTruthy();
-		});
-
-		test('testAnalysis_Valid', () => {
-			const schema = investmentFormSchema;
-			const data = {
-				investmentName: 'Test',
-				investmentType: 'StockInvestment',
-				stockTicker: 'TEST',
-				stockPrice: '123.45',
-				stockQuantity: '123.45',
-				stockPurchaseDate: '2023-01-30',
-				stockDividendPercent: '0.05',
-				stockDividendDistributionInterval: 'Month',
-				stockDividendDistributionMethod: 'Stock',
-				stockDividendFirstPaymentDate: '2023-01-30',
-				analysisType: 'testAnalysis',
 			};
 
 			expect(schema.isValidSync(data)).toBeTruthy();

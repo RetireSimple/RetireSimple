@@ -20,11 +20,11 @@ export const investmentFormSchema = object().shape({
 			then: (schema) =>
 				schema
 					.defined('Required')
-					.oneOf(['MonteCarlo_NormalDist', 'MonteCarlo_LogNormalDist', 'testAnalysis']),
+					.oneOf(['MonteCarlo_NormalDist', 'MonteCarlo_LogNormalDist']),
 		})
 		.when('investmentType', {
 			is: 'BondInvestment',
-			then: (schema) => schema.oneOf(['bondValuationAnalysis']), //todo - add bond specific analysis types
+			then: (schema) => schema.oneOf(['bondValuationAnalysis']),
 		}),
 
 	//========================================

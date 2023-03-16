@@ -8,8 +8,10 @@ import {FormVehicle} from '../Interfaces';
 import {VehicleDataForm} from '../forms/VehicleDataForm';
 import {updateVehicle} from '../api/VehicleApi';
 import {VehicleModelGraph} from '../components/GraphComponents';
+import {ConfirmDeleteDialog} from '../components/DialogComponents';
 
 export const VehicleView = () => {
+	const [showDelete, setShowDelete] = React.useState(false);
 	const vehicleData = useLoaderData() as FormVehicle;
 	const submit = useSubmit();
 	const deleteAction = useFormAction('delete');
@@ -28,10 +30,6 @@ export const VehicleView = () => {
 		formContext.reset(vehicleData, {keepErrors: true});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [vehicleData]);
-
-	const handleDelete = () => {
-		submit(null, {action: deleteAction, method: 'delete'});
-	};
 
 	const handleUpdate = handleSubmit((data: FieldValues) => {
 		const requestData: {[key: string]: string} = {};
@@ -62,7 +60,7 @@ export const VehicleView = () => {
 								justifyContent: 'flex-end',
 							}}>
 							<Button onClick={() => reset(vehicleData)}>Reset</Button>
-							<Button color='error' onClick={handleDelete}>
+							<Button color='error' onClick={() => setShowDelete(true)}>
 								Delete
 							</Button>
 							<Button onClick={handleUpdate} disabled={!isDirty}>
@@ -75,6 +73,13 @@ export const VehicleView = () => {
 			<Box sx={{width: '100%', height: '100%'}}>
 				<VehicleModelGraph vehicleId={vehicleData.investmentVehicleId} />
 			</Box>
+			<ConfirmDeleteDialog
+				open={showDelete}
+				onClose={() => setShowDelete(false)}
+				onConfirm={() => submit(null, {action: deleteAction, method: 'delete'})}
+				deleteTargetType='vehicle'
+				deleteTarget={vehicleData.investmentVehicleName}
+			/>
 		</Box>
 	);
 };

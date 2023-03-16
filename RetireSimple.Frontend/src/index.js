@@ -28,7 +28,6 @@ export const SuspenseRoute = ({ children }) => {
 	return <React.Suspense fallback={<><CircularProgress /></>}>{children}</React.Suspense>;
 };
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 /************************
