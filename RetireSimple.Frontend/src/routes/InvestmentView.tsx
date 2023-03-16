@@ -9,8 +9,11 @@ import {InvestmentModelGraph} from '../components/GraphComponents';
 import {InvestmentFormDefaults, investmentFormSchema} from '../forms/FormSchema';
 import {Investment} from '../Interfaces';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
+import {ConfirmDeleteDialog} from '../components/DialogComponents';
 
 export const InvestmentView = () => {
+	const [showDelete, setShowDelete] = React.useState(false);
+
 	const currentInvestmentData = useLoaderData() as Investment;
 	const submit = useSubmit();
 	const deleteAction = useFormAction('delete');
@@ -29,10 +32,6 @@ export const InvestmentView = () => {
 		formContext.reset(currentInvestmentData, {keepErrors: true});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentInvestmentData]);
-
-	const handleDelete = () => {
-		submit(null, {action: deleteAction, method: 'delete'});
-	};
 
 	const handleUpdate = handleSubmit((data: FieldValues) => {
 		const requestData: {[key: string]: string} = {};
@@ -64,7 +63,7 @@ export const InvestmentView = () => {
 								justifyContent: 'flex-end',
 							}}>
 							<Button onClick={() => reset(currentInvestmentData)}>Reset</Button>
-							<Button color='error' onClick={handleDelete}>
+							<Button color='error' onClick={() => setShowDelete(true)}>
 								Delete
 							</Button>
 							<Button onClick={handleUpdate} disabled={!isDirty}>
@@ -77,6 +76,13 @@ export const InvestmentView = () => {
 			<Box sx={{width: '100%', height: '100%'}}>
 				<InvestmentModelGraph investmentId={currentInvestmentData.investmentId} />
 			</Box>
+			<ConfirmDeleteDialog
+				open={showDelete}
+				onClose={() => setShowDelete(false)}
+				onConfirm={() => submit(null, {action: deleteAction, method: 'delete'})}
+				deleteTarget={currentInvestmentData.investmentName}
+				deleteTargetType='investment'
+			/>
 		</Box>
 	);
 };

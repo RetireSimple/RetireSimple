@@ -1,5 +1,5 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import {Box, Button, Dialog, DialogActions, DialogTitle} from '@mui/material';
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
 import {FieldValues, FormProvider, useForm} from 'react-hook-form';
 import {useFormAction, useSubmit} from 'react-router-dom';
 import {addInvestment} from '../api/InvestmentApi';
@@ -17,6 +17,14 @@ export interface AddInvestmentDialogProps {
 export interface AddVehicleDialogProps {
 	open: boolean;
 	onClose: () => void;
+}
+
+export interface ConfirmDeleteDialogProps {
+	open: boolean;
+	onClose: () => void;
+	onConfirm: () => void;
+	deleteTarget: string;
+	deleteTargetType: string;
 }
 
 export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
@@ -101,5 +109,29 @@ export const AddVehicleDialog = (props: AddVehicleDialogProps) => {
 				</Box>
 			</Dialog>
 		</FormProvider>
+	);
+};
+
+export const ConfirmDeleteDialog = (props: ConfirmDeleteDialogProps) => {
+	const handleConfirm = () => {
+		props.onConfirm();
+		props.onClose();
+	};
+
+	return (
+		<Dialog open={props.open}>
+			<DialogTitle>Confirm Deletion</DialogTitle>
+			<DialogContent>
+				Are you sure you want to delete{' '}
+				{props.deleteTargetType + ' ' + props.deleteTarget + ' '}
+				{props.deleteTargetType === 'vehicle' ? 'and all associated investments' : ''}?
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={props.onClose}>Cancel</Button>
+				<Button color='error' onClick={handleConfirm}>
+					Delete
+				</Button>
+			</DialogActions>
+		</Dialog>
 	);
 };
