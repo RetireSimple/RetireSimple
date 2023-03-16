@@ -94,13 +94,14 @@ export const BondForm = (props: BondFormProps) => {
 		/>
 	);
 
-	const bondPurchasePriceField = (
+	const bondFaceValueField = (
 		<FormTextField
 			name='bondFaceValue'
 			label='Face Value'
 			control={formContext.control}
 			errorField={errors.bondFaceValue}
 			tooltip='The face value of the bond.'
+			decoration='currency'
 		/>
 	);
 
@@ -122,6 +123,7 @@ export const BondForm = (props: BondFormProps) => {
 			control={formContext.control}
 			errorField={errors.bondCurrentPrice}
 			tooltip='The current price of the bond.'
+			decoration='currency'
 		/>
 	);
 
@@ -132,27 +134,29 @@ export const BondForm = (props: BondFormProps) => {
 					<Grid item xs={12}>
 						<Typography variant='subtitle2'>Bond Information</Typography>
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={6} sm={4}>
 						{bondTickerField}
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={6} sm={4}>
 						{bondCouponRateField}
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={6} sm={4}>
 						{bondYTMField}
 					</Grid>
-					<Grid item xs={12} sm={6}>
-						{bondMaturityDateField}
+					<Grid item xs={6} sm={4}>
+						{bondFaceValueField}
 					</Grid>
-					<Grid item xs={12} sm={6}>
-						{bondPurchasePriceField}
-					</Grid>
-					<Grid item xs={12} sm={6}>
-						{bondPurchaseDateField}
-					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={6} sm={4}>
 						{bondCurrentPriceField}
 					</Grid>
+					<Grid item xs={6} sm={4} />
+					<Grid item xs={6} sm={4}>
+						{bondPurchaseDateField}
+					</Grid>
+					<Grid item xs={6} sm={4}>
+						{bondMaturityDateField}
+					</Grid>
+					<Grid item xs={6} sm={4} />
 					{/* Analysis Section */}
 					<Grid item xs={12}>
 						<Typography variant='subtitle2'>Analysis Configuration</Typography>
