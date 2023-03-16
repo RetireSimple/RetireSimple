@@ -18,7 +18,7 @@ export interface FormTextFieldProps {
 	label: string;
 	control: Control;
 	errorField: any;
-	tooltip?: string;
+	tooltip?: string | React.ReactNode;
 	decoration?: 'currency' | 'percent';
 }
 
@@ -30,7 +30,7 @@ export interface FormSelectFieldProps {
 	control: Control;
 	errorField: any;
 	disable: boolean;
-	tooltip?: string;
+	tooltip?: string | React.ReactNode;
 }
 
 export interface FormDatePickerProps {
@@ -39,7 +39,7 @@ export interface FormDatePickerProps {
 	control: Control;
 	errorField: any;
 	defaultValue: string;
-	tooltip?: string;
+	tooltip?: string | React.ReactNode;
 }
 
 export const FormTextField = (props: FormTextFieldProps) => {
@@ -49,7 +49,7 @@ export const FormTextField = (props: FormTextFieldProps) => {
 			control={props.control}
 			defaultValue={''}
 			render={({field}) => (
-				<Tooltip title={props.tooltip ?? ''} arrow>
+				<Tooltip title={props.tooltip ?? ''} arrow describeChild>
 					<TextField
 						{...field}
 						label={props.label}
@@ -102,20 +102,20 @@ export const FormDatePicker = (props: FormDatePickerProps) => {
 			defaultValue={props.defaultValue ?? ''}
 			render={({field}) => (
 				<LocalizationProvider dateAdapter={AdapterDayjs}>
-					<Tooltip title={props.tooltip ?? ''} arrow>
-						<DatePicker
-							{...field}
-							label={props.label}
-							renderInput={(params) => (
+					<DatePicker
+						{...field}
+						label={props.label}
+						renderInput={(params) => (
+							<Tooltip title={props.tooltip ?? ''} arrow describeChild>
 								<TextField
 									{...params}
 									size='small'
 									error={!!props.errorField}
 									helperText={props.errorField?.message as string}
 								/>
-							)}
-						/>
-					</Tooltip>
+							</Tooltip>
+						)}
+					/>
 				</LocalizationProvider>
 			)}
 		/>
