@@ -44,16 +44,6 @@ export interface InvestmentVehicle {
 	analysisOptionsOverrides: {[key: string]: string};
 }
 
-export interface FormVehicle {
-	investmentVehicleId: number;
-	investmentVehicleName: string;
-	investmentVehicleType: string;
-	cashHoldings: string;
-	analysis_analysisLength: string;
-	analysis_cashContribution: string;
-	analysis_vehicleTaxPercentage: string;
-}
-
 export interface Portfolio {
 	portfolioId: number;
 	portfolioName: string;

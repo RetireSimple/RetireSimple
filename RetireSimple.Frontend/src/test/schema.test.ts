@@ -1,4 +1,4 @@
-import {decimalValidation, investmentFormSchema} from '../forms/FormSchema';
+import {decimalValidation, investmentFormSchema, vehicleFormSchema} from '../forms/FormSchema';
 
 describe('schema validation', () => {
 	describe('decimal validation', () => {
@@ -135,6 +135,66 @@ describe('schema validation', () => {
 					analysis_isAnnual: 'true',
 				};
 
+				expect(schema.isValidSync(data)).toBeTruthy();
+			});
+		});
+	});
+
+	describe('investmentVehicles', () => {
+		describe('General 401k Validation', () => {
+			test('standard401k_Valid: fixed contribution', () => {
+				const schema = vehicleFormSchema;
+				const data = {
+					investmentVehicleName: 'Test',
+					investmentVehicleType: '401k',
+					cashHoldings: '0',
+					analysis_analysisLength: '60',
+					analysis_shortTermCapitalGainsTax: '0.0',
+					analysis_longTermCapitalGainsTax: '0.0',
+					analysis_salary: '0',
+					analysis_payFrequency: 'weekly',
+					analysis_maxEmployerContributionPercentage: '0.0',
+					analysis_employerMatchPercentage: '0.0',
+					analysis_userContributionType: 'fixed',
+					analysis_userContributionAmount: '0.0',
+				};
+
+				expect(schema.isValidSync(data)).toBeTruthy();
+			});
+
+			test('standard401k_Valid: percentage contribution', () => {
+				const schema = vehicleFormSchema;
+				const data = {
+					investmentVehicleName: 'Test',
+					investmentVehicleType: '401k',
+					cashHoldings: '0',
+					analysis_analysisLength: '60',
+					analysis_shortTermCapitalGainsTax: '0.0',
+					analysis_longTermCapitalGainsTax: '0.0',
+					analysis_salary: '0',
+					analysis_payFrequency: 'weekly',
+					analysis_maxEmployerContributionPercentage: '0.0',
+					analysis_employerMatchPercentage: '0.0',
+					analysis_userContributionType: 'percentage',
+					analysis_userContributionPercentage: '0.0',
+				};
+
+				expect(schema.isValidSync(data)).toBeTruthy();
+			});
+		});
+
+		describe('Other Vehicle Types', () => {
+			test('standardOtherVehicle_Valid', () => {
+				const schema = vehicleFormSchema;
+				const data = {
+					investmentVehicleName: 'Test',
+					investmentVehicleType: 'IRA',
+					cashHoldings: '0',
+					analysis_analysisLength: '60',
+					analysis_shortTermCapitalGainsTax: '0.0',
+					analysis_longTermCapitalGainsTax: '0.0',
+					analysis_userContributionAmount: '0.0',
+				};
 				expect(schema.isValidSync(data)).toBeTruthy();
 			});
 		});

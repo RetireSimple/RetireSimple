@@ -1,5 +1,4 @@
 import {
-	FormVehicle,
 	Investment,
 	InvestmentModel,
 	InvestmentVehicle,
@@ -103,16 +102,19 @@ export const createAggregateStackData = (investmentModels: {[key: string]: Inves
 	return result;
 };
 
-export const getFlatVehicleData = (vehicle: InvestmentVehicle): FormVehicle => {
-	const result: FormVehicle = {
-		investmentVehicleId: vehicle.investmentVehicleId,
-		investmentVehicleName: vehicle.investmentVehicleName,
-		investmentVehicleType: vehicle.investmentVehicleType,
-		cashHoldings: vehicle.investmentVehicleData['cashHoldings'],
-		analysis_analysisLength: vehicle.analysisOptionsOverrides['analysisLength'],
-		analysis_cashContribution: vehicle.analysisOptionsOverrides['cashContribution'],
-		analysis_vehicleTaxPercentage: vehicle.analysisOptionsOverrides['vehicleTaxPercentage'],
-	};
+export const getFlatVehicleData = (vehicle: InvestmentVehicle) => {
+	const result: {[key: string]: any} = {};
+	result['investmentVehicleId'] = vehicle.investmentVehicleId;
+	result['investmentVehicleName'] = vehicle.investmentVehicleName;
+	result['investmentVehicleType'] = vehicle.investmentVehicleType;
+	result['cashHoldings'] = vehicle.investmentVehicleData['cashHoldings'];
+
+	const renamedOverrides = Object.keys(vehicle.analysisOptionsOverrides).reduce((acc, key) => {
+		acc[`analysis_${key}`] = vehicle.analysisOptionsOverrides[key];
+		return acc;
+	}, {} as {[key: string]: any});
+
+	Object.assign(result, renamedOverrides);
 
 	return result;
 };

@@ -105,6 +105,8 @@ export const investmentFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 
+
+
 	//========================================
 	// Bond Investment Specific Fields
 	//========================================
@@ -266,24 +268,127 @@ export const vehicleFormSchema = object().shape({
 		.defined('Required')
 		.required('Required')
 		.oneOf(['401k', 'IRA', 'RothIRA', '403b', '457']),
-	cashHoldings: number().defined('Required').positive('Must be positive'),
+	cashHoldings: number()
+		.defined('Required')
+		.required('Required')
+		.test('is-decimal', decimalErrorString, (value) =>
+			isNaN(value) ? false : decimalValidation(2, value),
+		),
 
 	//========================================
 	// Analysis Related Fields
 	//========================================
-	analysis_analysisLength: number().defined('Required').positive().required('Required'),
-	analysis_cashContribution: number()
+	analysis_analysisLength: number()
 		.defined('Required')
-		.positive('Must be positive')
+		.positive('Must be Positive')
 		.required('Required'),
-	analysis_vehicleTaxPercentage: number().defined('Required').positive('Must be positive'),
+	analysis_shortTermCapitalGainsTax: number()
+		.defined('Required')
+		.required('Required')
+		.test('is-decimal', decimalErrorString, (value) =>
+			isNaN(value) ? false : decimalValidation(2, value),
+		),
+	analysis_longTermCapitalGainsTax: number()
+		.defined('Required')
+		.required('Required')
+		.test('is-decimal', decimalErrorString, (value) =>
+			isNaN(value) ? false : decimalValidation(2, value),
+		),
+
+	//========================================
+	// 401k Specific Fields
+	//========================================
+	analysis_salary: number().when('investmentVehicleType', {
+		is: '401k',
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.required('Required')
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(2, value),
+				),
+
+		otherwise: (schema) => schema.strip(),
+	}),
+	analysis_payFrequency: string().when('investmentVehicleType', {
+		is: '401k',
+		then: (schema) =>
+			schema.defined('Required').required('Required').oneOf(['weekly', 'biweekly']),
+		otherwise: (schema) => schema.strip(),
+	}),
+	analysis_maxEmployerContributionPercentage: number().when('investmentVehicleType', {
+		is: '401k',
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.required('Required')
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(2, value),
+				),
+		otherwise: (schema) => schema.strip(),
+	}),
+	analysis_employerMatchPercentage: number().when('investmentVehicleType', {
+		is: '401k',
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.required('Required')
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(2, value),
+				),
+		otherwise: (schema) => schema.strip(),
+	}),
+	analysis_userContributionType: string().when('investmentVehicleType', {
+		is: '401k',
+		then: (schema) =>
+			schema.defined('Required').required('Required').oneOf(['fixed', 'percentage']),
+		otherwise: (schema) => schema.strip(),
+	}),
+	analysis_userContributionAmount: number().when(
+		['investmentVehicleType', 'analysis_userContributionType'],
+		{
+			is: (investmentVehicleType: string, analysis_userContributionType: string) =>
+				(investmentVehicleType === '401k' && analysis_userContributionType === 'fixed') ||
+				investmentVehicleType !== '401k',
+			then: (schema) =>
+				schema
+					.defined('Required')
+					.required('Required')
+					.test('is-decimal', decimalErrorString, (value) =>
+						isNaN(value) ? false : decimalValidation(2, value),
+					),
+			otherwise: (schema) => schema.strip(),
+		},
+	),
+	analysis_userContributionPercentage: number().when(
+		['investmentVehicleType', 'analysis_userContributionType'],
+		{
+			is: (investmentVehicleType: string, analysis_userContributionType: string) =>
+				investmentVehicleType === '401k' && analysis_userContributionType === 'percentage',
+			then: (schema) =>
+				schema
+					.defined('Required')
+					.required('Required')
+					.test('is-decimal', decimalErrorString, (value) =>
+						isNaN(value) ? false : decimalValidation(2, value),
+					),
+			otherwise: (schema) => schema.strip(),
+		},
+	),
 });
 
 export const VehicleFormDefaults = {
 	investmentVehicleName: '',
-	investmentvehicleType: '401k',
-	cashHoldings: '',
+	investmentVehicleType: '401k',
+	cashHoldings: '0',
 	analysis_analysisLength: '60',
-	analysis_cashContribution: '',
-	analysis_vehicleTaxPercentage: '',
+	analysis_shortTermCapitalGainsTax: '0.0',
+	analysis_longTermCapitalGainsTax: '0.0',
+	analysis_salary: '0',
+	analysis_payFrequency: 'weekly',
+	analysis_maxEmployerContributionPercentage: '0.0',
+	analysis_employerMatchPercentage: '0.0',
+	analysis_userContributionType: 'fixed',
+	analysis_userContributionAmount: '0.0',
+	analysis_userContributionPercentage: '0.0',
 };

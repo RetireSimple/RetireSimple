@@ -49,7 +49,7 @@ export const FormTextField = (props: FormTextFieldProps) => {
 			control={props.control}
 			defaultValue={''}
 			render={({field}) => (
-				<Tooltip title={props.tooltip ?? ''} arrow describeChild>
+				<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
 					<TextField
 						{...field}
 						label={props.label}
@@ -76,7 +76,7 @@ export const FormSelectField = (props: FormSelectFieldProps) => {
 			control={props.control}
 			defaultValue={props.defaultOption}
 			render={({field}) => (
-				<Tooltip title={props.tooltip ?? ''} arrow>
+				<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
 					<FormControl fullWidth error={!!props.errorField} size='small'>
 						<InputLabel id={props.name}>{props.label}</InputLabel>
 						<Select {...field} label={props.name} disabled={props.disable}>
@@ -106,7 +106,11 @@ export const FormDatePicker = (props: FormDatePickerProps) => {
 						{...field}
 						label={props.label}
 						renderInput={(params) => (
-							<Tooltip title={props.tooltip ?? ''} arrow describeChild>
+							<Tooltip
+								title={props.tooltip ?? ''}
+								arrow
+								describeChild
+								placement='top'>
 								<TextField
 									{...params}
 									size='small'
