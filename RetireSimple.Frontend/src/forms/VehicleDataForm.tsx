@@ -1,6 +1,8 @@
-import {Box, Grid} from '@mui/material';
-import {useFormContext} from 'react-hook-form';
+import {Box, Grid, Typography} from '@mui/material';
+import {useFormContext, useWatch} from 'react-hook-form';
 import {FormSelectField, FormTextField} from '../components/InputComponents';
+import {Analysis401kForm} from './analysis/Analysis401kForm';
+import React from 'react';
 
 export interface VehicleDataFormProps {
 	defaultValues?: any;
@@ -10,6 +12,12 @@ export interface VehicleDataFormProps {
 
 export const VehicleDataForm = (props: VehicleDataFormProps) => {
 	const formContext = useFormContext();
+
+	const investmentVehicleType = useWatch({
+		name: 'investmentVehicleType',
+		control: formContext.control,
+		defaultValue: '401k',
+	});
 
 	const {errors} = formContext.formState;
 
@@ -66,25 +74,47 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 		/>
 	);
 
-	// const cashContributionField = (
-	// 	<FormTextField
-	// 		name='analysis_cashContribution'
-	// 		label='Contribution Amount (Monthly)'
-	// 		control={formContext.control}
-	// 		errorField={errors.analysis_cashContribution}
-	// 		tooltip='The amount of cash to contribute to the vehicle each month.'
-	// 	/>
-	// );
+	const shortTermCapitalGainsField = (
+		<FormTextField
+			name='analysis_shortTermCapitalGainsTax'
+			label='Capital Gains Tax (Short Term)'
+			control={formContext.control}
+			errorField={errors.analysis_shortTermCapitalGainsTax}
+			tooltip='The tax rate applied to short term capital gains.'
+			// decoration='percent'
+		/>
+	);
 
-	// const vehicleTaxPercentageField = (
-	// 	<FormTextField
-	// 		name='analysis_vehicleTaxPercentage'
-	// 		label='Vehicle Tax Percentage'
-	// 		control={formContext.control}
-	// 		errorField={errors.analysis_vehicleTaxPercentage}
-	// 		tooltip='The percentage of the vehicle that is taxed. This is used to determine the tax applied model.'
-	// 	/>
-	// );
+	const longTermCapitalGainsField = (
+		<FormTextField
+			name='analysis_longTermCapitalGainsTax'
+			label='Capital Gains Tax (Long Term)'
+			control={formContext.control}
+			errorField={errors.analysis_longTermCapitalGainsTax}
+			tooltip='The tax rate applied to long term capital gains.'
+			// decoration='percent'
+		/>
+	);
+
+	const analysisSubform = React.useMemo(() => {
+		switch (investmentVehicleType) {
+			case '401k':
+				return <Analysis401kForm />;
+			default:
+				return (
+					<Grid item xs={4}>
+						<FormTextField
+							name='analysis_userContributionFixed'
+							label='User Contribution'
+							control={formContext.control}
+							errorField={errors.analysis_userContributionFixed}
+							tooltip='The amount of money that you contribute to this vehicle each month.'
+							decoration='currency'
+						/>
+					</Grid>
+				);
+		}
+	}, [errors.analysis_userContributionFixed, formContext.control, investmentVehicleType]);
 
 	return (
 		<>
@@ -101,15 +131,20 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 						{cashHoldingField}
 					</Grid>
 					<Grid item xs={8} />
+					<Grid item xs={12}>
+						<Typography variant='subtitle2'>Analysis Configuration</Typography>
+					</Grid>
 					<Grid item xs={4}>
 						{analysisLengthField}
 					</Grid>
 					<Grid item xs={4}>
-						{/* {cashContributionField} */}
+						{shortTermCapitalGainsField}
 					</Grid>
 					<Grid item xs={4}>
-						{/* {vehicleTaxPercentageField} */}
+						{longTermCapitalGainsField}
 					</Grid>
+
+					{analysisSubform}
 				</Grid>
 			</Box>
 			{props.children}
