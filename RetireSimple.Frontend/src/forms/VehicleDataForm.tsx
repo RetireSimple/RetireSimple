@@ -66,25 +66,25 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 		/>
 	);
 
-	const cashContributionField = (
-		<FormTextField
-			name='analysis_cashContribution'
-			label='Contribution Amount (Monthly)'
-			control={formContext.control}
-			errorField={errors.analysis_cashContribution}
-			tooltip='The amount of cash to contribute to the vehicle each month.'
-		/>
-	);
+	// const cashContributionField = (
+	// 	<FormTextField
+	// 		name='analysis_cashContribution'
+	// 		label='Contribution Amount (Monthly)'
+	// 		control={formContext.control}
+	// 		errorField={errors.analysis_cashContribution}
+	// 		tooltip='The amount of cash to contribute to the vehicle each month.'
+	// 	/>
+	// );
 
-	const vehicleTaxPercentageField = (
-		<FormTextField
-			name='analysis_vehicleTaxPercentage'
-			label='Vehicle Tax Percentage'
-			control={formContext.control}
-			errorField={errors.analysis_vehicleTaxPercentage}
-			tooltip='The percentage of the vehicle that is taxed. This is used to determine the tax applied model.'
-		/>
-	);
+	// const vehicleTaxPercentageField = (
+	// 	<FormTextField
+	// 		name='analysis_vehicleTaxPercentage'
+	// 		label='Vehicle Tax Percentage'
+	// 		control={formContext.control}
+	// 		errorField={errors.analysis_vehicleTaxPercentage}
+	// 		tooltip='The percentage of the vehicle that is taxed. This is used to determine the tax applied model.'
+	// 	/>
+	// );
 
 	return (
 		<>
@@ -105,10 +105,10 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 						{analysisLengthField}
 					</Grid>
 					<Grid item xs={4}>
-						{cashContributionField}
+						{/* {cashContributionField} */}
 					</Grid>
 					<Grid item xs={4}>
-						{vehicleTaxPercentageField}
+						{/* {vehicleTaxPercentageField} */}
 					</Grid>
 				</Grid>
 			</Box>
