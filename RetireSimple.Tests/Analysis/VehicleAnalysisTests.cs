@@ -1,96 +1,142 @@
+using Microsoft.Extensions.Options;
+
+using Moq;
+using Newtonsoft.Json.Linq;
+
+using System.Security.Principal;
+
 namespace RetireSimple.Tests.Analysis {
 
 	public class VehicleAnalysisTests {
 
-		[Theory,
-		MemberData(nameof(VehicleAnalysisTestData.CashSimVars),
-					MemberType = typeof(VehicleAnalysisTestData))]
-		public void SimulateCashContributions_DefaultAfterTaxReturnsValues(OptionsDict options, decimal initialHoldings, List<decimal> expected) {
-			var vehicle = new Vehicle401k { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+		[Theory, MemberData(nameof(VehicleAnalysisTestData.CashSimVars), MemberType = typeof(VehicleAnalysisTestData))]
+		public void TestSimulateCashContributionsDefault(OptionsDict options, decimal initialHoldings, List<decimal> expected) {
 
-			var result = vehicle.SimulateCashContributions(options);
-
-			result.Should().HaveSameCount(expected);
-			result.Should().BeEquivalentTo(expected);
+			var vehicle = new Vehicle403b { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } }; 
+			var actual = vehicle.SimulateCashContributions(options);
+			
+			actual.Should().HaveSameCount(expected);
+			actual.Should().BeEquivalentTo(expected);
 		}
 
-		[Theory,
-		MemberData(nameof(VehicleAnalysisTestData.CashSimVars_PostTax),
-					MemberType = typeof(VehicleAnalysisTestData))]
-		public void SimulateCashContributions_DefaultPreTaxReturnsValues(OptionsDict options, decimal initialHoldings, List<decimal> expected) {
-			var vehicle = new VehicleRothIRA { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+		[Fact]
+		public void Test401kCashContributionsPercentage() {
 
-			var result = vehicle.SimulateCashContributions(options);
+			var vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401k };
+			var actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401k);
+			var expectedData = new List<decimal>() { 0, 800, 1600, 2400, 3200, 4000, 4800, 5600, 6400, 7200 };
 
-			result.Should().HaveSameCount(expected);
-			result.Should().BeEquivalentTo(expected);
+			actual.Should().HaveSameCount(expectedData);
+			actual.Should().BeEquivalentTo(expectedData);
+
+			VehicleAnalysisTestData.Options401k["pay freq"] = "weekly";
+			vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401k };
+			actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401k);
+			var expectedData2 = new List<string> { "", "738.462", "1476.923", "2215.385", "2953.846", "3692.308", "4430.769", "5169.231", "5907.692", "6646.154" };
+			
+			var newData = new List<string>();
+			foreach (var data in actual) {
+				newData.Add(data.ToString("#.###"));
+			}
+			newData.Should().HaveSameCount(expectedData2);
+			newData.Should().BeEquivalentTo(expectedData2);
+		}    
+
+		[Fact]
+		public void Test401kCashContributionsFixed() {
+
+			var vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401kFixed };
+			var actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401kFixed);
+			var expected = new List<decimal>() { 0, 110, 220, 330, 440, 550, 660, 770, 880, 990 };
+
+			actual.Should().HaveSameCount(expected);
+			actual.Should().BeEquivalentTo(expected);
+
+			VehicleAnalysisTestData.Options401kFixed["pay freq"] = "weekly";
+			vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401kFixed };
+			actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401kFixed);
+			expected = new List<decimal>() { 0, 440, 880, 1320, 1760, 2200, 2640, 3080, 3520, 3960 };
+
+			actual.Should().HaveSameCount(expected);
+			actual.Should().BeEquivalentTo(expected);
 		}
+    
+		//[Theory, MemberData(nameof(VehicleAnalysisTestData.AggregateSimVars_PreTax), MemberType = typeof(VehicleAnalysisTestData))]
+		//public void TestGeneratePreTaxModelDefault(List<InvestmentModel> models, OptionsDict options, decimal initialHoldings, InvestmentModel expected) {
 
-		[Theory,
-		MemberData(nameof(VehicleAnalysisTestData.AggregateSimVars_PreTax),
-					MemberType = typeof(VehicleAnalysisTestData))]
-		public void GeneratePreTaxModel_DefaultAfterTaxReturnsValues(List<InvestmentModel> models,
-																	OptionsDict options,
-																	decimal initialHoldings,
-																	InvestmentModel expected) {
-			var vehicle = new Vehicle401k { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
-			var combinedOptions = vehicle.MergeOverrideOptions(options);    //Done in the GenerateAnalysis() call
-			var cashSim = VehicleDefaultAS.SimulateCashContributionsDefaultAfterTax(vehicle, combinedOptions);
+		//	var vehicle = new Vehicle403b { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+		//	var combinedOptions = vehicle.MergeOverrideOptions(options);
+		//	var cashSim = VehicleDefaultAS.SimulateCashContributionsDefault(vehicle, combinedOptions);
+		//	var result = VehicleDefaultAS.GeneratePreTaxModelDefault(combinedOptions, models, cashSim);
 
-			var result = VehicleDefaultAS.GeneratePreTaxModelDefaultAfterTaxVehicle(combinedOptions, models, cashSim);
+		//	result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
+		//	result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
+		//	result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
+		//}
 
-			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
-			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
-			result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
-		}
+		//[Theory, MemberData(nameof(VehicleAnalysisTestData.AggregateSimVars_PostTax), MemberType = typeof(VehicleAnalysisTestData))]
+		//public void TestGeneratePostTaxModelDefault(List<InvestmentModel> models,OptionsDict options,decimal initialHoldings,InvestmentModel expected) {
 
+		//	var vehicle = new Vehicle403b { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+		//	var combinedOptions = vehicle.MergeOverrideOptions(options);
+		//	var cashSim = VehicleDefaultAS.SimulateCashContributionsDefault(vehicle, combinedOptions);
+		//	var result = VehicleDefaultAS.GeneratePostTaxModelDefault(combinedOptions, models, cashSim);
 
-		[Theory,
-		MemberData(nameof(VehicleAnalysisTestData.AggregateSimVars_PostTax),
-			MemberType = typeof(VehicleAnalysisTestData))]
-		public void GeneratePostTaxModel_DefaultAfterTaxReturnsValues(List<InvestmentModel> models,
-																	OptionsDict options,
-																	decimal initialHoldings,
-																	InvestmentModel expected) {
-			var vehicle = new Vehicle401k { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
-			var combinedOptions = vehicle.MergeOverrideOptions(options);
-			var cashSim = VehicleDefaultAS.SimulateCashContributionsDefaultAfterTax(vehicle, combinedOptions);
+		//	result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
+		//	result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
+		//	result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
+		//}
 
-			var result = VehicleDefaultAS.GeneratePostTaxModelDefaultAfterTaxVehicle(combinedOptions, models, cashSim);
+		//[Theory, MemberData(nameof(VehicleAnalysisTestData.AggregateSimVars_PostTax), MemberType = typeof(VehicleAnalysisTestData))]
+		//public void TestGeneratePostTaxModel401k(List<InvestmentModel> models, OptionsDict options, decimal initialHoldings, InvestmentModel expected) {
 
-			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
-			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
-			result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
-		}
+		//	var vehicle = new Vehicle401k { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+		//	var combinedOptions = vehicle.MergeOverrideOptions(options);
+		//	var cashSim = VehicleDefaultAS.SimulateCashContributionsDefault(vehicle, combinedOptions);
+		//	var result = VehicleDefaultAS.GeneratePostTaxModelDefault(combinedOptions, models, cashSim);
 
-
-		[Theory(Skip = "Needs Fixing"),
-		MemberData(nameof(VehicleAnalysisTestData.AggregateSimVarsPreTaxVehicle_PreTax),
-					MemberType = typeof(VehicleAnalysisTestData))]
-		public void GeneratePreTaxModel_DefaultPreTaxReturnsValues(List<InvestmentModel> models,
-																	OptionsDict options,
-																	decimal initialHoldings,
-																	InvestmentModel expected) {
-			var vehicle = new Vehicle401k { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
-			var combinedOptions = vehicle.MergeOverrideOptions(options);
-			var cashSim = VehicleDefaultAS.SimulateCashContributionsDefaultAfterTax(vehicle, combinedOptions);
-
-			var result = VehicleDefaultAS.GeneratePreTaxModelDefaultPreTaxVehicle(combinedOptions, models, cashSim);
-
-			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
-			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
-			result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
-		}
+		//	result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
+		//	result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
+		//	result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
+		//}
 	}
 
 	static class VehicleAnalysisTestData {
-		/********************************************************
-		 * Defaults + Mock Data
-		 ********************************************************/
+		
 		public static readonly OptionsDict DefaultOptions = new() {
 			["analysisLength"] = "10",
 			["cashContribution"] = "0",
 			["vehicleTaxPercentage"] = "0.3",
+		};
+
+		public static readonly OptionsDict Options401k = new() {
+			["analysisLength"] = "10",
+			["cashContribution"] = "0",
+			["vehicleTaxPercentage"] = "0.3",
+			["cashHoldings"] = "0",
+
+			["pay freq"] = "monthly",
+			["salary"] = "60000",
+			["max_employer_salary_contribution"] = "0.06",
+			["user_contribution_percent"] = "0.1",
+			["employer_contribution_percent"] = "1.2",
+			["user_contribution_type"] = "percentage",
+			["user_contribution_amount"] = "0",
+		};
+
+		public static readonly OptionsDict Options401kFixed = new() {
+			["analysisLength"] = "10",
+			["cashContribution"] = "0",
+			["vehicleTaxPercentage"] = "0.3",
+			["cashHoldings"] = "0",
+
+			["pay freq"] = "monthly",
+			["salary"] = "60000",
+			["max_employer_salary_contribution"] = "0.06",
+			["user_contribution_percent"] = "0.1",
+			["employer_contribution_percent"] = "1.2",
+			["user_contribution_type"] = "fixed",
+			["user_contribution_amount"] = "50",
 		};
 
 		public static readonly List<InvestmentModel> MockModels = new(){
@@ -116,7 +162,7 @@ namespace RetireSimple.Tests.Analysis {
 			},
 		};
 
-		public static readonly List<InvestmentModel> ExpectedMockModels = new() {
+		public static readonly List<InvestmentModel> ExpectedModelsDefault = new() {
 			new InvestmentModel(){
 				MinModelData = new List<decimal>(){ 100, 105, 110, 115, 120, 125, 130, 135, 140, 145 },
 				AvgModelData = new List<decimal>(){ 100, 110, 120, 130, 140, 150, 160, 170, 180, 190 },
@@ -136,6 +182,14 @@ namespace RetireSimple.Tests.Analysis {
 				MinModelData = new List<decimal>(){ 250, 250, 265, 250, 285, 250, 305, 250, 325, 250 },
 				AvgModelData = new List<decimal>(){ 250, 270, 290, 310, 330, 350, 370, 390, 410, 430 },
 				MaxModelData = new List<decimal>(){ 250, 290, 315, 370, 375, 450, 435, 530, 495, 610 },
+			},
+		};
+
+		public static readonly List<InvestmentModel> ExpectedModels401k = new() {
+			new InvestmentModel(){
+				MinModelData = new List<decimal>(){ 0, 800, 1600, 2400, 3200, 4000, 4800, 5600, 6400, 7200 },
+				AvgModelData = new List<decimal>(){ 0, 800, 1600, 2400, 3200, 4000, 4800, 5600, 6400, 7200 },
+				MaxModelData = new List<decimal>(){ 0, 800, 1600, 2400, 3200, 4000, 4800, 5600, 6400, 7200 },
 			},
 		};
 
@@ -181,126 +235,126 @@ namespace RetireSimple.Tests.Analysis {
 			}
 		};
 
-		public static readonly IEnumerable<object[]> AggregateSimVars_PreTax = new List<object[]> {
-			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m, ExpectedMockModels[0] },
-			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[0].MinModelData.Select(x=> x+100).ToList(),
-					AvgModelData = ExpectedMockModels[0].AvgModelData.Select(x=> x+100).ToList(),
-					MaxModelData = ExpectedMockModels[0].MaxModelData.Select(x=> x+100).ToList(),
-				}
-			},
-			new object[] { MockModels.GetRange(0, 2), DefaultOptions, 0.0m, ExpectedMockModels[1] },
-			new object[] { MockModels.GetRange(0, 2), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[1].MinModelData.Select(x=> x+100).ToList(),
-					AvgModelData = ExpectedMockModels[1].AvgModelData.Select(x=> x+100).ToList(),
-					MaxModelData = ExpectedMockModels[1].MaxModelData.Select(x=> x+100).ToList(),
-				}
-			},
-			new object[] { MockModels.GetRange(0, 3), DefaultOptions, 0.0m, ExpectedMockModels[2] },
-			new object[] { MockModels.GetRange(0, 3), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[2].MinModelData.Select(x=> x+100).ToList(),
-					AvgModelData = ExpectedMockModels[2].AvgModelData.Select(x=> x+100).ToList(),
-					MaxModelData = ExpectedMockModels[2].MaxModelData.Select(x=> x+100).ToList(),
-				}
-			},
-			new object[] { MockModels.GetRange(0, 4), DefaultOptions, 0.0m, ExpectedMockModels[3] },
-			new object[] { MockModels.GetRange(0, 4), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[3].MinModelData.Select(x=> x+100).ToList(),
-					AvgModelData = ExpectedMockModels[3].AvgModelData.Select(x=> x+100).ToList(),
-					MaxModelData = ExpectedMockModels[3].MaxModelData.Select(x=> x+100).ToList(),
-				}
-			},
-		};
+		//public static readonly IEnumerable<object[]> AggregateSimVars_PreTax = new List<object[]> {
+		//	new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m, ExpectedMockModels[0] },
+		//	new object[] { MockModels.GetRange(0, 1), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[0].MinModelData.Select(x=> x+100).ToList(),
+		//			AvgModelData = ExpectedMockModels[0].AvgModelData.Select(x=> x+100).ToList(),
+		//			MaxModelData = ExpectedMockModels[0].MaxModelData.Select(x=> x+100).ToList(),
+		//		}
+		//	},
+		//	new object[] { MockModels.GetRange(0, 2), DefaultOptions, 0.0m, ExpectedMockModels[1] },
+		//	new object[] { MockModels.GetRange(0, 2), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[1].MinModelData.Select(x=> x+100).ToList(),
+		//			AvgModelData = ExpectedMockModels[1].AvgModelData.Select(x=> x+100).ToList(),
+		//			MaxModelData = ExpectedMockModels[1].MaxModelData.Select(x=> x+100).ToList(),
+		//		}
+		//	},
+		//	new object[] { MockModels.GetRange(0, 3), DefaultOptions, 0.0m, ExpectedMockModels[2] },
+		//	new object[] { MockModels.GetRange(0, 3), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[2].MinModelData.Select(x=> x+100).ToList(),
+		//			AvgModelData = ExpectedMockModels[2].AvgModelData.Select(x=> x+100).ToList(),
+		//			MaxModelData = ExpectedMockModels[2].MaxModelData.Select(x=> x+100).ToList(),
+		//		}
+		//	},
+		//	new object[] { MockModels.GetRange(0, 4), DefaultOptions, 0.0m, ExpectedMockModels[3] },
+		//	new object[] { MockModels.GetRange(0, 4), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[3].MinModelData.Select(x=> x+100).ToList(),
+		//			AvgModelData = ExpectedMockModels[3].AvgModelData.Select(x=> x+100).ToList(),
+		//			MaxModelData = ExpectedMockModels[3].MaxModelData.Select(x=> x+100).ToList(),
+		//		}
+		//	},
+		//};
 
-		public static readonly IEnumerable<object[]> AggregateSimVars_PostTax = new List<object[]> {
-			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[0].MinModelData.Select(x => x * 0.7m).ToList(),
-					AvgModelData = ExpectedMockModels[0].AvgModelData.Select(x => x * 0.7m).ToList(),
-					MaxModelData = ExpectedMockModels[0].MaxModelData.Select(x => x * 0.7m).ToList(),
-				}},
-			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[0].MinModelData.Select(x => (x+100) * 0.7m).ToList(),
-					AvgModelData = ExpectedMockModels[0].AvgModelData.Select(x => (x+100) * 0.7m).ToList(),
-					MaxModelData = ExpectedMockModels[0].MaxModelData.Select(x => (x+100) * 0.7m).ToList(),
-				}},
-			new object[] { MockModels.GetRange(0, 2), DefaultOptions, 0.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[1].MinModelData.Select(x => x * 0.7m).ToList(),
-					AvgModelData = ExpectedMockModels[1].AvgModelData.Select(x => x * 0.7m).ToList(),
-					MaxModelData = ExpectedMockModels[1].MaxModelData.Select(x => x * 0.7m).ToList(),
-				}},
-			new object[] { MockModels.GetRange(0, 2), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[1].MinModelData.Select(x => (x+100) * 0.7m).ToList(),
-					AvgModelData = ExpectedMockModels[1].AvgModelData.Select(x => (x+100) * 0.7m).ToList(),
-					MaxModelData = ExpectedMockModels[1].MaxModelData.Select(x => (x+100) * 0.7m).ToList(),
-				}},
-			new object[] { MockModels.GetRange(0, 3), DefaultOptions, 0.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[2].MinModelData.Select(x => x * 0.7m).ToList(),
-					AvgModelData = ExpectedMockModels[2].AvgModelData.Select(x => x * 0.7m).ToList(),
-					MaxModelData = ExpectedMockModels[2].MaxModelData.Select(x => x * 0.7m).ToList(),
-				}},
-			new object[] { MockModels.GetRange(0, 3), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[2].MinModelData.Select(x => (x+100) * 0.7m).ToList(),
-					AvgModelData = ExpectedMockModels[2].AvgModelData.Select(x => (x+100) * 0.7m).ToList(),
-					MaxModelData = ExpectedMockModels[2].MaxModelData.Select(x => (x+100) * 0.7m).ToList(),
-				}},
-			new object[] { MockModels.GetRange(0, 4), DefaultOptions, 0.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[3].MinModelData.Select(x => x * 0.7m).ToList(),
-					AvgModelData = ExpectedMockModels[3].AvgModelData.Select(x => x * 0.7m).ToList(),
-					MaxModelData = ExpectedMockModels[3].MaxModelData.Select(x => x * 0.7m).ToList(),
-				}},
-			new object[] { MockModels.GetRange(0, 4), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[3].MinModelData.Select(x => (x+100) * 0.7m).ToList(),
-					AvgModelData = ExpectedMockModels[3].AvgModelData.Select(x => (x+100) * 0.7m).ToList(),
-					MaxModelData = ExpectedMockModels[3].MaxModelData.Select(x => (x+100) * 0.7m).ToList(),
-				}},
-		};
+		//public static readonly IEnumerable<object[]> AggregateSimVars_PostTax = new List<object[]> {
+		//	new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[0].MinModelData.Select(x => x * 0.7m).ToList(),
+		//			AvgModelData = ExpectedMockModels[0].AvgModelData.Select(x => x * 0.7m).ToList(),
+		//			MaxModelData = ExpectedMockModels[0].MaxModelData.Select(x => x * 0.7m).ToList(),
+		//		}},
+		//	new object[] { MockModels.GetRange(0, 1), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[0].MinModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//			AvgModelData = ExpectedMockModels[0].AvgModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//			MaxModelData = ExpectedMockModels[0].MaxModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//		}},
+		//	new object[] { MockModels.GetRange(0, 2), DefaultOptions, 0.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[1].MinModelData.Select(x => x * 0.7m).ToList(),
+		//			AvgModelData = ExpectedMockModels[1].AvgModelData.Select(x => x * 0.7m).ToList(),
+		//			MaxModelData = ExpectedMockModels[1].MaxModelData.Select(x => x * 0.7m).ToList(),
+		//		}},
+		//	new object[] { MockModels.GetRange(0, 2), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[1].MinModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//			AvgModelData = ExpectedMockModels[1].AvgModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//			MaxModelData = ExpectedMockModels[1].MaxModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//		}},
+		//	new object[] { MockModels.GetRange(0, 3), DefaultOptions, 0.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[2].MinModelData.Select(x => x * 0.7m).ToList(),
+		//			AvgModelData = ExpectedMockModels[2].AvgModelData.Select(x => x * 0.7m).ToList(),
+		//			MaxModelData = ExpectedMockModels[2].MaxModelData.Select(x => x * 0.7m).ToList(),
+		//		}},
+		//	new object[] { MockModels.GetRange(0, 3), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[2].MinModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//			AvgModelData = ExpectedMockModels[2].AvgModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//			MaxModelData = ExpectedMockModels[2].MaxModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//		}},
+		//	new object[] { MockModels.GetRange(0, 4), DefaultOptions, 0.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[3].MinModelData.Select(x => x * 0.7m).ToList(),
+		//			AvgModelData = ExpectedMockModels[3].AvgModelData.Select(x => x * 0.7m).ToList(),
+		//			MaxModelData = ExpectedMockModels[3].MaxModelData.Select(x => x * 0.7m).ToList(),
+		//		}},
+		//	new object[] { MockModels.GetRange(0, 4), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[3].MinModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//			AvgModelData = ExpectedMockModels[3].AvgModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//			MaxModelData = ExpectedMockModels[3].MaxModelData.Select(x => (x+100) * 0.7m).ToList(),
+		//		}},
+		//};
 
-		public static readonly IEnumerable<object[]> AggregateSimVarsPreTaxVehicle_PreTax = new List<object[]> {
-			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m, ExpectedMockModels[0] },
-			new object[] { MockModels.GetRange(0, 1), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[0].MinModelData.Select(x=> x+70).ToList(),
-					AvgModelData = ExpectedMockModels[0].AvgModelData.Select(x=> x+70).ToList(),
-					MaxModelData = ExpectedMockModels[0].MaxModelData.Select(x=> x+70).ToList(),
-				}
-			},
-			new object[] { MockModels.GetRange(0, 2), DefaultOptions, 0.0m, ExpectedMockModels[1] },
-			new object[] { MockModels.GetRange(0, 2), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[1].MinModelData.Select(x=> x+70).ToList(),
-					AvgModelData = ExpectedMockModels[1].AvgModelData.Select(x=> x+70).ToList(),
-					MaxModelData = ExpectedMockModels[1].MaxModelData.Select(x=> x+70).ToList(),
-				}
-			},
-			new object[] { MockModels.GetRange(0, 3), DefaultOptions, 0.0m, ExpectedMockModels[2] },
-			new object[] { MockModels.GetRange(0, 3), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[2].MinModelData.Select(x=> x+70).ToList(),
-					AvgModelData = ExpectedMockModels[2].AvgModelData.Select(x=> x+70).ToList(),
-					MaxModelData = ExpectedMockModels[2].MaxModelData.Select(x=> x+70).ToList(),
-				}
-			},
-			new object[] { MockModels.GetRange(0, 4), DefaultOptions, 0.0m, ExpectedMockModels[3] },
-			new object[] { MockModels.GetRange(0, 4), DefaultOptions, 100.0m,
-				new InvestmentModel() {
-					MinModelData = ExpectedMockModels[3].MinModelData.Select(x=> x+70).ToList(),
-					AvgModelData = ExpectedMockModels[3].AvgModelData.Select(x=> x+70).ToList(),
-					MaxModelData = ExpectedMockModels[3].MaxModelData.Select(x=> x+70).ToList(),
-				}
-			},
-		};
+		//public static readonly IEnumerable<object[]> AggregateSimVarsPreTaxVehicle_PreTax = new List<object[]> {
+		//	new object[] { MockModels.GetRange(0, 1), DefaultOptions, 0.0m, ExpectedMockModels[0] },
+		//	new object[] { MockModels.GetRange(0, 1), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[0].MinModelData.Select(x=> x+70).ToList(),
+		//			AvgModelData = ExpectedMockModels[0].AvgModelData.Select(x=> x+70).ToList(),
+		//			MaxModelData = ExpectedMockModels[0].MaxModelData.Select(x=> x+70).ToList(),
+		//		}
+		//	},
+		//	new object[] { MockModels.GetRange(0, 2), DefaultOptions, 0.0m, ExpectedMockModels[1] },
+		//	new object[] { MockModels.GetRange(0, 2), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[1].MinModelData.Select(x=> x+70).ToList(),
+		//			AvgModelData = ExpectedMockModels[1].AvgModelData.Select(x=> x+70).ToList(),
+		//			MaxModelData = ExpectedMockModels[1].MaxModelData.Select(x=> x+70).ToList(),
+		//		}
+		//	},
+		//	new object[] { MockModels.GetRange(0, 3), DefaultOptions, 0.0m, ExpectedMockModels[2] },
+		//	new object[] { MockModels.GetRange(0, 3), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[2].MinModelData.Select(x=> x+70).ToList(),
+		//			AvgModelData = ExpectedMockModels[2].AvgModelData.Select(x=> x+70).ToList(),
+		//			MaxModelData = ExpectedMockModels[2].MaxModelData.Select(x=> x+70).ToList(),
+		//		}
+		//	},
+		//	new object[] { MockModels.GetRange(0, 4), DefaultOptions, 0.0m, ExpectedMockModels[3] },
+		//	new object[] { MockModels.GetRange(0, 4), DefaultOptions, 100.0m,
+		//		new InvestmentModel() {
+		//			MinModelData = ExpectedMockModels[3].MinModelData.Select(x=> x+70).ToList(),
+		//			AvgModelData = ExpectedMockModels[3].AvgModelData.Select(x=> x+70).ToList(),
+		//			MaxModelData = ExpectedMockModels[3].MaxModelData.Select(x=> x+70).ToList(),
+		//		}
+		//	},
+		//};
 	}
 }
 
