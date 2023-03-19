@@ -105,8 +105,6 @@ export const investmentFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 
-
-
 	//========================================
 	// Bond Investment Specific Fields
 	//========================================
@@ -313,7 +311,10 @@ export const vehicleFormSchema = object().shape({
 	analysis_payFrequency: string().when('investmentVehicleType', {
 		is: '401k',
 		then: (schema) =>
-			schema.defined('Required').required('Required').oneOf(['weekly', 'biweekly']),
+			schema
+				.defined('Required')
+				.required('Required')
+				.oneOf(['weekly', 'biweekly', 'monthly']),
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_maxEmployerContributionPercentage: number().when('investmentVehicleType', {

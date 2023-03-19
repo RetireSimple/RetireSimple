@@ -9,10 +9,8 @@ namespace RetireSimple.Engine.Analysis {
 			List<InvestmentModel> models,
 			List<decimal>? cashContribution = null) {
 
-			//Short term capital gains tax
-			var short_term_tax = decimal.Parse(options["shorttermvehicleTaxPercentage"]);
-			//Long term captial gains tax
-			var long_term_tax = decimal.Parse(options["longtermvehicleTaxPercentage"]);
+			var shortTermTax = decimal.Parse(options["shortTermCapitalGainsTax"]);
+			var longTermTax = decimal.Parse(options["longTermCapitalGainsTax"]);
 
 			List<InvestmentModel> newModels = new List<InvestmentModel>();
 
@@ -22,29 +20,30 @@ namespace RetireSimple.Engine.Analysis {
 				var avgModel = new List<decimal>();
 				var maxModel = new List<decimal>();
 
-				var capital_gains_min = 0M;
-				var capital_gains_max = 0M;
-				var capital_gains_avg = 0M;
+				var capitalGainsMin = 0M;
+				var capitalGainsMax = 0M;
+				var capitalGainsAvg = 0M;
 
 				for (int i = 0; i < int.Parse(options["analysisLength"]); i++) {
-					decimal tax = short_term_tax;
-					// first 12 values qualify for short term capital gains tax 
-					if(i < 12) {
-						tax = short_term_tax;
-					} else {	// everything after (>11) is subject to long term capital gains 
-						tax = long_term_tax;
+					decimal tax = shortTermTax;
+					// first 12 values qualify for short term capital gains tax
+					if (i < 12) {
+						tax = shortTermTax;
 					}
-					capital_gains_min = Math.Max(0, model.MinModelData[i] - model.MinModelData[0]);
-					capital_gains_min *= 1 - tax;
-					minModel.Add(capital_gains_min + model.MinModelData[i]);
-					
-					capital_gains_max = Math.Max(0, model.MaxModelData[i] - model.MaxModelData[0]);
-					capital_gains_max *= 1 - tax;
-					maxModel.Add(capital_gains_max + model.MaxModelData[i]);
-						
-					capital_gains_avg = Math.Max(0, model.AvgModelData[i] - model.AvgModelData[0]);
-					capital_gains_avg *= 1 - tax;
-					avgModel.Add(capital_gains_avg + model.AvgModelData[i]);
+					else {  // everything after (>11) is subject to long term capital gains
+						tax = longTermTax;
+					}
+					capitalGainsMin = Math.Max(0, model.MinModelData[i] - model.MinModelData[0]);
+					capitalGainsMin *= 1 - tax;
+					minModel.Add(capitalGainsMin + model.MinModelData[i]);
+
+					capitalGainsMax = Math.Max(0, model.MaxModelData[i] - model.MaxModelData[0]);
+					capitalGainsMax *= 1 - tax;
+					maxModel.Add(capitalGainsMax + model.MaxModelData[i]);
+
+					capitalGainsAvg = Math.Max(0, model.AvgModelData[i] - model.AvgModelData[0]);
+					capitalGainsAvg *= 1 - tax;
+					avgModel.Add(capitalGainsAvg + model.AvgModelData[i]);
 				}
 				newModels.Add(new InvestmentModel() {
 					MinModelData = minModel,
@@ -77,9 +76,9 @@ namespace RetireSimple.Engine.Analysis {
 			List<InvestmentModel> models,
 			List<decimal>? cashContribution = null) {
 			//The logic here is a bit confusing at first, but here is an explanation of the transforms
-			var minModel = Enumerable.Range(0, models[0].MinModelData.Count)				// Project the total length of the model with indexes
-									.Select(model =>										// For each index,
-										models.Select(m => m.MinModelData[model]).Sum());	// project each model's value at that index and sum
+			var minModel = Enumerable.Range(0, models[0].MinModelData.Count)                // Project the total length of the model with indexes
+									.Select(model =>                                        // For each index,
+										models.Select(m => m.MinModelData[model]).Sum());   // project each model's value at that index and sum
 			var maxModel = Enumerable.Range(0, models[0].MaxModelData.Count)
 									.Select(model =>
 										models.Select(m => m.MaxModelData[model]).Sum());
@@ -105,7 +104,7 @@ namespace RetireSimple.Engine.Analysis {
 
 		public static List<decimal> SimulateCashContributionsDefault(InvestmentVehicleBase vehicle, OptionsDict options) {
 			var analysisLength = int.Parse(options["analysisLength"]);
-			var cashContribution = decimal.Parse(options["cashContribution"]);
+			var cashContribution = decimal.Parse(options["userContributionAmount"]);
 			var currentHoldings = vehicle.CashHoldings;
 
 			return Enumerable.Range(0, analysisLength)

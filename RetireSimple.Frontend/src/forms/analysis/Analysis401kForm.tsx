@@ -48,6 +48,7 @@ export const Analysis401kForm = () => {
 			options={[
 				{value: 'biweekly', label: 'Biweekly'},
 				{value: 'weekly', label: 'Weekly'},
+				{value: 'monthly', label: 'Monthly'},
 			]}
 			disable={false}
 			tooltip={
