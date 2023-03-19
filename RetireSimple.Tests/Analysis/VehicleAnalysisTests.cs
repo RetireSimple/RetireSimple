@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
 
 using Moq;
+
 using Newtonsoft.Json.Linq;
 
 using System.Security.Principal;
@@ -12,15 +13,15 @@ namespace RetireSimple.Tests.Analysis {
 		[Theory, MemberData(nameof(VehicleAnalysisTestData.CashSimVars), MemberType = typeof(VehicleAnalysisTestData))]
 		public void TestSimulateCashContributionsDefault(OptionsDict options, decimal initialHoldings, List<decimal> expected) {
 
-			var vehicle = new Vehicle403b { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } }; 
+			var vehicle = new Vehicle403b { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
 			var actual = vehicle.SimulateCashContributions(options);
-			
+
 			actual.Should().HaveSameCount(expected);
 			actual.Should().BeEquivalentTo(expected);
 		}
 
 		[Fact]
-		public void Test401kCashContributionsPercentage() {
+		public void Test401kCashContributionsPercentage_WeeklyPaycheck() {
 
 			var vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401k };
 			var actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401k);
@@ -29,18 +30,18 @@ namespace RetireSimple.Tests.Analysis {
 			actual.Should().HaveSameCount(expectedData);
 			actual.Should().BeEquivalentTo(expectedData);
 
-			VehicleAnalysisTestData.Options401k["pay freq"] = "weekly";
+			VehicleAnalysisTestData.Options401k["payFrequency"] = "weekly";
 			vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401k };
 			actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401k);
 			var expectedData2 = new List<string> { "", "738.462", "1476.923", "2215.385", "2953.846", "3692.308", "4430.769", "5169.231", "5907.692", "6646.154" };
-			
+
 			var newData = new List<string>();
 			foreach (var data in actual) {
 				newData.Add(data.ToString("#.###"));
 			}
 			newData.Should().HaveSameCount(expectedData2);
 			newData.Should().BeEquivalentTo(expectedData2);
-		}    
+		}
 
 		[Fact]
 		public void Test401kCashContributionsFixed() {
@@ -52,7 +53,7 @@ namespace RetireSimple.Tests.Analysis {
 			actual.Should().HaveSameCount(expected);
 			actual.Should().BeEquivalentTo(expected);
 
-			VehicleAnalysisTestData.Options401kFixed["pay freq"] = "weekly";
+			VehicleAnalysisTestData.Options401kFixed["payFrequency"] = "weekly";
 			vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401kFixed };
 			actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401kFixed);
 			expected = new List<decimal>() { 0, 440, 880, 1320, 1760, 2200, 2640, 3080, 3520, 3960 };
@@ -60,7 +61,7 @@ namespace RetireSimple.Tests.Analysis {
 			actual.Should().HaveSameCount(expected);
 			actual.Should().BeEquivalentTo(expected);
 		}
-    
+
 		//[Theory, MemberData(nameof(VehicleAnalysisTestData.AggregateSimVars_PreTax), MemberType = typeof(VehicleAnalysisTestData))]
 		//public void TestGeneratePreTaxModelDefault(List<InvestmentModel> models, OptionsDict options, decimal initialHoldings, InvestmentModel expected) {
 
@@ -102,41 +103,35 @@ namespace RetireSimple.Tests.Analysis {
 	}
 
 	static class VehicleAnalysisTestData {
-		
+
 		public static readonly OptionsDict DefaultOptions = new() {
 			["analysisLength"] = "10",
-			["cashContribution"] = "0",
-			["vehicleTaxPercentage"] = "0.3",
+			["userContributionAmount"] = "0",
 		};
 
 		public static readonly OptionsDict Options401k = new() {
 			["analysisLength"] = "10",
-			["cashContribution"] = "0",
+			["userContributionAmount"] = "0",
 			["vehicleTaxPercentage"] = "0.3",
 			["cashHoldings"] = "0",
-
-			["pay freq"] = "monthly",
+			["payFrequency"] = "monthly",
 			["salary"] = "60000",
-			["max_employer_salary_contribution"] = "0.06",
-			["user_contribution_percent"] = "0.1",
-			["employer_contribution_percent"] = "1.2",
-			["user_contribution_type"] = "percentage",
-			["user_contribution_amount"] = "0",
+			["maxEmployerContributionPercentage"] = "0.06",
+			["userContributionPercentage"] = "0.1",
+			["employerMatchPercentage"] = "1.2",
+			["userContributionType"] = "percentage",
 		};
 
 		public static readonly OptionsDict Options401kFixed = new() {
 			["analysisLength"] = "10",
-			["cashContribution"] = "0",
-			["vehicleTaxPercentage"] = "0.3",
 			["cashHoldings"] = "0",
-
-			["pay freq"] = "monthly",
+			["payFrequency"] = "monthly",
 			["salary"] = "60000",
-			["max_employer_salary_contribution"] = "0.06",
-			["user_contribution_percent"] = "0.1",
-			["employer_contribution_percent"] = "1.2",
-			["user_contribution_type"] = "fixed",
-			["user_contribution_amount"] = "50",
+			["maxEmployerContributionPercentage"] = "0.06",
+			["userContributionPercentage"] = "0.1",
+			["employerMatchPercentage"] = "1.2",
+			["userContributionType"] = "fixed",
+			["userContributionAmount"] = "50",
 		};
 
 		public static readonly List<InvestmentModel> MockModels = new(){
@@ -199,38 +194,38 @@ namespace RetireSimple.Tests.Analysis {
 		 ********************************************************/
 		public static readonly IEnumerable<object[]> CashSimVars = new List<object[]> {
 			new object[] {
-				new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" },
+				new OptionsDict(DefaultOptions){ ["userContributionAmount"] = "0" },
 				0.0m,
 				Enumerable.Repeat(0m, 10).ToList(),
 			},
 			new object[] {
-				new OptionsDict(DefaultOptions){ ["cashContribution"] = "10" },
+				new OptionsDict(DefaultOptions){ ["userContributionAmount"] = "10" },
 				0.0m,
 				new List<decimal>(){0, 10, 20, 30, 40, 50, 60, 70, 80, 90}
 			},
 			new object[] {
-				new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" },
+				new OptionsDict(DefaultOptions){ ["userContributionAmount"] = "0" },
 				100.0m,
 				Enumerable.Repeat(100m, 10).ToList()
 			},
 			new object[] {
-				new OptionsDict(DefaultOptions){ ["cashContribution"] = "10"},
+				new OptionsDict(DefaultOptions){ ["userContributionAmount"] = "10"},
 				100.0m,
 				new List<decimal>(){100m, 110m, 120m, 130m, 140m, 150m, 160m, 170m, 180m, 190m}
 			}
 		};
 
 		public static readonly IEnumerable<object[]> CashSimVars_PostTax = new List<object[]> {
-			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" }, 0.0m,
+			new object[] { new OptionsDict(DefaultOptions){ ["userContributionAmount"] = "0" }, 0.0m,
 				new List<decimal>(){0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 			},
-			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "10" }, 0.0m,
+			new object[] { new OptionsDict(DefaultOptions){ ["userContributionAmount"] = "10" }, 0.0m,
 				new List<decimal>(){0, 7,14, 21, 28, 35, 42, 49, 56, 63}
 			},
-			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" }, 100.0m,
+			new object[] { new OptionsDict(DefaultOptions){ ["userContributionAmount"] = "0" }, 100.0m,
 				new List<decimal>(){100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, }
 			},
-			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "10" }, 100.0m,
+			new object[] { new OptionsDict(DefaultOptions){ ["userContributionAmount"] = "10" }, 100.0m,
 				new List<decimal>(){100m, 107m, 114m, 121m, 128m, 135m, 142m, 149m, 156m, 163m}
 			}
 		};
