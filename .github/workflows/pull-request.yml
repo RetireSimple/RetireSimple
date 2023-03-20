@@ -26,7 +26,7 @@ jobs:
       - name: Build Engine
         run: dotnet build ./RetireSimple.Engine/RetireSimple.Engine.csproj --no-restore
       - name: Execute Tests
-        run: dotnet test --collect:"XPlat Code Coverage" --verbosity normal
+        run: dotnet test --verbosity normal
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
 
