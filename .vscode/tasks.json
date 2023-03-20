@@ -36,6 +36,17 @@
 				"${workspaceFolder}/RetireSimple.Backend/RetireSimple.Backend.csproj"
 			],
 			"problemMatcher": "$msCompile"
-		}
+		},
+		{
+			"label": "test",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"test",
+				"${workspaceFolder}/RetireSimple.Backend.Tests/RetireSimple.Backend.Tests.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+		},
 	]
 }
