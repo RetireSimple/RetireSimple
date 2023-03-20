@@ -36,10 +36,22 @@
 		"@vitejs/plugin-react": "^3.1.0",
 		"eslint": "^8.36.0",
 		"eslint-config-react-app": "^7.0.1",
+		"jest": "^29.5.0",
 		"jest-editor-support": "^30.3.1",
+		"ts-jest": "^29.0.5",
 		"typescript": "^5",
 		"vite": "^4.2.0",
 		"vite-tsconfig-paths": "^4.0.7"
+	},
+	"jest": {
+		"preset": "ts-jest",
+		"testEnvironment": "node",
+		"transform": {
+			"node_modules/variables/.+\\.(j|t)sx?$": "ts-jest"
+		},
+		"transformIgnorePatterns": [
+			"node_modules/(?!variables/.*)"
+		]
 	},
 	"scripts": {
 		"start": "vite",
