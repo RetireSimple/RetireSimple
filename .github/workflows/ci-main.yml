@@ -5,6 +5,31 @@ on:
     branches: ["main"]
 
 jobs:
+  engine-test:
+    name: RetireSimple.Engine
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.x
+      - name: Restore NuGet Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Restore .NET Projects
+        run: dotnet restore
+      - name: Build Engine
+        run: dotnet build ./RetireSimple.Engine/RetireSimple.Engine.csproj --no-restore
+      - name: Execute Tests
+        run: dotnet test --collect:"XPlat Code Coverage" --verbosity normal
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+
   get-info:
     name: Get Relevant Project Information
     runs-on: ubuntu-latest
@@ -184,7 +209,6 @@ jobs:
           name: RetireSimple-Engine-NuGet
           path: publish/RetireSimple.Engine.*.nupkg
           retention-days: 1
-
 
   ###############################################################
   # DISABLED BECAUSE MACOS CROSS-MACHINE RELEASE BUILDS BE BROKEY
