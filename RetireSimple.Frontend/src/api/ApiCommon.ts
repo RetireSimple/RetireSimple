@@ -1,6 +1,6 @@
 import {Portfolio} from "../Interfaces";
 
-export const API_BASE_URL = process.env.REACT_APP_API_URL;
+export const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getPortfolio = async (): Promise<Portfolio> => {
 	const response = await fetch(`${API_BASE_URL}/Portfolio`);
