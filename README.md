@@ -1,5 +1,8 @@
 # RetireSimple
 
+[![Nightly Builder](https://github.com/RetireSimple/RetireSimple/actions/workflows/ci-main.yml/badge.svg?branch=main)](https://github.com/RetireSimple/RetireSimple/actions/workflows/ci-main.yml)
+[![codecov](https://codecov.io/github/RetireSimple/RetireSimple/branch/main/graph/badge.svg?token=0DDVBGJ5RM)](https://codecov.io/github/RetireSimple/RetireSimple)
+
 A financial modeling framework focused on retirement, designed around extensibility and user choice.
 
 This project is currently under construction.
