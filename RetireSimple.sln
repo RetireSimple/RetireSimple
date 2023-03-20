@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B8EC216-52A2-400E-AAA0-52764E05432A}"
 	ProjectSection(SolutionItems) = preProject
-		C:\Users\awest\.config\.editorconfig = C:\Users\awest\.config\.editorconfig
+		..\..\.config\.editorconfig = ..\..\.config\.editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 	EndProjectSection
@@ -22,13 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetireSimple.Tests", "Retir
 		{F6C70AA5-3787-43B0-8AE8-1C400294A696} = {F6C70AA5-3787-43B0-8AE8-1C400294A696}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetireSimple.Engine", "RetireSimple.Engine\RetireSimple.Engine.csproj", "{F6C70AA5-3787-43B0-8AE8-1C400294A696}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub CI", "GitHub CI", "{589FA551-95A8-42D7-97E5-C914E9720D79}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ci-main.yml = .github\workflows\ci-main.yml
-		.github\labeler.yml = .github\labeler.yml
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetireSimple.Engine", "RetireSimple.Engine\RetireSimple.Engine.csproj", "{F6C70AA5-3787-43B0-8AE8-1C400294A696}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,9 +51,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{589FA551-95A8-42D7-97E5-C914E9720D79} = {7B8EC216-52A2-400E-AAA0-52764E05432A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D873A26-7091-4B13-8E96-51BADD59405B}
