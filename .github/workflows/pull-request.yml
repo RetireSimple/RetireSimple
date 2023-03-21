@@ -24,11 +24,11 @@ jobs:
       - name: Restore .NET Projects
         run: dotnet restore
       - name: Build Engine
-        run: dotnet build ./RetireSimple.Engine/RetireSimple.Engine.csproj --no-restore --no-dependencies
-      - name: Build Test Project
-        run: dotnet build ./RetireSimple.Tests/RetireSimple.Tests.csproj --no-restore --no-dependencies
+        run: dotnet build ./RetireSimple.Engine/RetireSimple.Engine.csproj --no-restore
       - name: Execute Tests
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test --verbosity normal
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
 
   # Verify Cross-Platform Build Compatibility
   backend-build:
