@@ -36,7 +36,7 @@ export const investmentFormSchema = object().shape({
 			schema
 				.defined('Required')
 				.required('Required')
-				.min(3)
+				.min(1)
 				.max(5)
 				.uppercase('Must be uppercase'),
 		otherwise: (schema) => schema.strip(),
@@ -114,7 +114,7 @@ export const investmentFormSchema = object().shape({
 			schema
 				.defined('Required')
 				.required('Required')
-				.min(3)
+				.min(1)
 				.max(5)
 				.uppercase('Must be uppercase'),
 		otherwise: (schema) => schema.strip(),
