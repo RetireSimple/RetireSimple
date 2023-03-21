@@ -1,3 +1,4 @@
+import {Schema} from 'yup';
 import {decimalValidation, investmentFormSchema, vehicleFormSchema} from '../forms/FormSchema';
 
 describe('schema validation', () => {
@@ -114,6 +115,12 @@ describe('schema validation', () => {
 
 			expect(schema.isValidSync(data)).toBeTruthy();
 		});
+
+		test('#176 - Short Tickers', () => {
+			const subschema = investmentFormSchema.fields.stockTicker as Schema;
+			expect(subschema.isValidSync('A')).toBeTruthy();
+			expect(subschema.isValidSync('AA')).toBeTruthy();
+		});
 	});
 
 	describe('investmentType: BondInvestment', () => {
@@ -137,6 +144,12 @@ describe('schema validation', () => {
 
 				expect(schema.isValidSync(data)).toBeTruthy();
 			});
+		});
+
+		test('#176 - Short Tickers', () => {
+			const subschema = investmentFormSchema.fields.bondTicker as Schema;
+			expect(subschema.isValidSync('A')).toBeTruthy();
+			expect(subschema.isValidSync('AA')).toBeTruthy();
 		});
 	});
 
