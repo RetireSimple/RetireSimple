@@ -121,6 +121,12 @@ describe('schema validation', () => {
 			expect(subschema.isValidSync('A')).toBeTruthy();
 			expect(subschema.isValidSync('AA')).toBeTruthy();
 		});
+
+		test('#184 - Zero Percent Dividend', () => {
+			const subschema = investmentFormSchema.fields.stockDividendPercent as Schema;
+			expect(subschema.isValidSync(0)).toBeTruthy();
+			expect(subschema.isValidSync(0.0)).toBeTruthy();
+		});
 	});
 
 	describe('investmentType: BondInvestment', () => {

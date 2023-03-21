@@ -79,7 +79,6 @@ export const investmentFormSchema = object().shape({
 		then: (schema) =>
 			schema
 				.defined('Required')
-				.positive('Must be positive')
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(4, value),
 				)
