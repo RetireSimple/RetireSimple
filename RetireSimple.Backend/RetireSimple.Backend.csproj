@@ -25,6 +25,10 @@
 		</ProjectReference>
 	</ItemGroup>
 
+	<Target Name="CopyREADME" AfterTargets="Publish">
+		<Copy SourceFiles="$(MSBuildProjectDirectory)/README.txt" DestinationFolder="$(PublishDir)" />
+	</Target>
+
 
 	<!--Linux/MacOS Configurations to simplify build process-->
 	<Target Name="PublishFrontend" AfterTargets="Publish" Condition="'$(OS)' != 'Windows_NT'">
