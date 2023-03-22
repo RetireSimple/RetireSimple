@@ -33,16 +33,7 @@ const VehicleView = React.lazy(() =>
  * Suspense Wrapper
  ***********************/
 export const SuspenseRoute = ({children}: {children: React.ReactNode}) => {
-	return (
-		<React.Suspense
-			fallback={
-				<>
-					<CircularProgress />
-				</>
-			}>
-			{children}
-		</React.Suspense>
-	);
+	return <React.Suspense fallback={<CircularProgress />}>{children}</React.Suspense>;
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

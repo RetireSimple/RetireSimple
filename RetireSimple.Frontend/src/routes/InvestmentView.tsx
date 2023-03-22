@@ -27,12 +27,10 @@ export const InvestmentView = () => {
 	const {reset, control, handleSubmit} = formContext;
 	const {isDirty, dirtyFields} = useFormState({control});
 
-	//HACK React docs indicate this is problematic, should fix sometime
 	React.useEffect(() => {
 		console.log('currentInvestmentData is defined, resetting form');
-		formContext.reset(currentInvestmentData, {keepErrors: true});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentInvestmentData]);
+		reset(currentInvestmentData, {keepErrors: true});
+	}, [currentInvestmentData, reset]);
 
 	const handleUpdate = handleSubmit((data: FieldValues) => {
 		const requestData: {[key: string]: string} = {};
