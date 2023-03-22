@@ -4,12 +4,12 @@ import React from 'react';
 import {FormProvider, useForm, useFormState} from 'react-hook-form';
 import {FieldValues} from 'react-hook-form/dist/types';
 import {useFormAction, useLoaderData, useSubmit} from 'react-router-dom';
+import {Investment} from '../Interfaces';
 import {updateInvestment} from '../api/InvestmentApi';
+import {ConfirmDeleteDialog} from '../components/DialogComponents';
 import {InvestmentModelGraph} from '../components/GraphComponents';
 import {InvestmentFormDefaults, investmentFormSchema} from '../forms/FormSchema';
-import {Investment} from '../Interfaces';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
-import {ConfirmDeleteDialog} from '../components/DialogComponents';
 
 export const InvestmentView = () => {
 	const [showDelete, setShowDelete] = React.useState(false);
@@ -21,17 +21,16 @@ export const InvestmentView = () => {
 	const formContext = useForm({
 		shouldUnregister: true,
 		resolver: yupResolver(investmentFormSchema),
-		defaultValues: InvestmentFormDefaults,
+		defaultValues: currentInvestmentData ?? InvestmentFormDefaults,
 	});
 
 	const {reset, control, handleSubmit} = formContext;
 	const {isDirty, dirtyFields} = useFormState({control});
 
-	//HACK React docs indicate this is problematic, should fix sometime
 	React.useEffect(() => {
-		formContext.reset(currentInvestmentData, {keepErrors: true});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentInvestmentData]);
+		console.log('currentInvestmentData is defined, resetting form');
+		reset(currentInvestmentData, {keepErrors: true});
+	}, [currentInvestmentData, reset]);
 
 	const handleUpdate = handleSubmit((data: FieldValues) => {
 		const requestData: {[key: string]: string} = {};

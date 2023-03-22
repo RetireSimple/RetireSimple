@@ -18,17 +18,15 @@ export const VehicleView = () => {
 	const formContext = useForm({
 		shouldUnregister: true,
 		resolver: yupResolver(vehicleFormSchema),
-		defaultValues: VehicleFormDefaults,
+		defaultValues: vehicleData ?? VehicleFormDefaults,
 	});
 
 	const {reset, control, handleSubmit} = formContext;
 	const {isDirty, dirtyFields} = useFormState({control});
 
-	//HACK React docs indicate this is problematic, should fix sometime
 	React.useEffect(() => {
-		formContext.reset(vehicleData, {keepErrors: true});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [vehicleData]);
+		reset(vehicleData, {keepErrors: true});
+	}, [reset, vehicleData]);
 
 	const handleUpdate = handleSubmit((data: FieldValues) => {
 		const requestData: {[key: string]: string} = {};

@@ -30,7 +30,7 @@ describe('flattenApiInvestment', () => {
 		};
 
 		const expected = {
-			investmentId: 2,
+			investmentId: '2',
 			investmentName: 'Test Investment 2',
 			investmentType: 'StockInvestment',
 			stockPrice: '250',
