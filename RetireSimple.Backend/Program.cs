@@ -53,6 +53,7 @@ if (app.Environment.IsDevelopment()) {
 }
 
 if (app.Environment.IsProduction()) {
+	app.UseDefaultFiles();
 	app.UseStaticFiles();
 }
 
@@ -60,7 +61,7 @@ app.MapControllers();
 
 //invoke browser to app window
 if (app.Environment.IsProduction()) {
-	var url = "http://localhost:5000/index.html";
+	var url = "http://localhost:5000/";
 	try {
 		Process.Start(url);
 	}
