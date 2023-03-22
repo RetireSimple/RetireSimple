@@ -12,7 +12,7 @@ import {deleteInvestment, getInvestment} from './api/InvestmentApi';
 import {deleteVehicle, getVehicle} from './api/VehicleApi';
 import './index.css';
 import {Layout} from './Layout';
-import {CircularProgress} from '@mui/material';
+import {CircularProgress, Typography} from '@mui/material';
 
 /************************
  * Lazy Loaded Components
@@ -35,8 +35,6 @@ const VehicleView = React.lazy(() =>
 export const SuspenseRoute = ({children}: {children: React.ReactNode}) => {
 	return <React.Suspense fallback={<CircularProgress />}>{children}</React.Suspense>;
 };
-
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 /************************
  * React Router Actions
@@ -118,10 +116,13 @@ const router = createBrowserRouter(
 			<Route path='*' element={<div>404</div>} />
 		</Route>,
 	]),
+
 );
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
 	<React.StrictMode>
-		<RouterProvider router={router} />
+		<RouterProvider router={router} fallbackElement={<Typography>Testing</Typography>} />
 	</React.StrictMode>,
 );
