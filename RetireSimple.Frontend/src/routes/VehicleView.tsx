@@ -18,7 +18,7 @@ export const VehicleView = () => {
 	const formContext = useForm({
 		shouldUnregister: true,
 		resolver: yupResolver(vehicleFormSchema),
-		defaultValues: VehicleFormDefaults,
+		defaultValues: vehicleData ?? VehicleFormDefaults,
 	});
 
 	const {reset, control, handleSubmit} = formContext;

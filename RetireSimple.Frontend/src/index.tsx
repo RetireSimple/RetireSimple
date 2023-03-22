@@ -17,11 +17,13 @@ import {CircularProgress} from '@mui/material';
 /************************
  * Lazy Loaded Components
  ***********************/
-const RootView = React.lazy(() =>
-	import('./routes/Root').then((module) => ({default: module.Root})),
-);
+
 const InvestmentView = React.lazy(() =>
 	import('./routes/InvestmentView').then((module) => ({default: module.InvestmentView})),
+);
+
+const RootView = React.lazy(() =>
+	import('./routes/Root').then((module) => ({default: module.Root})),
 );
 const VehicleView = React.lazy(() =>
 	import('./routes/VehicleView').then((module) => ({default: module.VehicleView})),
