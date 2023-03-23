@@ -54,6 +54,9 @@ export const MonteCarloAnalysisForm = () => {
 					<Typography variant='inherit'>
 						Can be considered the average increase in stock price per month.
 					</Typography>
+					<Typography variant='inherit'>
+						This is the statistical analogue of a stock's Alpha value.
+					</Typography>
 				</>
 			}
 		/>
@@ -72,6 +75,9 @@ export const MonteCarloAnalysisForm = () => {
 					</Typography>
 					<Typography variant='inherit'>
 						Can be considered the volatility of the stock price.
+					</Typography>
+					<Typography variant='inherit'>
+						This is the statistical analogue of a stock's Beta value.
 					</Typography>
 				</>
 			}
