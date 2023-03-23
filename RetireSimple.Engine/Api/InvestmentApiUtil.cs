@@ -55,9 +55,9 @@ namespace RetireSimple.Engine.Api {
 			["bondTicker"] = "N/A",
 			["bondCouponRate"] = "0.05",
 			["bondYieldToMaturity"] = "0.05",
-			["bondMaturityDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
+			["bondMaturityDate"] = DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd"),
 			["bondFaceValue"] = "0",
-			["bondPurchaseDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
+			["bondPurchaseDate"] = DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd"),
 			["bondCurrentPrice"] = "0",
 		};
 	}
