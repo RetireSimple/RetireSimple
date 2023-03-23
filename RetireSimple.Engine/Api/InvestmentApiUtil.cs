@@ -9,7 +9,7 @@ namespace RetireSimple.Engine.Api {
 
 		public static StockInvestment CreateStock(OptionsDict parameters) {
 			var defaults = GetStockDefaults();
-			var analysisType = parameters.GetValueOrDefault("AnalysisType") ?? "MonteCarlo_NormalDist";
+			var analysisType = parameters.GetValueOrDefault("analysisType") ?? "MonteCarlo_NormalDist";
 
 			return new StockInvestment(analysisType) {
 				StockPrice = decimal.Parse(parameters.GetValueOrDefault("stockPrice", defaults["stockPrice"])),
@@ -25,7 +25,7 @@ namespace RetireSimple.Engine.Api {
 
 		public static BondInvestment CreateBond(OptionsDict parameters) {
 			var defaults = GetBondDefaults();
-			var analysisType = parameters.GetValueOrDefault("AnalysisType") ?? "MonteCarlo_NormalDist";
+			var analysisType = parameters.GetValueOrDefault("analysisType") ?? "bondValuationAnalysis";
 
 			return new BondInvestment(analysisType) {
 				BondTicker = parameters.GetValueOrDefault("bondTicker", defaults["bondTicker"]),
@@ -55,9 +55,9 @@ namespace RetireSimple.Engine.Api {
 			["bondTicker"] = "N/A",
 			["bondCouponRate"] = "0.05",
 			["bondYieldToMaturity"] = "0.05",
-			["bondMaturityDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
+			["bondMaturityDate"] = DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd"),
 			["bondFaceValue"] = "0",
-			["bondPurchaseDate"] = DateTime.Now.ToString("yyyy-MM-dd"),
+			["bondPurchaseDate"] = DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd"),
 			["bondCurrentPrice"] = "0",
 		};
 	}

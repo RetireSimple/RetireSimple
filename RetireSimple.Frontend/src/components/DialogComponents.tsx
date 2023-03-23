@@ -2,6 +2,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
 import {FieldValues, FormProvider, useForm} from 'react-hook-form';
 import {useFormAction, useSubmit} from 'react-router-dom';
+import {convertDates} from '../api/DateUtils';
 import {addInvestment} from '../api/InvestmentApi';
 import {addInvestmentToVehicle, addVehicle} from '../api/VehicleApi';
 import {investmentFormSchema, vehicleFormSchema} from '../forms/FormSchema';
@@ -42,6 +43,9 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 		Object.entries(data)
 			.map(([key, value]) => [key, value.toString()])
 			.forEach(([key, value]) => (requestData[key] = value));
+
+		//Check if we have known date fields, and convert them to yyyy-MM-dd
+		convertDates(requestData);
 
 		addInvestment(requestData).then((investmentId) => {
 			if (props.vehicleTarget > -1) {
@@ -86,6 +90,8 @@ export const AddVehicleDialog = (props: AddVehicleDialogProps) => {
 		Object.entries(data)
 			.map(([key, value]) => [key, value.toString()])
 			.forEach(([key, value]) => (requestData[key] = value));
+
+		convertDates(requestData);
 
 		addVehicle(requestData).then(() => {
 			props.onClose();

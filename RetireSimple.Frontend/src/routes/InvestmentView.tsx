@@ -10,6 +10,7 @@ import {ConfirmDeleteDialog} from '../components/DialogComponents';
 import {InvestmentModelGraph} from '../components/GraphComponents';
 import {InvestmentFormDefaults, investmentFormSchema} from '../forms/FormSchema';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
+import {convertDates} from '../api/DateUtils';
 
 export const InvestmentView = () => {
 	const [showDelete, setShowDelete] = React.useState(false);
@@ -39,6 +40,9 @@ export const InvestmentView = () => {
 				requestData[key] = data[key].toString();
 			}
 		});
+
+		convertDates(requestData);
+
 		updateInvestment(currentInvestmentData.investmentId, requestData).then(() => {
 			submit(null, {action: updateAction, method: 'post'});
 		});

@@ -1,4 +1,4 @@
-import {Portfolio} from "../Interfaces";
+import {Portfolio} from '../Interfaces';
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL;
 

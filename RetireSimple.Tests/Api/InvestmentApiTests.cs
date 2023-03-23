@@ -599,6 +599,50 @@ namespace RetireSimple.Tests.Api {
 			});
 			act.Should().Throw<InvalidOperationException>();
 		}
+
+		//Regression Test: #183
+		[Fact]
+		public void CreateStockChecksAnalysisTypeSetsAssignedType() {
+			//This is intentionally a different option, as we are checking if the field is
+			//actually set to the correct value.
+			var paramsDict = new OptionsDict() {
+				{ "analysisType", "StockAnalysis" }
+			};
+
+			var stock = InvestmentApiUtil.CreateStock(paramsDict);
+
+			stock.AnalysisType.Should().Be("StockAnalysis");
+		}
+
+		//Regression Test: #183
+		[Fact]
+		public void CreateStockFieldNotFoundSetsDefaultType() {
+			var stock = InvestmentApiUtil.CreateStock(new OptionsDict());
+
+			stock.AnalysisType.Should().Be("MonteCarlo_NormalDist");
+		}
+
+		//Regression Test: #183
+		[Fact]
+		public void CreateBondChecksAnalysisTypeSetsAssignedType() {
+			//This is intentionally a different option, as we are checking if the field is
+			//actually set to the correct value.
+			var paramsDict = new OptionsDict() {
+				{ "analysisType", "BondAnalysis" }
+			};
+
+			var bond = InvestmentApiUtil.CreateBond(paramsDict);
+
+			bond.AnalysisType.Should().Be("BondAnalysis");
+		}
+
+		//Regression Test: #183
+		[Fact]
+		public void CreateBondFieldNotFoundSetsDefaultType() {
+			var bond = InvestmentApiUtil.CreateBond(new OptionsDict());
+
+			bond.AnalysisType.Should().Be("bondValuationAnalysis");
+		}
 	}
 }
 
