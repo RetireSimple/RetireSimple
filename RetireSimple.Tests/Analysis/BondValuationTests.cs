@@ -34,6 +34,18 @@
 		//	Time	0		1		2		3
 		//	pv		0		92.59 +	85.73 +	873.21 = 1051.55	
 		[Fact]
+		public void TestBondMatured() {
+			TestInvestment.BondPurchaseDate = new DateOnly(DateTime.Now.Year - 4, DateTime.Now.Month, DateTime.Now.Day);
+			TestInvestment.BondMaturityDate = new DateOnly(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day);
+
+			var ListOfBondVal = BondAS.BondValuation(TestInvestment, BondAS.DefaultBondAnalysisOptions);
+			decimal[] actual = { 4600M };
+
+			Assert.Equal(ListOfBondVal[0], actual[0]);
+			Assert.Equal(ListOfBondVal[59].ToString("#.##"), actual[0].ToString());
+		}
+
+		[Fact]
 		public void TestBondAnnualCurrentEqualPurchase() {
 			var ListOfBondVal = BondAS.BondValuation(TestInvestment, BondAS.DefaultBondAnalysisOptions);
 			decimal[] actual = { 0M, 92.59M, 178.33M, 1051.54M };
