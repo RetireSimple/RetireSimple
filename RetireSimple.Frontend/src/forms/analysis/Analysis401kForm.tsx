@@ -73,8 +73,7 @@ export const Analysis401kForm = () => {
 			tooltip={
 				<>
 					<Typography variant='inherit'>
-						The maximum percentage of the salary that the employer can contribute to the
-						vehicle.
+						The maximum amount that the employer can contribute to the vehicle.
 					</Typography>
 					<Typography variant='inherit'>
 						This is used to reflect legal limits on employer contributions to 401k

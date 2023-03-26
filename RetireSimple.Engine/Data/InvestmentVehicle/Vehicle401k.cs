@@ -59,7 +59,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 					break;
 			}
 			decimal salary = decimal.Parse(options["salary"]);
-			decimal maxEmployerContributionPercentage = decimal.Parse(options["maxEmployerContributionPercentage"]);
+			decimal maxEmployerContribution = decimal.Parse(options["maxEmployerContributionPercentage"]);
 			decimal userContributionPercentage = decimal.Parse(options["userContributionPercentage"]);
 			decimal employerMatchPercentage = decimal.Parse(options["employerMatchPercentage"]);
 			decimal userContribution = 0M;
@@ -70,10 +70,9 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 			else {
 				userContribution = salary / pay_freq * userContributionPercentage;
 			}
-			var max_employer_contribution = salary * maxEmployerContributionPercentage;
 			var employer_match = userContribution * employerMatchPercentage;
-			if (employer_match >= (max_employer_contribution / pay_freq)) {
-				employer_match = (max_employer_contribution / pay_freq);
+			if (employer_match >= (maxEmployerContribution / pay_freq)) {
+				employer_match = (maxEmployerContribution / pay_freq);
 			}
 			var contribution_per_month = userContribution + employer_match;
 
