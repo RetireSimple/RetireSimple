@@ -38,13 +38,18 @@ namespace RetireSimple.Engine.Analysis {
 			DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
 			int analysisLength = int.Parse(investment.AnalysisOptionsOverrides["analysisLength"]);
 			int monthsApart = Math.Abs(12 * ((purchaseDate.Year - maturityDate.Year) + (purchaseDate.Month - maturityDate.Month)));
-			int monthInterval = 12;
+			int monthInterval = 12;	
 			decimal faceVal = investment.BondFaceValue;
 			int n = 1;
 			int k = 1;
 			decimal discountRate = investment.BondYTM;
 			decimal cashFlow = faceVal * (decimal)investment.BondCouponRate;
 			decimal presentVal = 0;
+
+			if (maturityDate < currentDate) {
+				bondVals = Enumerable.Repeat((cashFlow * monthsApart) + faceVal, analysisLength).ToList();
+				return bondVals;
+			}
 
 			if (!bool.Parse(investment.AnalysisOptionsOverrides["isAnnual"])) {
 				monthInterval = 6;
@@ -77,6 +82,7 @@ namespace RetireSimple.Engine.Analysis {
 			if (tempList.Count < analysisLength) {
 				tempList.AddRange(Enumerable.Repeat(tempList.Last(), analysisLength - tempList.Count));
 			}
+
 			return tempList;
 		}
 
