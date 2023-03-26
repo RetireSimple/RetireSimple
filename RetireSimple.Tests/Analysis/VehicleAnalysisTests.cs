@@ -1,11 +1,3 @@
-using Microsoft.Extensions.Options;
-
-using Moq;
-
-using Newtonsoft.Json.Linq;
-
-using System.Security.Principal;
-
 namespace RetireSimple.Tests.Analysis {
 
 	public class VehicleAnalysisTests {
@@ -20,7 +12,6 @@ namespace RetireSimple.Tests.Analysis {
 			actual.Should().BeEquivalentTo(expected);
 		}
 
-		//TODO convert to theory using payFrequency
 		[Fact]
 		public void Test401kCashContributionsPercentage_WeeklyPaycheck() {
 			var vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401k };
@@ -43,7 +34,6 @@ namespace RetireSimple.Tests.Analysis {
 			newData.Should().BeEquivalentTo(expectedData2);
 		}
 
-		//TODO convert to theory using payFrequency
 		[Fact]
 		public void Test401kCashContributionsFixed() {
 			var vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401kFixed };
@@ -60,6 +50,17 @@ namespace RetireSimple.Tests.Analysis {
 
 			actual.Should().HaveSameCount(expected);
 			actual.Should().BeEquivalentTo(expected);
+		}
+
+		[Theory, MemberData(nameof(VehicleAnalysisTestData.AggregateSimVars_PreTax), MemberType = typeof(VehicleAnalysisTestData))]
+		public void TestGeneratePreTaxModelDefault(List<InvestmentModel> models, OptionsDict options, decimal initialHoldings, InvestmentModel expected) {
+			var vehicle = new Vehicle403b { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+			var combinedOptions = vehicle.MergeOverrideOptions(options);
+			var cashSim = VehicleDefaultAS.SimulateCashContributionsDefault(vehicle, combinedOptions);
+			var result = VehicleDefaultAS.GeneratePreTaxModelDefault(combinedOptions, models, cashSim);
+			result.MinModelData.Should().BeEquivalentTo(expected.MinModelData);
+			result.AvgModelData.Should().BeEquivalentTo(expected.AvgModelData);
+			result.MaxModelData.Should().BeEquivalentTo(expected.MaxModelData);
 		}
 	}
 
@@ -95,7 +96,7 @@ namespace RetireSimple.Tests.Analysis {
 			["userContributionAmount"] = "50",
 		};
 
-		public static readonly List<InvestmentModel> MockModels = new(){
+		public static readonly List<InvestmentModel> ExpectedMockModels = new(){
 			new InvestmentModel(){
 				MinModelData = new List<decimal>(){ 100, 105, 110, 115, 120, 125, 130, 135, 140, 145 },
 				AvgModelData = new List<decimal>(){ 100, 110, 120, 130, 140, 150, 160, 170, 180, 190 },
@@ -149,7 +150,6 @@ namespace RetireSimple.Tests.Analysis {
 			},
 		};
 
-
 		/********************************************************
 		 * 		 Test Parameters
 		 ********************************************************/
@@ -174,6 +174,33 @@ namespace RetireSimple.Tests.Analysis {
 				100.0m,
 				new List<decimal>(){100m, 110m, 120m, 130m, 140m, 150m, 160m, 170m, 180m, 190m}
 			}
+		};
+
+		public static readonly IEnumerable<object[]> CashSimVars_PostTax = new List<object[]> {
+			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" }, 0.0m,
+				new List<decimal>(){0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+			},
+			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "10" }, 0.0m,
+				new List<decimal>(){0, 7,14, 21, 28, 35, 42, 49, 56, 63}
+			},
+			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" }, 100.0m,
+				new List<decimal>(){100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, }
+			},
+			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "10" }, 100.0m,
+				new List<decimal>(){100m, 107m, 114m, 121m, 128m, 135m, 142m, 149m, 156m, 163m}
+			}
+		};
+
+		public static readonly IEnumerable<object[]> AggregateSimVars_PreTax = new List<object[]> {
+			new object[] { ExpectedMockModels.GetRange(0, 1), DefaultOptions, 0.0m, ExpectedMockModels[0] },
+
+		new object[] { ExpectedMockModels.GetRange(0, 1), DefaultOptions, 100.0m,
+				new InvestmentModel() {
+					MinModelData = ExpectedMockModels[0].MinModelData.Select(x => x + 100).ToList(),
+					AvgModelData = ExpectedMockModels[0].AvgModelData.Select(x => x + 100).ToList(),
+					MaxModelData = ExpectedMockModels[0].MaxModelData.Select(x => x + 100).ToList(),
+				}
+			},
 		};
 	}
 }
