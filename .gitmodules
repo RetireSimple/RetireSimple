@@ -1,0 +1,4 @@
+[submodule "docs"]
+	path = docs
+	url = git@github.com:Retiresimple/RetireSimple.wiki.git
+	branch = master
