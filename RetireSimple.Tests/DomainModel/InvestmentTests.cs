@@ -18,7 +18,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestStockInvestmentAdd() {
-			var investment = new StockInvestment("testAnalysis") {
+			var investment = new StockInvestment("") {
 				StockPrice = 100,
 				StockQuantity = 10,
 				StockTicker = "TST"
@@ -34,7 +34,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestStockInvestmentRemove() {
-			var investment = new StockInvestment("testAnalysis") {
+			var investment = new StockInvestment("") {
 				StockPrice = 100,
 				StockQuantity = 10,
 				StockTicker = "TST"
@@ -52,7 +52,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentFKInvestmentModelConstraint() {
-			var investment = new StockInvestment("testAnalysis") {
+			var investment = new StockInvestment("") {
 				StockPrice = 100,
 				StockQuantity = 10,
 				StockTicker = "TST"
@@ -63,7 +63,9 @@ namespace RetireSimple.Tests.DomainModel {
 			Context.Portfolio.First().Investments.Add(investment);
 			Context.SaveChanges();
 
-			Context.InvestmentModel.Add(investment.InvokeAnalysis(options));
+			Context.InvestmentModel.Add(new InvestmentModel() {
+				InvestmentId = 1,
+			});
 
 			Context.SaveChanges();
 			Action act = () => {
@@ -78,7 +80,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentFKExpensesConstraint() {
-			var investment = new StockInvestment("testAnalysis") {
+			var investment = new StockInvestment("") {
 				StockPrice = 100,
 				StockQuantity = 10,
 				StockTicker = "TST"
@@ -107,7 +109,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentFKPortfolioConstraint() {
-			var investment = new StockInvestment("testAnalysis") {
+			var investment = new StockInvestment("") {
 				StockPrice = 100,
 				StockQuantity = 10,
 				StockTicker = "TST"
@@ -123,12 +125,12 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentFKTransfersFromConstraint() {
-			var investment = new StockInvestment("testAnalysis") {
+			var investment = new StockInvestment("") {
 				StockPrice = 100,
 				StockQuantity = 10,
 				StockTicker = "TST"
 			};
-			var investment2 = new StockInvestment("testAnalysis") {
+			var investment2 = new StockInvestment("") {
 				StockPrice = 200,
 				StockQuantity = 50,
 				StockTicker = "TST2"
@@ -155,12 +157,12 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentFKTransfersConstraint() {
-			var investment = new StockInvestment("testAnalysis") {
+			var investment = new StockInvestment("") {
 				StockPrice = 100,
 				StockQuantity = 10,
 				StockTicker = "TST"
 			};
-			var investment2 = new StockInvestment("testAnalysis") {
+			var investment2 = new StockInvestment("") {
 				StockPrice = 200,
 				StockQuantity = 50,
 				StockTicker = "TST2"
