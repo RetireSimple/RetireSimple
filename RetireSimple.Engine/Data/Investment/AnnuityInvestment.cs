@@ -41,17 +41,8 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		public AnnuityInvestment(string analysisType) : base() {
 			InvestmentType = "AnnuityInvestment";
-			ResolveAnalysisDelegate(analysisType);
 		}
 
-		public override void ResolveAnalysisDelegate(string analysisType) {
-			AnalysisMethod = analysisType switch {
-				"DefaultCashAnalysis" => AnnuityAS.DefaultAnnuityAnalyis,
-				_ => null,
-			};
-			//Overwrite The current Analysis Delegate Type
-			AnalysisType = analysisType;
-		}
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null
 			? AnalysisMethod(this, options)

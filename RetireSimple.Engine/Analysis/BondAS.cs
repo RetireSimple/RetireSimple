@@ -14,6 +14,7 @@ namespace RetireSimple.Engine.Analysis {
 
 	public class BondAS {
 
+		[AnalysisModule("BondInvestment")]
 		public static InvestmentModel DefaultBondAnalysis(BondInvestment investment, OptionsDict options) {
 			var list = BondValuation(investment, options);
 			return new InvestmentModel() {
@@ -38,7 +39,7 @@ namespace RetireSimple.Engine.Analysis {
 			DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
 			int analysisLength = int.Parse(investment.AnalysisOptionsOverrides["analysisLength"]);
 			int monthsApart = Math.Abs(12 * ((purchaseDate.Year - maturityDate.Year) + (purchaseDate.Month - maturityDate.Month)));
-			int monthInterval = 12;	
+			int monthInterval = 12;
 			decimal faceVal = investment.BondFaceValue;
 			int n = 1;
 			int k = 1;
@@ -55,7 +56,7 @@ namespace RetireSimple.Engine.Analysis {
 				monthInterval = 6;
 			}
 
-			while(n <= monthsApart) {
+			while (n <= monthsApart) {
 				if (n % monthInterval == 0) {
 					if (n - monthsApart == 0) {
 						cashFlow += faceVal;
@@ -72,8 +73,9 @@ namespace RetireSimple.Engine.Analysis {
 			if (purchaseDate <= currentDate) {
 				int dateDiff = Math.Abs(12 * (currentDate.Year - purchaseDate.Year) + (currentDate.Month - purchaseDate.Month));
 				tempList = bondVals.Take(new Range(dateDiff, analysisLength + dateDiff)).ToList();
-			} else if(purchaseDate > currentDate) {
-				int dateDiff = Math.Abs(12 * (purchaseDate.Year- currentDate.Year) + purchaseDate.Month- currentDate.Month);
+			}
+			else if (purchaseDate > currentDate) {
+				int dateDiff = Math.Abs(12 * (purchaseDate.Year - currentDate.Year) + purchaseDate.Month - currentDate.Month);
 				var zeroList = new List<decimal>();
 				zeroList.AddRange(Enumerable.Repeat(0M, dateDiff));
 				zeroList.AddRange(bondVals);

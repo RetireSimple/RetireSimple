@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
 
+	[InvestmentModule(nameof(AnalysisMethod))]
 	public class StockInvestment : InvestmentBase {
 
 		/// <summary>
@@ -82,25 +83,11 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public AnalysisModule<StockInvestment>? AnalysisMethod { get; private set; }
+		public AnalysisModule<StockInvestment>? AnalysisMethod { get; set; }
 
 		//Constructor used by EF
-		public StockInvestment(string analysisType) : base() {
+		public StockInvestment(string analysisType) : base(analysisType) {
 			InvestmentType = "StockInvestment";
-			ResolveAnalysisDelegate(analysisType);
-
-		}
-
-		public override void ResolveAnalysisDelegate(string analysisType) {
-			AnalysisMethod = analysisType switch {
-				"testAnalysis" => StockAS.TestAnalysis,
-				"MonteCarlo_NormalDist" => StockAS.MonteCarloNormalDist,
-				"MonteCarlo_LogNormalDist" => StockAS.MonteCarloLogNormalDist,
-				_ => null,
-			};
-
-			//Overwrite The current Analysis Delegate Type
-			AnalysisType = analysisType;
 		}
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>

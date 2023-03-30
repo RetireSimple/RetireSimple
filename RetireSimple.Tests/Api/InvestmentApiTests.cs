@@ -524,8 +524,8 @@ namespace RetireSimple.Tests.Api {
 		[Fact]
 		public void GetAnalysisOutdatedModelRunsAnalysis() {
 			api.Add("StockInvestment");
-			var investment = context.Investment.First();
-			investment.ResolveAnalysisDelegate("");
+			var investment = context.Investment.First() as StockInvestment;
+			investment.AnalysisMethod = null;
 			var invokeTime = DateTime.Now;
 			investment.LastUpdated = invokeTime;
 			var model = new InvestmentModel() {
@@ -545,8 +545,7 @@ namespace RetireSimple.Tests.Api {
 		[Fact]
 		public void GetAnalysisNoModelRunsAnalysis() {
 			api.Add("StockInvestment");
-			var investment = context.Investment.First();
-			investment.ResolveAnalysisDelegate("");
+			var investment = context.Investment.First() as StockInvestment;
 			context.SaveChanges();
 
 			Action act = () => api.GetAnalysis(investment.InvestmentId);
@@ -556,8 +555,8 @@ namespace RetireSimple.Tests.Api {
 		[Fact]
 		public void GetAnalysisGivenEmptyOptionsDoesNotRunAnalysis() {
 			api.Add("StockInvestment");
-			var investment = context.Investment.First();
-			investment.ResolveAnalysisDelegate("");
+			var investment = context.Investment.First() as StockInvestment;
+			investment.AnalysisMethod = null;
 			var invokeTime = DateTime.Now;
 			investment.LastUpdated = invokeTime;
 			var model = new InvestmentModel() {
@@ -580,8 +579,8 @@ namespace RetireSimple.Tests.Api {
 		[Fact]
 		public void GetAnalysisGivenOptionsRunsAnalysis() {
 			api.Add("StockInvestment");
-			var investment = context.Investment.First();
-			investment.ResolveAnalysisDelegate("");
+			StockInvestment investment = context.Investment.First() as StockInvestment;
+			investment.AnalysisMethod = null;
 			var invokeTime = DateTime.Now;
 			investment.LastUpdated = invokeTime;
 			var model = new InvestmentModel() {

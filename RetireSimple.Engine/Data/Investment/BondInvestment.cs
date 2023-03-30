@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
+
+	[InvestmentModule(nameof(AnalysisMethod))]
 	public class BondInvestment : InvestmentBase {
 
 		[JsonIgnore, NotMapped]
@@ -54,21 +56,11 @@ namespace RetireSimple.Engine.Data.Investment {
 		public AnalysisModule<BondInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
-		public BondInvestment(string analysisType) : base() {
+		public BondInvestment(string analysisType) : base(analysisType) {
 			InvestmentType = "BondInvestment";
-			ResolveAnalysisDelegate(analysisType);
 
 		}
 
-		public override void ResolveAnalysisDelegate(string analysisType) {
-			AnalysisMethod = analysisType switch {
-				"bondValuationAnalysis" => BondAS.DefaultBondAnalysis,
-				_ => null,
-			};
-
-			//Overwrite The current Analysis Delegate Type
-			AnalysisType = analysisType;
-		}
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null
 			? AnalysisMethod(this, options)

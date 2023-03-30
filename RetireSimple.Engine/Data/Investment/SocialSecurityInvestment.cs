@@ -36,16 +36,6 @@ namespace RetireSimple.Engine.Data.Investment {
 		//Constructor used by EF
 		public SocialSecurityInvestment(string analysisType) : base() {
 			InvestmentType = "SocialSecurityInvestment";
-			ResolveAnalysisDelegate(analysisType);
-		}
-
-		public override void ResolveAnalysisDelegate(string analysisType) {
-			AnalysisMethod = analysisType switch {
-				"testAnalysis" => SocialSecurityAS.DefaultSocialSecurityAnalysis,
-				_ => null,
-			};
-			//Overwrite The current Analysis Delegate Type
-			AnalysisType = analysisType;
 		}
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
