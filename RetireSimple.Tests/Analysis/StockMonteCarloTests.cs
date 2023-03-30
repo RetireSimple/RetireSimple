@@ -10,7 +10,7 @@ namespace RetireSimple.Tests.Analysis {
 		public StockInvestment TestInvestment { get; set; }
 
 		public StockMonteCarloTests() {
-			TestInvestment = new StockInvestment("test") {
+			TestInvestment = new StockInvestment("") {
 				StockPrice = 100,
 			};
 		}

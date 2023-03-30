@@ -24,7 +24,7 @@ export const investmentFormSchema = object().shape({
 		})
 		.when('investmentType', {
 			is: 'BondInvestment',
-			then: (schema) => schema.oneOf(['bondValuationAnalysis']),
+			then: (schema) => schema.oneOf(['StdBondValuation']),
 		}),
 
 	//========================================
@@ -234,7 +234,7 @@ export const investmentFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_isAnnual: string().when('analysisType', {
-		is: (value: string) => value === 'bondValuationAnalysis',
+		is: (value: string) => value === 'StdBondValuation',
 		then: (schema) => schema.defined().required().oneOf(['true', 'false']),
 		otherwise: (schema) => schema.strip(),
 	}),

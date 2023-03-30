@@ -15,7 +15,7 @@ namespace RetireSimple.Engine.Analysis {
 	public class BondAS {
 
 		[AnalysisModule("BondInvestment")]
-		public static InvestmentModel DefaultBondAnalysis(BondInvestment investment, OptionsDict options) {
+		public static InvestmentModel StdBondValuation(BondInvestment investment, OptionsDict options) {
 			var list = BondValuation(investment, options);
 			return new InvestmentModel() {
 				MinModelData = list,

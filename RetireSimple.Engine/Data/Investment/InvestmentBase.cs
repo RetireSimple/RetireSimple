@@ -115,6 +115,7 @@ namespace RetireSimple.Engine.Data.Investment {
 			if (!moduleList.ContainsKey(analysisModule)) {
 				throw new ArgumentException($"Analysis Module {analysisModule} does not exist for {this.GetType().Name}");
 			}
+			this.AnalysisType = analysisModule;
 
 			ReflectionUtils.SetAnalysisModuleDelegate(this, moduleList[analysisModule]);
 		}

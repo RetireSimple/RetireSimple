@@ -520,11 +520,13 @@ namespace RetireSimple.Tests.Api {
 		//This is especially important since we set the AnalysisMethod to null, and validate
 		//if an InvalidOperationException is thrown as the call to InvokeAnalysis should throw
 		//under these conditions.
-		//Analysis valididy should be done in separate test
+		//Analysis validity should be done in separate test
 		[Fact]
 		public void GetAnalysisOutdatedModelRunsAnalysis() {
 			api.Add("StockInvestment");
-			var investment = context.Investment.First() as StockInvestment;
+			if (context.Investment.First() is not StockInvestment investment) {
+				throw new ArgumentException("Investment object was unexpectedly null");
+			}
 			investment.AnalysisMethod = null;
 			var invokeTime = DateTime.Now;
 			investment.LastUpdated = invokeTime;
@@ -545,7 +547,9 @@ namespace RetireSimple.Tests.Api {
 		[Fact]
 		public void GetAnalysisNoModelRunsAnalysis() {
 			api.Add("StockInvestment");
-			var investment = context.Investment.First() as StockInvestment;
+			if (context.Investment.First() is not StockInvestment investment) {
+				throw new ArgumentNullException("Investment Object was unexpectedly null");
+			}
 			context.SaveChanges();
 
 			Action act = () => api.GetAnalysis(investment.InvestmentId);
@@ -555,7 +559,9 @@ namespace RetireSimple.Tests.Api {
 		[Fact]
 		public void GetAnalysisGivenEmptyOptionsDoesNotRunAnalysis() {
 			api.Add("StockInvestment");
-			var investment = context.Investment.First() as StockInvestment;
+			if (context.Investment.First() is not StockInvestment investment) {
+				throw new ArgumentNullException("Investment Object was unexpectedly null");
+			}
 			investment.AnalysisMethod = null;
 			var invokeTime = DateTime.Now;
 			investment.LastUpdated = invokeTime;
@@ -579,7 +585,9 @@ namespace RetireSimple.Tests.Api {
 		[Fact]
 		public void GetAnalysisGivenOptionsRunsAnalysis() {
 			api.Add("StockInvestment");
-			StockInvestment investment = context.Investment.First() as StockInvestment;
+			if (context.Investment.First() is not StockInvestment investment) {
+				throw new ArgumentNullException("Investment Object was unexpectedly null");
+			}
 			investment.AnalysisMethod = null;
 			var invokeTime = DateTime.Now;
 			investment.LastUpdated = invokeTime;
@@ -605,12 +613,12 @@ namespace RetireSimple.Tests.Api {
 			//This is intentionally a different option, as we are checking if the field is
 			//actually set to the correct value.
 			var paramsDict = new OptionsDict() {
-				{ "analysisType", "StockAnalysis" }
+				{ "analysisType", "MonteCarlo_LogNormalDist" }
 			};
 
 			var stock = InvestmentApiUtil.CreateStock(paramsDict);
 
-			stock.AnalysisType.Should().Be("StockAnalysis");
+			stock.AnalysisType.Should().Be("MonteCarlo_LogNormalDist");
 		}
 
 		//Regression Test: #183
@@ -627,12 +635,12 @@ namespace RetireSimple.Tests.Api {
 			//This is intentionally a different option, as we are checking if the field is
 			//actually set to the correct value.
 			var paramsDict = new OptionsDict() {
-				{ "analysisType", "BondAnalysis" }
+				{ "analysisType", "StdBondValuation" }
 			};
 
 			var bond = InvestmentApiUtil.CreateBond(paramsDict);
 
-			bond.AnalysisType.Should().Be("BondAnalysis");
+			bond.AnalysisType.Should().Be("StdBondValuation");
 		}
 
 		//Regression Test: #183
@@ -640,7 +648,7 @@ namespace RetireSimple.Tests.Api {
 		public void CreateBondFieldNotFoundSetsDefaultType() {
 			var bond = InvestmentApiUtil.CreateBond(new OptionsDict());
 
-			bond.AnalysisType.Should().Be("bondValuationAnalysis");
+			bond.AnalysisType.Should().Be("StdBondValuation");
 		}
 	}
 }

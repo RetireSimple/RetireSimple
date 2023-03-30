@@ -53,7 +53,7 @@ namespace RetireSimple.Engine.Analysis {
 		}
 
 		[AnalysisModule("StockInvestment")]
-		public static InvestmentModel MonteCarloNormalDist(StockInvestment investment, OptionsDict options) {
+		public static InvestmentModel MonteCarlo_NormalDist(StockInvestment investment, OptionsDict options) {
 			var priceModel = MonteCarlo.MonteCarloSimNormal(investment, DefaultStockAnalysisOptions);
 			//TODO Update to support other dividend types
 			var dividendModel = ProjectStockDividend(investment, DefaultStockAnalysisOptions);
@@ -66,7 +66,7 @@ namespace RetireSimple.Engine.Analysis {
 		}
 
 		[AnalysisModule("StockInvestment")]
-		public static InvestmentModel MonteCarloLogNormalDist(StockInvestment investment, OptionsDict options) {
+		public static InvestmentModel MonteCarlo_LogNormalDist(StockInvestment investment, OptionsDict options) {
 			var priceModel = MonteCarlo.MonteCarloSimLogNormal(investment, DefaultStockAnalysisOptions);
 			//TODO Update to support other dividend types
 			var dividendModel = ProjectStockDividend(investment, DefaultStockAnalysisOptions);

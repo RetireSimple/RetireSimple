@@ -25,7 +25,7 @@ namespace RetireSimple.Engine.Api {
 
 		public static BondInvestment CreateBond(OptionsDict parameters) {
 			var defaults = GetBondDefaults();
-			var analysisType = parameters.GetValueOrDefault("analysisType") ?? "bondValuationAnalysis";
+			var analysisType = parameters.GetValueOrDefault("analysisType") ?? "StdBondValuation";
 
 			return new BondInvestment(analysisType) {
 				BondTicker = parameters.GetValueOrDefault("bondTicker", defaults["bondTicker"]),

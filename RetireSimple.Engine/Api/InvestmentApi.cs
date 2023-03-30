@@ -57,7 +57,6 @@ namespace RetireSimple.Engine.Api {
 		/// <returns>ID of the newly created investment after it is saved in the database</returns>
 		/// <exception cref="ArgumentException">The specified investment type was not found</exception>
 		public int Add(string type, OptionsDict? parameters = null) {
-			//TODO Refactor
 			parameters ??= new OptionsDict();
 			InvestmentBase newInvestment = type switch {
 				"StockInvestment" => InvestmentApiUtil.CreateStock(parameters),

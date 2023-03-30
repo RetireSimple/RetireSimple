@@ -87,9 +87,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 								label='Analysis Type'
 								control={formContext.control}
 								errorField={errors.analysisType}
-								options={[
-									{value: 'bondValuationAnalysis', label: 'Bond Valuation'},
-								]}
+								options={[{value: 'StdBondValuation', label: 'Bond Valuation'}]}
 								defaultOption=''
 								disable={false}
 								tooltip='The type of analysis to run on this investment. Only standard bond valuation is currently supported.'

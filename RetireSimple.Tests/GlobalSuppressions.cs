@@ -6,3 +6,5 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>", Scope = "module")]
+[assembly: SuppressMessage("Naming", "CA1701: Resource string compound words should be cased correctly", Scope = "module")]
+[assembly: SuppressMessage("Usage", "CA1816: Call GC.SuppressFinalize correctly", Scope = "module")]
