@@ -1,6 +1,7 @@
 ﻿using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
+using RetireSimple.Engine.Data.Expense;
 
 namespace RetireSimple.Engine.Api {
 	public class InvestmentApi {
