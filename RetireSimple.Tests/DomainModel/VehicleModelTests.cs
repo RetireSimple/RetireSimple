@@ -1,10 +1,10 @@
 using RetireSimple.Engine.Data.Analysis;
 
 namespace RetireSimple.Tests.DomainModel {
-	public class InvestmentVehicleModelTests : IDisposable {
+	public class VehicleModelTests : IDisposable {
 		EngineDbContext Context { get; set; }
 
-		public InvestmentVehicleModelTests() {
+		public VehicleModelTests() {
 			Context = new EngineDbContext(
 				new DbContextOptionsBuilder()
 					.UseSqlite("Data Source=testing_vmodel.db")

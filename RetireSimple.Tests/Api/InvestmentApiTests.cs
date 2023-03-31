@@ -1,4 +1,5 @@
 using RetireSimple.Engine.Api;
+using RetireSimple.Engine.Data.Analysis;
 
 namespace RetireSimple.Tests.Api {
 	public class InvestmentApiTests : IDisposable {

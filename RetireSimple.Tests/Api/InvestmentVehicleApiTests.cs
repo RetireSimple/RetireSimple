@@ -1,4 +1,5 @@
 using RetireSimple.Engine.Api;
+using RetireSimple.Engine.Data.Analysis;
 
 namespace RetireSimple.Tests.Api {
 	public class InvestmentVehicleApiTests : IDisposable {
@@ -205,7 +206,7 @@ namespace RetireSimple.Tests.Api {
 			api.AddInvestmentToVehicle(vehicleId, tempInvestment.InvestmentId);
 
 			context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId).InvestmentVehicleModel
-				= new InvestmentVehicleModel();
+				= new VehicleModel();
 			context.SaveChanges();
 
 			api.Remove(vehicleId);

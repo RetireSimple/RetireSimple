@@ -1,3 +1,5 @@
+using RetireSimple.Engine.Data.Analysis;
+
 namespace RetireSimple.Tests.DomainModel {
 	public class InvestmentTests : IDisposable {
 		EngineDbContext Context { get; set; }
