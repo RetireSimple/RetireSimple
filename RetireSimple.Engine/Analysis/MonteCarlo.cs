@@ -55,7 +55,7 @@ namespace RetireSimple.Engine.Analysis {
 		/// <param name="parameters"></param>
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
-		private static IContinuousDistribution CreateRandomVarInstance(MonteCarloRV type, Dictionary<string, double> parameters) {
+		internal static IContinuousDistribution CreateRandomVarInstance(MonteCarloRV type, Dictionary<string, double> parameters) {
 			return type switch {
 				MonteCarloRV.NORMAL => new Normal(parameters["Mu"], parameters["Sigma"]),
 				MonteCarloRV.LOGNORMAL => new LogNormal(parameters["Mu"], parameters["Sigma"]),
@@ -113,14 +113,7 @@ namespace RetireSimple.Engine.Analysis {
 				simLists.Add(MonteCarloSimSingleIteration(simOptions));
 			});
 
-			var model = new InvestmentModel();
-			for (int i = 0; i < simOptions.AnalysisLength; i++) {
-				model.MinModelData.Add(simLists.Select(x => x[i]).Min());
-				model.MaxModelData.Add(simLists.Select(x => x[i]).Max());
-				model.AvgModelData.Add(simLists.Select(x => x[i]).Average());
-			}
-
-			return model;
+			return FilterSimulationData(simLists, simOptions.AnalysisLength);
 		}
 
 		/// <summary>
@@ -159,8 +152,12 @@ namespace RetireSimple.Engine.Analysis {
 				simLists.Add(MonteCarloSimSingleIteration(simOptions));
 			});
 
+			return FilterSimulationData(simLists, simOptions.AnalysisLength);
+		}
+
+		public static InvestmentModel FilterSimulationData(ConcurrentBag<List<decimal>> simLists, int analysisLength) {
 			var model = new InvestmentModel();
-			for (int i = 0; i < simOptions.AnalysisLength; i++) {
+			for (int i = 0; i < analysisLength; i++) {
 				model.MinModelData.Add(simLists.Select(x => x[i]).Min());
 				model.MaxModelData.Add(simLists.Select(x => x[i]).Max());
 				model.AvgModelData.Add(simLists.Select(x => x[i]).Average());

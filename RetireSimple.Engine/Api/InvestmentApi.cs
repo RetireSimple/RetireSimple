@@ -4,7 +4,19 @@ using RetireSimple.Engine.Data.Base;
 using RetireSimple.Engine.Data.Expense;
 
 namespace RetireSimple.Engine.Api {
-	public class InvestmentApi {
+	internal interface IInvestmentApi {
+		List<Investment> GetAllInvestments();
+		List<Investment> GetSingluarInvestments();
+		Investment GetInvestment(int id);
+		int Add(string type, OptionsDict? parameters = null);
+		void Remove(int id);
+		void Update(int id, OptionsDict parameters);
+		void UpdateAnalysisOptions(int id, OptionsDict options);
+		InvestmentModel GetAnalysis(int id, OptionsDict? options = null);
+		Dictionary<string, InvestmentModel> GetAllAnalysis();
+	}
+
+	public class InvestmentApi : IInvestmentApi {
 		private readonly EngineDbContext _context;
 
 		public InvestmentApi(EngineDbContext context) {
@@ -158,8 +170,7 @@ namespace RetireSimple.Engine.Api {
 			foreach (var (key, value) in options) {
 				if (value == "") {
 					investment.AnalysisOptionsOverrides.Remove(key);
-				}
-				else {
+				} else {
 					investment.AnalysisOptionsOverrides[key] = value;
 				}
 			}

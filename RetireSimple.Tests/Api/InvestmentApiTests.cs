@@ -1,10 +1,12 @@
+using Moq;
+
 using RetireSimple.Engine.Api;
 using RetireSimple.Engine.Data.Analysis;
 
 namespace RetireSimple.Tests.Api {
 	public class InvestmentApiTests : IDisposable {
 		private readonly EngineDbContext context;
-		private readonly InvestmentApi api;
+		private readonly IInvestmentApi api;
 
 		public InvestmentApiTests() {
 			context = new EngineDbContext(
@@ -608,6 +610,35 @@ namespace RetireSimple.Tests.Api {
 				{ "test", "test" }
 			});
 			act.Should().Throw<InvalidOperationException>();
+		}
+
+		[Fact]
+		public void GetAllAnalysis_NoInvestments_ReturnsEmptyList() {
+			var result = api.GetAllAnalysis();
+			result.Should().BeEmpty();
+		}
+
+		[Fact]
+		public void GetAllAnalysis_OneInvestment_ReturnsListWithOneItem() {
+			var partialMockedApi = new Mock<InvestmentApi>(context) { CallBase = true }.As<IInvestmentApi>();
+			partialMockedApi.Setup(x => x.GetAnalysis(It.IsAny<int>(), It.IsAny<OptionsDict?>())).Returns(new InvestmentModel());
+			partialMockedApi.Object.Add("StockInvestment");
+
+			var result = partialMockedApi.Object.GetAllAnalysis();
+			result.Should().HaveCount(1);
+		}
+
+		[Fact]
+		public void GetAllAnalysis_MultipleInvestments_ReturnsListWithAllItems() {
+			var partialMockedApi = new Mock<InvestmentApi>(context).As<IInvestmentApi>();
+			partialMockedApi.CallBase = true;
+			partialMockedApi.Setup(x => x.GetAnalysis(It.IsAny<int>(), It.IsAny<OptionsDict?>())).Returns(new InvestmentModel());
+			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "investmentName", "Test Investment 1" } });
+			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "investmentName", "Test Investment 2" } });
+			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "investmentName", "Test Investment 3" } });
+
+			var result = partialMockedApi.Object.GetAllAnalysis();
+			result.Should().HaveCount(3);
 		}
 
 		//Regression Test: #183

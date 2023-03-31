@@ -86,5 +86,27 @@ namespace RetireSimple.Tests.Analysis {
 			}
 
 		}
+
+		public static readonly IEnumerable<object[]> RVCreationTestValues = new List<object[]>(){
+			new object[] {MonteCarloRV.NORMAL, new Dictionary<string, double>(){{"Mu", 0d}, {"Sigma", 1d}}, typeof(Normal)},
+			new object[] {MonteCarloRV.LOGNORMAL, new Dictionary<string, double>(){{"Mu", 0d}, {"Sigma", 1d}}, typeof(LogNormal)},
+		};
+
+		[Theory, MemberData(nameof(RVCreationTestValues))]
+		public void TestRandomVariableCreation_CreatesSupportedRV(MonteCarloRV rvType, Dictionary<string, double> rvParams, Type expectedType) {
+			var rv = MonteCarlo.CreateRandomVarInstance(rvType, rvParams);
+			rv.Should().BeOfType(expectedType);
+		}
+
+		[Fact]
+		public void TestRandomVariableCreation_ThrowsExceptionOnUnsupportedRV() {
+			var rvParams = new Dictionary<string, double>() { { "mu", 0d }, { "sigma", 1d } };
+			Action act = () => MonteCarlo.CreateRandomVarInstance(MonteCarloRV.TRIANGULAR, rvParams);
+			act.Should().Throw<NotImplementedException>();
+		}
+
+
+
+
 	}
 }
