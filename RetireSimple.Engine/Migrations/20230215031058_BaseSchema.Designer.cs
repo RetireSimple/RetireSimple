@@ -160,7 +160,7 @@ namespace RetireSimple.Engine.Migrations
                     b.ToTable("InvestmentTransfers", (string)null);
                 });
 
-            modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicleBase", b =>
+            modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle", b =>
                 {
                     b.Property<int>("InvestmentVehicleId")
                         .ValueGeneratedOnAdd()
@@ -194,7 +194,7 @@ namespace RetireSimple.Engine.Migrations
 
                     b.ToTable("InvestmentVehicle");
 
-                    b.HasDiscriminator<string>("InvestmentVehicleType").HasValue("InvestmentVehicleBase");
+                    b.HasDiscriminator<string>("InvestmentVehicleType").HasValue("InvestmentVehicle");
 
                     b.UseTphMappingStrategy();
                 });
@@ -427,35 +427,35 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.Vehicle401k", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicleBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle");
 
                     b.HasDiscriminator().HasValue("401k");
                 });
 
             modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.Vehicle403b", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicleBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle");
 
                     b.HasDiscriminator().HasValue("403b");
                 });
 
             modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.Vehicle457", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicleBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle");
 
                     b.HasDiscriminator().HasValue("457");
                 });
 
             modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.VehicleIRA", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicleBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle");
 
                     b.HasDiscriminator().HasValue("IRA");
                 });
 
             modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.VehicleRothIRA", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicleBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle");
 
                     b.HasDiscriminator().HasValue("RothIRA");
                 });
@@ -473,7 +473,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Investment.Investment", b =>
                 {
-                    b.HasOne("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicleBase", null)
+                    b.HasOne("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle", null)
                         .WithMany("Investments")
                         .HasForeignKey("InvestmentVehicleBaseInvestmentVehicleId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -515,7 +515,7 @@ namespace RetireSimple.Engine.Migrations
                     b.Navigation("SourceInvestment");
                 });
 
-            modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicleBase", b =>
+            modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle", b =>
                 {
                     b.HasOne("RetireSimple.Engine.Data.User.Portfolio", null)
                         .WithMany("InvestmentVehicles")
@@ -526,7 +526,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicleModel", b =>
                 {
-                    b.HasOne("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicleBase", null)
+                    b.HasOne("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle", null)
                         .WithOne("InvestmentVehicleModel")
                         .HasForeignKey("RetireSimple.Engine.Data.InvestmentVehicleModel", "InvestmentVehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -566,7 +566,7 @@ namespace RetireSimple.Engine.Migrations
                     b.Navigation("TransfersTo");
                 });
 
-            modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicleBase", b =>
+            modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle", b =>
                 {
                     b.Navigation("InvestmentVehicleModel");
 

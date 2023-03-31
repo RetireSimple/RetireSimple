@@ -2,14 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using RetireSimple.Engine.Data.Base;
+using RetireSimple.Engine.Data.InvestmentVehicle;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace RetireSimple.Engine.Data.InvestmentVehicle {
-	public abstract class InvestmentVehicleBase {
+namespace RetireSimple.Engine.Data.Base {
+	public abstract class InvestmentVehicle {
 		public int PortfolioId { get; set; }
 
 		public int InvestmentVehicleId { get; set; }
@@ -17,7 +17,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 
 		public string InvestmentVehicleType { get; set; }
 
-		public List<Base.Investment> Investments { get; set; } = new List<Base.Investment>();
+		public List<Investment> Investments { get; set; } = new List<Investment>();
 
 		public int? InvestmentVehicleModelId { get; set; }
 		[JsonIgnore] public InvestmentVehicleModel? InvestmentVehicleModel { get; set; }
@@ -27,8 +27,8 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 		// A specialized field to hold cash that is not allocated to a specific investment in the vehicle.
 		[NotMapped, JsonIgnore]
 		public decimal CashHoldings {
-			get => decimal.Parse(this.InvestmentVehicleData["cashHoldings"]);
-			set => this.InvestmentVehicleData["cashHoldings"] = value.ToString();
+			get => decimal.Parse(InvestmentVehicleData["cashHoldings"]);
+			set => InvestmentVehicleData["cashHoldings"] = value.ToString();
 		}
 
 		public DateTime LastUpdated { get; set; }
@@ -105,14 +105,14 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 
 	}
 
-	public class InvestmentVehicleBaseConfiguration : IEntityTypeConfiguration<InvestmentVehicleBase> {
+	public class InvestmentVehicleBaseConfiguration : IEntityTypeConfiguration<InvestmentVehicle> {
 		static readonly JsonSerializerOptions options = new() {
 			AllowTrailingCommas = true,
 			DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
 			IncludeFields = true
 		};
 
-		public void Configure(EntityTypeBuilder<InvestmentVehicleBase> builder) {
+		public void Configure(EntityTypeBuilder<InvestmentVehicle> builder) {
 			builder.HasKey(i => i.InvestmentVehicleId);
 
 			builder.HasDiscriminator(i => i.InvestmentVehicleType)

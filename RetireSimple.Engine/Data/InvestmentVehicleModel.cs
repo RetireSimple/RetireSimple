@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using RetireSimple.Engine.Data.InvestmentVehicle;
+using RetireSimple.Engine.Data.Base;
 
 using System.Text.Json;
 
@@ -61,7 +61,7 @@ namespace RetireSimple.Engine.Data {
 			builder.Property(i => i.LastUpdated)
 		.HasColumnType("datetime2");
 
-			builder.HasOne<InvestmentVehicleBase>()
+			builder.HasOne<Base.InvestmentVehicle>()
 				.WithOne(i => i.InvestmentVehicleModel)
 				.HasForeignKey<InvestmentVehicleModel>(i => i.InvestmentVehicleId)
 				.IsRequired(true);

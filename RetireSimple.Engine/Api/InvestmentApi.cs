@@ -16,7 +16,7 @@ namespace RetireSimple.Engine.Api {
 
 		/// <summary>
 		/// Gets a list of all<see cref="Investment"/> objects that are not
-		/// associated with an <see cref="Data.InvestmentVehicle.InvestmentVehicleBase"/>.
+		/// associated with an <see cref="Data.Base.InvestmentVehicle"/>.
 		/// </summary>
 		/// <returns></returns>
 		public List<Investment> GetSingluarInvestments() {

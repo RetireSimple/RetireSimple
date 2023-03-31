@@ -1,3 +1,5 @@
+using RetireSimple.Engine.Data.Base;
+
 namespace RetireSimple.Tests.DomainModel {
 	public class InvestmentVehicleTests : IDisposable {
 		EngineDbContext Context { get; set; }
@@ -26,7 +28,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentVehicleAdd() {
-			InvestmentVehicleBase vehicle = new Vehicle403b();
+			InvestmentVehicle vehicle = new Vehicle403b();
 			Context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
 			Context.SaveChanges();
 			vehicle.Investments.Add(Context.Investment.First(i => i.InvestmentId == 1));
@@ -37,7 +39,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentVehicleRemove() {
-			InvestmentVehicleBase vehicle = new Vehicle403b();
+			InvestmentVehicle vehicle = new Vehicle403b();
 			Context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
 			Context.SaveChanges();
 			vehicle.Investments.Add(Context.Investment.First(i => i.InvestmentId == 1));
@@ -51,7 +53,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentVehicleFKConstraintPortfolio() {
-			InvestmentVehicleBase vehicle = new Vehicle403b();
+			InvestmentVehicle vehicle = new Vehicle403b();
 
 			Action act = () => {
 				Context.InvestmentVehicle.Add(vehicle);
@@ -63,7 +65,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentVehicleFKConstraintInvestmentDeleteCascades() {
-			InvestmentVehicleBase vehicle = new Vehicle403b();
+			InvestmentVehicle vehicle = new Vehicle403b();
 			Context.Portfolio.First(p => p.PortfolioId == 1).InvestmentVehicles.Add(vehicle);
 			vehicle.Investments.Add(Context.Investment.First(i => i.InvestmentId == 1));
 			Context.SaveChanges();

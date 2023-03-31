@@ -20,7 +20,7 @@ namespace RetireSimple.Engine.Api {
 		/// Returns all investment vehicle objects currently tracked by EF.
 		/// </summary>
 		/// <returns></returns>
-		public List<InvestmentVehicleBase> GetInvestmentVehicles() {
+		public List<InvestmentVehicle> GetInvestmentVehicles() {
 			return _context.InvestmentVehicle.ToList();
 		}
 
@@ -31,7 +31,7 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="vehicleId"></param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentException">If no investment vehicle with the specified ID exists</exception>
-		public InvestmentVehicleBase GetInvestmentVehicle(int vehicleId) {
+		public InvestmentVehicle GetInvestmentVehicle(int vehicleId) {
 			return _context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)
 				? _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId)
 				: throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
@@ -72,7 +72,7 @@ namespace RetireSimple.Engine.Api {
 		/// relationship fields.
 		/// </summary>
 		public int Add(string type, OptionsDict options) {
-			InvestmentVehicleBase vehicle = type switch {
+			InvestmentVehicle vehicle = type switch {
 				"401k" => new Vehicle401k(),
 				"403b" => new Vehicle403b(),
 				"457" => new Vehicle457(),
@@ -93,7 +93,7 @@ namespace RetireSimple.Engine.Api {
 		/// Adds an investment to the vehicle. The investment must exist in the database
 		/// before this operation, otherwise an <see cref="ArgumentException"/> is thrown.
 		/// </summary>
-		/// <param name="vehicleId">ID of the InvestmentVehicleBase object</param>
+		/// <param name="vehicleId">ID of the InvestmentVehicle object</param>
 		/// <param name="investmentId">ID of the Investment object</param>
 		public void AddInvestmentToVehicle(int vehicleId, int investmentId) {
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
@@ -186,7 +186,7 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Updates the <see cref="InvestmentVehicleBase.AnalysisOptionsOverrides"/> with the
+		/// Updates the <see cref="InvestmentVehicle.AnalysisOptionsOverrides"/> with the
 		/// specified analysis option and option value. No actual validation of the value with
 		/// respect to the analysis option is performed in this method. If <paramref name="value"/>
 		/// is null and the option exists, it gets removed from the analysis overrides for the

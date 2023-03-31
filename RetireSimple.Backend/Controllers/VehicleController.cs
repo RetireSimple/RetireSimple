@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using RetireSimple.Engine.Api;
 using RetireSimple.Engine.Data;
-using RetireSimple.Engine.Data.InvestmentVehicle;
+using RetireSimple.Engine.Data.Base;
 
 using System.Text.Json;
 
@@ -17,12 +17,12 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpGet]
-		public ActionResult<List<InvestmentVehicleBase>> GetVehicles() => Ok(_vehicleApi.GetInvestmentVehicles());
+		public ActionResult<List<InvestmentVehicle>> GetVehicles() => Ok(_vehicleApi.GetInvestmentVehicles());
 
 
 		[HttpGet]
 		[Route("{id}")]
-		public ActionResult<InvestmentVehicleBase> GetVehicle(int id) {
+		public ActionResult<InvestmentVehicle> GetVehicle(int id) {
 			try {
 				var vehicle = _vehicleApi.GetInvestmentVehicle(id);
 				return Ok(vehicle);

@@ -1,7 +1,8 @@
 ﻿using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 namespace RetireSimple.Engine.Data.InvestmentVehicle {
-	public class VehicleRothIRA : InvestmentVehicleBase {
+	public class VehicleRothIRA : Base.InvestmentVehicle {
 		public override InvestmentModel GeneratePostTaxModels(OptionsDict options,
 													List<InvestmentModel> models,
 													List<decimal>? cashContribution = null)

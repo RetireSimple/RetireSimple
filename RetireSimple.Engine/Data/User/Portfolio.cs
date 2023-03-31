@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using RetireSimple.Engine.Data.Base;
-using RetireSimple.Engine.Data.InvestmentVehicle;
 
 namespace RetireSimple.Engine.Data.User {
 	public class Portfolio {
@@ -24,7 +23,7 @@ namespace RetireSimple.Engine.Data.User {
 		public Profile Profile { get; set; }
 
 		public List<Base.Investment> Investments { get; set; } = new List<Base.Investment>();
-		public List<InvestmentVehicleBase> InvestmentVehicles { get; set; } = new List<InvestmentVehicleBase>();
+		public List<Base.InvestmentVehicle> InvestmentVehicles { get; set; } = new List<Base.InvestmentVehicle>();
 
 		public PortfolioModel? PortfolioModel { get; set; }
 		public DateTime? LastUpdated { get; set; } = DateTime.Now;

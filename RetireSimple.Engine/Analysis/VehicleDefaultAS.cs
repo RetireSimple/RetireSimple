@@ -1,5 +1,5 @@
 using RetireSimple.Engine.Data;
-using RetireSimple.Engine.Data.InvestmentVehicle;
+using RetireSimple.Engine.Data.Base;
 
 namespace RetireSimple.Engine.Analysis {
 
@@ -102,7 +102,7 @@ namespace RetireSimple.Engine.Analysis {
 			return preTaxModel;
 		}
 
-		public static List<decimal> SimulateCashContributionsDefault(InvestmentVehicleBase vehicle, OptionsDict options) {
+		public static List<decimal> SimulateCashContributionsDefault(InvestmentVehicle vehicle, OptionsDict options) {
 			var analysisLength = int.Parse(options["analysisLength"]);
 			var cashContribution = decimal.Parse(options["userContributionAmount"]);
 			var currentHoldings = vehicle.CashHoldings;
