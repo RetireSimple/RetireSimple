@@ -6,18 +6,6 @@ namespace RetireSimple.Engine.Data {
 
 
 	public static class ReflectionUtils {
-		public static List<string> GetInvestmentModules() {
-			List<string> modules = new List<string>();
-
-			var types = typeof(InvestmentBase).Assembly.GetTypes();
-			var investmentModules = types.Where(t => t.GetCustomAttributes(typeof(InvestmentModuleAttribute), false).Length > 0);
-			foreach (var module in investmentModules) {
-				modules.Add(module.Name);
-			}
-
-			return modules;
-		}
-
 		public static Dictionary<string, Delegate> GetAnalysisModules(string investmentModule) {
 			List<Delegate> modules = new List<Delegate>();
 
@@ -28,10 +16,9 @@ namespace RetireSimple.Engine.Data {
 				if (analysisModule is not null &&
 					analysisModule.InvestmentModule == investmentModule) {
 					Console.WriteLine($"Found analysis module {module.Name} for investment module {investmentModule}");
-					var delTypeParam = Type.GetType($"RetireSimple.Engine.Data.Investment.{investmentModule}");
-					if (delTypeParam is null) {
-						throw new ArgumentException($"Investment Module {investmentModule} does not exist during reflection");
-					}
+					var delTypeParam = Type.GetType($"RetireSimple.Engine.Data.Investment.{investmentModule}")
+					?? throw new ArgumentException($"Investment Module {investmentModule} does not exist during reflection");
+
 					var del = Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(delTypeParam), module);
 					modules.Add(del);
 				}
@@ -51,15 +38,9 @@ namespace RetireSimple.Engine.Data {
 
 		public static void SetAnalysisModuleDelegate<T>(T investment, Delegate? del) where T : InvestmentBase {
 			//Check if the attribute on the investment is properly defined
-			if (investment.GetType().GetCustomAttributes(typeof(InvestmentModuleAttribute), false)[0] is not InvestmentModuleAttribute moduleAttribute) {
-				throw new ArgumentException($"Investment Module {investment.GetType().Name} does not have a valid InvestmentModuleAttribute");
-			}
-
+			var moduleAttribute = investment.GetType().GetCustomAttributes(typeof(InvestmentModuleAttribute), false)[0] as InvestmentModuleAttribute
+				?? throw new ArgumentException($"Investment Module {investment.GetType().Name} does not have a valid InvestmentModuleAttribute");
 			Console.WriteLine($"AnalysisModuleField: {moduleAttribute.AnalysisModuleField}");
-
-			// if (typeof(T).GetProperty(moduleAttribute.AnalysisModuleField) is null) {
-			// 	throw new ArgumentException($"Investment Module {investment.GetType().Name} does not have a valid AnalysisModuleField");
-			// }
 
 			typeof(T).GetProperty(moduleAttribute.AnalysisModuleField)?.SetValue(investment, del);
 		}

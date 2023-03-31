@@ -98,13 +98,6 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		//TODO TESTING REFLECTION HERE, BE WARY TRAVELLERS
 
-		protected InvestmentBase(string analysisModule, Dictionary<string, Delegate> moduleList) {
-			if (!moduleList.ContainsKey(analysisModule)) {
-				throw new ArgumentException($"Analysis Module {analysisModule} does not exist for {this.GetType().Name}");
-			}
-			ReflectionUtils.SetAnalysisModuleDelegate(this, moduleList[analysisModule]);
-		}
-
 		protected InvestmentBase(string analysisModule) {
 			if (analysisModule == "") {
 				ReflectionUtils.SetAnalysisModuleDelegate(this, null);
