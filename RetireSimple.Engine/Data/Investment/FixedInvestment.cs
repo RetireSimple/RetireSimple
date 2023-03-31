@@ -8,7 +8,6 @@ using System.Text.Json.Serialization;
 namespace RetireSimple.Engine.Data.Investment {
 
 	public class FixedInvestment : Base.Investment {
-
 		[JsonIgnore, NotMapped]
 		public double FixedValue {
 			get => double.Parse(InvestmentData["FixedValue"]);
@@ -23,6 +22,8 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		[JsonIgnore, NotMapped]
 		public AnalysisModule<FixedInvestment>? AnalysisMethod { get; private set; }
+
+		public FixedInvestment(string analysisType) : base(analysisType) {}
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null

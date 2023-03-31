@@ -101,12 +101,10 @@ namespace RetireSimple.Engine.Data.Base {
 		//TODO TESTING REFLECTION HERE, BE WARY TRAVELLERS
 
 		protected Investment(string analysisType) {
+			//Get the derived type for the investment type property
+			InvestmentType = GetType().Name;
 			AnalysisType = analysisType;
 			ResolveAnalysisDelegate();
-		}
-
-		protected Investment() {
-			ReflectionUtils.SetAnalysisModuleDelegate(this, null);
 		}
 
 		public void ResolveAnalysisDelegate() {

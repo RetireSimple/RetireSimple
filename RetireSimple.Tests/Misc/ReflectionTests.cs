@@ -86,6 +86,15 @@ namespace RetireSimple.Tests.Misc {
 			}
 		}
 
+		public static readonly IEnumerable<object[]> ResolveAnalysisDelegateConstructionTestData = new List<object[]> {
+			new object[] { "StockInvestment"},
+			new object[] { "BondInvestment" },
+			new object[] { "CashInvestment" },
+			new object[] { "FixedInvestment" },
+			new object[] { "AnnuityInvestment" },
+			new object[] { "PensionInvestment" },
+			new object[] { "SocialSecurityInvestment" }
+		};
 
 	}
 }

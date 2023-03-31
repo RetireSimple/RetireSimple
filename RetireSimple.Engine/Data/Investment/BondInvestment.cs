@@ -58,10 +58,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		public AnalysisModule<BondInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
-		public BondInvestment(string analysisType) : base(analysisType) {
-			InvestmentType = "BondInvestment";
-
-		}
+		public BondInvestment(string analysisType) : base(analysisType) { }
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null

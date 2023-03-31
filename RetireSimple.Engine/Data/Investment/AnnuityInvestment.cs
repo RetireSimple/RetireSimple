@@ -41,9 +41,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		[JsonIgnore, NotMapped]
 		public AnalysisModule<AnnuityInvestment>? AnalysisMethod { get; private set; }
 
-		public AnnuityInvestment(string analysisType) : base() {
-			InvestmentType = "AnnuityInvestment";
-		}
+		public AnnuityInvestment(string analysisType) : base(analysisType) { }
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null

@@ -30,9 +30,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		[JsonIgnore, NotMapped]
 		public AnalysisModule<CashInvestment>? AnalysisMethod { get; private set; }
 
-		public CashInvestment(string analysisType) : base() {
-			InvestmentType = "CashInvestment";
-		}
+		public CashInvestment(string analysisType) : base(analysisType) { }
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null
