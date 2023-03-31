@@ -6,8 +6,8 @@ using RetireSimple.Engine.Data.Base;
 
 using System.Text.Json;
 
-namespace RetireSimple.Engine.Data {
-	public class InvestmentVehicleModel {
+namespace RetireSimple.Engine.Data.Analysis {
+	public class VehicleModel {
 
 		public int ModelId { get; set; }
 		public int InvestmentVehicleId { get; set; }
@@ -30,9 +30,9 @@ namespace RetireSimple.Engine.Data {
 		/// <summary>
 		/// Parameterless Constructor for EF, DO NOT REMOVE
 		/// </summary>
-		public InvestmentVehicleModel() { }
+		public VehicleModel() { }
 
-		public InvestmentVehicleModel(int vehicleId, InvestmentModel preTaxModel, InvestmentModel postTaxModel) {
+		public VehicleModel(int vehicleId, InvestmentModel preTaxModel, InvestmentModel postTaxModel) {
 			InvestmentVehicleId = vehicleId;
 			LastUpdated = DateTime.Now;
 
@@ -48,14 +48,14 @@ namespace RetireSimple.Engine.Data {
 		//Methods to produce statistical information per step/overall of the model
 	}
 
-	public class InvestmentVehicleModelConfiguration : IEntityTypeConfiguration<InvestmentVehicleModel> {
+	public class InvestmentVehicleModelConfiguration : IEntityTypeConfiguration<VehicleModel> {
 		static readonly JsonSerializerOptions options = new() {
 			AllowTrailingCommas = true,
 			DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
 			IncludeFields = true
 		};
 
-		public void Configure(EntityTypeBuilder<InvestmentVehicleModel> builder) {
+		public void Configure(EntityTypeBuilder<VehicleModel> builder) {
 			builder.HasKey(i => i.ModelId);
 
 			builder.Property(i => i.LastUpdated)
@@ -63,7 +63,7 @@ namespace RetireSimple.Engine.Data {
 
 			builder.HasOne<Base.InvestmentVehicle>()
 				.WithOne(i => i.InvestmentVehicleModel)
-				.HasForeignKey<InvestmentVehicleModel>(i => i.InvestmentVehicleId)
+				.HasForeignKey<VehicleModel>(i => i.InvestmentVehicleId)
 				.IsRequired(true);
 
 #pragma warning disable CS8604 // Possible null reference argument.

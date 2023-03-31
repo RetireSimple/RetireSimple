@@ -8,7 +8,7 @@ using RetireSimple.Engine.Data.User;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace RetireSimple.Engine.Data {
+namespace RetireSimple.Engine.Data.Analysis {
 	public class PortfolioModel {
 		/// <summary>
 		/// Primary Key ID of the object.

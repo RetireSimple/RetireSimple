@@ -1,4 +1,5 @@
 using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;

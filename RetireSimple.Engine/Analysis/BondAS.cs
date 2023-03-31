@@ -1,6 +1,7 @@
 ﻿using MathNet.Numerics;
 
 using RetireSimple.Engine.Data;
+using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Investment;
 
 using System;

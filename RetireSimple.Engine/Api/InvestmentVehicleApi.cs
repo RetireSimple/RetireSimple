@@ -1,4 +1,5 @@
 ﻿using RetireSimple.Engine.Data;
+using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 using RetireSimple.Engine.Data.Investment;
 using RetireSimple.Engine.Data.InvestmentVehicle;
@@ -219,7 +220,7 @@ namespace RetireSimple.Engine.Api {
 
 		/// <summary>
 		/// Returns a model of the vehicle's value and based on the vehicle's defined analysis, set options, and (optionally)
-		/// any parameters that should be used as an override. If an existing <see cref="InvestmentVehicleModel"/>
+		/// any parameters that should be used as an override. If an existing <see cref="VehicleModel"/>
 		/// already exists and the investment's last change is before the time the model was generated, no analysis
 		/// is executed and the existing model is returned. If <paramref name="options"/> is passed with a non-null
 		/// value, the analysis is re-executed regardless if the model is up-to-date.
@@ -229,7 +230,7 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="options"></param>
 		/// <returns></returns>
 		//TODO Need to figure out how to add testing (is based on InvestmentApi logic that works)
-		public InvestmentVehicleModel GetAnalysis(int id, OptionsDict? options = null) {
+		public VehicleModel GetAnalysis(int id, OptionsDict? options = null) {
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == id)) {
 				throw new ArgumentException("Investment Vehicle not found");
 			}

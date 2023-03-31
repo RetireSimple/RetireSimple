@@ -7,7 +7,7 @@ using RetireSimple.Engine.Data.Base;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace RetireSimple.Engine.Data {
+namespace RetireSimple.Engine.Data.Analysis {
 	public class InvestmentModel {
 		/// <summary>
 		/// Primary Key ID of the object.

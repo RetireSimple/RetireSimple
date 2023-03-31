@@ -201,7 +201,7 @@ namespace RetireSimple.Engine.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicleModel", b =>
+            modelBuilder.Entity("RetireSimple.Engine.Data.VehicleModel", b =>
                 {
                     b.Property<int>("ModelId")
                         .ValueGeneratedOnAdd()
@@ -242,7 +242,7 @@ namespace RetireSimple.Engine.Migrations
                     b.HasIndex("InvestmentVehicleId")
                         .IsUnique();
 
-                    b.ToTable("InvestmentVehicleModel");
+                    b.ToTable("VehicleModel");
                 });
 
             modelBuilder.Entity("RetireSimple.Engine.Data.PortfolioModel", b =>
@@ -526,11 +526,11 @@ namespace RetireSimple.Engine.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicleModel", b =>
+            modelBuilder.Entity("RetireSimple.Engine.Data.VehicleModel", b =>
                 {
                     b.HasOne("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle", null)
-                        .WithOne("InvestmentVehicleModel")
-                        .HasForeignKey("RetireSimple.Engine.Data.InvestmentVehicleModel", "InvestmentVehicleId")
+                        .WithOne("VehicleModel")
+                        .HasForeignKey("RetireSimple.Engine.Data.VehicleModel", "InvestmentVehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -570,7 +570,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicle", b =>
                 {
-                    b.Navigation("InvestmentVehicleModel");
+                    b.Navigation("VehicleModel");
 
                     b.Navigation("Investments");
                 });

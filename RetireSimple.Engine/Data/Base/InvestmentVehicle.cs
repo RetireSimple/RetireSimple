@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.InvestmentVehicle;
 
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,7 +21,7 @@ namespace RetireSimple.Engine.Data.Base {
 		public List<Investment> Investments { get; set; } = new List<Investment>();
 
 		public int? InvestmentVehicleModelId { get; set; }
-		[JsonIgnore] public InvestmentVehicleModel? InvestmentVehicleModel { get; set; }
+		[JsonIgnore] public VehicleModel? InvestmentVehicleModel { get; set; }
 
 		public OptionsDict InvestmentVehicleData { get; set; } = new OptionsDict();
 
@@ -51,7 +52,7 @@ namespace RetireSimple.Engine.Data.Base {
 		/// </summary>
 		/// <param name="options"></param>
 		/// <returns></returns>
-		public InvestmentVehicleModel GenerateAnalysis(OptionsDict options) {
+		public VehicleModel GenerateAnalysis(OptionsDict options) {
 			var combinedOptions = MergeOverrideOptions(options);
 			var containedModels = GetContainedInvestmentModels(combinedOptions);
 
@@ -65,7 +66,7 @@ namespace RetireSimple.Engine.Data.Base {
 			var postTaxModel = GeneratePostTaxModels(combinedOptions, containedModels, cashSim);
 
 			var newModel =
-				new InvestmentVehicleModel(InvestmentVehicleId, preTaxModel, postTaxModel);
+				new VehicleModel(InvestmentVehicleId, preTaxModel, postTaxModel);
 
 			//NOTE don't add to EF in this method, that should be an API level responsibility
 			return newModel;
@@ -129,7 +130,7 @@ namespace RetireSimple.Engine.Data.Base {
 
 			builder.HasOne(i => i.InvestmentVehicleModel)
 				.WithOne()
-				.HasForeignKey<InvestmentVehicleModel>(m => m.InvestmentVehicleId)
+				.HasForeignKey<VehicleModel>(m => m.InvestmentVehicleId)
 				.IsRequired(false)
 				.OnDelete(DeleteBehavior.Cascade);
 

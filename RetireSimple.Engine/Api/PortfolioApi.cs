@@ -1,4 +1,5 @@
 ﻿using RetireSimple.Engine.Data;
+using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.User;
 
 namespace RetireSimple.Engine.Api {

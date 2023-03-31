@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
+using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 using RetireSimple.Engine.Data.User;
 
@@ -15,7 +16,7 @@ namespace RetireSimple.Engine.Data {
 		public DbSet<Portfolio> Portfolio { get; set; }
 		public DbSet<Base.Expense> Expense { get; set; }
 		public DbSet<InvestmentTransfer> InvestmentTransfer { get; set; }
-		public DbSet<InvestmentVehicleModel> InvestmentVehicleModel { get; set; }
+		public DbSet<VehicleModel> InvestmentVehicleModel { get; set; }
 		public DbSet<PortfolioModel> PortfolioModel { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {

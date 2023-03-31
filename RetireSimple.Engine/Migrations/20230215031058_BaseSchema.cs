@@ -127,7 +127,7 @@ namespace RetireSimple.Engine.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InvestmentVehicleModel",
+                name: "VehicleModel",
                 columns: table => new
                 {
                     ModelId = table.Column<int>(type: "INTEGER", nullable: false)
@@ -276,7 +276,7 @@ namespace RetireSimple.Engine.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvestmentVehicleModel_InvestmentVehicleId",
-                table: "InvestmentVehicleModel",
+                table: "VehicleModel",
                 column: "InvestmentVehicleId",
                 unique: true);
 
@@ -305,7 +305,7 @@ namespace RetireSimple.Engine.Migrations
                 name: "InvestmentTransfers");
 
             migrationBuilder.DropTable(
-                name: "InvestmentVehicleModel");
+                name: "VehicleModel");
 
             migrationBuilder.DropTable(
                 name: "PortfolioModel");
