@@ -1,11 +1,12 @@
 using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
 
-	public class FixedInvestment : InvestmentBase {
+	public class FixedInvestment : Base.Investment {
 
 		[JsonIgnore, NotMapped]
 		public double FixedValue {

@@ -3,18 +3,19 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using RetireSimple.Engine.Data.Expense;
+using RetireSimple.Engine.Data.Investment;
 using RetireSimple.Engine.Data.User;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace RetireSimple.Engine.Data.Investment {
-	public delegate InvestmentModel AnalysisModule<in T>(T investment, OptionsDict options) where T : InvestmentBase;
+namespace RetireSimple.Engine.Data.Base {
+	public delegate InvestmentModel AnalysisModule<in T>(T investment, OptionsDict options) where T : Investment;
 
 
 	[Table("Investments")]
-	public abstract class InvestmentBase {
+	public abstract class Investment {
 
 		/// <summary>
 		/// Primary Key of the Investment Table
@@ -98,42 +99,42 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		//TODO TESTING REFLECTION HERE, BE WARY TRAVELLERS
 
-		protected InvestmentBase(string analysisType) {
-			this.AnalysisType = analysisType;
+		protected Investment(string analysisType) {
+			AnalysisType = analysisType;
 			ResolveAnalysisDelegate();
 		}
 
-		protected InvestmentBase() {
+		protected Investment() {
 			ReflectionUtils.SetAnalysisModuleDelegate(this, null);
 		}
 
 		public void ResolveAnalysisDelegate() {
-			if (this.AnalysisType == null || this.AnalysisType == "") {
+			if (AnalysisType == null || AnalysisType == "") {
 				ReflectionUtils.SetAnalysisModuleDelegate(this, null);
 				return;
 			}
-			var type = this.GetType().Name;
+			var type = GetType().Name;
 			var moduleList = ReflectionUtils.GetAnalysisModules(type);
-			if (!moduleList.ContainsKey(this.AnalysisType)) {
-				throw new ArgumentException($"Analysis Module {this.AnalysisType} does not exist for {this.GetType().Name}");
+			if (!moduleList.ContainsKey(AnalysisType)) {
+				throw new ArgumentException($"Analysis Module {AnalysisType} does not exist for {GetType().Name}");
 			}
 
 			//Ensure we are invoking the correct generic version
 			//TODO This is a bit of a hack, but it works for now. I'm not sure if there is a better way to do this\
-			var setDelegateMethod = typeof(ReflectionUtils).GetMethod("SetAnalysisModuleDelegate")?.MakeGenericMethod(this.GetType());
-			setDelegateMethod?.Invoke(null, new object[] { this, moduleList[this.AnalysisType] });
+			var setDelegateMethod = typeof(ReflectionUtils).GetMethod("SetAnalysisModuleDelegate")?.MakeGenericMethod(GetType());
+			setDelegateMethod?.Invoke(null, new object[] { this, moduleList[AnalysisType] });
 		}
 	}
 
 
-	public class InvestmentBaseConfiguration : IEntityTypeConfiguration<InvestmentBase> {
+	public class InvestmentBaseConfiguration : IEntityTypeConfiguration<Investment> {
 		static readonly JsonSerializerOptions options = new() {
 			AllowTrailingCommas = true,
 			DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
 			IncludeFields = true
 		};
 
-		public void Configure(EntityTypeBuilder<InvestmentBase> builder) {
+		public void Configure(EntityTypeBuilder<Investment> builder) {
 			builder.HasKey(i => i.InvestmentId);
 
 			//TODO Allow Cascade of models as those should not exist if the investment still exists

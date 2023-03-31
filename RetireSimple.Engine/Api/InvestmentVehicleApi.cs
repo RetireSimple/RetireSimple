@@ -1,4 +1,5 @@
 ﻿using RetireSimple.Engine.Data;
+using RetireSimple.Engine.Data.Base;
 using RetireSimple.Engine.Data.Investment;
 using RetireSimple.Engine.Data.InvestmentVehicle;
 
@@ -41,8 +42,8 @@ namespace RetireSimple.Engine.Api {
 		/// include individual investments. Keys of the dictionary are the IDs of the vehicles,
 		/// </summary>
 		/// <returns></returns>
-		public Dictionary<int, List<InvestmentBase>> GetAllVehicleInvestments() {
-			var dict = new Dictionary<int, List<InvestmentBase>>();
+		public Dictionary<int, List<Investment>> GetAllVehicleInvestments() {
+			var dict = new Dictionary<int, List<Investment>>();
 
 			if (_context.InvestmentVehicle.Any()) {
 				foreach (var vehicle in _context.InvestmentVehicle) {
@@ -59,7 +60,7 @@ namespace RetireSimple.Engine.Api {
 		/// </summary>
 		/// <param name="vehicleId"></param>
 		/// <returns></returns>
-		public List<InvestmentBase> GetVehicleInvestments(int vehicleId) {
+		public List<Investment> GetVehicleInvestments(int vehicleId) {
 			return _context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)
 				? _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId).Investments.ToList()
 				: throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
@@ -93,7 +94,7 @@ namespace RetireSimple.Engine.Api {
 		/// before this operation, otherwise an <see cref="ArgumentException"/> is thrown.
 		/// </summary>
 		/// <param name="vehicleId">ID of the InvestmentVehicleBase object</param>
-		/// <param name="investmentId">ID of the InvestmentBase object</param>
+		/// <param name="investmentId">ID of the Investment object</param>
 		public void AddInvestmentToVehicle(int vehicleId, int investmentId) {
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
 				throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");

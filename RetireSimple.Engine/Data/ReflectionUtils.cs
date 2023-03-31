@@ -1,4 +1,4 @@
-using RetireSimple.Engine.Data.Investment;
+using RetireSimple.Engine.Data.Base;
 
 using System.Reflection;
 
@@ -9,7 +9,7 @@ namespace RetireSimple.Engine.Data {
 		public static Dictionary<string, Delegate> GetAnalysisModules(string investmentModule) {
 			List<Delegate> modules = new List<Delegate>();
 
-			var types = typeof(InvestmentBase).Assembly.GetTypes();
+			var types = typeof(Base.Investment).Assembly.GetTypes();
 			var analysisModules = types.SelectMany(t => t.GetMethods()).Where(m => m.GetCustomAttributes(typeof(AnalysisModuleAttribute), false).Length > 0);
 			foreach (var module in analysisModules) {
 				var analysisModule = module.GetCustomAttributes(typeof(AnalysisModuleAttribute), false)[0] as AnalysisModuleAttribute;
@@ -36,7 +36,7 @@ namespace RetireSimple.Engine.Data {
 			return moduleDict;
 		}
 
-		public static void SetAnalysisModuleDelegate<T>(T investment, Delegate? del) where T : InvestmentBase {
+		public static void SetAnalysisModuleDelegate<T>(T investment, Delegate? del) where T : Base.Investment {
 			//Check if the attribute on the investment is properly defined
 			var moduleAttribute = investment.GetType().GetCustomAttributes(typeof(InvestmentModuleAttribute), false)[0] as InvestmentModuleAttribute
 				?? throw new ArgumentException($"Investment Module {investment.GetType().Name} does not have a valid InvestmentModuleAttribute");

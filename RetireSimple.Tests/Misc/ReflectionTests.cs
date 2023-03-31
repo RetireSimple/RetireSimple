@@ -1,4 +1,4 @@
-﻿using RetireSimple.Engine.Data.Investment;
+﻿using RetireSimple.Engine.Data.Base;
 
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace RetireSimple.Tests.Misc {
 #pragma warning restore CS8604
 
 		[Theory, MemberData(nameof(ReflectionTheoryData))]
-		public void SetAnalysisMethodDelegate_ResolvesCorrectDelegate(InvestmentBase investment, Delegate expectedDelegate) {
+		public void SetAnalysisMethodDelegate_ResolvesCorrectDelegate(Investment investment, Delegate expectedDelegate) {
 			//The purpose of this test is to ensure we can set a delegate via reflection
 			//Check if we have a clean slate first (i.e. AnalysisMethod is null)
 			var analysisMethodProp = investment.GetType().GetProperty("AnalysisMethod");

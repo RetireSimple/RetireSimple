@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using RetireSimple.Engine.Data.Investment;
+using RetireSimple.Engine.Data.Base;
 using RetireSimple.Engine.Data.InvestmentVehicle;
 
 namespace RetireSimple.Engine.Data.User {
@@ -23,7 +23,7 @@ namespace RetireSimple.Engine.Data.User {
 		/// </summary>
 		public Profile Profile { get; set; }
 
-		public List<InvestmentBase> Investments { get; set; } = new List<InvestmentBase>();
+		public List<Base.Investment> Investments { get; set; } = new List<Base.Investment>();
 		public List<InvestmentVehicleBase> InvestmentVehicles { get; set; } = new List<InvestmentVehicleBase>();
 
 		public PortfolioModel? PortfolioModel { get; set; }

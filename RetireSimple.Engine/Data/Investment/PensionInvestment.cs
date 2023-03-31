@@ -1,10 +1,11 @@
 using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
-	public class PensionInvestment : InvestmentBase {
+	public class PensionInvestment : Base.Investment {
 
 		[JsonIgnore, NotMapped]
 		public DateOnly PensionStartDate {

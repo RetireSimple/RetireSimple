@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
+using RetireSimple.Engine.Data.Base;
 using RetireSimple.Engine.Data.Expense;
-using RetireSimple.Engine.Data.Investment;
 using RetireSimple.Engine.Data.InvestmentVehicle;
 using RetireSimple.Engine.Data.User;
 
@@ -10,7 +10,7 @@ namespace RetireSimple.Engine.Data {
 	public class EngineDbContext : DbContext {
 		public EngineDbContext(DbContextOptions options) : base(options) { }
 
-		public DbSet<InvestmentBase> Investment { get; set; }
+		public DbSet<Base.Investment> Investment { get; set; }
 		public DbSet<InvestmentVehicleBase> InvestmentVehicle { get; set; }
 		public DbSet<InvestmentModel> InvestmentModel { get; set; }
 		public DbSet<Profile> Profile { get; set; }

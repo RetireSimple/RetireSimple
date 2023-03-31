@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using RetireSimple.Engine.Data.Investment;
+using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
@@ -17,7 +17,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 
 		public string InvestmentVehicleType { get; set; }
 
-		public List<InvestmentBase> Investments { get; set; } = new List<InvestmentBase>();
+		public List<Base.Investment> Investments { get; set; } = new List<Base.Investment>();
 
 		public int? InvestmentVehicleModelId { get; set; }
 		[JsonIgnore] public InvestmentVehicleModel? InvestmentVehicleModel { get; set; }

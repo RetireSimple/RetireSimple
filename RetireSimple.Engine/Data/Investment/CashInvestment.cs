@@ -1,11 +1,12 @@
 using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 
 namespace RetireSimple.Engine.Data.Investment {
-	public class CashInvestment : InvestmentBase {
+	public class CashInvestment : Base.Investment {
 
 		[JsonIgnore, NotMapped]
 		public string CashCurrency {

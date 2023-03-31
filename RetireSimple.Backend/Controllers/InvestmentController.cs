@@ -2,7 +2,7 @@
 
 using RetireSimple.Engine.Api;
 using RetireSimple.Engine.Data;
-using RetireSimple.Engine.Data.Investment;
+using RetireSimple.Engine.Data.Base;
 
 using System.Text.Json;
 
@@ -17,13 +17,13 @@ namespace RetireSimple.Backend.Controllers {
 		}
 
 		[HttpGet]
-		public ActionResult<List<InvestmentBase>> GetInvestments() {
+		public ActionResult<List<Investment>> GetInvestments() {
 			return Ok(_investmentApi.GetSingluarInvestments());
 		}
 
 		[HttpGet]
 		[Route("{id}")]
-		public ActionResult<InvestmentBase> GetInvestment(int id) {
+		public ActionResult<Investment> GetInvestment(int id) {
 			try {
 				var investment = _investmentApi.GetInvestment(id);
 				return Ok(investment);

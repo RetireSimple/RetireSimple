@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using RetireSimple.Engine.Data.Investment;
+using RetireSimple.Engine.Data.Base;
 
 using System.Text.Json.Serialization;
 
@@ -17,15 +17,15 @@ namespace RetireSimple.Engine.Data.Expense {
 		public int ExpenseId { get; set; }
 
 		/// <summary>
-		/// Foreign Key of the <see cref="InvestmentBase"/> that this expense is associated with.
+		/// Foreign Key of the <see cref="Base.Investment"/> that this expense is associated with.
 		/// </summary>
 		public int SourceInvestmentId { get; set; }
 
 		/// <summary>
-		/// The <see cref="InvestmentBase"/> that this expense is associated with.
+		/// The <see cref="Base.Investment"/> that this expense is associated with.
 		/// </summary>
 		[JsonIgnore]
-		public InvestmentBase SourceInvestment { get; set; }
+		public Base.Investment SourceInvestment { get; set; }
 
 		/// <summary>
 		/// The amount this expense deducts from the investment.

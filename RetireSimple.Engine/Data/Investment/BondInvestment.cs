@@ -1,4 +1,5 @@
 using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -6,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace RetireSimple.Engine.Data.Investment {
 
 	[InvestmentModule(nameof(AnalysisMethod))]
-	public class BondInvestment : InvestmentBase {
+	public class BondInvestment : Base.Investment {
 
 		[JsonIgnore, NotMapped]
 		public string BondTicker {

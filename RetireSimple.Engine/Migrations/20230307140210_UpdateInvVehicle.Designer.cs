@@ -49,7 +49,7 @@ namespace RetireSimple.Engine.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("RetireSimple.Engine.Data.Investment.InvestmentBase", b =>
+            modelBuilder.Entity("RetireSimple.Engine.Data.Investment.Investment", b =>
                 {
                     b.Property<int>("InvestmentId")
                         .ValueGeneratedOnAdd()
@@ -94,7 +94,7 @@ namespace RetireSimple.Engine.Migrations
 
                     b.ToTable("Investments");
 
-                    b.HasDiscriminator<string>("InvestmentType").HasValue("InvestmentBase");
+                    b.HasDiscriminator<string>("InvestmentType").HasValue("Investment");
 
                     b.UseTphMappingStrategy();
                 });
@@ -366,7 +366,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Investment.AnnuityInvestment", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.Investment.InvestmentBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.Investment.Investment");
 
                     b.ToTable("Investments");
 
@@ -375,7 +375,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Investment.BondInvestment", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.Investment.InvestmentBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.Investment.Investment");
 
                     b.ToTable("Investments");
 
@@ -384,7 +384,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Investment.CashInvestment", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.Investment.InvestmentBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.Investment.Investment");
 
                     b.ToTable("Investments");
 
@@ -393,7 +393,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Investment.FixedInvestment", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.Investment.InvestmentBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.Investment.Investment");
 
                     b.ToTable("Investments");
 
@@ -402,7 +402,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Investment.PensionInvestment", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.Investment.InvestmentBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.Investment.Investment");
 
                     b.ToTable("Investments");
 
@@ -411,7 +411,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Investment.SocialSecurityInvestment", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.Investment.InvestmentBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.Investment.Investment");
 
                     b.ToTable("Investments");
 
@@ -420,7 +420,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Investment.StockInvestment", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.Investment.InvestmentBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.Investment.Investment");
 
                     b.ToTable("Investments");
 
@@ -464,7 +464,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Expense.ExpenseBase", b =>
                 {
-                    b.HasOne("RetireSimple.Engine.Data.Investment.InvestmentBase", "SourceInvestment")
+                    b.HasOne("RetireSimple.Engine.Data.Investment.Investment", "SourceInvestment")
                         .WithMany("Expenses")
                         .HasForeignKey("SourceInvestmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -473,7 +473,7 @@ namespace RetireSimple.Engine.Migrations
                     b.Navigation("SourceInvestment");
                 });
 
-            modelBuilder.Entity("RetireSimple.Engine.Data.Investment.InvestmentBase", b =>
+            modelBuilder.Entity("RetireSimple.Engine.Data.Investment.Investment", b =>
                 {
                     b.HasOne("RetireSimple.Engine.Data.InvestmentVehicle.InvestmentVehicleBase", null)
                         .WithMany("Investments")
@@ -489,7 +489,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentModel", b =>
                 {
-                    b.HasOne("RetireSimple.Engine.Data.Investment.InvestmentBase", "Investment")
+                    b.HasOne("RetireSimple.Engine.Data.Investment.Investment", "Investment")
                         .WithOne("InvestmentModel")
                         .HasForeignKey("RetireSimple.Engine.Data.InvestmentModel", "InvestmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -500,13 +500,13 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.InvestmentTransfer", b =>
                 {
-                    b.HasOne("RetireSimple.Engine.Data.Investment.InvestmentBase", "DestinationInvestment")
+                    b.HasOne("RetireSimple.Engine.Data.Investment.Investment", "DestinationInvestment")
                         .WithMany("TransfersTo")
                         .HasForeignKey("DestinationInvestmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("RetireSimple.Engine.Data.Investment.InvestmentBase", "SourceInvestment")
+                    b.HasOne("RetireSimple.Engine.Data.Investment.Investment", "SourceInvestment")
                         .WithMany("TransfersFrom")
                         .HasForeignKey("SourceInvestmentId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -557,7 +557,7 @@ namespace RetireSimple.Engine.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("RetireSimple.Engine.Data.Investment.InvestmentBase", b =>
+            modelBuilder.Entity("RetireSimple.Engine.Data.Investment.Investment", b =>
                 {
                     b.Navigation("Expenses");
 

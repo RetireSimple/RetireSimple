@@ -1,5 +1,5 @@
 ﻿using RetireSimple.Engine.Data;
-using RetireSimple.Engine.Data.Investment;
+using RetireSimple.Engine.Data.Base;
 
 namespace RetireSimple.Engine.Api {
 	public class InvestmentApi {
@@ -10,16 +10,16 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Gets a list of all<see cref="InvestmentBase"/> objects </summary>
+		/// Gets a list of all<see cref="Investment"/> objects </summary>
 		/// <returns></returns>
-		public List<InvestmentBase> GetAllInvestments() => _context.Investment.ToList();
+		public List<Investment> GetAllInvestments() => _context.Investment.ToList();
 
 		/// <summary>
-		/// Gets a list of all<see cref="InvestmentBase"/> objects that are not
+		/// Gets a list of all<see cref="Investment"/> objects that are not
 		/// associated with an <see cref="Data.InvestmentVehicle.InvestmentVehicleBase"/>.
 		/// </summary>
 		/// <returns></returns>
-		public List<InvestmentBase> GetSingluarInvestments() {
+		public List<Investment> GetSingluarInvestments() {
 			var vehicleInvestments = _context.Portfolio.First()
 											.InvestmentVehicles
 											.SelectMany(v => v.Investments);
@@ -34,7 +34,7 @@ namespace RetireSimple.Engine.Api {
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public InvestmentBase GetInvestment(int id) => _context.Investment.First(i => i.InvestmentId == id);
+		public Investment GetInvestment(int id) => _context.Investment.First(i => i.InvestmentId == id);
 
 		/// <summary>
 		/// Adds a new investment of the specified type, with investment-specific parameters set
@@ -58,7 +58,7 @@ namespace RetireSimple.Engine.Api {
 		/// <exception cref="ArgumentException">The specified investment type was not found</exception>
 		public int Add(string type, OptionsDict? parameters = null) {
 			parameters ??= new OptionsDict();
-			InvestmentBase newInvestment = type switch {
+			Investment newInvestment = type switch {
 				"StockInvestment" => InvestmentApiUtil.CreateStock(parameters),
 				"BondInvestment" => InvestmentApiUtil.CreateBond(parameters),
 				_ => throw new ArgumentException("The specified investment type was not found"),
@@ -101,7 +101,7 @@ namespace RetireSimple.Engine.Api {
 		/// <summary>
 		/// Updates many parameters in a specific investment based on the values defined in <paramref name="parameters"/>
 		/// For simplicity, this method does not validate if the specified investment has such a parameter,
-		/// rather it is inserted/overwritten directly to the internal <see cref="InvestmentBase.InvestmentData"/>
+		/// rather it is inserted/overwritten directly to the internal <see cref="Investment.InvestmentData"/>
 		/// Values cannot be null, and keys will not be removable from this dictionary.
 		/// </summary>
 		/// <param name="id"></param>
@@ -137,7 +137,7 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Updates the <see cref="InvestmentBase.AnalysisOptionsOverrides"/> with the
+		/// Updates the <see cref="Investment.AnalysisOptionsOverrides"/> with the
 		/// specified analysis option and option value. No actual validation of the value with
 		/// respect to the analysis option is performed in this method.
 		/// If a key exists in <paramref name="options"/> and also exists in the current overrides,
