@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using RetireSimple.Engine.Data.Expense;
 using RetireSimple.Engine.Data.Investment;
 using RetireSimple.Engine.Data.User;
 
@@ -56,7 +55,7 @@ namespace RetireSimple.Engine.Data.Base {
 		/// This is not passed during JSON Serialization and should be accessed through EF.
 		/// </summary>
 		[JsonIgnore]
-		public List<ExpenseBase> Expenses { get; set; } = new List<ExpenseBase>();
+		public List<Expense> Expenses { get; set; } = new List<Expense>();
 
 		/// <summary>
 		/// List of transfers objects associated with this investment that pull value from the investment. <br/>

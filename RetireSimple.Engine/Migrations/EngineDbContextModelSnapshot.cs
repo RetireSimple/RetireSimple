@@ -17,7 +17,7 @@ namespace RetireSimple.Engine.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
 
-            modelBuilder.Entity("RetireSimple.Engine.Data.Expense.ExpenseBase", b =>
+            modelBuilder.Entity("RetireSimple.Engine.Data.Expense.Expense", b =>
                 {
                     b.Property<int>("ExpenseId")
                         .ValueGeneratedOnAdd()
@@ -41,7 +41,7 @@ namespace RetireSimple.Engine.Migrations
 
                     b.ToTable("Expenses", (string)null);
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("ExpenseBase");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Expense");
 
                     b.UseTphMappingStrategy();
                 });
@@ -337,7 +337,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Expense.OneTimeExpense", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.Expense.ExpenseBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.Expense.Expense");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
@@ -347,7 +347,7 @@ namespace RetireSimple.Engine.Migrations
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Expense.RecurringExpense", b =>
                 {
-                    b.HasBaseType("RetireSimple.Engine.Data.Expense.ExpenseBase");
+                    b.HasBaseType("RetireSimple.Engine.Data.Expense.Expense");
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("TEXT");
@@ -459,7 +459,7 @@ namespace RetireSimple.Engine.Migrations
                     b.HasDiscriminator().HasValue("RothIRA");
                 });
 
-            modelBuilder.Entity("RetireSimple.Engine.Data.Expense.ExpenseBase", b =>
+            modelBuilder.Entity("RetireSimple.Engine.Data.Expense.Expense", b =>
                 {
                     b.HasOne("RetireSimple.Engine.Data.Investment.Investment", "SourceInvestment")
                         .WithMany("Expenses")

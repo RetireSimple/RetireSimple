@@ -1,31 +1,31 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using RetireSimple.Engine.Data.Base;
+using RetireSimple.Engine.Data.Expense;
 
 using System.Text.Json.Serialization;
 
-namespace RetireSimple.Engine.Data.Expense {
+namespace RetireSimple.Engine.Data.Base {
 
 	/// <summary>
 	/// The base class 
 	/// </summary>
-	public abstract class ExpenseBase {
+	public abstract class Expense {
 		/// <summary>
 		/// Primary Key of the Expense Table
 		/// </summary>
 		public int ExpenseId { get; set; }
 
 		/// <summary>
-		/// Foreign Key of the <see cref="Base.Investment"/> that this expense is associated with.
+		/// Foreign Key of the <see cref="Investment"/> that this expense is associated with.
 		/// </summary>
 		public int SourceInvestmentId { get; set; }
 
 		/// <summary>
-		/// The <see cref="Base.Investment"/> that this expense is associated with.
+		/// The <see cref="Investment"/> that this expense is associated with.
 		/// </summary>
 		[JsonIgnore]
-		public Base.Investment SourceInvestment { get; set; }
+		public Investment SourceInvestment { get; set; }
 
 		/// <summary>
 		/// The amount this expense deducts from the investment.
@@ -39,8 +39,8 @@ namespace RetireSimple.Engine.Data.Expense {
 		public abstract List<DateTime> GetExpenseDates();
 	}
 
-	public class ExpenseBaseConfiguration : IEntityTypeConfiguration<ExpenseBase> {
-		public void Configure(EntityTypeBuilder<ExpenseBase> builder) {
+	public class ExpenseBaseConfiguration : IEntityTypeConfiguration<Expense> {
+		public void Configure(EntityTypeBuilder<Expense> builder) {
 			builder.ToTable("Expenses");
 			builder.HasKey(e => e.ExpenseId);
 			builder.HasDiscriminator()
