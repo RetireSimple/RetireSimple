@@ -550,6 +550,8 @@ namespace RetireSimple.Tests.Api {
 			if (context.Investment.First() is not StockInvestment investment) {
 				throw new ArgumentNullException("Investment Object was unexpectedly null");
 			}
+			investment.AnalysisMethod = null;
+			investment.AnalysisType = null;
 			context.SaveChanges();
 
 			Action act = () => api.GetAnalysis(investment.InvestmentId);

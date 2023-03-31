@@ -98,23 +98,30 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		//TODO TESTING REFLECTION HERE, BE WARY TRAVELLERS
 
-		protected InvestmentBase(string analysisModule) {
-			if (analysisModule == "") {
+		protected InvestmentBase(string analysisType) {
+			this.AnalysisType = analysisType;
+			ResolveAnalysisDelegate();
+		}
+
+		protected InvestmentBase() {
+			ReflectionUtils.SetAnalysisModuleDelegate(this, null);
+		}
+
+		public void ResolveAnalysisDelegate() {
+			if (this.AnalysisType == null || this.AnalysisType == "") {
 				ReflectionUtils.SetAnalysisModuleDelegate(this, null);
 				return;
 			}
 			var type = this.GetType().Name;
 			var moduleList = ReflectionUtils.GetAnalysisModules(type);
-			if (!moduleList.ContainsKey(analysisModule)) {
-				throw new ArgumentException($"Analysis Module {analysisModule} does not exist for {this.GetType().Name}");
+			if (!moduleList.ContainsKey(this.AnalysisType)) {
+				throw new ArgumentException($"Analysis Module {this.AnalysisType} does not exist for {this.GetType().Name}");
 			}
-			this.AnalysisType = analysisModule;
 
-			ReflectionUtils.SetAnalysisModuleDelegate(this, moduleList[analysisModule]);
-		}
-
-		protected InvestmentBase() {
-			ReflectionUtils.SetAnalysisModuleDelegate(this, null);
+			//Ensure we are invoking the correct generic version
+			//TODO This is a bit of a hack, but it works for now. I'm not sure if there is a better way to do this\
+			var setDelegateMethod = typeof(ReflectionUtils).GetMethod("SetAnalysisModuleDelegate")?.MakeGenericMethod(this.GetType());
+			setDelegateMethod?.Invoke(null, new object[] { this, moduleList[this.AnalysisType] });
 		}
 	}
 
@@ -191,7 +198,6 @@ namespace RetireSimple.Engine.Data.Investment {
 					.HasColumnType("datetime2(7)");
 
 			builder.Navigation(i => i.InvestmentModel).AutoInclude();
-
 
 		}
 	}
