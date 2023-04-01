@@ -1,10 +1,12 @@
 using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
-	public class PensionInvestment : InvestmentBase {
+	public class PensionInvestment : Base.Investment {
 
 		[JsonIgnore, NotMapped]
 		public DateOnly PensionStartDate {
@@ -28,22 +30,11 @@ namespace RetireSimple.Engine.Data.Investment {
 		public AnalysisModule<PensionInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
-		public PensionInvestment(string analysisType) : base() {
-			InvestmentType = "PensionInvestment";
-			ResolveAnalysisDelegate(analysisType);
-		}
-		public override void ResolveAnalysisDelegate(string analysisType) {
-			AnalysisMethod = analysisType switch {
-				"DefaultCashAnalysis" => PensionAS.DefaultPensionAnalysis,
-				_ => null,
-			};
-			//Overwrite The current Analysis Delegate Type
-			AnalysisType = analysisType;
-		}
+		public PensionInvestment(string analysisType) : base(analysisType) {}
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
-			AnalysisMethod is not null
-			? AnalysisMethod(this, options)
-			: throw new InvalidOperationException("The specified investment has no specified analysis");
+		AnalysisMethod is not null
+		? AnalysisMethod(this, options)
+		: throw new InvalidOperationException("The specified investment has no specified analysis");
 	}
 }

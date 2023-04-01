@@ -10,14 +10,14 @@ namespace RetireSimple.Tests.DomainModel {
 			Context.Database.Migrate();
 			Context.Database.EnsureCreated();
 
-			var investment = new StockInvestment("test") {
+			var investment = new StockInvestment("") {
 				StockPrice = 100,
 				StockQuantity = 10,
 				StockTicker = "TST"
 			};
 			Context.Portfolio.First(p => p.PortfolioId == 1).Investments.Add(investment);
 			Context.SaveChanges();
-			var investment2 = new StockInvestment("test2") {
+			var investment2 = new StockInvestment("") {
 				StockPrice = 100,
 				StockQuantity = 10,
 				StockTicker = "TST"

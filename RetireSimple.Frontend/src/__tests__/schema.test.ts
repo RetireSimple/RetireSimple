@@ -143,7 +143,7 @@ describe('schema validation', () => {
 					bondCurrentPrice: '123.45',
 					bondCouponRate: '0.05',
 					bondMaturityDate: '2023-01-30',
-					analysisType: 'bondValuationAnalysis',
+					analysisType: 'StdBondValuation',
 					analysis_analysisLength: '60',
 					analysis_isAnnual: 'true',
 				};

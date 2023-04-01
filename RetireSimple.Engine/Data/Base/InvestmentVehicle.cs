@@ -2,14 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using RetireSimple.Engine.Data.Investment;
+using RetireSimple.Engine.Data.Analysis;
+using RetireSimple.Engine.Data.InvestmentVehicle;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace RetireSimple.Engine.Data.InvestmentVehicle {
-	public abstract class InvestmentVehicleBase {
+namespace RetireSimple.Engine.Data.Base {
+	public abstract class InvestmentVehicle {
 		public int PortfolioId { get; set; }
 
 		public int InvestmentVehicleId { get; set; }
@@ -17,18 +18,18 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 
 		public string InvestmentVehicleType { get; set; }
 
-		public List<InvestmentBase> Investments { get; set; } = new List<InvestmentBase>();
+		public List<Investment> Investments { get; set; } = new List<Investment>();
 
 		public int? InvestmentVehicleModelId { get; set; }
-		[JsonIgnore] public InvestmentVehicleModel? InvestmentVehicleModel { get; set; }
+		[JsonIgnore] public VehicleModel? InvestmentVehicleModel { get; set; }
 
 		public OptionsDict InvestmentVehicleData { get; set; } = new OptionsDict();
 
 		// A specialized field to hold cash that is not allocated to a specific investment in the vehicle.
 		[NotMapped, JsonIgnore]
 		public decimal CashHoldings {
-			get => decimal.Parse(this.InvestmentVehicleData["cashHoldings"]);
-			set => this.InvestmentVehicleData["cashHoldings"] = value.ToString();
+			get => decimal.Parse(InvestmentVehicleData["cashHoldings"]);
+			set => InvestmentVehicleData["cashHoldings"] = value.ToString();
 		}
 
 		public DateTime LastUpdated { get; set; }
@@ -51,7 +52,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 		/// </summary>
 		/// <param name="options"></param>
 		/// <returns></returns>
-		public InvestmentVehicleModel GenerateAnalysis(OptionsDict options) {
+		public VehicleModel GenerateAnalysis(OptionsDict options) {
 			var combinedOptions = MergeOverrideOptions(options);
 			var containedModels = GetContainedInvestmentModels(combinedOptions);
 
@@ -65,7 +66,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 			var postTaxModel = GeneratePostTaxModels(combinedOptions, containedModels, cashSim);
 
 			var newModel =
-				new InvestmentVehicleModel(InvestmentVehicleId, preTaxModel, postTaxModel);
+				new VehicleModel(InvestmentVehicleId, preTaxModel, postTaxModel);
 
 			//NOTE don't add to EF in this method, that should be an API level responsibility
 			return newModel;
@@ -105,14 +106,14 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 
 	}
 
-	public class InvestmentVehicleBaseConfiguration : IEntityTypeConfiguration<InvestmentVehicleBase> {
+	public class InvestmentVehicleBaseConfiguration : IEntityTypeConfiguration<InvestmentVehicle> {
 		static readonly JsonSerializerOptions options = new() {
 			AllowTrailingCommas = true,
 			DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
 			IncludeFields = true
 		};
 
-		public void Configure(EntityTypeBuilder<InvestmentVehicleBase> builder) {
+		public void Configure(EntityTypeBuilder<InvestmentVehicle> builder) {
 			builder.HasKey(i => i.InvestmentVehicleId);
 
 			builder.HasDiscriminator(i => i.InvestmentVehicleType)
@@ -129,7 +130,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 
 			builder.HasOne(i => i.InvestmentVehicleModel)
 				.WithOne()
-				.HasForeignKey<InvestmentVehicleModel>(m => m.InvestmentVehicleId)
+				.HasForeignKey<VehicleModel>(m => m.InvestmentVehicleId)
 				.IsRequired(false)
 				.OnDelete(DeleteBehavior.Cascade);
 

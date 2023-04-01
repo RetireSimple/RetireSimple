@@ -1,10 +1,12 @@
 using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
-	public class SocialSecurityInvestment : InvestmentBase {
+	public class SocialSecurityInvestment : Base.Investment {
 
 		[JsonIgnore, NotMapped]
 		public DateOnly SocialSecurityStartDate {
@@ -34,19 +36,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		public AnalysisModule<SocialSecurityInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
-		public SocialSecurityInvestment(string analysisType) : base() {
-			InvestmentType = "SocialSecurityInvestment";
-			ResolveAnalysisDelegate(analysisType);
-		}
-
-		public override void ResolveAnalysisDelegate(string analysisType) {
-			AnalysisMethod = analysisType switch {
-				"testAnalysis" => SocialSecurityAS.DefaultSocialSecurityAnalysis,
-				_ => null,
-			};
-			//Overwrite The current Analysis Delegate Type
-			AnalysisType = analysisType;
-		}
+		public SocialSecurityInvestment(string analysisType) : base(analysisType) { }
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null

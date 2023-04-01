@@ -57,7 +57,8 @@ namespace RetireSimple.Engine.Migrations
                     InvestmentVehicleName = table.Column<string>(type: "TEXT", nullable: true),
                     InvestmentVehicleType = table.Column<string>(type: "TEXT", nullable: false),
                     InvestmentVehicleModelId = table.Column<int>(type: "INTEGER", nullable: true),
-                    CashHoldings = table.Column<decimal>(type: "TEXT", nullable: false, defaultValue: 0.0m),
+                    InvestmentVehicleData = table.Column<string>(type: "TEXT", nullable: false),
+                    LastUpdated = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
                     AnalysisOptionsOverrides = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -107,14 +108,14 @@ namespace RetireSimple.Engine.Migrations
                     AnalysisType = table.Column<string>(type: "TEXT", nullable: true),
                     LastUpdated = table.Column<DateTime>(type: "datetime2(7)", nullable: true),
                     PortfolioId = table.Column<int>(type: "INTEGER", nullable: false),
-                    InvestmentVehicleBaseInvestmentVehicleId = table.Column<int>(type: "INTEGER", nullable: true)
+                    InvestmentVehicleId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Investments", x => x.InvestmentId);
                     table.ForeignKey(
-                        name: "FK_Investments_InvestmentVehicle_InvestmentVehicleBaseInvestmentVehicleId",
-                        column: x => x.InvestmentVehicleBaseInvestmentVehicleId,
+                        name: "FK_Investments_InvestmentVehicle_InvestmentVehicleId",
+                        column: x => x.InvestmentVehicleId,
                         principalTable: "InvestmentVehicle",
                         principalColumn: "InvestmentVehicleId",
                         onDelete: ReferentialAction.Cascade);
@@ -250,9 +251,9 @@ namespace RetireSimple.Engine.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Investments_InvestmentVehicleBaseInvestmentVehicleId",
+                name: "IX_Investments_InvestmentVehicleId",
                 table: "Investments",
-                column: "InvestmentVehicleBaseInvestmentVehicleId");
+                column: "InvestmentVehicleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Investments_PortfolioId",

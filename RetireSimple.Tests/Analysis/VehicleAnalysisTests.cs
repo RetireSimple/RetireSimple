@@ -1,3 +1,5 @@
+using RetireSimple.Engine.Data.Analysis;
+
 namespace RetireSimple.Tests.Analysis {
 
 	public class VehicleAnalysisTests {

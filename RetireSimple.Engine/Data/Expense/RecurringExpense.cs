@@ -1,8 +1,10 @@
-﻿namespace RetireSimple.Engine.Data.Expense {
+﻿using RetireSimple.Engine.Data.Base;
+
+namespace RetireSimple.Engine.Data.Expense {
 	/// <summary>
 	/// Represent a recurring expense on an investment
 	/// </summary>
-	public class RecurringExpense : ExpenseBase {
+	public class RecurringExpense : Base.Expense {
 		/// <summary>
 		/// How many months between each expense
 		/// (e.g. 1 = monthly, 3 = quarterly, 12 = yearly)

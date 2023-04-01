@@ -2,12 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using RetireSimple.Engine.Data.Investment;
+using RetireSimple.Engine.Data.Base;
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace RetireSimple.Engine.Data {
+namespace RetireSimple.Engine.Data.Analysis {
 	public class InvestmentModel {
 		/// <summary>
 		/// Primary Key ID of the object.
@@ -20,7 +20,7 @@ namespace RetireSimple.Engine.Data {
 		public int InvestmentId { get; set; }
 
 		[JsonIgnore]
-		public InvestmentBase Investment { get; set; }
+		public Base.Investment Investment { get; set; }
 
 
 		//Index defaults to the number of months since model start point

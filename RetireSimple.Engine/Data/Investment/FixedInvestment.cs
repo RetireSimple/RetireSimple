@@ -1,12 +1,13 @@
 using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
 
-	public class FixedInvestment : InvestmentBase {
-
+	public class FixedInvestment : Base.Investment {
 		[JsonIgnore, NotMapped]
 		public double FixedValue {
 			get => double.Parse(InvestmentData["FixedValue"]);
@@ -22,14 +23,8 @@ namespace RetireSimple.Engine.Data.Investment {
 		[JsonIgnore, NotMapped]
 		public AnalysisModule<FixedInvestment>? AnalysisMethod { get; private set; }
 
-		public override void ResolveAnalysisDelegate(string analysisType) {
-			AnalysisMethod = analysisType switch {
-				"DefaultCashAnalysis" => FixedAS.DefaultFixedAnalyis,
-				_ => null,
-			};
-			//Overwrite The current Analysis Delegate Type
-			AnalysisType = analysisType;
-		}
+		public FixedInvestment(string analysisType) : base(analysisType) {}
+
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null
 			? AnalysisMethod(this, options)

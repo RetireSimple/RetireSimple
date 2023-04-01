@@ -1,3 +1,5 @@
+using RetireSimple.Engine.Data.Analysis;
+
 namespace RetireSimple.Tests.DomainModel {
 	public class InvestmentModelTests : IDisposable {
 		EngineDbContext Context { get; set; }
@@ -10,7 +12,7 @@ namespace RetireSimple.Tests.DomainModel {
 			Context.Database.Migrate();
 			Context.Database.EnsureCreated();
 
-			var investment = new StockInvestment("test") {
+			var investment = new StockInvestment("") {
 				StockPrice = 100,
 				StockQuantity = 10,
 				StockTicker = "TST"

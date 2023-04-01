@@ -1,8 +1,10 @@
+using RetireSimple.Engine.Data.Analysis;
+
 namespace RetireSimple.Tests.DomainModel {
-	public class InvestmentVehicleModelTests : IDisposable {
+	public class VehicleModelTests : IDisposable {
 		EngineDbContext Context { get; set; }
 
-		public InvestmentVehicleModelTests() {
+		public VehicleModelTests() {
 			Context = new EngineDbContext(
 				new DbContextOptionsBuilder()
 					.UseSqlite("Data Source=testing_vmodel.db")
@@ -22,7 +24,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentVehicleModelAdd() {
-			InvestmentVehicleModel model = new();
+			VehicleModel model = new();
 			Context.Portfolio.First(p => p.PortfolioId == 1)
 				.InvestmentVehicles.First(i => i.InvestmentVehicleId == 1)
 				.InvestmentVehicleModel = model;
@@ -34,7 +36,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentModelRemove() {
-			InvestmentVehicleModel model = new();
+			VehicleModel model = new();
 			Context.Portfolio.First(p => p.PortfolioId == 1)
 				.InvestmentVehicles.First(i => i.InvestmentVehicleId == 1)
 				.InvestmentVehicleModel = model;
@@ -49,7 +51,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestInvestmentModelFKConstraint() {
-			InvestmentVehicleModel model = new();
+			VehicleModel model = new();
 
 			Action act = () => {
 				Context.InvestmentVehicleModel.Add(model);

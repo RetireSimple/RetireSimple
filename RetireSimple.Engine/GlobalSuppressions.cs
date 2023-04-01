@@ -7,3 +7,4 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>", Scope = "module")]
 [assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "This has many public API facets", Scope = "module")]
+[assembly: SuppressMessage("Naming", "CA1707: Identifiers should not contain underscores", Scope = "module")]

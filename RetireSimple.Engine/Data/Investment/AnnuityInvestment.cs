@@ -1,10 +1,12 @@
 using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
-	public class AnnuityInvestment : InvestmentBase {
+	public class AnnuityInvestment : Base.Investment {
 
 		[JsonIgnore, NotMapped]
 		public string AnnuityName {
@@ -39,19 +41,8 @@ namespace RetireSimple.Engine.Data.Investment {
 		[JsonIgnore, NotMapped]
 		public AnalysisModule<AnnuityInvestment>? AnalysisMethod { get; private set; }
 
-		public AnnuityInvestment(string analysisType) : base() {
-			InvestmentType = "AnnuityInvestment";
-			ResolveAnalysisDelegate(analysisType);
-		}
+		public AnnuityInvestment(string analysisType) : base(analysisType) { }
 
-		public override void ResolveAnalysisDelegate(string analysisType) {
-			AnalysisMethod = analysisType switch {
-				"DefaultCashAnalysis" => AnnuityAS.DefaultAnnuityAnalyis,
-				_ => null,
-			};
-			//Overwrite The current Analysis Delegate Type
-			AnalysisType = analysisType;
-		}
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null
 			? AnalysisMethod(this, options)

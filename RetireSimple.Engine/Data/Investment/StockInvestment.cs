@@ -1,11 +1,14 @@
 using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
 
-	public class StockInvestment : InvestmentBase {
+	[InvestmentModule(nameof(AnalysisMethod))]
+	public class StockInvestment : Base.Investment {
 
 		/// <summary>
 		/// The price of the Stock
@@ -82,26 +85,10 @@ namespace RetireSimple.Engine.Data.Investment {
 		}
 
 		[JsonIgnore, NotMapped]
-		public AnalysisModule<StockInvestment>? AnalysisMethod { get; private set; }
+		public AnalysisModule<StockInvestment>? AnalysisMethod { get; set; }
 
 		//Constructor used by EF
-		public StockInvestment(string analysisType) : base() {
-			InvestmentType = "StockInvestment";
-			ResolveAnalysisDelegate(analysisType);
-
-		}
-
-		public override void ResolveAnalysisDelegate(string analysisType) {
-			AnalysisMethod = analysisType switch {
-				"testAnalysis" => StockAS.TestAnalysis,
-				"MonteCarlo_NormalDist" => StockAS.MonteCarloNormalDist,
-				"MonteCarlo_LogNormalDist" => StockAS.MonteCarloLogNormalDist,
-				_ => null,
-			};
-
-			//Overwrite The current Analysis Delegate Type
-			AnalysisType = analysisType;
-		}
+		public StockInvestment(string analysisType) : base(analysisType) { }
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null

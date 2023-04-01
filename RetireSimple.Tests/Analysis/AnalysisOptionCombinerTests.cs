@@ -4,7 +4,7 @@ namespace RetireSimple.Tests {
 
 		[Fact]
 		public void TestStockASOptionsMerge() {
-			var investment = new StockInvestment("test");
+			var investment = new StockInvestment("");
 			var investmentDict = new OptionsDict {
 				{ "investment", "result" },
 				{"test", "result2" }
@@ -17,7 +17,6 @@ namespace RetireSimple.Tests {
 				["investment"] = "result",
 				["test"] = "result",
 				["AnalysisLength"] = "60",
-				["StockAnalysisExpectedGrowth"] = "0.1",
 				["RandomVariableMu"] = "0",
 				["RandomVariableSigma"] = "1",
 				["RandomVariableScaleFactor"] = "1",

@@ -1,11 +1,13 @@
 using RetireSimple.Engine.Analysis;
+using RetireSimple.Engine.Data.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 
 namespace RetireSimple.Engine.Data.Investment {
-	public class CashInvestment : InvestmentBase {
+	public class CashInvestment : Base.Investment {
 
 		[JsonIgnore, NotMapped]
 		public string CashCurrency {
@@ -28,19 +30,8 @@ namespace RetireSimple.Engine.Data.Investment {
 		[JsonIgnore, NotMapped]
 		public AnalysisModule<CashInvestment>? AnalysisMethod { get; private set; }
 
-		public CashInvestment(string analysisType) : base() {
-			InvestmentType = "CashInvestment";
-			ResolveAnalysisDelegate(analysisType);
-		}
+		public CashInvestment(string analysisType) : base(analysisType) { }
 
-		public override void ResolveAnalysisDelegate(string analysisType) {
-			AnalysisMethod = analysisType switch {
-				"DefaultCashAnalysis" => CashAS.DefaultCashAnalysis,
-				_ => null,
-			};
-			//Overwrite The current Analysis Delegate Type
-			AnalysisType = analysisType;
-		}
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null
 			? AnalysisMethod(this, options)

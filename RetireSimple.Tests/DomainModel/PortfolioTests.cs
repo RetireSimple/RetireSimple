@@ -23,7 +23,7 @@ namespace RetireSimple.Tests.DomainModel {
 			};
 			Context.Profile.First(p => p.ProfileId == 1).Portfolios.Add(portfolio);
 
-			var investment = new StockInvestment("testAnalysis") {
+			var investment = new StockInvestment("") {
 				StockPrice = 100,
 				StockQuantity = 10,
 				StockTicker = "TST"
