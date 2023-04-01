@@ -45,6 +45,12 @@ namespace RetireSimple.Engine.Data {
 			typeof(T).GetProperty(moduleAttribute.AnalysisModuleField)?.SetValue(investment, del);
 		}
 
+		public static List<Type> GetInvestmentModules() {
+			var types = typeof(Base.Investment).Assembly.GetTypes();
+			var investmentModules = types.Where(t => t.GetCustomAttributes(typeof(InvestmentModuleAttribute), false).Length > 0);
+			return investmentModules.ToList();
+		}
+
 	}
 
 	/**************************************

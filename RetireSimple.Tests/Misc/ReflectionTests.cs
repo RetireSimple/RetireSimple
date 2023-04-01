@@ -86,15 +86,16 @@ namespace RetireSimple.Tests.Misc {
 			}
 		}
 
-		public static readonly IEnumerable<object[]> ResolveAnalysisDelegateConstructionTestData = new List<object[]> {
-			new object[] { "StockInvestment"},
-			new object[] { "BondInvestment" },
-			new object[] { "CashInvestment" },
-			new object[] { "FixedInvestment" },
-			new object[] { "AnnuityInvestment" },
-			new object[] { "PensionInvestment" },
-			new object[] { "SocialSecurityInvestment" }
-		};
+		[Fact]
+		public void GetInvestmentModules_ReturnsKnownCorrectModules(){
+			var moduleList = ReflectionUtils.GetInvestmentModules();
 
+			moduleList.Should().NotBeNull();
+			moduleList.Should().HaveCountGreaterThanOrEqualTo(2);
+			moduleList.Should().Contain(typeof(StockInvestment));
+			moduleList.Should().Contain(typeof(BondInvestment));
+		}
 	}
+
+
 }

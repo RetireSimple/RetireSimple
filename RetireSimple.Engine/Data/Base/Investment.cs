@@ -155,14 +155,12 @@ namespace RetireSimple.Engine.Data.Base {
 				.HasForeignKey(t => t.DestinationInvestmentId)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			builder.HasDiscriminator(i => i.InvestmentType)
-					.HasValue<StockInvestment>("StockInvestment")
-					.HasValue<BondInvestment>("BondInvestment")
-					.HasValue<FixedInvestment>("FixedInvestment")
-					.HasValue<CashInvestment>("CashInvestment")
-					.HasValue<SocialSecurityInvestment>("SocialSecurityInvestment")
-					.HasValue<AnnuityInvestment>("AnnuityInvestment")
-					.HasValue<PensionInvestment>("PensionInvestment");
+			//Discriminator Configuration via Reflection
+			var investmentModules = ReflectionUtils.GetInvestmentModules();
+			var discriminatorBuilder = builder.HasDiscriminator(i => i.InvestmentType);
+			foreach (var module in investmentModules) {
+				discriminatorBuilder.HasValue(module, module.Name);
+			}
 
 #pragma warning disable CS8604 // Possible null reference argument.
 			builder.Property(i => i.InvestmentData)
