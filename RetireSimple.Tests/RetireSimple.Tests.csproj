@@ -12,6 +12,7 @@
 		<CollectCoverage>true</CollectCoverage>
 		<CoverletOutputFormat>opencover</CoverletOutputFormat>
 		<ExcludeByFile>**/Migrations/EngineDbContextModelSnapshot.cs, **/*.Designer.cs</ExcludeByFile>
+		<SkipAutoProps>true</SkipAutoProps>
 	</PropertyGroup>
 
 	<ItemGroup>
