@@ -120,7 +120,7 @@ namespace RetireSimple.Engine.Data.Base {
 			var vehicleModules = ReflectionUtils.GetInvestmentVehicleModules();
 			var discriminatorBuilder = builder.HasDiscriminator(i => i.InvestmentVehicleType);
 			foreach (var module in vehicleModules) {
-				discriminatorBuilder.HasValue(module.Item1, module.Item2);
+				discriminatorBuilder.HasValue(module, module.Name);
 			}
 
 			builder.HasMany(i => i.Investments)

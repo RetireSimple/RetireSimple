@@ -102,11 +102,11 @@ namespace RetireSimple.Tests.Misc {
 
 			moduleList.Should().NotBeNull();
 			moduleList.Should().HaveCountGreaterThanOrEqualTo(5);
-			moduleList.Should().Contain((typeof(Vehicle401k), "401k"));
-			moduleList.Should().Contain((typeof(Vehicle403b), "403b"));
-			moduleList.Should().Contain((typeof(Vehicle457), "457"));
-			moduleList.Should().Contain((typeof(VehicleIRA), "IRA"));
-			moduleList.Should().Contain((typeof(VehicleRothIRA), "RothIRA"));
+			moduleList.Should().Contain(typeof(Vehicle401k));
+			moduleList.Should().Contain(typeof(Vehicle403b));
+			moduleList.Should().Contain(typeof(Vehicle457));
+			moduleList.Should().Contain(typeof(VehicleIRA));
+			moduleList.Should().Contain(typeof(VehicleRothIRA));
 		}
 	}
 

@@ -52,13 +52,11 @@ namespace RetireSimple.Engine.Data {
 		}
 
 
-		public static List<(Type, string)> GetInvestmentVehicleModules() {
+		public static List<Type> GetInvestmentVehicleModules() {
 			var types = typeof(Base.Investment).Assembly.GetTypes();
-			var investmentModules = types.Where(t => t.GetCustomAttributes(typeof(InvestmentVehicleModuleAttribute), false).Length > 0);
-			var moduleList = investmentModules.Select(t => (t,
-				(t.GetCustomAttributes(typeof(InvestmentVehicleModuleAttribute), false)[0] as InvestmentVehicleModuleAttribute)?.VehicleTypeName ?? "Unknown"));
+			var vehicleModules = types.Where(t => t.GetCustomAttributes(typeof(InvestmentVehicleModuleAttribute), false).Length > 0);
 
-			return moduleList.ToList();
+			return vehicleModules.ToList();
 		}
 	}
 
@@ -87,11 +85,5 @@ namespace RetireSimple.Engine.Data {
 	}
 
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-	public sealed class InvestmentVehicleModuleAttribute : Attribute {
-		public string VehicleTypeName { get; }
-		public InvestmentVehicleModuleAttribute(string vehicleTypeName) {
-			VehicleTypeName = vehicleTypeName;
-		}
-	}
-
+	public sealed class InvestmentVehicleModuleAttribute : Attribute { }
 }

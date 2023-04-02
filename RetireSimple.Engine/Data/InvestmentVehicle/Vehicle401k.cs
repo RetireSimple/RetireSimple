@@ -7,7 +7,7 @@ using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 
 namespace RetireSimple.Engine.Data.InvestmentVehicle {
-	[InvestmentVehicleModule("401k")]
+	[InvestmentVehicleModule]
 	public class Vehicle401k : Base.InvestmentVehicle {
 		public override InvestmentModel GeneratePostTaxModels(OptionsDict options, List<InvestmentModel> models, List<decimal>? cashContribution = null) {
 			var preTaxModel = GeneratePreTaxModels(options, models, cashContribution);
