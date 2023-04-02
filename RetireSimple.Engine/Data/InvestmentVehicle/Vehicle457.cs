@@ -3,6 +3,7 @@ using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 
 namespace RetireSimple.Engine.Data.InvestmentVehicle {
+	[InvestmentVehicleModule("457")]
 	public class Vehicle457 : Base.InvestmentVehicle {
 		public override InvestmentModel GeneratePostTaxModels(OptionsDict options,
 													List<InvestmentModel> models,

@@ -87,13 +87,26 @@ namespace RetireSimple.Tests.Misc {
 		}
 
 		[Fact]
-		public void GetInvestmentModules_ReturnsKnownCorrectModules(){
+		public void GetInvestmentModules_ReturnsKnownCorrectModules() {
 			var moduleList = ReflectionUtils.GetInvestmentModules();
 
 			moduleList.Should().NotBeNull();
 			moduleList.Should().HaveCountGreaterThanOrEqualTo(2);
 			moduleList.Should().Contain(typeof(StockInvestment));
 			moduleList.Should().Contain(typeof(BondInvestment));
+		}
+
+		[Fact]
+		public void GetInvestmentVehicleModules_ReturnsKnownCorrectModules() {
+			var moduleList = ReflectionUtils.GetInvestmentVehicleModules();
+
+			moduleList.Should().NotBeNull();
+			moduleList.Should().HaveCountGreaterThanOrEqualTo(5);
+			moduleList.Should().Contain((typeof(Vehicle401k), "401k"));
+			moduleList.Should().Contain((typeof(Vehicle403b), "403b"));
+			moduleList.Should().Contain((typeof(Vehicle457), "457"));
+			moduleList.Should().Contain((typeof(VehicleIRA), "IRA"));
+			moduleList.Should().Contain((typeof(VehicleRothIRA), "RothIRA"));
 		}
 	}
 
