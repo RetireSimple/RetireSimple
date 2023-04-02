@@ -119,7 +119,6 @@ namespace RetireSimple.Engine.Data.Base {
 			}
 
 			//Ensure we are invoking the correct generic version
-			//TODO This is a bit of a hack, but it works for now. I'm not sure if there is a better way to do this\
 			var setDelegateMethod = typeof(ReflectionUtils).GetMethod("SetAnalysisModuleDelegate")?.MakeGenericMethod(GetType());
 			setDelegateMethod?.Invoke(null, new object[] { this, moduleList[AnalysisType] });
 		}

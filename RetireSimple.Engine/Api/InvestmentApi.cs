@@ -7,7 +7,7 @@ namespace RetireSimple.Engine.Api {
 	internal interface IInvestmentApi {
 		List<Investment> GetAllInvestments();
 		List<Investment> GetSingluarInvestments();
-		Investment GetInvestment(int id);
+		Investment? GetInvestment(int id);
 		int Add(string type, OptionsDict? parameters = null);
 		void Remove(int id);
 		void Update(int id, OptionsDict parameters);
@@ -44,11 +44,11 @@ namespace RetireSimple.Engine.Api {
 		}
 
 		/// <summary>
-		/// Gets a single investment by its id
+		/// Gets a single investment by its id. Returns null if no investment with the specified id exists.
 		/// </summary>
 		/// <param name="id"></param>
-		/// <returns></returns>
-		public Investment GetInvestment(int id) => _context.Investment.First(i => i.InvestmentId == id);
+		/// <returns>The investment </returns>
+		public Investment? GetInvestment(int id) => _context.Investment.Find(id);
 
 		/// <summary>
 		/// Adds a new investment of the specified type, with investment-specific parameters set

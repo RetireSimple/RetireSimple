@@ -52,7 +52,7 @@ namespace RetireSimple.Engine.Data.Base {
 		/// </summary>
 		/// <param name="options"></param>
 		/// <returns></returns>
-		public VehicleModel GenerateAnalysis(OptionsDict options) {
+		internal virtual VehicleModel GenerateAnalysis(OptionsDict options) {
 			var combinedOptions = MergeOverrideOptions(options);
 			var containedModels = GetContainedInvestmentModels(combinedOptions);
 
@@ -84,7 +84,7 @@ namespace RetireSimple.Engine.Data.Base {
 
 
 		//Internal Methods for use in the template method
-		private List<InvestmentModel> GetContainedInvestmentModels(OptionsDict options) {
+		internal virtual List<InvestmentModel> GetContainedInvestmentModels(OptionsDict options) {
 			var models = new List<InvestmentModel>();
 			foreach (var investment in Investments) {
 				models.Add(investment.InvokeAnalysis(options));
