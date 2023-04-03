@@ -41,7 +41,7 @@ namespace RetireSimple.Engine.Data.Base {
 				["analysisLength"] = "60",
 				["vehicleTaxPercentage"] = "0.29", //Tax to apply on contribution/withdrawal/valuation
 				["userContributionAmount"] = "0.00",
-				["vehicleContributionInvestmentTarget"] = "-1" ///Default, simulates the <see cref="CashHoldings"/> contributions
+				["vehicleContributionInvestmentTarget"] = "-1"  //Default, simulates the <see cref="CashHoldings"/> contributions
 			};
 
 		/// <summary>

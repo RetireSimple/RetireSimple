@@ -154,7 +154,7 @@ namespace RetireSimple.Engine.Api {
 		/// if the vehicle does not exist. Ignores unkonwn fields present in <paramref name="options"/>.
 		/// </summary>
 		/// <param name="vehicleId"></param>
-		/// <param name="name">The new name of the Vehicle </param>
+		/// <param name="options">A dictionary of options to update. Currently only "investmentVehicleName" and "cashHoldings" are supported.</param>
 		public void Update(int vehicleId, OptionsDict options) {
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
 				throw new ArgumentException($"Investment Vehicle with ID {vehicleId} does not exist");
@@ -168,8 +168,7 @@ namespace RetireSimple.Engine.Api {
 			if (options.ContainsKey("investmentVehicleName")) {
 				if (!string.IsNullOrWhiteSpace(options["investmentVehicleName"])) {
 					vehicle.InvestmentVehicleName = options["investmentVehicleName"];
-				}
-				else {
+				} else {
 					throw new ArgumentException("Name cannot be empty");
 				}
 			}
@@ -177,8 +176,7 @@ namespace RetireSimple.Engine.Api {
 			if (options.ContainsKey("cashHoldings")) {
 				if (!string.IsNullOrWhiteSpace(options["cashHoldings"])) {
 					vehicle.CashHoldings = decimal.Parse(options["cashHoldings"]);
-				}
-				else {
+				} else {
 					throw new ArgumentException("Cash Holdings cannot be empty");
 				}
 			}
@@ -189,15 +187,12 @@ namespace RetireSimple.Engine.Api {
 		/// <summary>
 		/// Updates the <see cref="InvestmentVehicle.AnalysisOptionsOverrides"/> with the
 		/// specified analysis option and option value. No actual validation of the value with
-		/// respect to the analysis option is performed in this method. If <paramref name="value"/>
-		/// is null and the option exists, it gets removed from the analysis overrides for the
-		/// vehicle.
+		/// respect to the analysis option is performed in this method. If the value for a key
+		/// is empty, it is removed from the dictionary if it exists.
 		/// </summary>
 		/// <param name="vehicleId"></param>
-		/// <param name="option"></param>
-		/// <param name="value"></param>
-		/// <exception cref="ArgumentException">If the specified option does not exist yet in
-		/// the overrides and <paramref name="value"/> is null</exception>
+		/// <param name="options">A dictionary of options to update. </param>
+		/// <exception cref="ArgumentException">If the vehicle could not be found</exception>
 		public void UpdateAnalysisOverrides(int vehicleId, OptionsDict options) {
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
 				throw new ArgumentException("Investment Vehicle not found");
@@ -207,8 +202,7 @@ namespace RetireSimple.Engine.Api {
 			foreach (var (key, value) in options) {
 				if (value == "") {
 					investmentVehicle.AnalysisOptionsOverrides.Remove(key);
-				}
-				else {
+				} else {
 					investmentVehicle.AnalysisOptionsOverrides[key] = value;
 				}
 			}
@@ -251,8 +245,7 @@ namespace RetireSimple.Engine.Api {
 					vehicle.InvestmentVehicleModel.TaxDeductedMinModelData = vehicleModel.TaxDeductedMinModelData;
 					vehicle.InvestmentVehicleModel.TaxDeductedAvgModelData = vehicleModel.TaxDeductedAvgModelData;
 					vehicle.InvestmentVehicleModel.TaxDeductedMaxModelData = vehicleModel.TaxDeductedMaxModelData;
-				}
-				else {
+				} else {
 					vehicleModel.InvestmentVehicleId = vehicle.InvestmentVehicleId;
 					vehicleModel.LastUpdated = updateTime;
 					vehicle.InvestmentVehicleModel = vehicleModel;

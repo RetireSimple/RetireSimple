@@ -53,21 +53,15 @@ namespace RetireSimple.Engine.Api {
 		/// <summary>
 		/// Adds a new investment of the specified type, with investment-specific parameters set
 		/// to the respective keys in <paramref name="parameters"/>. The analysis used can also be
-		/// set by adding the key-value pair <code>{["AnalysisType"] = //<<analysisNameString>></some></code>
-		/// in <paramref name="parameters"/>.<br/>
-		/// If <paramref name="parameters"/> does not contain a key for an investment-specifc parameter
-		/// or for the type of analysis to use, the default value defined by the investment for that
-		/// parameter is used. <br/>
-		/// If <paramref name="parameters"/> is empty or null, the analysis used and other
-		/// investment-specific parameters will be set to their default values.
-		/// Throws an <see cref="ArgumentException"/> if <paramref name="type"/> does not match a
-		/// known investment type.<br/>
-		/// Do not use this method to set Analysis Parameters, use <see cref="UpdateAnalysisOption(int, string, string?)"/>
-		/// for that functionality.
+		/// set by adding the key-value pair <code>["AnalysisType"] = [analysisNameString]</code>
+		/// in <paramref name="parameters"/>.<br/> If <paramref name="parameters"/> does not contain
+		/// a key for an investment-specifc parameter or for the type of analysis to use, the default
+		/// value defined by the investment for that parameter is used. <br/> If <paramref name="parameters"/>
+		/// is empty or null, the analysis used and other investment-specific parameters will be
+		/// set to their default values.
 		/// </summary>
 		/// <param name="type"></param>
-		/// <param name="name"></param>
-		/// <param name="parameters"></param>
+		/// <param name="parameters">If unused, automatically uses internal defaults for creating the investment</param>
 		/// <returns>ID of the newly created investment after it is saved in the database</returns>
 		/// <exception cref="ArgumentException">The specified investment type was not found</exception>
 		public int Add(string type, OptionsDict? parameters = null) {
@@ -90,7 +84,7 @@ namespace RetireSimple.Engine.Api {
 
 		/// <summary>
 		/// Removes the investment with the specified ID. If the specified investment has any
-		/// <see cref="InvestmentModel"/> or <see cref="Backend.DomainModel.Data.Expense.ExpeseBase"/>
+		/// <see cref="InvestmentModel"/> or <see cref="Expense"/>
 		/// associated with it, those are deleted as well. <strong>However</strong>, if there are any
 		/// <see cref="InvestmentTransfer"/> objects related to this investment in any form, an
 		/// <see cref="InvalidOperationException"/> is thrown.

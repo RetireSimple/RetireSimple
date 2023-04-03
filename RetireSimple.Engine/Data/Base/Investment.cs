@@ -47,7 +47,6 @@ namespace RetireSimple.Engine.Data.Base {
 
 		/// <summary>
 		/// The type of analysis module to use when invoking analysis. <br/>
-		/// This is set/updated in the <see cref="ResolveAnalysisDelegate(string)"/> method during EF object conversion so that the correct analysis module is used in runtime<br/>
 		/// </summary>
 		public string? AnalysisType { get; set; }
 
