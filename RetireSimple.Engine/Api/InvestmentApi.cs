@@ -6,7 +6,7 @@ using RetireSimple.Engine.Data.Expense;
 namespace RetireSimple.Engine.Api {
 	internal interface IInvestmentApi {
 		List<Investment> GetAllInvestments();
-		List<Investment> GetSingluarInvestments();
+		List<Investment> GetSingularInvestments();
 		Investment? GetInvestment(int id);
 		int Add(string type, OptionsDict? parameters = null);
 		void Remove(int id);
@@ -33,7 +33,7 @@ namespace RetireSimple.Engine.Api {
 		/// associated with an <see cref="Data.Base.InvestmentVehicle"/>.
 		/// </summary>
 		/// <returns></returns>
-		public List<Investment> GetSingluarInvestments() {
+		public List<Investment> GetSingularInvestments() {
 			var vehicleInvestments = _context.Portfolio.First()
 											.InvestmentVehicles
 											.SelectMany(v => v.Investments);

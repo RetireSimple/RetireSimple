@@ -76,7 +76,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void GetSingluarInvestments_EmptyDB_ReturnEmptyList() {
-			var result = api.GetSingluarInvestments();
+			var result = api.GetSingularInvestments();
 
 			result.Should().BeEmpty();
 		}
@@ -128,7 +128,7 @@ namespace RetireSimple.Tests.Api {
 
 			context.InvestmentVehicle.First().Investments.Add(context.Investment.First());
 
-			var result = api.GetSingluarInvestments();
+			var result = api.GetSingularInvestments();
 			result.Should().ContainSingle();
 			result.First().InvestmentId.Should().Be(2);
 		}
@@ -649,13 +649,13 @@ namespace RetireSimple.Tests.Api {
 			api.Add("StockInvestment");
 			api.Add("StockInvestment");
 
-			var investments = api.GetSingluarInvestments();
+			var investments = api.GetSingularInvestments();
 			investments.Should().HaveCount(4);
 		}
 
 		[Fact]
 		public void GetSingularInvestmentsNoInvestments() {
-			var investments = api.GetSingluarInvestments();
+			var investments = api.GetSingularInvestments();
 			investments.Should().BeEmpty();
 		}
 
@@ -671,7 +671,7 @@ namespace RetireSimple.Tests.Api {
 			context.InvestmentVehicle.First().Investments.Add(context.Investment.First());
 			context.SaveChanges();
 
-			var investments = api.GetSingluarInvestments();
+			var investments = api.GetSingularInvestments();
 			investments.Should().HaveCount(3);
 			investments.Should().NotContain(i => i.InvestmentId == 1);
 		}
