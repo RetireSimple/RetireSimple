@@ -23,6 +23,8 @@ const percentageFields = [
 	'bondYieldToMaturity',
 	'analysis_userContributionPercentage',
 	'analysis_employerMatchPercentage',
+	'analysis_shortTermCapitalGainsTax',
+	'analysis_longTermCapitalGainsTax',
 ];
 
 export const convertFromDecimal = (data: {[key: string]: string}) => {

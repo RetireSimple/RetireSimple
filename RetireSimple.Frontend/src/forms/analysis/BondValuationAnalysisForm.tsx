@@ -12,7 +12,7 @@ export const BondValuationAnalysisForm = () => {
 	const analysisLengthField = (
 		<FormTextFieldMonthUnits
 			name='analysis_analysisLength'
-			label='Analysis Length (Months)'
+			label='Analysis Length'
 			control={formContext.control}
 			errorField={errors.analysis_analysisLength}
 			tooltip='The number of months starting from today to run the analysis for.'

@@ -13,7 +13,7 @@ export const MonteCarloAnalysisForm = () => {
 	const analysisLengthField = (
 		<FormTextFieldMonthUnits
 			name='analysis_analysisLength'
-			label='Analysis Length (Months)'
+			label='Analysis Length'
 			control={formContext.control}
 			errorField={errors.analysisLength}
 			tooltip='The number of months from today to run the analysis for.'

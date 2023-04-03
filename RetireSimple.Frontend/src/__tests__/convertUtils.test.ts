@@ -61,6 +61,8 @@ describe('convertFromDecimal', () => {
 			bondYieldToMaturity: '0.3',
 			analysis_userContributionPercentage: '0.4',
 			analysis_employerMatchPercentage: '0.5',
+			analysis_shortTermCapitalGainsTax: '0.6023',
+			analysis_longTermCapitalGainsTax: '0.7034',
 		};
 		convertFromDecimal(data);
 		expect(data.stockDividendPercent).toEqual('10.1');
@@ -68,6 +70,8 @@ describe('convertFromDecimal', () => {
 		expect(data.bondYieldToMaturity).toEqual('30');
 		expect(data.analysis_userContributionPercentage).toEqual('40');
 		expect(data.analysis_employerMatchPercentage).toEqual('50');
+		expect(data.analysis_shortTermCapitalGainsTax).toEqual('60.23');
+		expect(data.analysis_longTermCapitalGainsTax).toEqual('70.34');
 	});
 
 	test('does not touch unknown fields', () => {
@@ -85,6 +89,8 @@ describe('convertToDecimal', () => {
 			bondYieldToMaturity: '30',
 			analysis_userContributionPercentage: '40',
 			analysis_employerMatchPercentage: '50',
+			analysis_shortTermCapitalGainsTax: '60.23',
+			analysis_longTermCapitalGainsTax: '70.34',
 		};
 		convertToDecimal(data);
 		expect(data.stockDividendPercent).toEqual('0.101');
@@ -92,6 +98,8 @@ describe('convertToDecimal', () => {
 		expect(data.bondYieldToMaturity).toEqual('0.3');
 		expect(data.analysis_userContributionPercentage).toEqual('0.4');
 		expect(data.analysis_employerMatchPercentage).toEqual('0.5');
+		expect(data.analysis_shortTermCapitalGainsTax).toEqual('0.6023');
+		expect(data.analysis_longTermCapitalGainsTax).toEqual('0.7034');
 	});
 
 	test('does not touch unknown fields', () => {

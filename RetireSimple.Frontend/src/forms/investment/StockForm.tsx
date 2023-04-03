@@ -110,7 +110,7 @@ export const StockForm = (props: StockFormProps) => {
 	const stockDividendPercentField = (
 		<FormTextFieldPercent
 			name='stockDividendPercent'
-			label='Dividend %'
+			label='Dividend Amount'
 			control={formContext.control}
 			errorField={errors.stockDividendPercent}
 			tooltip={

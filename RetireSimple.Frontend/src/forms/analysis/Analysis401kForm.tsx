@@ -89,7 +89,7 @@ export const Analysis401kForm = () => {
 	);
 
 	const employerMatchField = (
-		<FormTextField
+		<FormTextFieldPercent
 			name='analysis_employerMatchPercentage'
 			label='Employer Match'
 			control={formContext.control}
