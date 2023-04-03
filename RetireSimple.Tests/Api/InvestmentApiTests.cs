@@ -175,8 +175,8 @@ namespace RetireSimple.Tests.Api {
 			});
 			context.SaveChanges();
 			var result = api.GetInvestment(1);
-			result.InvestmentId.Should().Be(1);
-			result.InvestmentName.Should().Be("Test Investment");
+			result?.InvestmentId.Should().Be(1);
+			result?.InvestmentName.Should().Be("Test Investment");
 		}
 
 		[Fact]
