@@ -118,3 +118,4 @@ export const getFlatVehicleData = (vehicle: InvestmentVehicle) => {
 
 	return result;
 };
+

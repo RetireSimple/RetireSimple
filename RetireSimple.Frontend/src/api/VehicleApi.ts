@@ -1,5 +1,6 @@
 import {InvestmentVehicle, InvestmentVehicleModel} from '../Interfaces';
 import {API_BASE_URL} from './ApiCommon';
+import {convertToDecimal} from './ConvertUtils';
 
 export const getVehicles = async (): Promise<InvestmentVehicle[]> => {
 	const response = await fetch(`${API_BASE_URL}/Vehicle`);
@@ -12,6 +13,7 @@ export const getVehicle = async (id: number): Promise<InvestmentVehicle> => {
 };
 
 export const addVehicle = async (data: any) => {
+	convertToDecimal(data);
 	await fetch(`${API_BASE_URL}/Vehicle`, {
 		method: 'POST',
 		body: JSON.stringify(data),
@@ -29,6 +31,7 @@ export const deleteVehicle = async (id: number) => {
 };
 
 export const updateVehicle = async (id: number, data: any) => {
+	convertToDecimal(data);
 	await fetch(`${API_BASE_URL}/Vehicle/${id}`, {
 		method: 'POST',
 		body: JSON.stringify(data),

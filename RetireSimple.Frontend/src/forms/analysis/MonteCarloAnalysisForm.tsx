@@ -1,7 +1,7 @@
 import {Grid, Typography} from '@mui/material';
 import React from 'react';
 import {useFormContext} from 'react-hook-form';
-import {FormTextField} from '../../components/InputComponents';
+import {FormTextField, FormTextFieldMonthUnits} from '../../components/InputComponents';
 
 export const MonteCarloAnalysisForm = () => {
 	const formContext = useFormContext();
@@ -11,7 +11,7 @@ export const MonteCarloAnalysisForm = () => {
 	//Field definitions (To reduce indent depth)
 	//==============================================
 	const analysisLengthField = (
-		<FormTextField
+		<FormTextFieldMonthUnits
 			name='analysis_analysisLength'
 			label='Analysis Length (Months)'
 			control={formContext.control}

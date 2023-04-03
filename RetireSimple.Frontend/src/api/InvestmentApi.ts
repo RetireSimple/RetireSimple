@@ -1,5 +1,6 @@
 import {FullModelData, Investment, InvestmentModel} from '../Interfaces';
 import {API_BASE_URL} from './ApiCommon';
+import {convertToDecimal} from './ConvertUtils';
 
 export const getInvestmentModel = async (id: number): Promise<InvestmentModel> => {
 	const response = await fetch(`${API_BASE_URL}/Analysis/Investment/${id}`, {
@@ -23,6 +24,7 @@ export const getInvestment = async (id: number): Promise<Investment> => {
 };
 
 export const addInvestment = async (data: any): Promise<string> => {
+	convertToDecimal(data);
 	const response = await fetch(`${API_BASE_URL}/Investment`, {
 		method: 'POST',
 		body: JSON.stringify(data),
@@ -42,6 +44,7 @@ export const deleteInvestment = async (id: number) => {
 };
 
 export const updateInvestment = async (id: number, data: any) => {
+	convertToDecimal(data);
 	await fetch(`${API_BASE_URL}/Investment/${id}`, {
 		method: 'POST',
 		body: JSON.stringify(data),

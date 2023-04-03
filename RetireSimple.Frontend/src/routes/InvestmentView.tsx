@@ -10,7 +10,7 @@ import {ConfirmDeleteDialog} from '../components/DialogComponents';
 import {InvestmentModelGraph} from '../components/GraphComponents';
 import {InvestmentFormDefaults, investmentFormSchema} from '../forms/FormSchema';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
-import {convertDates} from '../api/DateUtils';
+import {convertDates} from '../api/ConvertUtils';
 
 export const InvestmentView = () => {
 	const [showDelete, setShowDelete] = React.useState(false);

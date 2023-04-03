@@ -2,7 +2,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
 import {FieldValues, FormProvider, useForm} from 'react-hook-form';
 import {useFormAction, useSubmit} from 'react-router-dom';
-import {convertDates} from '../api/DateUtils';
+import {convertDates} from '../api/ConvertUtils';
 import {addInvestment} from '../api/InvestmentApi';
 import {addInvestmentToVehicle, addVehicle} from '../api/VehicleApi';
 import {investmentFormSchema, vehicleFormSchema} from '../forms/FormSchema';

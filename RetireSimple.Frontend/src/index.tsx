@@ -13,6 +13,7 @@ import {deleteVehicle, getVehicle} from './api/VehicleApi';
 import './index.css';
 import {Layout} from './Layout';
 import {CircularProgress, Typography} from '@mui/material';
+import {convertFromDecimal} from './api/ConvertUtils';
 
 /************************
  * Lazy Loaded Components
@@ -92,9 +93,13 @@ const router = createBrowserRouter(
 						<InvestmentView />
 					</SuspenseRoute>
 				}
-				loader={async ({params}) =>
-					flattenApiInvestment(await getInvestment(parseInt(params.id ?? '')))
-				}>
+				loader={async ({params}) => {
+					const data = flattenApiInvestment(
+						await getInvestment(parseInt(params.id ?? '')),
+					);
+					convertFromDecimal(data);
+					return data;
+				}}>
 				<Route path='update' action={updateInvestmentAction} />
 				<Route path='delete' action={deleteInvestmentAction} />
 			</Route>
@@ -105,9 +110,11 @@ const router = createBrowserRouter(
 						<VehicleView />
 					</SuspenseRoute>
 				}
-				loader={async ({params}) =>
-					getFlatVehicleData(await getVehicle(parseInt(params.id ?? '')))
-				}>
+				loader={async ({params}) => {
+					const data = getFlatVehicleData(await getVehicle(parseInt(params.id ?? '')));
+					convertFromDecimal(data);
+					return data;
+				}}>
 				<Route path='update' action={updateVehicleAction} />
 				<Route path='delete' action={deleteVehicleAction} />
 			</Route>
@@ -116,7 +123,6 @@ const router = createBrowserRouter(
 			<Route path='*' element={<div>404</div>} />
 		</Route>,
 	]),
-
 );
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

@@ -19,7 +19,7 @@ export interface FormTextFieldProps {
 	control: Control;
 	errorField: any;
 	tooltip?: string | React.ReactNode;
-	decoration?: 'currency' | 'percent';
+	// decoration?: 'currency' | 'percent';
 }
 
 export interface FormSelectFieldProps {
@@ -57,10 +57,80 @@ export const FormTextField = (props: FormTextFieldProps) => {
 						size='small'
 						error={!!props.errorField}
 						helperText={props.errorField?.message as string}
+					/>
+				</Tooltip>
+			)}
+		/>
+	);
+};
+
+export const FormTextFieldCurrency = (props: FormTextFieldProps) => {
+	return (
+		<Controller
+			name={props.name}
+			control={props.control}
+			defaultValue={''}
+			render={({field}) => (
+				<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
+					<TextField
+						{...field}
+						label={props.label}
+						fullWidth
+						size='small'
+						error={!!props.errorField}
+						helperText={props.errorField?.message as string}
 						InputProps={{
-							startAdornment: props.decoration === 'currency' && (
-								<InputAdornment position='start'>$</InputAdornment>
-							),
+							startAdornment: <InputAdornment position='start'>$</InputAdornment>,
+						}}
+					/>
+				</Tooltip>
+			)}
+		/>
+	);
+};
+
+export const FormTextFieldPercent = (props: FormTextFieldProps) => {
+	return (
+		<Controller
+			name={props.name}
+			control={props.control}
+			defaultValue={''}
+			render={({field}) => (
+				<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
+					<TextField
+						{...field}
+						label={props.label}
+						fullWidth
+						size='small'
+						error={!!props.errorField}
+						helperText={props.errorField?.message as string}
+						InputProps={{
+							endAdornment: <InputAdornment position='end'>%</InputAdornment>,
+						}}
+					/>
+				</Tooltip>
+			)}
+		/>
+	);
+};
+
+export const FormTextFieldMonthUnits = (props: FormTextFieldProps) => {
+	return (
+		<Controller
+			name={props.name}
+			control={props.control}
+			defaultValue={''}
+			render={({field}) => (
+				<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
+					<TextField
+						{...field}
+						label={props.label}
+						fullWidth
+						size='small'
+						error={!!props.errorField}
+						helperText={props.errorField?.message as string}
+						InputProps={{
+							endAdornment: <InputAdornment position='end'>mo.</InputAdornment>,
 						}}
 					/>
 				</Tooltip>

@@ -2,7 +2,7 @@ import {Box, Grid, Typography} from '@mui/material';
 
 import React from 'react';
 import {useFormContext, useWatch} from 'react-hook-form';
-import {FormDatePicker, FormSelectField, FormTextField} from '../../components/InputComponents';
+import {FormDatePicker, FormSelectField, FormTextField, FormTextFieldCurrency, FormTextFieldPercent} from '../../components/InputComponents';
 import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
 
 export interface StockFormProps {
@@ -53,12 +53,11 @@ export const StockForm = (props: StockFormProps) => {
 	);
 
 	const stockPriceField = (
-		<FormTextField
+		<FormTextFieldCurrency
 			name='stockPrice'
 			label='Price'
 			control={formContext.control}
 			errorField={errors.stockPrice}
-			decoration='currency'
 			tooltip={
 				<>
 					<Typography variant='inherit'>The current price of the stock.</Typography>
@@ -109,7 +108,7 @@ export const StockForm = (props: StockFormProps) => {
 	);
 
 	const stockDividendPercentField = (
-		<FormTextField
+		<FormTextFieldPercent
 			name='stockDividendPercent'
 			label='Dividend %'
 			control={formContext.control}
@@ -118,9 +117,6 @@ export const StockForm = (props: StockFormProps) => {
 				<>
 					<Typography variant='inherit'>
 						The dividend percentage of this stock.
-					</Typography>
-					<Typography variant='inherit'>
-						This is inputted as a decimal (i.e. 0.05 for 5%).
 					</Typography>
 				</>
 			}

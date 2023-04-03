@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {convertDates} from '../api/DateUtils';
+import {convertDates, convertFromDecimal, convertToDecimal} from '../api/ConvertUtils';
 
 describe('convertDates', () => {
 	test('convert stockPurchaseDate', () => {
@@ -49,6 +49,54 @@ describe('convertDates', () => {
 	test('does not touch unknown fields', () => {
 		const data = {foo: 'bar'};
 		convertDates(data);
+		expect(data).toEqual({foo: 'bar'});
+	});
+});
+
+describe('convertFromDecimal', () => {
+	test('converts known percentage fields', () => {
+		const data = {
+			stockDividendPercent: '0.101',
+			bondCoupunRate: '0.2',
+			bondYieldToMaturity: '0.3',
+			analysis_userContributionPercentage: '0.4',
+			analysis_employerMatchPercentage: '0.5',
+		};
+		convertFromDecimal(data);
+		expect(data.stockDividendPercent).toEqual('10.1');
+		expect(data.bondCoupunRate).toEqual('20');
+		expect(data.bondYieldToMaturity).toEqual('30');
+		expect(data.analysis_userContributionPercentage).toEqual('40');
+		expect(data.analysis_employerMatchPercentage).toEqual('50');
+	});
+
+	test('does not touch unknown fields', () => {
+		const data = {foo: 'bar'};
+		convertFromDecimal(data);
+		expect(data).toEqual({foo: 'bar'});
+	});
+});
+
+describe('convertToDecimal', () => {
+	test('converts known percentage fields', () => {
+		const data = {
+			stockDividendPercent: '10.1',
+			bondCoupunRate: '20',
+			bondYieldToMaturity: '30',
+			analysis_userContributionPercentage: '40',
+			analysis_employerMatchPercentage: '50',
+		};
+		convertToDecimal(data);
+		expect(data.stockDividendPercent).toEqual('0.101');
+		expect(data.bondCoupunRate).toEqual('0.2');
+		expect(data.bondYieldToMaturity).toEqual('0.3');
+		expect(data.analysis_userContributionPercentage).toEqual('0.4');
+		expect(data.analysis_employerMatchPercentage).toEqual('0.5');
+	});
+
+	test('does not touch unknown fields', () => {
+		const data = {foo: 'bar'};
+		convertToDecimal(data);
 		expect(data).toEqual({foo: 'bar'});
 	});
 });

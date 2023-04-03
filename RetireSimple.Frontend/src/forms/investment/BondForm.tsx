@@ -1,7 +1,12 @@
 import {Box, Grid, Typography} from '@mui/material';
 import React from 'react';
 import {useFormContext} from 'react-hook-form';
-import {FormDatePicker, FormTextField} from '../../components/InputComponents';
+import {
+	FormDatePicker,
+	FormTextField,
+	FormTextFieldCurrency,
+	FormTextFieldPercent,
+} from '../../components/InputComponents';
 import {BondValuationAnalysisForm} from '../analysis/BondValuationAnalysisForm';
 
 export interface BondFormProps {
@@ -34,7 +39,7 @@ export const BondForm = (props: BondFormProps) => {
 	);
 
 	const bondCouponRateField = (
-		<FormTextField
+		<FormTextFieldPercent
 			name='bondCouponRate'
 			label='Coupon Rate'
 			control={formContext.control}
@@ -46,16 +51,13 @@ export const BondForm = (props: BondFormProps) => {
 						This is the annual interest rate that the bond issuer pays to the bond
 						holder.'
 					</Typography>
-					<Typography variant='inherit'>
-						This is inputted as a decimal value (i.e. 0.05 for 5%).
-					</Typography>
 				</>
 			}
 		/>
 	);
 
 	const bondYTMField = (
-		<FormTextField
+		<FormTextFieldPercent
 			name='bondYieldToMaturity'
 			label='Yield to Maturity'
 			control={formContext.control}
@@ -66,9 +68,6 @@ export const BondForm = (props: BondFormProps) => {
 					<Typography variant='inherit'>
 						This is the annual interest rate that the bond issuer pays to the bond
 						holder.
-					</Typography>
-					<Typography variant='inherit'>
-						This is inputted as a decimal value (i.e. 0.05 for 5%).
 					</Typography>
 				</>
 			}
@@ -95,13 +94,12 @@ export const BondForm = (props: BondFormProps) => {
 	);
 
 	const bondFaceValueField = (
-		<FormTextField
+		<FormTextFieldCurrency
 			name='bondFaceValue'
 			label='Face Value'
 			control={formContext.control}
 			errorField={errors.bondFaceValue}
 			tooltip='The face value of the bond.'
-			decoration='currency'
 		/>
 	);
 
@@ -117,13 +115,12 @@ export const BondForm = (props: BondFormProps) => {
 	);
 
 	const bondCurrentPriceField = (
-		<FormTextField
+		<FormTextFieldCurrency
 			name='bondCurrentPrice'
 			label='Current Price'
 			control={formContext.control}
 			errorField={errors.bondCurrentPrice}
 			tooltip='The current price of the bond.'
-			decoration='currency'
 		/>
 	);
 
