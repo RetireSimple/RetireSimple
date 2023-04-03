@@ -1,7 +1,12 @@
 import {Grid, Typography} from '@mui/material';
 import React from 'react';
 import {useFormContext, useWatch} from 'react-hook-form';
-import {FormSelectField, FormTextField} from '../../components/InputComponents';
+import {
+	FormSelectField,
+	FormTextField,
+	FormTextFieldCurrency,
+	FormTextFieldPercent,
+} from '../../components/InputComponents';
 
 export const Analysis401kForm = () => {
 	const formContext = useFormContext();
@@ -18,7 +23,7 @@ export const Analysis401kForm = () => {
 	//==============================================
 
 	const salaryField = (
-		<FormTextField
+		<FormTextFieldCurrency
 			name='analysis_salary'
 			label='Salary'
 			control={formContext.control}
@@ -34,7 +39,6 @@ export const Analysis401kForm = () => {
 					</Typography>
 				</>
 			}
-			decoration='currency'
 		/>
 	);
 
@@ -85,7 +89,7 @@ export const Analysis401kForm = () => {
 	);
 
 	const employerMatchField = (
-		<FormTextField
+		<FormTextFieldPercent
 			name='analysis_employerMatchPercentage'
 			label='Employer Match'
 			control={formContext.control}
@@ -132,7 +136,7 @@ export const Analysis401kForm = () => {
 		switch (userContributionType) {
 			case 'percentage':
 				return (
-					<FormTextField
+					<FormTextFieldPercent
 						name='analysis_userContributionPercentage'
 						label='User Contribution'
 						control={formContext.control}
@@ -142,13 +146,12 @@ export const Analysis401kForm = () => {
 				);
 			case 'fixed':
 				return (
-					<FormTextField
+					<FormTextFieldCurrency
 						name='analysis_userContributionAmount'
 						label='User Contribution'
 						control={formContext.control}
 						errorField={errors.analysis_userContributionAmount}
 						tooltip='The amount of money contributed to the vehicle each month.'
-						decoration='currency'
 					/>
 				);
 			default:

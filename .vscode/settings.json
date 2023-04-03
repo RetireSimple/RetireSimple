@@ -1,0 +1,7 @@
+{
+	"jest.rootPath": "./RetireSimple.Frontend",
+	"jest.autoRun": {
+		"off": true
+	},
+	"jest.jestCommandLine": "./RetireSimple.Frontend/node_modules/.bin/jest",
+}

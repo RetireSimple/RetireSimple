@@ -1,6 +1,12 @@
 import {Box, Grid, Typography} from '@mui/material';
 import {useFormContext, useWatch} from 'react-hook-form';
-import {FormSelectField, FormTextField} from '../components/InputComponents';
+import {
+	FormSelectField,
+	FormTextField,
+	FormTextFieldCurrency,
+	FormTextFieldMonthUnits,
+	FormTextFieldPercent,
+} from '../components/InputComponents';
 import {Analysis401kForm} from './analysis/Analysis401kForm';
 import React from 'react';
 
@@ -55,7 +61,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 	);
 
 	const cashHoldingField = (
-		<FormTextField
+		<FormTextFieldCurrency
 			name='cashHoldings'
 			label='Cash Holdings'
 			control={formContext.control}
@@ -65,7 +71,7 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 	);
 
 	const analysisLengthField = (
-		<FormTextField
+		<FormTextFieldMonthUnits
 			name='analysis_analysisLength'
 			label='Analysis Length'
 			control={formContext.control}
@@ -75,24 +81,22 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 	);
 
 	const shortTermCapitalGainsField = (
-		<FormTextField
+		<FormTextFieldPercent
 			name='analysis_shortTermCapitalGainsTax'
 			label='Capital Gains Tax (Short Term)'
 			control={formContext.control}
 			errorField={errors.analysis_shortTermCapitalGainsTax}
 			tooltip='The tax rate applied to short term capital gains.'
-			// decoration='percent'
 		/>
 	);
 
 	const longTermCapitalGainsField = (
-		<FormTextField
+		<FormTextFieldPercent
 			name='analysis_longTermCapitalGainsTax'
 			label='Capital Gains Tax (Long Term)'
 			control={formContext.control}
 			errorField={errors.analysis_longTermCapitalGainsTax}
 			tooltip='The tax rate applied to long term capital gains.'
-			// decoration='percent'
 		/>
 	);
 
@@ -103,13 +107,12 @@ export const VehicleDataForm = (props: VehicleDataFormProps) => {
 			default:
 				return (
 					<Grid item xs={4}>
-						<FormTextField
+						<FormTextFieldCurrency
 							name='analysis_userContributionFixed'
 							label='User Contribution'
 							control={formContext.control}
 							errorField={errors.analysis_userContributionFixed}
 							tooltip='The amount of money that you contribute to this vehicle each month.'
-							decoration='currency'
 						/>
 					</Grid>
 				);

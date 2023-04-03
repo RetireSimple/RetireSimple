@@ -1,0 +1,14 @@
+{
+	"recommendations": [
+		"ms-dotnettools.csharp",
+		"aaron-bond.better-comments",
+		"axetroy.vscode-auto-schema",
+		"DavidAnson.vscode-markdownlint",
+		"dbaeumer.vscode-eslint",
+		"k--kato.docomment",
+		"esbenp.prettier-vscode",
+		"formulahendry.dotnet-test-explorer",
+		"dsznajder.es7-react-js-snippets",
+		"Orta.vscode-jest"
+	]
+}
