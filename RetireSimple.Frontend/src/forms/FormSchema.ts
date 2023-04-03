@@ -264,7 +264,7 @@ export const vehicleFormSchema = object().shape({
 	investmentVehicleType: string()
 		.defined('Required')
 		.required('Required')
-		.oneOf(['401k', 'IRA', 'RothIRA', '403b', '457']),
+		.oneOf(['Vehicle401k', 'VehicleIRA', 'VehicleRothIRA', 'Vehicle403b', 'Vehicle457']),
 	cashHoldings: number()
 		.defined('Required')
 		.required('Required')
@@ -296,7 +296,7 @@ export const vehicleFormSchema = object().shape({
 	// 401k Specific Fields
 	//========================================
 	analysis_salary: number().when('investmentVehicleType', {
-		is: '401k',
+		is: 'Vehicle401k',
 		then: (schema) =>
 			schema
 				.defined('Required')
@@ -308,7 +308,7 @@ export const vehicleFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_payFrequency: string().when('investmentVehicleType', {
-		is: '401k',
+		is: 'Vehicle401k',
 		then: (schema) =>
 			schema
 				.defined('Required')
@@ -317,7 +317,7 @@ export const vehicleFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_maxEmployerContributionPercentage: number().when('investmentVehicleType', {
-		is: '401k',
+		is: 'Vehicle401k',
 		then: (schema) =>
 			schema
 				.defined('Required')
@@ -328,7 +328,7 @@ export const vehicleFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_employerMatchPercentage: number().when('investmentVehicleType', {
-		is: '401k',
+		is: 'Vehicle401k',
 		then: (schema) =>
 			schema
 				.defined('Required')
@@ -339,7 +339,7 @@ export const vehicleFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_userContributionType: string().when('investmentVehicleType', {
-		is: '401k',
+		is: 'Vehicle401k',
 		then: (schema) =>
 			schema.defined('Required').required('Required').oneOf(['fixed', 'percentage']),
 		otherwise: (schema) => schema.strip(),
@@ -348,8 +348,9 @@ export const vehicleFormSchema = object().shape({
 		['investmentVehicleType', 'analysis_userContributionType'],
 		{
 			is: (investmentVehicleType: string, analysis_userContributionType: string) =>
-				(investmentVehicleType === '401k' && analysis_userContributionType === 'fixed') ||
-				investmentVehicleType !== '401k',
+				(investmentVehicleType === 'Vehicle401k' &&
+					analysis_userContributionType === 'fixed') ||
+				investmentVehicleType !== 'Vehicle401k',
 			then: (schema) =>
 				schema
 					.defined('Required')
@@ -364,7 +365,8 @@ export const vehicleFormSchema = object().shape({
 		['investmentVehicleType', 'analysis_userContributionType'],
 		{
 			is: (investmentVehicleType: string, analysis_userContributionType: string) =>
-				investmentVehicleType === '401k' && analysis_userContributionType === 'percentage',
+				investmentVehicleType === 'Vehicle401k' &&
+				analysis_userContributionType === 'percentage',
 			then: (schema) =>
 				schema
 					.defined('Required')
@@ -379,7 +381,7 @@ export const vehicleFormSchema = object().shape({
 
 export const VehicleFormDefaults = {
 	investmentVehicleName: '',
-	investmentVehicleType: '401k',
+	investmentVehicleType: 'Vehicle401k',
 	cashHoldings: '0',
 	analysis_analysisLength: '60',
 	analysis_shortTermCapitalGainsTax: '0.0',

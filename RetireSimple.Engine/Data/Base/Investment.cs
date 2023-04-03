@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Expense;
-using RetireSimple.Engine.Data.Investment;
 using RetireSimple.Engine.Data.User;
 
 using System.ComponentModel.DataAnnotations.Schema;
@@ -48,7 +47,6 @@ namespace RetireSimple.Engine.Data.Base {
 
 		/// <summary>
 		/// The type of analysis module to use when invoking analysis. <br/>
-		/// This is set/updated in the <see cref="ResolveAnalysisDelegate(string)"/> method during EF object conversion so that the correct analysis module is used in runtime<br/>
 		/// </summary>
 		public string? AnalysisType { get; set; }
 
@@ -119,7 +117,6 @@ namespace RetireSimple.Engine.Data.Base {
 			}
 
 			//Ensure we are invoking the correct generic version
-			//TODO This is a bit of a hack, but it works for now. I'm not sure if there is a better way to do this\
 			var setDelegateMethod = typeof(ReflectionUtils).GetMethod("SetAnalysisModuleDelegate")?.MakeGenericMethod(GetType());
 			setDelegateMethod?.Invoke(null, new object[] { this, moduleList[AnalysisType] });
 		}
@@ -155,14 +152,12 @@ namespace RetireSimple.Engine.Data.Base {
 				.HasForeignKey(t => t.DestinationInvestmentId)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			builder.HasDiscriminator(i => i.InvestmentType)
-					.HasValue<StockInvestment>("StockInvestment")
-					.HasValue<BondInvestment>("BondInvestment")
-					.HasValue<FixedInvestment>("FixedInvestment")
-					.HasValue<CashInvestment>("CashInvestment")
-					.HasValue<SocialSecurityInvestment>("SocialSecurityInvestment")
-					.HasValue<AnnuityInvestment>("AnnuityInvestment")
-					.HasValue<PensionInvestment>("PensionInvestment");
+			//Discriminator Configuration via Reflection
+			var investmentModules = ReflectionUtils.GetInvestmentModules();
+			var discriminatorBuilder = builder.HasDiscriminator(i => i.InvestmentType);
+			foreach (var module in investmentModules) {
+				discriminatorBuilder.HasValue(module, module.Name);
+			}
 
 #pragma warning disable CS8604 // Possible null reference argument.
 			builder.Property(i => i.InvestmentData)

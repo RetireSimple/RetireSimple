@@ -165,7 +165,7 @@ describe('schema validation', () => {
 				const schema = vehicleFormSchema;
 				const data = {
 					investmentVehicleName: 'Test',
-					investmentVehicleType: '401k',
+					investmentVehicleType: 'Vehicle401k',
 					cashHoldings: '0',
 					analysis_analysisLength: '60',
 					analysis_shortTermCapitalGainsTax: '0.0',
@@ -185,7 +185,7 @@ describe('schema validation', () => {
 				const schema = vehicleFormSchema;
 				const data = {
 					investmentVehicleName: 'Test',
-					investmentVehicleType: '401k',
+					investmentVehicleType: 'Vehicle401k',
 					cashHoldings: '0',
 					analysis_analysisLength: '60',
 					analysis_shortTermCapitalGainsTax: '0.0',
@@ -207,7 +207,7 @@ describe('schema validation', () => {
 				const schema = vehicleFormSchema;
 				const data = {
 					investmentVehicleName: 'Test',
-					investmentVehicleType: 'IRA',
+					investmentVehicleType: 'VehicleIRA',
 					cashHoldings: '0',
 					analysis_analysisLength: '60',
 					analysis_shortTermCapitalGainsTax: '0.0',

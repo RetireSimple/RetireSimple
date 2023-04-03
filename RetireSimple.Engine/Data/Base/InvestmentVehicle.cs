@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using RetireSimple.Engine.Data.Analysis;
-using RetireSimple.Engine.Data.InvestmentVehicle;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
@@ -42,7 +41,7 @@ namespace RetireSimple.Engine.Data.Base {
 				["analysisLength"] = "60",
 				["vehicleTaxPercentage"] = "0.29", //Tax to apply on contribution/withdrawal/valuation
 				["userContributionAmount"] = "0.00",
-				["vehicleContributionInvestmentTarget"] = "-1" ///Default, simulates the <see cref="CashHoldings"/> contributions
+				["vehicleContributionInvestmentTarget"] = "-1"  //Default, simulates the <see cref="CashHoldings"/> contributions
 			};
 
 		/// <summary>
@@ -52,7 +51,7 @@ namespace RetireSimple.Engine.Data.Base {
 		/// </summary>
 		/// <param name="options"></param>
 		/// <returns></returns>
-		public VehicleModel GenerateAnalysis(OptionsDict options) {
+		internal virtual VehicleModel GenerateAnalysis(OptionsDict options) {
 			var combinedOptions = MergeOverrideOptions(options);
 			var containedModels = GetContainedInvestmentModels(combinedOptions);
 
@@ -84,7 +83,7 @@ namespace RetireSimple.Engine.Data.Base {
 
 
 		//Internal Methods for use in the template method
-		private List<InvestmentModel> GetContainedInvestmentModels(OptionsDict options) {
+		internal virtual List<InvestmentModel> GetContainedInvestmentModels(OptionsDict options) {
 			var models = new List<InvestmentModel>();
 			foreach (var investment in Investments) {
 				models.Add(investment.InvokeAnalysis(options));
@@ -116,12 +115,12 @@ namespace RetireSimple.Engine.Data.Base {
 		public void Configure(EntityTypeBuilder<InvestmentVehicle> builder) {
 			builder.HasKey(i => i.InvestmentVehicleId);
 
-			builder.HasDiscriminator(i => i.InvestmentVehicleType)
-				.HasValue<Vehicle401k>("401k")
-				.HasValue<Vehicle403b>("403b")
-				.HasValue<Vehicle457>("457")
-				.HasValue<VehicleIRA>("IRA")
-				.HasValue<VehicleRothIRA>("RothIRA");
+			//Discriminator Configuration via Reflection
+			var vehicleModules = ReflectionUtils.GetInvestmentVehicleModules();
+			var discriminatorBuilder = builder.HasDiscriminator(i => i.InvestmentVehicleType);
+			foreach (var module in vehicleModules) {
+				discriminatorBuilder.HasValue(module, module.Name);
+			}
 
 			builder.HasMany(i => i.Investments)
 				.WithOne()

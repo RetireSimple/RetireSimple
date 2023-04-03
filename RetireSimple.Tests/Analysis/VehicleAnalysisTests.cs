@@ -1,8 +1,45 @@
+using Moq;
+
 using RetireSimple.Engine.Data.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 namespace RetireSimple.Tests.Analysis {
 
 	public class VehicleAnalysisTests {
+
+		[Fact]
+		public void GenerateAnalysis_TemplateMethodCallsAbstractInOrder() {
+			var mockVehicle = new Mock<InvestmentVehicle>();
+			mockVehicle.Setup(x => x.GenerateAnalysis(It.IsAny<OptionsDict>())).CallBase();
+			mockVehicle.Object.InvestmentVehicleId = 1;
+			mockVehicle.Setup(x => x.GetContainedInvestmentModels(It.IsAny<OptionsDict>()))
+						.Returns(new List<InvestmentModel>());
+			mockVehicle.Setup(x => x.SimulateCashContributions(It.IsAny<OptionsDict>()))
+						.Returns(new List<decimal>());
+			mockVehicle.Setup(x => x.GeneratePreTaxModels(It.IsAny<OptionsDict>(),
+														It.IsAny<List<InvestmentModel>>(),
+														It.IsAny<List<decimal>>()))
+						.Returns(new InvestmentModel());
+			mockVehicle.Setup(x => x.GeneratePostTaxModels(It.IsAny<OptionsDict>(),
+															It.IsAny<List<InvestmentModel>>(),
+															It.IsAny<List<decimal>>()))
+						.Returns(new InvestmentModel());
+
+			var actual = mockVehicle.Object.GenerateAnalysis(new OptionsDict());
+
+			actual.Should().BeOfType(typeof(VehicleModel));
+			actual.InvestmentVehicleId.Should().Be(1);
+
+			mockVehicle.Verify(x => x.GetContainedInvestmentModels(It.IsAny<OptionsDict>()), Times.Once);
+			mockVehicle.Verify(x => x.SimulateCashContributions(It.IsAny<OptionsDict>()), Times.Once);
+			mockVehicle.Verify(x => x.GeneratePreTaxModels(It.IsAny<OptionsDict>(),
+															It.IsAny<List<InvestmentModel>>(),
+															It.IsAny<List<decimal>>()), Times.Once);
+			mockVehicle.Verify(x => x.GeneratePostTaxModels(It.IsAny<OptionsDict>(),
+															It.IsAny<List<InvestmentModel>>(),
+															It.IsAny<List<decimal>>()), Times.Once);
+
+		}
 
 		[Theory, MemberData(nameof(VehicleAnalysisTestData.CashSimVars), MemberType = typeof(VehicleAnalysisTestData))]
 		public void TestSimulateCashContributionsDefault(OptionsDict options, decimal initialHoldings, List<decimal> expected) {

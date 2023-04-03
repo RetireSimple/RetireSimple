@@ -25,6 +25,184 @@ namespace RetireSimple.Tests.Api {
 		}
 
 		[Fact]
+		public void GetAllInvestments_EmptyDB_ReturnsEmptyList() {
+			var result = api.GetAllInvestments();
+
+			result.Should().BeEmpty();
+		}
+
+		[Fact]
+		public void GetAllInvestments_PopulatedDB_ReturnsFullInvestmentList() {
+			context.Investment.Add(new StockInvestment("") {
+				InvestmentId = 1,
+				PortfolioId = 1,
+				InvestmentName = "Test Investment",
+				InvestmentType = "StockInvestment",
+				InvestmentData = new OptionsDict {
+					{"stockTicker", "N/A"},
+					{"stockQuantity", "0"},
+					{"stockPrice", "0"},
+					{"stockPurchaseDate", DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")},
+					{"stockDividendPercent", "0"},
+					{"stockDividendDistributionInterval", "Month"},
+					{"stockDividendDistributionMethod", "Stock"},
+					{"stockDividendFirstPaymentDate",DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")}
+				}
+			});
+
+			context.Investment.Add(new StockInvestment("") {
+				InvestmentId = 2,
+				PortfolioId = 1,
+				InvestmentName = "Test Investment 2",
+				InvestmentType = "StockInvestment",
+				InvestmentData = new OptionsDict {
+					{"stockTicker", "N/A"},
+					{"stockQuantity", "0"},
+					{"stockPrice", "0"},
+					{"stockPurchaseDate", DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")},
+					{"stockDividendPercent", "0"},
+					{"stockDividendDistributionInterval", "Month"},
+					{"stockDividendDistributionMethod", "Stock"},
+					{"stockDividendFirstPaymentDate",DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")}
+				}
+			});
+
+			context.SaveChanges();
+
+			var result = api.GetAllInvestments();
+			result.Should().HaveCount(2);
+			result.Should().IntersectWith(context.Investment.ToList());
+		}
+
+		[Fact]
+		public void GetSingluarInvestments_EmptyDB_ReturnEmptyList() {
+			var result = api.GetSingularInvestments();
+
+			result.Should().BeEmpty();
+		}
+
+		[Fact]
+		public void GetSingluarInvestments_PopulatedDB_ReturnsInvestmentsNotInVehicles() {
+			context.Investment.Add(new StockInvestment("") {
+				InvestmentId = 1,
+				PortfolioId = 1,
+				InvestmentName = "Test Investment",
+				InvestmentType = "StockInvestment",
+				InvestmentData = new OptionsDict {
+					{"stockTicker", "N/A"},
+					{"stockQuantity", "0"},
+					{"stockPrice", "0"},
+					{"stockPurchaseDate", DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")},
+					{"stockDividendPercent", "0"},
+					{"stockDividendDistributionInterval", "Month"},
+					{"stockDividendDistributionMethod", "Stock"},
+					{"stockDividendFirstPaymentDate",DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")}
+				}
+			});
+
+			context.Investment.Add(new StockInvestment("") {
+				InvestmentId = 2,
+				PortfolioId = 1,
+				InvestmentName = "Test Investment 2",
+				InvestmentType = "StockInvestment",
+				InvestmentData = new OptionsDict {
+					{"stockTicker", "N/A"},
+					{"stockQuantity", "0"},
+					{"stockPrice", "0"},
+					{"stockPurchaseDate", DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")},
+					{"stockDividendPercent", "0"},
+					{"stockDividendDistributionInterval", "Month"},
+					{"stockDividendDistributionMethod", "Stock"},
+					{"stockDividendFirstPaymentDate",DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")}
+				}
+			});
+
+			context.InvestmentVehicle.Add(new Vehicle401k() {
+				PortfolioId = 1,
+				InvestmentVehicleId = 1,
+				InvestmentVehicleName = "Test 401k",
+				InvestmentVehicleType = "Vehicle401k",
+			});
+
+			context.SaveChanges();
+
+			context.InvestmentVehicle.First().Investments.Add(context.Investment.First());
+
+			var result = api.GetSingularInvestments();
+			result.Should().ContainSingle();
+			result.First().InvestmentId.Should().Be(2);
+		}
+
+		[Fact]
+		public void GetInvestment_EmptyDB_ReturnsNull() {
+			var result = api.GetInvestment(1);
+			result.Should().BeNull();
+		}
+
+		[Fact]
+		public void GetInvestment_PopulatedDB_ReturnsCorrectInvestment() {
+			context.Investment.Add(new StockInvestment("") {
+				InvestmentId = 1,
+				PortfolioId = 1,
+				InvestmentName = "Test Investment",
+				InvestmentType = "StockInvestment",
+				InvestmentData = new OptionsDict {
+					{"stockTicker", "N/A"},
+					{"stockQuantity", "0"},
+					{"stockPrice", "0"},
+					{"stockPurchaseDate", DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")},
+					{"stockDividendPercent", "0"},
+					{"stockDividendDistributionInterval", "Month"},
+					{"stockDividendDistributionMethod", "Stock"},
+					{"stockDividendFirstPaymentDate",DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")}
+				}
+			});
+			context.Investment.Add(new StockInvestment("") {
+				InvestmentId = 2,
+				PortfolioId = 1,
+				InvestmentName = "Test Investment 2",
+				InvestmentType = "StockInvestment",
+				InvestmentData = new OptionsDict {
+					{"stockTicker", "N/A"},
+					{"stockQuantity", "0"},
+					{"stockPrice", "0"},
+					{"stockPurchaseDate", DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")},
+					{"stockDividendPercent", "0"},
+					{"stockDividendDistributionInterval", "Month"},
+					{"stockDividendDistributionMethod", "Stock"},
+					{"stockDividendFirstPaymentDate",DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")}
+				}
+			});
+			context.SaveChanges();
+			var result = api.GetInvestment(1);
+			result.InvestmentId.Should().Be(1);
+			result.InvestmentName.Should().Be("Test Investment");
+		}
+
+		[Fact]
+		public void GetInvestment_NonexistentId_ReturnsNull() {
+			context.Investment.Add(new StockInvestment("") {
+				InvestmentId = 1,
+				PortfolioId = 1,
+				InvestmentName = "Test Investment",
+				InvestmentType = "StockInvestment",
+				InvestmentData = new OptionsDict {
+					{"stockTicker", "N/A"},
+					{"stockQuantity", "0"},
+					{"stockPrice", "0"},
+					{"stockPurchaseDate", DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")},
+					{"stockDividendPercent", "0"},
+					{"stockDividendDistributionInterval", "Month"},
+					{"stockDividendDistributionMethod", "Stock"},
+					{"stockDividendFirstPaymentDate",DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")}
+				}
+			});
+			context.SaveChanges();
+			var result = api.GetInvestment(2);
+			result.Should().BeNull();
+		}
+
+		[Fact]
 		public void AddInvestmentUnknownTypeThrowsException() {
 			Action act = () => { api.Add("test"); };
 
@@ -471,13 +649,13 @@ namespace RetireSimple.Tests.Api {
 			api.Add("StockInvestment");
 			api.Add("StockInvestment");
 
-			var investments = api.GetSingluarInvestments();
+			var investments = api.GetSingularInvestments();
 			investments.Should().HaveCount(4);
 		}
 
 		[Fact]
 		public void GetSingularInvestmentsNoInvestments() {
-			var investments = api.GetSingluarInvestments();
+			var investments = api.GetSingularInvestments();
 			investments.Should().BeEmpty();
 		}
 
@@ -493,7 +671,7 @@ namespace RetireSimple.Tests.Api {
 			context.InvestmentVehicle.First().Investments.Add(context.Investment.First());
 			context.SaveChanges();
 
-			var investments = api.GetSingluarInvestments();
+			var investments = api.GetSingularInvestments();
 			investments.Should().HaveCount(3);
 			investments.Should().NotContain(i => i.InvestmentId == 1);
 		}

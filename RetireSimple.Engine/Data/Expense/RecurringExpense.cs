@@ -1,6 +1,4 @@
-﻿using RetireSimple.Engine.Data.Base;
-
-namespace RetireSimple.Engine.Data.Expense {
+﻿namespace RetireSimple.Engine.Data.Expense {
 	/// <summary>
 	/// Represent a recurring expense on an investment
 	/// </summary>

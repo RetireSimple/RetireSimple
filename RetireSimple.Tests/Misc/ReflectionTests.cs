@@ -1,14 +1,5 @@
 ﻿using RetireSimple.Engine.Data.Base;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-
-
 namespace RetireSimple.Tests.Misc {
 	public class ReflectionTests {
 
@@ -86,15 +77,29 @@ namespace RetireSimple.Tests.Misc {
 			}
 		}
 
-		public static readonly IEnumerable<object[]> ResolveAnalysisDelegateConstructionTestData = new List<object[]> {
-			new object[] { "StockInvestment"},
-			new object[] { "BondInvestment" },
-			new object[] { "CashInvestment" },
-			new object[] { "FixedInvestment" },
-			new object[] { "AnnuityInvestment" },
-			new object[] { "PensionInvestment" },
-			new object[] { "SocialSecurityInvestment" }
-		};
+		[Fact]
+		public void GetInvestmentModules_ReturnsKnownCorrectModules() {
+			var moduleList = ReflectionUtils.GetInvestmentModules();
 
+			moduleList.Should().NotBeNull();
+			moduleList.Should().HaveCountGreaterThanOrEqualTo(2);
+			moduleList.Should().Contain(typeof(StockInvestment));
+			moduleList.Should().Contain(typeof(BondInvestment));
+		}
+
+		[Fact]
+		public void GetInvestmentVehicleModules_ReturnsKnownCorrectModules() {
+			var moduleList = ReflectionUtils.GetInvestmentVehicleModules();
+
+			moduleList.Should().NotBeNull();
+			moduleList.Should().HaveCountGreaterThanOrEqualTo(5);
+			moduleList.Should().Contain(typeof(Vehicle401k));
+			moduleList.Should().Contain(typeof(Vehicle403b));
+			moduleList.Should().Contain(typeof(Vehicle457));
+			moduleList.Should().Contain(typeof(VehicleIRA));
+			moduleList.Should().Contain(typeof(VehicleRothIRA));
+		}
 	}
+
+
 }

@@ -18,7 +18,7 @@ namespace RetireSimple.Backend.Controllers {
 
 		[HttpGet]
 		public ActionResult<List<Investment>> GetInvestments() {
-			return Ok(_investmentApi.GetSingluarInvestments());
+			return Ok(_investmentApi.GetSingularInvestments());
 		}
 
 		[HttpGet]

@@ -1,12 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Options;
-
-using RetireSimple.Engine.Analysis;
+﻿using RetireSimple.Engine.Analysis;
 using RetireSimple.Engine.Data.Analysis;
-using RetireSimple.Engine.Data.Base;
 
 namespace RetireSimple.Engine.Data.InvestmentVehicle {
+	[InvestmentVehicleModule]
 	public class Vehicle401k : Base.InvestmentVehicle {
 		public override InvestmentModel GeneratePostTaxModels(OptionsDict options, List<InvestmentModel> models, List<decimal>? cashContribution = null) {
 			var preTaxModel = GeneratePreTaxModels(options, models, cashContribution);
@@ -68,8 +64,7 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 
 			if (options["userContributionType"] == "fixed") {
 				userContribution = decimal.Parse(options["userContributionAmount"]);
-			}
-			else {
+			} else {
 				userContribution = salary / pay_freq * userContributionPercentage;
 			}
 			var employer_match = userContribution * employerMatchPercentage;
