@@ -11,7 +11,7 @@ using System.Collections.Concurrent;
 namespace RetireSimple.Engine.Analysis.Utils {
 
 	internal interface IMonteCarlo {
-		IContinuousDistribution CreateRandomVarInstance(MonteCarloRV rvType, OptionsDict parameters);
+		//IContinuousDistribution CreateRandomVariable(MonteCarloRV rvType, OptionsDict parameters);
 		List<decimal> MonteCarloSingleSimulation();
 		InvestmentModel RunSimulation();
 		InvestmentModel FilterSimulationData(ConcurrentBag<List<decimal>> simLists, int analysisLength);
@@ -49,19 +49,20 @@ namespace RetireSimple.Engine.Analysis.Utils {
 		internal int SimulationCount { get; init; }
 		internal decimal RandomVarScaleFactor { get; init; }
 
-		public MonteCarlo(OptionsDict options) {
-			BasePrice = decimal.Parse(options["StockPrice"]);
+		public MonteCarlo(OptionsDict options, IContinuousDistribution randomVariable) {
+			BasePrice = decimal.Parse(options["basePrice"]);
 			AnalysisLength = int.Parse(options["analysisLength"]);
 			RandomVarScaleFactor = decimal.Parse(options["randomVariableScaleFactor"]);
 			SimulationCount = int.Parse(options["simCount"]);
-			var randomVarType = Enum.Parse<MonteCarloRV>(options["randomVarType"]);
-			RandomVariable = CreateRandomVarInstance(randomVarType, options);
+			RandomVariable = randomVariable;
 		}
 
-		public IContinuousDistribution CreateRandomVarInstance(MonteCarloRV rvType, OptionsDict parameters) {
+		public static IContinuousDistribution CreateRandomVariable(OptionsDict parameters) {
+			var rvType = Enum.Parse<MonteCarloRV>(parameters["randomVariableType"]);
+			
 			return rvType switch {
-				MonteCarloRV.Normal => new Normal(double.Parse(parameters["randomVariableMu"]), double.Parse(parameters["RandomVariableSigma"])),
-				MonteCarloRV.LogNormal => new LogNormal(double.Parse(parameters["randomVariableMu"]), double.Parse(parameters["RandomVariableSigma"])),
+				MonteCarloRV.Normal => new Normal(double.Parse(parameters["randomVariableMu"]), double.Parse(parameters["randomVariableSigma"])),
+				MonteCarloRV.LogNormal => new LogNormal(double.Parse(parameters["randomVariableMu"]), double.Parse(parameters["randomVariableSigma"])),
 				_ => throw new NotImplementedException(),
 			};
 		}

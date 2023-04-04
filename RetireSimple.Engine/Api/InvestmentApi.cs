@@ -3,6 +3,8 @@ using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 using RetireSimple.Engine.Data.Expense;
 
+using System.Diagnostics;
+
 namespace RetireSimple.Engine.Api {
 	internal interface IInvestmentApi {
 		List<Investment> GetAllInvestments();
@@ -228,5 +230,6 @@ namespace RetireSimple.Engine.Api {
 
 			return models;
 		}
+
 	}
 }

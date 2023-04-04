@@ -9,13 +9,8 @@ namespace RetireSimple.Tests.Misc {
 			new object[]{
 				new StockInvestment(""),
 				Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(StockInvestment)),
-										typeof(StockAS).GetMethod("MonteCarlo_NormalDist"))
+										typeof(StockAS).GetMethod("MonteCarlo"))
 			},
-			new object[]{
-				new StockInvestment(""),
-				Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(StockInvestment)),
-										typeof(StockAS).GetMethod("MonteCarlo_LogNormalDist"))
-				},
 			new object[]{
 				new BondInvestment(""),
 				Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(BondInvestment)),
@@ -48,11 +43,8 @@ namespace RetireSimple.Tests.Misc {
 #pragma warning disable CS8604
 		public static readonly IEnumerable<object[]> ExpectedAnalysisModuleResolution = new List<object[]> {
 			new object[] {"StockInvestment", new Dictionary<string,Delegate>(){
-				["MonteCarlo_NormalDist"] = Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(StockInvestment)),
-																	typeof(StockAS).GetMethod("MonteCarlo_NormalDist")),
-				["MonteCarlo_LogNormalDist"] = Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(StockInvestment)),
-																	typeof(StockAS).GetMethod("MonteCarlo_LogNormalDist"))
-				}
+				["MonteCarlo"] = Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(StockInvestment)),
+																	typeof(StockAS).GetMethod("MonteCarlo"))}
 			},
 			new object[] {"BondInvestment", new Dictionary<string,Delegate>(){
 				["StdBondValuation"] = Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(BondInvestment)),

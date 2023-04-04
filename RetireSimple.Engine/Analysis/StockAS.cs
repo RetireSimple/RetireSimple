@@ -40,7 +40,7 @@ namespace RetireSimple.Engine.Analysis {
 			var monthInterval = GetDividendIntervalMonths(investment.StockDividendDistributionInterval);
 
 			//quantityList.Add(stockQuantity);
-			for (int i = 0; i < int.Parse(options["AnalysisLength"]); i++) {
+			for (int i = 0; i < int.Parse(options["analysisLength"]); i++) {
 				if ((currentMonth - firstDividendMonth) % monthInterval == 0) {
 					stockQuantity += stockQuantity * dividendPercent;
 				}
@@ -58,7 +58,7 @@ namespace RetireSimple.Engine.Analysis {
 		public static InvestmentModel MonteCarlo(StockInvestment investment, OptionsDict options) {
 			var simPreset = ResolveMonteCarloPreset(investment, options);
 
-			var priceSim = new MonteCarlo(options);
+			var priceSim = new MonteCarlo(simPreset, Utils.MonteCarlo.CreateRandomVariable(simPreset));
 			var priceModel = priceSim.RunSimulation();
 			var dividendModel = ProjectStockDividend(investment, DefaultStockAnalysisOptions);
 

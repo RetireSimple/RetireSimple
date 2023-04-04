@@ -521,14 +521,14 @@ namespace RetireSimple.Tests.Api {
 
 			api.Update(1, new OptionsDict {
 				{"stockTicker", "MSFT"},
-				{"analysisType", "MonteCarlo_LogNormalDist"},
+				{"analysisType", "MonteCarlo"},
 			});
 
 			context.Investment.Should().ContainSingle();
 			var investment = context.Investment.First();
 			investment.InvestmentData["stockTicker"].Should().Be("MSFT");
 			investment.InvestmentData.Should().NotContainKey("analysisType");
-			investment.AnalysisType.Should().Be("MonteCarlo_LogNormalDist");
+			investment.AnalysisType.Should().Be("MonteCarlo");
 		}
 
 		[Fact]
@@ -809,7 +809,8 @@ namespace RetireSimple.Tests.Api {
 		[Fact]
 		public void GetAllAnalysis_MultipleInvestments_ReturnsListWithAllItems() {
 			var partialMockedApi = new Mock<InvestmentApi>(context).As<IInvestmentApi>();
-			partialMockedApi.CallBase = true;
+			partialMockedApi.Setup(x => x.GetAllAnalysis()).CallBase();
+			partialMockedApi.Setup(x => x.Add(It.IsAny<string>(), It.IsAny<OptionsDict?>())).CallBase();
 			partialMockedApi.Setup(x => x.GetAnalysis(It.IsAny<int>(), It.IsAny<OptionsDict?>())).Returns(new InvestmentModel());
 			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "investmentName", "Test Investment 1" } });
 			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "investmentName", "Test Investment 2" } });
@@ -825,12 +826,12 @@ namespace RetireSimple.Tests.Api {
 			//This is intentionally a different option, as we are checking if the field is
 			//actually set to the correct value.
 			var paramsDict = new OptionsDict() {
-				{ "analysisType", "MonteCarlo_LogNormalDist" }
+				{ "analysisType", "MonteCarlo" }
 			};
 
 			var stock = InvestmentApiUtil.CreateStock(paramsDict);
 
-			stock.AnalysisType.Should().Be("MonteCarlo_LogNormalDist");
+			stock.AnalysisType.Should().Be("MonteCarlo");
 		}
 
 		//Regression Test: #183
@@ -838,7 +839,7 @@ namespace RetireSimple.Tests.Api {
 		public void CreateStockFieldNotFoundSetsDefaultType() {
 			var stock = InvestmentApiUtil.CreateStock(new OptionsDict());
 
-			stock.AnalysisType.Should().Be("MonteCarlo_NormalDist");
+			stock.AnalysisType.Should().Be("MonteCarlo");
 		}
 
 		//Regression Test: #183
