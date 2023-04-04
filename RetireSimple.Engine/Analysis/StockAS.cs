@@ -10,11 +10,11 @@ namespace RetireSimple.Engine.Analysis {
 		//This dictionary is statically available to allow for a common set of defaults that all
 		//analysis modules for the same type of investment can use.
 		public static readonly OptionsDict DefaultStockAnalysisOptions = new() {
-			["AnalysisLength"] = "60",                          //Number of months to project
-			["RandomVariableMu"] = "0",
-			["RandomVariableSigma"] = "1",
-			["RandomVariableScaleFactor"] = "1",
-			["SimCount"] = "1000"
+			["analysisLength"] = "60",                          //Number of months to project
+			["randomVariableMu"] = "0",
+			["randomVariableSigma"] = "1",
+			["randomVariableScaleFactor"] = "1",
+			["simCount"] = "1000"
 		};
 
 		private static int GetDividendIntervalMonths(string interval) => interval switch {
@@ -55,9 +55,11 @@ namespace RetireSimple.Engine.Analysis {
 		}
 
 		[AnalysisModule("StockInvestment")]
-		public static InvestmentModel MonteCarlo_NormalDist(StockInvestment investment, OptionsDict options) {
-			var priceModel = MonteCarlo.MonteCarloSimNormal(investment, DefaultStockAnalysisOptions);
-			//TODO Update to support other dividend types
+		public static InvestmentModel MonteCarlo(StockInvestment investment, OptionsDict options) {
+			var simPreset = ResolveMonteCarloPreset(investment, options);
+
+			var priceSim = new MonteCarlo(options);
+			var priceModel = priceSim.RunSimulation();
 			var dividendModel = ProjectStockDividend(investment, DefaultStockAnalysisOptions);
 
 			priceModel.MinModelData = priceModel.MinModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
@@ -67,18 +69,36 @@ namespace RetireSimple.Engine.Analysis {
 			return priceModel;
 		}
 
-		[AnalysisModule("StockInvestment")]
-		public static InvestmentModel MonteCarlo_LogNormalDist(StockInvestment investment, OptionsDict options) {
-			var priceModel = MonteCarlo.MonteCarloSimLogNormal(investment, DefaultStockAnalysisOptions);
-			//TODO Update to support other dividend types
-			var dividendModel = ProjectStockDividend(investment, DefaultStockAnalysisOptions);
+		public static OptionsDict ResolveMonteCarloPreset(StockInvestment investment, OptionsDict options) {
+			var simPreset = options.GetValueOrDefault("MonteCarloPreset")
+							?? investment.AnalysisOptionsOverrides.GetValueOrDefault("MonteCarloPreset")
+							?? "DefaultStockAnalysis";
+			var simOptions = new OptionsDict() {
+				["basePrice"] = investment.StockPrice.ToString(),
+				["analysisLength"] = options.GetValueOrDefault("analysisLength")
+									?? investment.AnalysisOptionsOverrides.GetValueOrDefault("analysisLength")
+									?? "60"
+			};
 
-			priceModel.MinModelData = priceModel.MinModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
-			priceModel.AvgModelData = priceModel.AvgModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
-			priceModel.MaxModelData = priceModel.MaxModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
-
-			return priceModel;
+			if (simPreset == "Custom") {
+				//Extact the requisite options from the options dictionary and return them.
+				simOptions["randomVariableType"] = options.GetValueOrDefault("randomVariableType") ??
+													investment.AnalysisOptionsOverrides["randomVariableType"];
+				simOptions["randomVariableMu"] = options.GetValueOrDefault("randomVariableMu") ??
+													investment.AnalysisOptionsOverrides["randomVariableMu"];
+				simOptions["randomVariableSigma"] = options.GetValueOrDefault("randomVariableSigma") ??
+													investment.AnalysisOptionsOverrides["randomVariableSigma"];
+				simOptions["randomVariableScaleFactor"] = options.GetValueOrDefault("randomVariableScaleFactor") ??
+													investment.AnalysisOptionsOverrides["randomVariableScaleFactor"];
+				simOptions["simCount"] = options.GetValueOrDefault("simCount") ??
+													investment.AnalysisOptionsOverrides["simCount"];
+			} else {
+				var preset = ReflectionUtils.GetAnalysisPresets("MonteCarlo")[simPreset];
+				simOptions = simOptions.Union(preset).ToDictionary(x => x.Key, x => x.Value);
+			}
+			return simOptions;
 		}
 
 	}
+
 }

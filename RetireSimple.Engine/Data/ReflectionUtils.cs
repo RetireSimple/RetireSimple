@@ -62,9 +62,9 @@ namespace RetireSimple.Engine.Data {
 			return vehicleModules.ToList();
 		}
 
-		public static Dictionary<string, OptionsDict> GetAnalysisPresets() {
-			var callingModule = new StackTrace()?.GetFrame(1)?.GetMethod()?.DeclaringType?.Name
-								?? throw new ArgumentNullException("Unable to determine calling module during preset resolution");
+		public static Dictionary<string, OptionsDict> GetAnalysisPresets(string? name = null) {
+			var callingModule = name ?? new StackTrace()?.GetFrame(1)?.GetMethod()?.DeclaringType?.Name
+								?? throw new ArgumentException("Unable to determine calling module during preset resolution");
 			var types = typeof(Base.Investment).Assembly.GetTypes();
 			var presets = types.SelectMany(t => t.GetFields())
 								.Where(t => t.GetCustomAttributes(typeof(AnalysisPresetAttribute), false).Length > 0);
@@ -76,9 +76,22 @@ namespace RetireSimple.Engine.Data {
 					if (presetAttribute.SupportedModules.Contains(callingModule)) {
 						presetDict.Add(preset.Name,
 										preset.GetValue(null) as OptionsDict
-											?? throw new ArgumentNullException("Preset value could not be resolved"));
+											?? throw new ArgumentException("Preset value could not be resolved"));
 					}
 				}
+			}
+
+			return presetDict;
+		}
+
+
+		public static Dictionary<string, Dictionary<string, OptionsDict>> GetAvailableAnalysisPresets(string investmentType) {
+			//Get all available analysis modules first, we don't care about delegates here
+			var analysisModules = GetAnalysisModules(investmentType).Keys.ToList();
+			//get all available presets for each type
+			var presetDict = new Dictionary<string, Dictionary<string, OptionsDict>>();
+			foreach (var module in analysisModules) {
+				presetDict.Add(module, GetAnalysisPresets());
 			}
 
 			return presetDict;
