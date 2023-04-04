@@ -29,8 +29,7 @@ namespace RetireSimple.Engine.Analysis {
 					// first 12 values qualify for short term capital gains tax
 					if (i < 12) {
 						tax = shortTermTax;
-					}
-					else {  // everything after (>11) is subject to long term capital gains
+					} else {  // everything after (>11) is subject to long term capital gains
 						tax = longTermTax;
 					}
 					capitalGainsMin = Math.Max(0, model.MinModelData[i] - model.MinModelData[0]);

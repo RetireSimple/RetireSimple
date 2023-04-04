@@ -79,20 +79,5 @@ namespace RetireSimple.Engine.Analysis {
 			return priceModel;
 		}
 
-		public static OptionsDict MergeAnalysisOptions(StockInvestment investment, OptionsDict dict) {
-			var newDict = new OptionsDict(dict);
-			var investmentOptions = investment.AnalysisOptionsOverrides;
-
-			foreach (var k in investmentOptions.Keys) {
-				newDict.TryAdd(k, investmentOptions[k]);
-			}
-
-			foreach (var k in DefaultStockAnalysisOptions.Keys) {
-				newDict.TryAdd(k, DefaultStockAnalysisOptions[k]);
-			}
-
-			return newDict;
-		}
-
 	}
 }
