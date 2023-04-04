@@ -5,7 +5,7 @@ using RetireSimple.Engine.Data.Investment;
 
 using System.Collections.Concurrent;
 
-namespace RetireSimple.Engine.Analysis {
+namespace RetireSimple.Engine.Analysis.Utils {
 
 	public enum MonteCarloRV {
 		NORMAL,
@@ -157,7 +157,7 @@ namespace RetireSimple.Engine.Analysis {
 
 		public static InvestmentModel FilterSimulationData(ConcurrentBag<List<decimal>> simLists, int analysisLength) {
 			var model = new InvestmentModel();
-			for (int i = 0; i < analysisLength; i++) {
+			for (var i = 0; i < analysisLength; i++) {
 				model.MinModelData.Add(simLists.Select(x => x[i]).Min());
 				model.MaxModelData.Add(simLists.Select(x => x[i]).Max());
 				model.AvgModelData.Add(simLists.Select(x => x[i]).Average());

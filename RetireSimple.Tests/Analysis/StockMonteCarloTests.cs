@@ -2,7 +2,9 @@
 
 using MathNet.Numerics.Distributions;
 
-using static RetireSimple.Engine.Analysis.MonteCarlo;
+using RetireSimple.Engine.Analysis.Utils;
+
+using static RetireSimple.Engine.Analysis.Utils.MonteCarlo;
 
 namespace RetireSimple.Tests.Analysis {
 	public class StockMonteCarloTests {

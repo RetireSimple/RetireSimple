@@ -1,4 +1,8 @@
+using Microsoft.Extensions.Options;
+
 using RetireSimple.Engine.Data.Base;
+
+using System.Diagnostics;
 
 namespace RetireSimple.Engine.Data {
 
@@ -8,7 +12,8 @@ namespace RetireSimple.Engine.Data {
 			List<Delegate> modules = new List<Delegate>();
 
 			var types = typeof(Base.Investment).Assembly.GetTypes();
-			var analysisModules = types.SelectMany(t => t.GetMethods()).Where(m => m.GetCustomAttributes(typeof(AnalysisModuleAttribute), false).Length > 0);
+			var analysisModules = types.SelectMany(t => t.GetMethods())
+										.Where(m => m.GetCustomAttributes(typeof(AnalysisModuleAttribute), false).Length > 0);
 			foreach (var module in analysisModules) {
 				var analysisModule = module.GetCustomAttributes(typeof(AnalysisModuleAttribute), false)[0] as AnalysisModuleAttribute;
 				if (analysisModule is not null &&
@@ -56,6 +61,28 @@ namespace RetireSimple.Engine.Data {
 
 			return vehicleModules.ToList();
 		}
+
+		public static Dictionary<string, OptionsDict> GetAnalysisPresets() {
+			var callingModule = new StackTrace()?.GetFrame(1)?.GetMethod()?.DeclaringType?.Name
+								?? throw new ArgumentNullException("Unable to determine calling module during preset resolution");
+			var types = typeof(Base.Investment).Assembly.GetTypes();
+			var presets = types.SelectMany(t => t.GetFields())
+								.Where(t => t.GetCustomAttributes(typeof(AnalysisPresetAttribute), false).Length > 0);
+			var presetDict = new Dictionary<string, OptionsDict>();
+
+			foreach (var preset in presets) {
+				var presetAttribute = preset.GetCustomAttributes(typeof(AnalysisPresetAttribute), false)[0] as AnalysisPresetAttribute;
+				if (presetAttribute is not null) {
+					if (presetAttribute.SupportedModules.Contains(callingModule)) {
+						presetDict.Add(preset.Name,
+										preset.GetValue(null) as OptionsDict
+											?? throw new ArgumentNullException("Preset value could not be resolved"));
+					}
+				}
+			}
+
+			return presetDict;
+		}
 	}
 
 	/**************************************
@@ -84,4 +111,12 @@ namespace RetireSimple.Engine.Data {
 
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 	public sealed class InvestmentVehicleModuleAttribute : Attribute { }
+
+	[AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+	public sealed class AnalysisPresetAttribute : Attribute {
+		public List<string> SupportedModules { get; init; }
+		public AnalysisPresetAttribute(params string[] modules) {
+			SupportedModules = new List<string>(modules);
+		}
+	}
 }
