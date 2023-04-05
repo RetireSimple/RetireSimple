@@ -128,7 +128,7 @@ namespace RetireSimple.Engine.Data {
 	[AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
 	public sealed class AnalysisPresetAttribute : Attribute {
 		public List<string> SupportedModules { get; init; }
-		public AnalysisPresetAttribute(params string[] modules) {
+		public AnalysisPresetAttribute(string[] modules) {
 			SupportedModules = new List<string>(modules);
 		}
 	}

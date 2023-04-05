@@ -1,10 +1,10 @@
 using RetireSimple.Engine.Data;
+using RetireSimple.Engine.Data.Investment;
 
 namespace RetireSimple.Engine.Analysis.Presets {
 	public static class MonteCarloPresets {
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict DefaultStockAnalysis = new() {
-			["analysisLength"] = "60",
 			["randomVariableType"] = "Normal",
 			["randomVariableMu"] = "0",
 			["randomVariableSigma"] = "1",
@@ -14,7 +14,6 @@ namespace RetireSimple.Engine.Analysis.Presets {
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict LargeCapGrowth = new() {
-			["analysisLength"] = "60",
 			["randomVariableType"] = "Normal",
 			["randomVariableMu"] = "0.1",
 			["randomVariableSigma"] = "0.2",
@@ -24,7 +23,6 @@ namespace RetireSimple.Engine.Analysis.Presets {
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict LargeCapValue = new() {
-			["analysisLength"] = "60",
 			["randomVariableType"] = "Normal",
 			["randomVariableMu"] = "0.05",
 			["randomVariableSigma"] = "0.2",
@@ -34,7 +32,6 @@ namespace RetireSimple.Engine.Analysis.Presets {
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict SmallCapGrowth = new() {
-			["analysisLength"] = "60",
 			["randomVariableType"] = "Normal",
 			["randomVariableMu"] = "0.15",
 			["randomVariableSigma"] = "0.3",
@@ -44,7 +41,6 @@ namespace RetireSimple.Engine.Analysis.Presets {
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict SmallCapValue = new() {
-			["analysisLength"] = "60",
 			["randomVariableType"] = "Normal",
 			["randomVariableMu"] = "0.1",
 			["randomVariableSigma"] = "0.3",
@@ -54,7 +50,6 @@ namespace RetireSimple.Engine.Analysis.Presets {
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict MidCapGrowth = new() {
-			["analysisLength"] = "60",
 			["randomVariableType"] = "Normal",
 			["randomVariableMu"] = "0.1",
 			["randomVariableSigma"] = "0.25",
@@ -64,7 +59,6 @@ namespace RetireSimple.Engine.Analysis.Presets {
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict MidCapValue = new() {
-			["analysisLength"] = "60",
 			["randomVariableType"] = "Normal",
 			["randomVariableMu"] = "0.05",
 			["randomVariableSigma"] = "0.25",
@@ -74,12 +68,41 @@ namespace RetireSimple.Engine.Analysis.Presets {
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict InternationalStock = new() {
-			["analysisLength"] = "60",
 			["randomVariableType"] = "Normal",
 			["randomVariableMu"] = "0.1",
 			["randomVariableSigma"] = "0.3",
 			["randomVariableScaleFactor"] = "1",
 			["simCount"] = "1000"
 		};
+
+		public static OptionsDict ResolveMonteCarloPreset(StockInvestment investment, OptionsDict options) {
+			var simPreset = options.GetValueOrDefault("monteCarloPreset")
+							?? investment.AnalysisOptionsOverrides.GetValueOrDefault("monteCarloPreset")
+							?? "DefaultStockAnalysis";
+			var simOptions = new OptionsDict() {
+				["basePrice"] = investment.StockPrice.ToString(),
+				["analysisLength"] = options.GetValueOrDefault("analysisLength")
+									?? investment.AnalysisOptionsOverrides.GetValueOrDefault("analysisLength")
+									?? "60"
+			};
+
+			if (simPreset == "Custom") {
+				//Extact the requisite options from the options dictionary and return them.
+				simOptions["randomVariableType"] = options.GetValueOrDefault("randomVariableType") ??
+													investment.AnalysisOptionsOverrides["randomVariableType"];
+				simOptions["randomVariableMu"] = options.GetValueOrDefault("randomVariableMu") ??
+													investment.AnalysisOptionsOverrides["randomVariableMu"];
+				simOptions["randomVariableSigma"] = options.GetValueOrDefault("randomVariableSigma") ??
+													investment.AnalysisOptionsOverrides["randomVariableSigma"];
+				simOptions["randomVariableScaleFactor"] = options.GetValueOrDefault("randomVariableScaleFactor") ??
+													investment.AnalysisOptionsOverrides["randomVariableScaleFactor"];
+				simOptions["simCount"] = options.GetValueOrDefault("simCount") ??
+													investment.AnalysisOptionsOverrides["simCount"];
+			} else {
+				var preset = ReflectionUtils.GetAnalysisPresets("MonteCarlo")[simPreset];
+				simOptions = simOptions.Union(preset).ToDictionary(x => x.Key, x => x.Value);
+			}
+			return simOptions;
+		}
 	}
 }

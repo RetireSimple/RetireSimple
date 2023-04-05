@@ -1,4 +1,5 @@
-﻿using RetireSimple.Engine.Analysis.Utils;
+﻿using RetireSimple.Engine.Analysis.Presets;
+using RetireSimple.Engine.Analysis.Utils;
 using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Investment;
@@ -56,7 +57,7 @@ namespace RetireSimple.Engine.Analysis {
 
 		[AnalysisModule("StockInvestment")]
 		public static InvestmentModel MonteCarlo(StockInvestment investment, OptionsDict options) {
-			var simPreset = ResolveMonteCarloPreset(investment, options);
+			var simPreset = MonteCarloPresets.ResolveMonteCarloPreset(investment, options);
 
 			var priceSim = new MonteCarlo(simPreset, Utils.MonteCarlo.CreateRandomVariable(simPreset));
 			var priceModel = priceSim.RunSimulation();
@@ -67,36 +68,6 @@ namespace RetireSimple.Engine.Analysis {
 			priceModel.MaxModelData = priceModel.MaxModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
 
 			return priceModel;
-		}
-
-		public static OptionsDict ResolveMonteCarloPreset(StockInvestment investment, OptionsDict options) {
-			var simPreset = options.GetValueOrDefault("MonteCarloPreset")
-							?? investment.AnalysisOptionsOverrides.GetValueOrDefault("MonteCarloPreset")
-							?? "DefaultStockAnalysis";
-			var simOptions = new OptionsDict() {
-				["basePrice"] = investment.StockPrice.ToString(),
-				["analysisLength"] = options.GetValueOrDefault("analysisLength")
-									?? investment.AnalysisOptionsOverrides.GetValueOrDefault("analysisLength")
-									?? "60"
-			};
-
-			if (simPreset == "Custom") {
-				//Extact the requisite options from the options dictionary and return them.
-				simOptions["randomVariableType"] = options.GetValueOrDefault("randomVariableType") ??
-													investment.AnalysisOptionsOverrides["randomVariableType"];
-				simOptions["randomVariableMu"] = options.GetValueOrDefault("randomVariableMu") ??
-													investment.AnalysisOptionsOverrides["randomVariableMu"];
-				simOptions["randomVariableSigma"] = options.GetValueOrDefault("randomVariableSigma") ??
-													investment.AnalysisOptionsOverrides["randomVariableSigma"];
-				simOptions["randomVariableScaleFactor"] = options.GetValueOrDefault("randomVariableScaleFactor") ??
-													investment.AnalysisOptionsOverrides["randomVariableScaleFactor"];
-				simOptions["simCount"] = options.GetValueOrDefault("simCount") ??
-													investment.AnalysisOptionsOverrides["simCount"];
-			} else {
-				var preset = ReflectionUtils.GetAnalysisPresets("MonteCarlo")[simPreset];
-				simOptions = simOptions.Union(preset).ToDictionary(x => x.Key, x => x.Value);
-			}
-			return simOptions;
 		}
 
 #if DEBUG
