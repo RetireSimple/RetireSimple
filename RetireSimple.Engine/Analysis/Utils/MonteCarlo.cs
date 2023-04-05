@@ -10,14 +10,6 @@ using System.Collections.Concurrent;
 
 namespace RetireSimple.Engine.Analysis.Utils {
 
-	internal interface IMonteCarlo {
-		//IContinuousDistribution CreateRandomVariable(MonteCarloRV rvType, OptionsDict parameters);
-		List<decimal> MonteCarloSingleSimulation();
-		InvestmentModel RunSimulation();
-		InvestmentModel FilterSimulationData(ConcurrentBag<List<decimal>> simLists, int analysisLength);
-
-	}
-
 	public enum MonteCarloRV {
 		Normal,
 		LogNormal,
@@ -42,7 +34,7 @@ namespace RetireSimple.Engine.Analysis.Utils {
 	}
 
 
-	public class MonteCarlo : IMonteCarlo {
+	public class MonteCarlo {
 		internal IContinuousDistribution RandomVariable { get; init; }
 		internal decimal BasePrice { get; init; }
 		internal int AnalysisLength { get; init; }
@@ -59,7 +51,7 @@ namespace RetireSimple.Engine.Analysis.Utils {
 
 		public static IContinuousDistribution CreateRandomVariable(OptionsDict parameters) {
 			var rvType = Enum.Parse<MonteCarloRV>(parameters["randomVariableType"]);
-			
+
 			return rvType switch {
 				MonteCarloRV.Normal => new Normal(double.Parse(parameters["randomVariableMu"]), double.Parse(parameters["randomVariableSigma"])),
 				MonteCarloRV.LogNormal => new LogNormal(double.Parse(parameters["randomVariableMu"]), double.Parse(parameters["randomVariableSigma"])),
@@ -67,7 +59,7 @@ namespace RetireSimple.Engine.Analysis.Utils {
 			};
 		}
 
-		public List<decimal> MonteCarloSingleSimulation() {
+		internal virtual List<decimal> MonteCarloSingleSimulation() {
 			var currentPrice = BasePrice;
 			var iterModel = new List<decimal>();
 
@@ -89,7 +81,7 @@ namespace RetireSimple.Engine.Analysis.Utils {
 			return FilterSimulationData(simLists, AnalysisLength);
 		}
 
-		public InvestmentModel FilterSimulationData(ConcurrentBag<List<decimal>> simLists, int analysisLength) {
+		internal virtual InvestmentModel FilterSimulationData(ConcurrentBag<List<decimal>> simLists, int analysisLength) {
 			var model = new InvestmentModel();
 			for (var i = 0; i < analysisLength; i++) {
 				model.MinModelData.Add(simLists.Select(x => x[i]).Min());

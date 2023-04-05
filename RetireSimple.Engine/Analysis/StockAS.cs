@@ -99,6 +99,18 @@ namespace RetireSimple.Engine.Analysis {
 			return simOptions;
 		}
 
+#if DEBUG
+		[AnalysisModule("StockInvestment")]
+		public static InvestmentModel DummyStock(StockInvestment investment, OptionsDict options) {
+			var model = new InvestmentModel() {
+				MinModelData = new List<decimal>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+				AvgModelData = new List<decimal>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+				MaxModelData = new List<decimal>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+			};
+			return model;
+		}
+#endif
+
 	}
 
 }

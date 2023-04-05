@@ -800,7 +800,7 @@ namespace RetireSimple.Tests.Api {
 		public void GetAllAnalysis_OneInvestment_ReturnsListWithOneItem() {
 			var partialMockedApi = new Mock<InvestmentApi>(context) { CallBase = true }.As<IInvestmentApi>();
 			partialMockedApi.Setup(x => x.GetAnalysis(It.IsAny<int>(), It.IsAny<OptionsDict?>())).Returns(new InvestmentModel());
-			partialMockedApi.Object.Add("StockInvestment");
+			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "analysisType", "DummyStock" } });
 
 			var result = partialMockedApi.Object.GetAllAnalysis();
 			result.Should().HaveCount(1);
@@ -812,9 +812,9 @@ namespace RetireSimple.Tests.Api {
 			partialMockedApi.Setup(x => x.GetAllAnalysis()).CallBase();
 			partialMockedApi.Setup(x => x.Add(It.IsAny<string>(), It.IsAny<OptionsDict?>())).CallBase();
 			partialMockedApi.Setup(x => x.GetAnalysis(It.IsAny<int>(), It.IsAny<OptionsDict?>())).Returns(new InvestmentModel());
-			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "investmentName", "Test Investment 1" } });
-			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "investmentName", "Test Investment 2" } });
-			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "investmentName", "Test Investment 3" } });
+			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "investmentName", "Test Investment 1" }, { "analysisType", "DummyStock" } });
+			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "investmentName", "Test Investment 2" }, { "analysisType", "DummyStock" } });
+			partialMockedApi.Object.Add("StockInvestment", new OptionsDict() { { "investmentName", "Test Investment 3" }, { "analysisType", "DummyStock" } });
 
 			var result = partialMockedApi.Object.GetAllAnalysis();
 			result.Should().HaveCount(3);
@@ -826,12 +826,12 @@ namespace RetireSimple.Tests.Api {
 			//This is intentionally a different option, as we are checking if the field is
 			//actually set to the correct value.
 			var paramsDict = new OptionsDict() {
-				{ "analysisType", "MonteCarlo" }
+				{ "analysisType", "DummyStock" }
 			};
 
 			var stock = InvestmentApiUtil.CreateStock(paramsDict);
 
-			stock.AnalysisType.Should().Be("MonteCarlo");
+			stock.AnalysisType.Should().Be("DummyStock");
 		}
 
 		//Regression Test: #183

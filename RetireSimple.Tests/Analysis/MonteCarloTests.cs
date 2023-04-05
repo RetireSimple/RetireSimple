@@ -1,6 +1,11 @@
 ﻿using MathNet.Numerics.Distributions;
 
+using Moq;
+
 using RetireSimple.Engine.Analysis.Utils;
+using RetireSimple.Engine.Data.Analysis;
+
+using System.Collections.Concurrent;
 
 namespace RetireSimple.Tests.Analysis {
 	public class MonteCarloTests {
@@ -34,6 +39,58 @@ namespace RetireSimple.Tests.Analysis {
 			act.Should().Throw<NotImplementedException>();
 		}
 
+		[Fact]
+		public void FilterSimulationData_PerformsExpectedFilterning() {
+			var data = new ConcurrentBag<List<decimal>>() {
+				new List<decimal> {
+					1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+				},
+				new List<decimal>{10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+			};
+			var expected = new InvestmentModel() {
+				MinModelData = { 1, 2, 3, 4, 5, 5, 4, 3, 2, 1 },
+				MaxModelData = { 10, 9, 8, 7, 6, 6, 7, 8, 9, 10 },
+				AvgModelData = { 5.5M, 5.5M, 5.5M, 5.5M, 5.5M, 5.5M, 5.5M, 5.5M, 5.5M, 5.5M },
+			};
+			var dummyRV = new Mock<IContinuousDistribution>();
 
+
+			var monteCarlo = new MonteCarlo(TestOptions, dummyRV.Object);
+
+			var actual = monteCarlo.FilterSimulationData(data, 10);
+			//Quickly set LastUpdated to prevent equality errors
+			var now = DateTime.Now;
+			expected.LastUpdated = now;
+			actual.LastUpdated = now;
+
+			actual.Should().BeEquivalentTo(expected);
+		}
+
+		[Fact]
+		public void RunSimulation_SingleSimulation_ReturnsExpectedData() {
+			var dummyRV = new Mock<IContinuousDistribution>();
+			dummyRV.Setup(x => x.Sample()).Returns(1);
+			var monteCarlo = new MonteCarlo(TestOptions, dummyRV.Object);
+			var actual = monteCarlo.MonteCarloSingleSimulation();
+			actual.Should().BeEquivalentTo(new List<decimal> { 100, 101, 102, 103, 104, 105, 106, 107, 108, 109 });
+		}
+
+		[Fact]
+		public void RunFullSimulation_PerformsExpectedSteps() {
+			//While we can't exactly or effectively predict probability, we can 
+			//verify the steps performed by the simulation are correct
+
+			var dummyRV = new Mock<IContinuousDistribution>();
+			dummyRV.Setup(x => x.Sample()).Returns(1);
+			var monteCarlo = new Mock<MonteCarlo>(TestOptions, dummyRV.Object);
+			monteCarlo.Setup(x => x.MonteCarloSingleSimulation())
+						.Returns(new List<decimal>());
+			monteCarlo.Setup(x => x.FilterSimulationData(It.IsAny<ConcurrentBag<List<decimal>>>(), It.IsAny<int>()))
+						.Returns(new InvestmentModel());
+
+			var actual = monteCarlo.Object.RunSimulation();
+			monteCarlo.Verify(x => x.MonteCarloSingleSimulation(), Times.Exactly(1000));
+			monteCarlo.Verify(x => x.FilterSimulationData(It.IsAny<ConcurrentBag<List<decimal>>>(), It.IsAny<int>()), Times.Once);
+		}
 	}
 }
