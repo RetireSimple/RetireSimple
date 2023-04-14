@@ -29,13 +29,10 @@ namespace RetireSimple.Tests.Misc {
 			var type = investment.GetType();
 			var delegateType = typeof(AnalysisModule<>).MakeGenericType(type);
 
-			//Use Reflection to use the correct generic
 			var genericSetMethod = typeof(ReflectionUtils).GetMethod("SetAnalysisModuleDelegate")?.MakeGenericMethod(type);
 
-			//Set the delegate
 			genericSetMethod?.Invoke(null, new object[] { investment, expectedDelegate });
 
-			//Check if the delegate was set correctly
 			analysisMethodProp?.GetValue(investment).Should().NotBeNull();
 			analysisMethodProp?.GetValue(investment).Should().BeOfType(delegateType);
 		}

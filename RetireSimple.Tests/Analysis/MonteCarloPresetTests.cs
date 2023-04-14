@@ -31,6 +31,8 @@ namespace RetireSimple.Tests.Analysis {
 			new object[] {"DefaultStockAnalysis", MonteCarloPresets.DefaultStockAnalysis},
 			new object[]{"InternationalStock", MonteCarloPresets.InternationalStock},
 		};
+		public static readonly IEnumerable<object[]> PresetList = PresetResolutionData.Select(x => new object[] { x.First() });
+
 		[Theory, MemberData(nameof(PresetResolutionData))]
 		public void ResolveMonteCarloPresets_KnownPreset_ReturnsCorrectPreset(string preset, OptionsDict expectedSubset) {
 			TestInvestment.AnalysisOptionsOverrides["monteCarloPreset"] = preset;
@@ -45,8 +47,8 @@ namespace RetireSimple.Tests.Analysis {
 			actual["analysisLength"].Should().Be(TestInvestment.AnalysisOptionsOverrides["analysisLength"]);
 		}
 
-		[Theory, MemberData(nameof(PresetResolutionData))]
-		public void ResolveMonteCarloPresets_NoDefinedAnalysisLength_UsesDefaultLength(string preset, OptionsDict expectedSubset) {
+		[Theory, MemberData(nameof(PresetList))]
+		public void ResolveMonteCarloPresets_NoDefinedAnalysisLength_UsesDefaultLength(string preset) {
 			TestInvestment.AnalysisOptionsOverrides["monteCarloPreset"] = preset;
 			TestInvestment.AnalysisOptionsOverrides.Remove("analysisLength");
 
@@ -105,7 +107,7 @@ namespace RetireSimple.Tests.Analysis {
 				["randomVariableSigma"] = "Sigma",
 				["randomVariableScaleFactor"] = "ScaleFactor",
 				["simCount"] = "100000"
-			};	
+			};
 
 			var actual = MonteCarloPresets.ResolveMonteCarloPreset(TestInvestment, overrideParams);
 
@@ -123,7 +125,7 @@ namespace RetireSimple.Tests.Analysis {
 
 		[Fact]
 		public void ResolveMonteCarloPresets_UnknownPreset_ThrowsException() {
-			Action act = ()=>{ MonteCarloPresets.ResolveMonteCarloPreset(TestInvestment, new OptionsDict()); };
+			Action act = () => { MonteCarloPresets.ResolveMonteCarloPreset(TestInvestment, new OptionsDict()); };
 			act.Should().Throw<KeyNotFoundException>();
 		}
 
