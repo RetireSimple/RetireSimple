@@ -1,4 +1,8 @@
-import {convertInvestmentModelData, flattenApiInvestment} from '../api/ApiMapper';
+import {
+	convertInvestmentModelData,
+	flattenApiInvestment,
+	convertApiPresets,
+} from '../api/ApiMapper';
 import {Investment, InvestmentModel} from '../Interfaces';
 
 describe('flattenApiInvestment', () => {
@@ -110,5 +114,155 @@ describe('convertInvestmentModelData', () => {
 			expect(result[i].max).toEqual(+apiData.maxModelData[i].toFixed(2));
 			expect(result[i].avg).toEqual(+apiData.avgModelData[i].toFixed(2));
 		}
+	});
+});
+
+describe('convertApiPresets', () => {
+	test('performs proper conversion', () => {
+		const input = {
+			monteCarlo: {
+				defaultStockAnalysis: {
+					randomVariableType: 'Normal',
+					randomVariableMu: '0',
+					randomVariableSigma: '1',
+					randomVariableScaleFactor: '1',
+					simCount: '1000',
+				},
+				largeCapGrowth: {
+					randomVariableType: 'Normal',
+					randomVariableMu: '0.1',
+					randomVariableSigma: '0.2',
+					randomVariableScaleFactor: '1',
+					simCount: '1000',
+				},
+				largeCapValue: {
+					randomVariableType: 'Normal',
+					randomVariableMu: '0.05',
+					randomVariableSigma: '0.2',
+					randomVariableScaleFactor: '1',
+					simCount: '1000',
+				},
+				smallCapGrowth: {
+					randomVariableType: 'Normal',
+					randomVariableMu: '0.15',
+					randomVariableSigma: '0.3',
+					randomVariableScaleFactor: '1',
+					simCount: '1000',
+				},
+				smallCapValue: {
+					randomVariableType: 'Normal',
+					randomVariableMu: '0.1',
+					randomVariableSigma: '0.3',
+					randomVariableScaleFactor: '1',
+					simCount: '1000',
+				},
+				midCapGrowth: {
+					randomVariableType: 'Normal',
+					randomVariableMu: '0.1',
+					randomVariableSigma: '0.25',
+					randomVariableScaleFactor: '1',
+					simCount: '1000',
+				},
+				midCapValue: {
+					randomVariableType: 'Normal',
+					randomVariableMu: '0.05',
+					randomVariableSigma: '0.25',
+					randomVariableScaleFactor: '1',
+					simCount: '1000',
+				},
+				internationalStock: {
+					randomVariableType: 'Normal',
+					randomVariableMu: '0.1',
+					randomVariableSigma: '0.3',
+					randomVariableScaleFactor: '1',
+					simCount: '1000',
+				},
+			},
+			dummyTest: {
+				testPreset1: {
+					testOption1: 'testValue1',
+					testOption2: 'testValue2',
+				},
+				testPreset2: {
+					testOption1: 'testValue1',
+					testOption2: 'testValue2',
+				},
+			},
+		};
+
+		const expected = {
+			MonteCarlo: {
+				DefaultStockAnalysis: {
+					analysis_randomVariableType: 'Normal',
+					analysis_randomVariableMu: '0',
+					analysis_randomVariableSigma: '1',
+					analysis_randomVariableScaleFactor: '1',
+					analysis_simCount: '1000',
+				},
+				LargeCapGrowth: {
+					analysis_randomVariableType: 'Normal',
+					analysis_randomVariableMu: '0.1',
+					analysis_randomVariableSigma: '0.2',
+					analysis_randomVariableScaleFactor: '1',
+					analysis_simCount: '1000',
+				},
+				LargeCapValue: {
+					analysis_randomVariableType: 'Normal',
+					analysis_randomVariableMu: '0.05',
+					analysis_randomVariableSigma: '0.2',
+					analysis_randomVariableScaleFactor: '1',
+					analysis_simCount: '1000',
+				},
+				SmallCapGrowth: {
+					analysis_randomVariableType: 'Normal',
+					analysis_randomVariableMu: '0.15',
+					analysis_randomVariableSigma: '0.3',
+					analysis_randomVariableScaleFactor: '1',
+					analysis_simCount: '1000',
+				},
+				SmallCapValue: {
+					analysis_randomVariableType: 'Normal',
+					analysis_randomVariableMu: '0.1',
+					analysis_randomVariableSigma: '0.3',
+					analysis_randomVariableScaleFactor: '1',
+					analysis_simCount: '1000',
+				},
+				MidCapGrowth: {
+					analysis_randomVariableType: 'Normal',
+					analysis_randomVariableMu: '0.1',
+					analysis_randomVariableSigma: '0.25',
+					analysis_randomVariableScaleFactor: '1',
+					analysis_simCount: '1000',
+				},
+				MidCapValue: {
+					analysis_randomVariableType: 'Normal',
+					analysis_randomVariableMu: '0.05',
+					analysis_randomVariableSigma: '0.25',
+					analysis_randomVariableScaleFactor: '1',
+					analysis_simCount: '1000',
+				},
+				InternationalStock: {
+					analysis_randomVariableType: 'Normal',
+					analysis_randomVariableMu: '0.1',
+					analysis_randomVariableSigma: '0.3',
+					analysis_randomVariableScaleFactor: '1',
+					analysis_simCount: '1000',
+				},
+			},
+			DummyTest: {
+				TestPreset1: {
+					analysis_testOption1: 'testValue1',
+					analysis_testOption2: 'testValue2',
+				},
+				TestPreset2: {
+					analysis_testOption1: 'testValue1',
+					analysis_testOption2: 'testValue2',
+				},
+			},
+		};
+
+		const result = convertApiPresets(input);
+
+		expect(result).toEqual(expected);
 	});
 });

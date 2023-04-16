@@ -14,6 +14,7 @@ import './index.css';
 import {Layout} from './Layout';
 import {CircularProgress, Typography} from '@mui/material';
 import {convertFromDecimal} from './api/ConvertUtils';
+import {ApiPresetData} from './Interfaces';
 
 /************************
  * Lazy Loaded Components
@@ -36,6 +37,12 @@ const VehicleView = React.lazy(() =>
 export const SuspenseRoute = ({children}: {children: React.ReactNode}) => {
 	return <React.Suspense fallback={<CircularProgress />}>{children}</React.Suspense>;
 };
+
+/************************
+ * Preset Context
+ ************************/
+export const PresetConext = React.createContext<ApiPresetData>({});
+export const PresetProvider = PresetConext.Provider;
 
 /************************
  * React Router Actions

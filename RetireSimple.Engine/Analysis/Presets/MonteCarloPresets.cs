@@ -76,7 +76,7 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		};
 
 		public static OptionsDict ResolveMonteCarloPreset(StockInvestment investment, OptionsDict options) {
-			var simPreset = options.GetValueOrDefault("monteCarloPreset")
+			var simPreset = options.GetValueOrDefault("analysisPreset")
 							?? investment.AnalysisOptionsOverrides.GetValueOrDefault("monteCarloPreset")
 							?? "DefaultStockAnalysis";
 			var simOptions = new OptionsDict() {

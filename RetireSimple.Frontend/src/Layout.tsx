@@ -13,17 +13,28 @@ import {
 } from '@mui/material';
 import React from 'react';
 import {Link, Outlet, useLoaderData} from 'react-router-dom';
-import {Investment, Portfolio} from './Interfaces';
+import {ApiPresetData, Investment, Portfolio} from './Interfaces';
 import {SidebarInvestment, VehicleListItem} from './components/SidebarComponents';
 import {AddInvestmentDialog, AddVehicleDialog} from './components/DialogComponents';
+import {PresetProvider} from '.';
+import {getAnalysisPresets} from './api/ApiCommon';
 
 export const Layout = () => {
 	const portfolio = useLoaderData() as Portfolio;
 	const {investments, investmentVehicles: vehicles} = portfolio;
 
+	const [presetData, setPresetData] = React.useState<ApiPresetData>({});
 	const [invAddDialogOpen, setInvAddDialogOpen] = React.useState(false);
 	const [vehicleAddDialogOpen, setVehicleAddDialogOpen] = React.useState(false);
 	const [vehicleAddInvTarget, setVehicleAddInvTarget] = React.useState<number>(-1); //by default, adds as individual investment
+
+	React.useEffect(() => {
+		if (Object.keys(presetData).length === 0) {
+			getAnalysisPresets().then((data) => {
+				setPresetData(data);
+			});
+		}
+	}, [presetData]);
 
 	const openAddInvDialog = (vehicleId: number) => {
 		setVehicleAddInvTarget(vehicleId);
@@ -103,42 +114,44 @@ export const Layout = () => {
 
 	return (
 		<div>
-			<AppBar position='static' sx={{padding: '1rem'}}>
-				<Box sx={{display: 'flex'}}>
-					<Typography variant='h6' component='div'>
-						RetireSimple
-					</Typography>
-					<Box component='span' sx={{flex: '1 1 auto'}} />
-					<Tooltip title='Report Bug/Issue on GitHub'>
-						<IconButton
-							color='inherit'
-							href='https://github.com/RetireSimple/RetireSimple/issues/new/choose'>
-							<Icon baseClassName='material-icons'>bug_report</Icon>
-						</IconButton>
-					</Tooltip>
+			<PresetProvider value={presetData}>
+				<AppBar position='static' sx={{padding: '1rem'}}>
+					<Box sx={{display: 'flex'}}>
+						<Typography variant='h6' component='div'>
+							RetireSimple
+						</Typography>
+						<Box component='span' sx={{flex: '1 1 auto'}} />
+						<Tooltip title='Report Bug/Issue on GitHub'>
+							<IconButton
+								color='inherit'
+								href='https://github.com/RetireSimple/RetireSimple/issues/new/choose'>
+								<Icon baseClassName='material-icons'>bug_report</Icon>
+							</IconButton>
+						</Tooltip>
+					</Box>
+				</AppBar>
+				<Box sx={{marginTop: '0.5rem', display: 'flex', flexDirection: 'row'}}>
+					<Box sx={{marginRight: '2rem'}}>{contents}</Box>
+					<Box
+						sx={{
+							display: 'flex',
+							marginY: '0.5rem',
+							marginLeft: '1rem',
+							maxWidth: '100vh',
+						}}>
+						<Outlet />
+					</Box>
 				</Box>
-			</AppBar>
-			<Box sx={{marginTop: '0.5rem', display: 'flex', flexDirection: 'row'}}>
-				<Box sx={{marginRight: '2rem'}}>{contents}</Box>
-				<Box
-					sx={{
-						display: 'flex',
-						marginY: '0.5rem',
-						marginLeft: '1rem',
-						maxWidth: '100vh',
-					}}>
-					<Outlet />
-				</Box>
-			</Box>
-			<AddInvestmentDialog
-				open={invAddDialogOpen}
-				onClose={() => setInvAddDialogOpen(false)}
-				vehicleTarget={vehicleAddInvTarget}
-			/>
-			<AddVehicleDialog
-				open={vehicleAddDialogOpen}
-				onClose={() => setVehicleAddDialogOpen(false)}
-			/>
+				<AddInvestmentDialog
+					open={invAddDialogOpen}
+					onClose={() => setInvAddDialogOpen(false)}
+					vehicleTarget={vehicleAddInvTarget}
+				/>
+				<AddVehicleDialog
+					open={vehicleAddDialogOpen}
+					onClose={() => setVehicleAddDialogOpen(false)}
+				/>
+			</PresetProvider>
 		</div>
 	);
 };

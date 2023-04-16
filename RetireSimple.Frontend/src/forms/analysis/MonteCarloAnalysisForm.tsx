@@ -2,11 +2,12 @@ import {Grid, Typography} from '@mui/material';
 import React from 'react';
 import {useFormContext} from 'react-hook-form';
 import {FormTextField, FormTextFieldMonthUnits} from '../../components/InputComponents';
+import {PresetConext} from '../..';
 
 export const MonteCarloAnalysisForm = () => {
 	const formContext = useFormContext();
 	const {errors} = formContext.formState;
-
+	const presets = React.useContext(PresetConext)['MonteCarlo'];
 	//==============================================
 	//Field definitions (To reduce indent depth)
 	//==============================================

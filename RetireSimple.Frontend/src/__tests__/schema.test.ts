@@ -20,7 +20,7 @@ describe('schema validation', () => {
 	});
 
 	describe('investmentType: StockInvestment', () => {
-		test('MonteCarlo_NormalDist_Valid', () => {
+		test('MonteCarlo_DefinedPreset_Valid', () => {
 			const schema = investmentFormSchema;
 			const data = {
 				investmentName: 'Test',
@@ -33,7 +33,29 @@ describe('schema validation', () => {
 				stockDividendDistributionInterval: 'Month',
 				stockDividendDistributionMethod: 'Stock',
 				stockDividendFirstPaymentDate: '2023-01-30',
-				analysisType: 'MonteCarlo_NormalDist',
+				analysisType: 'MonteCarlo',
+				analysis_analysisLength: '60',
+				analysis_analysisPreset: 'DefaultStockAnalysis', //NOTE validation for the actual value is kinda pointless, but it's here for completeness
+			};
+
+			expect(schema.isValidSync(data)).toBeTruthy();
+		});
+
+		test('MonteCarlo_CustomPreset_Valid', () => {
+			const schema = investmentFormSchema;
+			const data = {
+				investmentName: 'Test',
+				investmentType: 'StockInvestment',
+				stockTicker: 'TEST',
+				stockPrice: '123.45',
+				stockQuantity: '123.45',
+				stockPurchaseDate: '2023-01-30',
+				stockDividendPercent: '0.05',
+				stockDividendDistributionInterval: 'Month',
+				stockDividendDistributionMethod: 'Stock',
+				stockDividendFirstPaymentDate: '2023-01-30',
+				analysisType: 'MonteCarlo',
+				analysis_analysisPreset: 'Custom',
 				analysis_analysisLength: '60',
 				analysis_simCount: '10000',
 				analysis_randomVariableMu: '1.23',
@@ -44,7 +66,7 @@ describe('schema validation', () => {
 			expect(schema.isValidSync(data)).toBeTruthy();
 		});
 
-		test('MonteCarlo_NormalDist_Invalid_NoUndefined', () => {
+		test('MonteCarlo_CustomPreset_Invalid_NoUndefined', () => {
 			const schema = investmentFormSchema;
 			const data = {
 				investmentName: '',
@@ -57,7 +79,8 @@ describe('schema validation', () => {
 				stockDividendDistributionInterval: undefined,
 				stockDividendDistributionMethod: undefined,
 				stockDividendFirstPaymentDate: undefined,
-				analysisType: 'MonteCarlo_NormalDist',
+				analysisType: 'MonteCarlo',
+				analysis_analysisPreset: 'Custom',
 				analysis_analysisLength: undefined,
 				analysis_simCount: undefined,
 				analysis_randomVariableMu: undefined,
@@ -68,7 +91,7 @@ describe('schema validation', () => {
 			expect(schema.isValidSync(data)).toBeFalsy();
 		});
 
-		test('MonteCarlo_NormalDist_Invalid_NaN_Inputs', () => {
+		test('MonteCarlo_CustomPreset_Invalid_NaN_Inputs', () => {
 			const schema = investmentFormSchema;
 			const data = {
 				investmentName: 'Test',
@@ -81,7 +104,8 @@ describe('schema validation', () => {
 				stockDividendDistributionInterval: 'Month',
 				stockDividendDistributionMethod: 'Stock',
 				stockDividendFirstPaymentDate: '2023-01-30',
-				analysisType: 'MonteCarlo_NormalDist',
+				analysisType: 'MonteCarlo',
+				analysis_analysisPreset: 'Custom',
 				analysis_analysisLength: '',
 				analysis_simCount: '',
 				analysis_randomVariableMu: '',
@@ -90,30 +114,6 @@ describe('schema validation', () => {
 			};
 
 			expect(schema.isValidSync(data)).toBeFalsy();
-		});
-
-		test('MonteCarlo_LogNormalDist_Valid', () => {
-			const schema = investmentFormSchema;
-			const data = {
-				investmentName: 'Test',
-				investmentType: 'StockInvestment',
-				stockTicker: 'TEST',
-				stockPrice: '123.45',
-				stockQuantity: '123.45',
-				stockPurchaseDate: '2023-01-30',
-				stockDividendPercent: '0.05',
-				stockDividendDistributionInterval: 'Month',
-				stockDividendDistributionMethod: 'Stock',
-				stockDividendFirstPaymentDate: '2023-01-30',
-				analysisType: 'MonteCarlo_LogNormalDist',
-				analysis_analysisLength: '60',
-				analysis_simCount: '10000',
-				analysis_randomVariableMu: '1.23',
-				analysis_randomVariableSigma: '1.23',
-				analysis_randomVariableScaleFactor: '1.23',
-			};
-
-			expect(schema.isValidSync(data)).toBeTruthy();
 		});
 
 		test('#176 - Short Tickers', () => {
