@@ -1,13 +1,13 @@
-import {Grid, Typography} from '@mui/material';
+import {Checkbox, FormControlLabel, Grid, Typography} from '@mui/material';
 import React from 'react';
 import {useFormContext, useWatch} from 'react-hook-form';
+import {PresetContext} from '../../Layout';
+import {addSpacesCapitalCase} from '../../api/ConvertUtils';
 import {
 	FormSelectField,
 	FormTextField,
 	FormTextFieldMonthUnits,
 } from '../../components/InputComponents';
-import {PresetContext} from '../../Layout';
-import {addSpacesCapitalCase} from '../../api/ConvertUtils';
 
 export const MonteCarloAnalysisForm = () => {
 	const formContext = useFormContext();
@@ -168,6 +168,12 @@ export const MonteCarloAnalysisForm = () => {
 			}
 		/>
 	);
+
+	const getPresetValue = (field: string) => {
+		if (!presets || !currentPreset) return 'Not Set';
+		return presets[currentPreset][field];
+	};
+
 	return (
 		<>
 			<Grid item xs={4}>
@@ -176,6 +182,51 @@ export const MonteCarloAnalysisForm = () => {
 			<Grid item xs={4}>
 				{analysisPresetField}
 			</Grid>
+			{!showCustomFields && currentPreset && (
+				<>
+					<Grid item xs={4}>
+						<FormControlLabel
+							label='Show Parameter Values'
+							control={
+								<Checkbox
+									checked={showSettings}
+									onChange={() => setShowSettings(!showSettings)}
+								/>
+							}
+						/>
+					</Grid>
+					{showSettings && (
+						<Grid item xs={12}>
+							<Typography variant='subtitle2'>Monte Carlo Parameters</Typography>
+							<Typography variant='body2'>
+								{`Simulations to Run (Number of Trials): ${getPresetValue(
+									'analysis_simCount',
+								)}`}
+							</Typography>
+							<Typography variant='body2'>
+								{`Random Variable Type:	${getPresetValue(
+									'analysis_randomVariableType',
+								)}`}
+							</Typography>
+							<Typography variant='body2'>
+								{`Random Variable Mu: ${getPresetValue(
+									'analysis_randomVariableMu',
+								)}`}
+							</Typography>
+							<Typography variant='body2'>
+								{`Random Variable Sigma: ${getPresetValue(
+									'analysis_randomVariableSigma',
+								)}`}
+							</Typography>
+							<Typography variant='body2'>
+								{`Random Variable Scale Factor:	${getPresetValue(
+									'analysis_randomVariableScaleFactor',
+								)}`}
+							</Typography>
+						</Grid>
+					)}
+				</>
+			)}
 			{showCustomFields && (
 				<>
 					<Grid item xs={12}>
@@ -190,7 +241,6 @@ export const MonteCarloAnalysisForm = () => {
 					<Grid item xs={12}>
 						<Typography variant='subtitle2'>Random Variable Parameters</Typography>
 					</Grid>
-
 					<Grid item xs={2}>
 						{randomVariableMuField}
 					</Grid>
