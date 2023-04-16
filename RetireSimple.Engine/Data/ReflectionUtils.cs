@@ -71,12 +71,13 @@ namespace RetireSimple.Engine.Data {
 			var presetDict = new Dictionary<string, OptionsDict>();
 
 			foreach (var preset in presets) {
+				Console.WriteLine($"Found Preset {preset.Name} for analysis module {callingModule}");
 				var presetAttribute = preset.GetCustomAttributes(typeof(AnalysisPresetAttribute), false)[0] as AnalysisPresetAttribute;
 				if (presetAttribute is not null) {
 					if (presetAttribute.SupportedModules.Contains(callingModule)) {
 						presetDict.Add(preset.Name,
-										preset.GetValue(null) as OptionsDict
-											?? throw new ArgumentException("Preset value could not be resolved"));
+										new OptionsDict(preset.GetValue(null) as OptionsDict
+											?? throw new ArgumentException("Preset value could not be resolved")));
 					}
 				}
 			}
@@ -84,14 +85,23 @@ namespace RetireSimple.Engine.Data {
 			return presetDict;
 		}
 
-
-		public static Dictionary<string, Dictionary<string, OptionsDict>> GetAvailableAnalysisPresets(string investmentType) {
-			//Get all available analysis modules first, we don't care about delegates here
-			var analysisModules = GetAnalysisModules(investmentType).Keys.ToList();
-			//get all available presets for each type
+		public static Dictionary<string, Dictionary<string, OptionsDict>> GetAllPresets() {
 			var presetDict = new Dictionary<string, Dictionary<string, OptionsDict>>();
-			foreach (var module in analysisModules) {
-				presetDict.Add(module, GetAnalysisPresets());
+			var assemblyTypes = typeof(Base.Investment).Assembly.GetTypes();
+			var presets = assemblyTypes.SelectMany(t => t.GetFields())
+								.Where(t => t.GetCustomAttributes(typeof(AnalysisPresetAttribute), false).Length > 0);
+
+			foreach (var preset in presets) {
+				var presetAttribute = preset.GetCustomAttributes(typeof(AnalysisPresetAttribute), false)[0] as AnalysisPresetAttribute;
+				if (presetAttribute is not null) {
+					foreach (var module in presetAttribute.SupportedModules) {
+						if (!presetDict.ContainsKey(module)) {
+							presetDict.Add(module, new Dictionary<string, OptionsDict>());
+						}
+						presetDict[module].Add(preset.Name, new OptionsDict(preset.GetValue(null) as OptionsDict
+																		?? throw new ArgumentException("Preset value could not be resolved")));
+					}
+				}
 			}
 
 			return presetDict;
