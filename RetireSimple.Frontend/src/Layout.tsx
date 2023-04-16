@@ -16,20 +16,22 @@ import {Link, Outlet, useLoaderData} from 'react-router-dom';
 import {ApiPresetData, Investment, Portfolio} from './Interfaces';
 import {SidebarInvestment, VehicleListItem} from './components/SidebarComponents';
 import {AddInvestmentDialog, AddVehicleDialog} from './components/DialogComponents';
-import {PresetProvider} from '.';
+
 import {getAnalysisPresets} from './api/ApiCommon';
+
+export const PresetContext = React.createContext<ApiPresetData | undefined>(undefined);
 
 export const Layout = () => {
 	const portfolio = useLoaderData() as Portfolio;
 	const {investments, investmentVehicles: vehicles} = portfolio;
 
-	const [presetData, setPresetData] = React.useState<ApiPresetData>({});
+	const [presetData, setPresetData] = React.useState<ApiPresetData | undefined>(undefined);
 	const [invAddDialogOpen, setInvAddDialogOpen] = React.useState(false);
 	const [vehicleAddDialogOpen, setVehicleAddDialogOpen] = React.useState(false);
 	const [vehicleAddInvTarget, setVehicleAddInvTarget] = React.useState<number>(-1); //by default, adds as individual investment
 
 	React.useEffect(() => {
-		if (Object.keys(presetData).length === 0) {
+		if (presetData === undefined) {
 			getAnalysisPresets().then((data) => {
 				setPresetData(data);
 			});
@@ -114,7 +116,7 @@ export const Layout = () => {
 
 	return (
 		<div>
-			<PresetProvider value={presetData}>
+			<PresetContext.Provider value={presetData}>
 				<AppBar position='static' sx={{padding: '1rem'}}>
 					<Box sx={{display: 'flex'}}>
 						<Typography variant='h6' component='div'>
@@ -151,7 +153,7 @@ export const Layout = () => {
 					open={vehicleAddDialogOpen}
 					onClose={() => setVehicleAddDialogOpen(false)}
 				/>
-			</PresetProvider>
+			</PresetContext.Provider>
 		</div>
 	);
 };

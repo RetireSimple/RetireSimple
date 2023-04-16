@@ -195,6 +195,12 @@ export const investmentFormSchema = object().shape({
 		then: (schema) => schema.defined('Required').positive().required(),
 		otherwise: (schema) => schema.strip(),
 	}),
+	analysis_randomVariableType: string().when(['analysisType', 'analysis_analysisPreset'], {
+		is: (analysisType: string, analysis_analysisPreset: string) =>
+			analysisType === 'MonteCarlo' && analysis_analysisPreset === 'Custom',
+		then: (schema) => schema.defined('Required').oneOf(['Normal', 'LogNormal']).required(),
+		otherwise: (schema) => schema.strip(),
+	}),
 	analysis_randomVariableMu: number().when(['analysisType', 'analysis_analysisPreset'], {
 		is: (analysisType: string, analysis_analysisPreset: string) =>
 			analysisType === 'MonteCarlo' && analysis_analysisPreset === 'Custom',

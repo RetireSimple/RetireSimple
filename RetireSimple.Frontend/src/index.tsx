@@ -1,3 +1,4 @@
+import {CircularProgress, Typography} from '@mui/material';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
@@ -8,13 +9,11 @@ import {
 } from 'react-router-dom';
 import {getPortfolio} from './api/ApiCommon';
 import {flattenApiInvestment, getFlatVehicleData} from './api/ApiMapper';
+import {convertFromDecimal} from './api/ConvertUtils';
 import {deleteInvestment, getInvestment} from './api/InvestmentApi';
 import {deleteVehicle, getVehicle} from './api/VehicleApi';
 import './index.css';
 import {Layout} from './Layout';
-import {CircularProgress, Typography} from '@mui/material';
-import {convertFromDecimal} from './api/ConvertUtils';
-import {ApiPresetData} from './Interfaces';
 
 /************************
  * Lazy Loaded Components
@@ -37,12 +36,6 @@ const VehicleView = React.lazy(() =>
 export const SuspenseRoute = ({children}: {children: React.ReactNode}) => {
 	return <React.Suspense fallback={<CircularProgress />}>{children}</React.Suspense>;
 };
-
-/************************
- * Preset Context
- ************************/
-export const PresetConext = React.createContext<ApiPresetData>({});
-export const PresetProvider = PresetConext.Provider;
 
 /************************
  * React Router Actions

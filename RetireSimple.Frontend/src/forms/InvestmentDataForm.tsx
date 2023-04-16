@@ -63,12 +63,8 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 								errorField={errors.analysisType}
 								options={[
 									{
-										value: 'MonteCarlo_NormalDist',
-										label: 'Monte Carlo (Normal Dist)',
-									},
-									{
-										value: 'MonteCarlo_LogNormalDist',
-										label: 'Monte Carlo (Log Normal Dist)',
+										value: 'MonteCarlo',
+										label: 'Monte Carlo',
 									},
 								]}
 								defaultOption=''
