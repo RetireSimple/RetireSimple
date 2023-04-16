@@ -15,7 +15,7 @@ namespace RetireSimple.Tests.Analysis {
 				StockPrice = 100,
 				AnalysisOptionsOverrides = {
 					["analysisLength"] = "50",
-					["monteCarloPreset"] = ""
+					["analysisPreset"] = ""
 				}
 			};
 
@@ -35,7 +35,7 @@ namespace RetireSimple.Tests.Analysis {
 
 		[Theory, MemberData(nameof(PresetResolutionData))]
 		public void ResolveMonteCarloPresets_KnownPreset_ReturnsCorrectPreset(string preset, OptionsDict expectedSubset) {
-			TestInvestment.AnalysisOptionsOverrides["monteCarloPreset"] = preset;
+			TestInvestment.AnalysisOptionsOverrides["analysisPreset"] = preset;
 
 			var actual = MonteCarloPresets.ResolveMonteCarloPreset(TestInvestment, new OptionsDict());
 
@@ -49,7 +49,7 @@ namespace RetireSimple.Tests.Analysis {
 
 		[Theory, MemberData(nameof(PresetList))]
 		public void ResolveMonteCarloPresets_NoDefinedAnalysisLength_UsesDefaultLength(string preset) {
-			TestInvestment.AnalysisOptionsOverrides["monteCarloPreset"] = preset;
+			TestInvestment.AnalysisOptionsOverrides["analysisPreset"] = preset;
 			TestInvestment.AnalysisOptionsOverrides.Remove("analysisLength");
 
 			var actual = MonteCarloPresets.ResolveMonteCarloPreset(TestInvestment, new OptionsDict());
@@ -61,7 +61,7 @@ namespace RetireSimple.Tests.Analysis {
 		[Theory, MemberData(nameof(PresetResolutionData))]
 		public void ResolveMonteCarloPresets_KnownPresetDefinedInOverrideParam_ReturnsCorrectPresetUsingOverrideDef(string preset, OptionsDict expectedSubset) {
 			var overrideParams = new OptionsDict() {
-				["monteCarloPreset"] = preset
+				["analysisPreset"] = preset
 			};
 
 			var actual = MonteCarloPresets.ResolveMonteCarloPreset(TestInvestment, overrideParams);
@@ -77,7 +77,7 @@ namespace RetireSimple.Tests.Analysis {
 
 		[Fact]
 		public void ResolveMonteCarloPresets_CustomPreset_ReturnsCustomPresetDefinedInInvestment() {
-			TestInvestment.AnalysisOptionsOverrides["monteCarloPreset"] = "Custom";
+			TestInvestment.AnalysisOptionsOverrides["analysisPreset"] = "Custom";
 			TestInvestment.AnalysisOptionsOverrides["randomVariableType"] = "Test1";
 			TestInvestment.AnalysisOptionsOverrides["randomVariableMu"] = "Mu";
 			TestInvestment.AnalysisOptionsOverrides["randomVariableSigma"] = "Sigma";
@@ -101,7 +101,7 @@ namespace RetireSimple.Tests.Analysis {
 		[Fact]
 		public void ResolveMonteCarloPresets_CustomPresetDefinedInOverrideParam_ReturnsCustomUsingOverrideParams() {
 			var overrideParams = new OptionsDict() {
-				["monteCarloPreset"] = "Custom",
+				["analysisPreset"] = "Custom",
 				["randomVariableType"] = "Test1",
 				["randomVariableMu"] = "Mu",
 				["randomVariableSigma"] = "Sigma",
@@ -131,7 +131,7 @@ namespace RetireSimple.Tests.Analysis {
 
 		[Fact]
 		public void ResolveMonteCarloPresets_UnknownPresetDefinedInOverrideParam_ThrowsException() {
-			Action act = () => { MonteCarloPresets.ResolveMonteCarloPreset(TestInvestment, new OptionsDict() { ["monteCarloPreset"] = "Unknown" }); };
+			Action act = () => { MonteCarloPresets.ResolveMonteCarloPreset(TestInvestment, new OptionsDict() { ["analysisPreset"] = "Unknown" }); };
 			act.Should().Throw<KeyNotFoundException>();
 		}
 
