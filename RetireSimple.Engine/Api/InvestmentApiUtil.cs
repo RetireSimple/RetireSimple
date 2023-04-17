@@ -9,7 +9,7 @@ namespace RetireSimple.Engine.Api {
 
 		public static StockInvestment CreateStock(OptionsDict parameters) {
 			var defaults = GetStockDefaults();
-			var analysisType = parameters.GetValueOrDefault("analysisType") ?? "MonteCarlo_NormalDist";
+			var analysisType = parameters.GetValueOrDefault("analysisType") ?? "MonteCarlo";
 
 			return new StockInvestment(analysisType) {
 				StockPrice = decimal.Parse(parameters.GetValueOrDefault("stockPrice", defaults["stockPrice"])),

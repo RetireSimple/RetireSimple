@@ -27,10 +27,6 @@ namespace RetireSimple.Engine.Analysis {
 			};
 		}
 
-		public static readonly OptionsDict DefaultBondAnalysisOptions = new() {
-			["analysisLength"] = "60",                    //Number of months to project
-			["isAnnual"] = "true",
-		};
 
 		public static List<decimal> BondValuation(BondInvestment investment, OptionsDict options) {
 			var bondVals = new List<decimal>();
@@ -39,7 +35,7 @@ namespace RetireSimple.Engine.Analysis {
 			DateOnly maturityDate = investment.BondMaturityDate;
 			DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
 			int analysisLength = int.Parse(investment.AnalysisOptionsOverrides["analysisLength"]);
-			int monthsApart = Math.Abs(12 * ((purchaseDate.Year - maturityDate.Year) + (purchaseDate.Month - maturityDate.Month)));
+			int monthsApart = Math.Abs(12 * (purchaseDate.Year - maturityDate.Year) + (purchaseDate.Month - maturityDate.Month));
 			int monthInterval = 12;
 			decimal faceVal = investment.BondFaceValue;
 			int n = 1;
@@ -74,8 +70,7 @@ namespace RetireSimple.Engine.Analysis {
 			if (purchaseDate <= currentDate) {
 				int dateDiff = Math.Abs(12 * (currentDate.Year - purchaseDate.Year) + (currentDate.Month - purchaseDate.Month));
 				tempList = bondVals.Take(new Range(dateDiff, analysisLength + dateDiff)).ToList();
-			}
-			else if (purchaseDate > currentDate) {
+			} else if (purchaseDate > currentDate) {
 				int dateDiff = Math.Abs(12 * (purchaseDate.Year - currentDate.Year) + purchaseDate.Month - currentDate.Month);
 				var zeroList = new List<decimal>();
 				zeroList.AddRange(Enumerable.Repeat(0M, dateDiff));
@@ -87,21 +82,6 @@ namespace RetireSimple.Engine.Analysis {
 			}
 
 			return tempList;
-		}
-
-		public static OptionsDict MergeAnalysisOption(BondInvestment investment, OptionsDict dict) {
-			var newDict = new OptionsDict(dict);
-			var investmentOptions = investment.AnalysisOptionsOverrides;
-
-			foreach (var k in investmentOptions.Keys) {
-				newDict.TryAdd(k, investmentOptions[k]);
-			}
-
-			foreach (var k in DefaultBondAnalysisOptions.Keys) {
-				newDict.TryAdd(k, DefaultBondAnalysisOptions[k]);
-			}
-
-			return newDict;
 		}
 
 	}

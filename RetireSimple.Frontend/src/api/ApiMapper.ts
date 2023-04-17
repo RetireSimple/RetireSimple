@@ -1,5 +1,6 @@
 import {
 	ApiFormData,
+	ApiPresetData,
 	Investment,
 	InvestmentModel,
 	InvestmentVehicle,
@@ -119,3 +120,24 @@ export const getFlatVehicleData = (vehicle: InvestmentVehicle) => {
 	return result;
 };
 
+export const convertApiPresets = (data: any): ApiPresetData => {
+	const result: ApiPresetData = {};
+
+	Object.keys(data).forEach((analysis_key) => {
+		const properName = analysis_key.charAt(0).toUpperCase() + analysis_key.slice(1);
+		result[properName] = {};
+
+		Object.keys(data[analysis_key]).forEach((preset_key) => {
+			const properPresetName = preset_key.charAt(0).toUpperCase() + preset_key.slice(1);
+			result[properName][properPresetName] = {};
+
+			Object.keys(data[analysis_key][preset_key]).forEach((option_key) => {
+				const presetOption = `analysis_${option_key}`;
+				result[properName][properPresetName][presetOption] =
+					data[analysis_key][preset_key][option_key];
+			});
+		});
+	});
+
+	return result;
+};

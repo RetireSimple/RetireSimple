@@ -17,14 +17,11 @@ export const investmentFormSchema = object().shape({
 		.required()
 		.when('investmentType', {
 			is: 'StockInvestment',
-			then: (schema) =>
-				schema
-					.defined('Required')
-					.oneOf(['MonteCarlo_NormalDist', 'MonteCarlo_LogNormalDist']),
+			then: (schema) => schema.defined('Required').oneOf(['MonteCarlo']),
 		})
 		.when('investmentType', {
 			is: 'BondInvestment',
-			then: (schema) => schema.oneOf(['StdBondValuation']),
+			then: (schema) => schema.defined('Required').oneOf(['StdBondValuation']),
 		}),
 
 	//========================================
@@ -186,20 +183,27 @@ export const investmentFormSchema = object().shape({
 	//========================================
 	// Monte Carlo Analysis Specific Fields
 	//========================================
-	analysis_analysisLength: number().when('analysisType', {
-		is: (value: string) => value !== 'testAnalysis',
+	analysis_analysisLength: number().defined('Required').positive().required(),
+	analysis_analysisPreset: string().when('analysisType', {
+		is: (value: string) => value === 'MonteCarlo',
+		then: (schema) => schema.defined('Required').required(),
+		otherwise: (schema) => schema.strip(),
+	}),
+	analysis_simCount: number().when(['analysisType', 'analysis_analysisPreset'], {
+		is: (analysisType: string, analysis_analysisPreset: string) =>
+			analysisType === 'MonteCarlo' && analysis_analysisPreset === 'Custom',
 		then: (schema) => schema.defined('Required').positive().required(),
 		otherwise: (schema) => schema.strip(),
 	}),
-	analysis_simCount: number().when('analysisType', {
-		is: (value: string) =>
-			value === 'MonteCarlo_NormalDist' || value === 'MonteCarlo_LogNormalDist',
-		then: (schema) => schema.defined('Required').positive().required(),
+	analysis_randomVariableType: string().when(['analysisType', 'analysis_analysisPreset'], {
+		is: (analysisType: string, analysis_analysisPreset: string) =>
+			analysisType === 'MonteCarlo' && analysis_analysisPreset === 'Custom',
+		then: (schema) => schema.defined('Required').oneOf(['Normal', 'LogNormal']).required(),
 		otherwise: (schema) => schema.strip(),
 	}),
-	analysis_randomVariableMu: number().when('analysisType', {
-		is: (value: string) =>
-			value === 'MonteCarlo_NormalDist' || value === 'MonteCarlo_LogNormalDist',
+	analysis_randomVariableMu: number().when(['analysisType', 'analysis_analysisPreset'], {
+		is: (analysisType: string, analysis_analysisPreset: string) =>
+			analysisType === 'MonteCarlo' && analysis_analysisPreset === 'Custom',
 		then: (schema) =>
 			schema
 				.defined('Required')
@@ -209,9 +213,10 @@ export const investmentFormSchema = object().shape({
 				.required(),
 		otherwise: (schema) => schema.strip(),
 	}),
-	analysis_randomVariableSigma: number().when('analysisType', {
-		is: (value: string) =>
-			value === 'MonteCarlo_NormalDist' || value === 'MonteCarlo_LogNormalDist',
+	analysis_randomVariableSigma: number().when(['analysisType', 'analysis_analysisPreset'], {
+		is: (analysisType: string, analysis_analysisPreset: string) =>
+			analysisType === 'MonteCarlo' && analysis_analysisPreset === 'Custom',
+
 		then: (schema) =>
 			schema
 				.defined('Required')
@@ -221,9 +226,9 @@ export const investmentFormSchema = object().shape({
 				.required(),
 		otherwise: (schema) => schema.strip(),
 	}),
-	analysis_randomVariableScaleFactor: number().when('analysisType', {
-		is: (value: string) =>
-			value === 'MonteCarlo_NormalDist' || value === 'MonteCarlo_LogNormalDist',
+	analysis_randomVariableScaleFactor: number().when(['analysisType', 'analysis_analysisPreset'], {
+		is: (analysisType: string, analysis_analysisPreset: string) =>
+			analysisType === 'MonteCarlo' && analysis_analysisPreset === 'Custom',
 		then: (schema) =>
 			schema
 				.defined('Required')
@@ -251,8 +256,10 @@ export const InvestmentFormDefaults = {
 	stockDividendDistributionInterval: '',
 	stockDividendDistributionMethod: '',
 	stockDividendFirstPaymentDate: '',
-	analysisType: 'MonteCarlo_NormalDist',
+	analysisType: 'MonteCarlo',
+	analysis_analysisPreset: 'DefaultStockAnalysis',
 	analysis_analysisLength: '60',
+	analysis_randomVariableType: 'Normal',
 	analysis_simCount: '10000',
 	analysis_randomVariableMu: '0.0',
 	analysis_randomVariableSigma: '1.0',

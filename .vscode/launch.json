@@ -12,7 +12,7 @@
 			"name": "Start Backend",
 			"type": "coreclr",
 			"request": "launch",
-			"preLaunchTask": "watch",
+			"preLaunchTask": "build",
 			"program": "${workspaceFolder}/RetireSimple.Backend/bin/Debug/net6.0/RetireSimple.Backend.dll",
 			"args": [],
 			"cwd": "${workspaceFolder}/RetireSimple.Backend",
@@ -21,14 +21,27 @@
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
 		},
+		{
+			"name": "Start Backend (No Build)",
+			"type": "coreclr",
+			"request": "launch",
+			"program": "${workspaceFolder}/RetireSimple.Backend/bin/Debug/net6.0/RetireSimple.Backend.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}/RetireSimple.Backend",
+			"stopAtEntry": false,
+			"env": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			},
+		}
 	],
 	"compounds": [
 		{
 			"name": "Spawn Full Application",
 			"configurations": [
 				"Start Frontend",
-				"Start Backend",
-			]
+				"Start Backend (No Build)",
+			],
+			"preLaunchTask": "build"
 		}
 	]
 }

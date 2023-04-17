@@ -308,3 +308,4 @@ jspm_packages/
 *.db
 *.db-wal
 *.db-shm
+*.diagsession

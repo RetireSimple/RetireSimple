@@ -66,6 +66,5 @@ export interface InvestmentVehicleModel {
 	taxDeductedAvgModelData: number[];
 }
 
-//Alias Type for Form Context Data
-//Primarily used for FormContexts and API POST/PUT requests
 export type ApiFormData = {[key: string]: string};
+export type ApiPresetData = {[analysis: string]: {[preset: string]: {[presetkey: string]: string}}};

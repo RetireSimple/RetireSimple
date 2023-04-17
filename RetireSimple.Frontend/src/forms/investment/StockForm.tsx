@@ -2,7 +2,13 @@ import {Box, Grid, Typography} from '@mui/material';
 
 import React from 'react';
 import {useFormContext, useWatch} from 'react-hook-form';
-import {FormDatePicker, FormSelectField, FormTextField, FormTextFieldCurrency, FormTextFieldPercent} from '../../components/InputComponents';
+import {
+	FormDatePicker,
+	FormSelectField,
+	FormTextField,
+	FormTextFieldCurrency,
+	FormTextFieldPercent,
+} from '../../components/InputComponents';
 import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
 
 export interface StockFormProps {
@@ -22,12 +28,15 @@ export const StockForm = (props: StockFormProps) => {
 
 	const analysisSubForm = React.useCallback(() => {
 		switch (analysisType) {
-			case 'MonteCarlo_NormalDist':
-			case 'MonteCarlo_LogNormalDist':
+			case 'MonteCarlo':
 				return <MonteCarloAnalysisForm />;
 			default:
 				return (
-					<Typography variant='subtitle2'>No analysis parameters available</Typography>
+					<Grid item xs={12}>
+						<Typography variant='subtitle2'>
+							No analysis parameters available
+						</Typography>
+					</Grid>
 				);
 		}
 	}, [analysisType]);
@@ -231,9 +240,8 @@ export const StockForm = (props: StockFormProps) => {
 				<Grid item xs={4}>
 					{props.analysisTypeField}
 				</Grid>
-				<Grid item xs={12}>
-					{analysisSubForm()}
-				</Grid>
+
+				{analysisSubForm()}
 			</Grid>
 		</Box>
 	);

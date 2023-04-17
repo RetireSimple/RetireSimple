@@ -1,11 +1,43 @@
-import {Grid, Typography} from '@mui/material';
+import {Checkbox, FormControlLabel, Grid, Typography} from '@mui/material';
 import React from 'react';
-import {useFormContext} from 'react-hook-form';
-import {FormTextField, FormTextFieldMonthUnits} from '../../components/InputComponents';
+import {useFormContext, useWatch} from 'react-hook-form';
+import {PresetContext} from '../../Layout';
+import {addSpacesCapitalCase} from '../../api/ConvertUtils';
+import {
+	FormSelectField,
+	FormTextField,
+	FormTextFieldMonthUnits,
+} from '../../components/InputComponents';
 
 export const MonteCarloAnalysisForm = () => {
 	const formContext = useFormContext();
 	const {errors} = formContext.formState;
+	const presets = React.useContext(PresetContext)?.['MonteCarlo'];
+	const currentPreset = useWatch({
+		control: formContext.control,
+		name: 'analysis_analysisPreset',
+		defaultValue: formContext.getValues('analysis_analysisPreset'),
+	});
+	const [showSettings, setShowSettings] = React.useState(false);
+	const [showAdvanced, setShowAdvanced] = React.useState(false);
+
+	React.useEffect(() => {
+		setShowAdvanced(currentPreset === 'Custom');
+	}, [currentPreset]);
+
+	const presetOptions = React.useMemo(() => {
+		if (!presets)
+			return [{label: 'Custom', value: 'Custom'}] as {label: string; value: string}[];
+		const presetList: {label: string; value: string}[] = Object.keys(presets).map(
+			(presetName) => ({
+				label: addSpacesCapitalCase(presetName),
+				value: presetName,
+			}),
+		);
+
+		presetList.push({label: 'Custom', value: 'Custom'});
+		return presetList;
+	}, [presets]);
 
 	//==============================================
 	//Field definitions (To reduce indent depth)
@@ -17,6 +49,19 @@ export const MonteCarloAnalysisForm = () => {
 			control={formContext.control}
 			errorField={errors.analysisLength}
 			tooltip='The number of months from today to run the analysis for.'
+		/>
+	);
+
+	const analysisPresetField = (
+		<FormSelectField
+			name='analysis_analysisPreset'
+			label='Analysis Preset'
+			control={formContext.control}
+			errorField={errors.analysis_analysisPreset}
+			tooltip='A preset to use for the analysis.'
+			options={presetOptions}
+			defaultOption={''}
+			disable={false}
 		/>
 	);
 
@@ -37,6 +82,31 @@ export const MonteCarloAnalysisForm = () => {
 					</Typography>
 				</>
 			}
+		/>
+	);
+
+	const randomVariableTypeField = (
+		<FormSelectField
+			name='analysis_randomVariableType'
+			label='Random Variable Type'
+			control={formContext.control}
+			errorField={errors.analysis_randomVariableType}
+			tooltip={
+				<>
+					<Typography variant='inherit'>
+						The type of random variable to use for the simulation.
+					</Typography>
+					<Typography variant='inherit'>
+						Normal is the most common, but can be changed to other distributions.
+					</Typography>
+				</>
+			}
+			options={[
+				{label: 'Normal', value: 'Normal'},
+				{label: 'Log Normal', value: 'LogNormal'},
+			]}
+			defaultOption={'Normal'}
+			disable={false}
 		/>
 	);
 
@@ -106,29 +176,90 @@ export const MonteCarloAnalysisForm = () => {
 			}
 		/>
 	);
+
+	const getPresetValue = (field: string) => {
+		if (!presets || !currentPreset) return 'Not Set';
+		return presets[currentPreset][field];
+	};
+
 	return (
-		<Grid container spacing={2}>
-			<Grid item xs={12}>
-				<Typography variant='subtitle2'>Monte Carlo Analysis Parameters</Typography>
-			</Grid>
+		<>
 			<Grid item xs={4}>
 				{analysisLengthField}
 			</Grid>
 			<Grid item xs={4}>
-				{simCountField}
+				{analysisPresetField}
 			</Grid>
-			<Grid item xs={12}>
-				<Typography variant='subtitle2'>Random Variable Parameters (Normal)</Typography>
-			</Grid>
-			<Grid item xs={2}>
-				{randomVariableMuField}
-			</Grid>
-			<Grid item xs={2}>
-				{randomVariableSigmaField}
-			</Grid>
-			<Grid item xs={2}>
-				{randomVariableScaleFactorField}
-			</Grid>
-		</Grid>
+			{!showAdvanced && (
+				<>
+					<Grid item xs={4}>
+						<FormControlLabel
+							label='Show Parameter Values'
+							control={
+								<Checkbox
+									checked={showSettings}
+									onChange={() => setShowSettings(!showSettings)}
+								/>
+							}
+						/>
+					</Grid>
+					{showSettings && (
+						<Grid item xs={12}>
+							<Typography variant='subtitle2'>Monte Carlo Parameters</Typography>
+							<Typography variant='body2'>
+								{`Simulations to Run (Number of Trials): ${getPresetValue(
+									'analysis_simCount',
+								)}`}
+							</Typography>
+							<Typography variant='body2'>
+								{`Random Variable Type:	${getPresetValue(
+									'analysis_randomVariableType',
+								)}`}
+							</Typography>
+							<Typography variant='body2'>
+								{`Random Variable Mu: ${getPresetValue(
+									'analysis_randomVariableMu',
+								)}`}
+							</Typography>
+							<Typography variant='body2'>
+								{`Random Variable Sigma: ${getPresetValue(
+									'analysis_randomVariableSigma',
+								)}`}
+							</Typography>
+							<Typography variant='body2'>
+								{`Random Variable Scale Factor:	${getPresetValue(
+									'analysis_randomVariableScaleFactor',
+								)}`}
+							</Typography>
+						</Grid>
+					)}
+				</>
+			)}
+			{showAdvanced && (
+				<>
+					<Grid item xs={12}>
+						<Typography variant='subtitle2'>Custom Monte Carlo Parameters</Typography>
+					</Grid>
+					<Grid item xs={4}>
+						{simCountField}
+					</Grid>
+					<Grid item xs={4}>
+						{randomVariableTypeField}
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant='subtitle2'>Random Variable Parameters</Typography>
+					</Grid>
+					<Grid item xs={2}>
+						{randomVariableMuField}
+					</Grid>
+					<Grid item xs={2}>
+						{randomVariableSigmaField}
+					</Grid>
+					<Grid item xs={2}>
+						{randomVariableScaleFactorField}
+					</Grid>
+				</>
+			)}
+		</>
 	);
 };

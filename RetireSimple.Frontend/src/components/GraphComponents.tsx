@@ -3,7 +3,15 @@ import {getInvestmentModel} from '../api/InvestmentApi';
 import {convertInvestmentModelData, convertVehicleModelData} from '../api/ApiMapper';
 import {InvestmentModel} from '../Interfaces';
 import {useNavigation} from 'react-router-dom';
-import {Box, Button, FormControlLabel, FormGroup, Switch, Typography} from '@mui/material';
+import {
+	Box,
+	Button,
+	CircularProgress,
+	FormControlLabel,
+	FormGroup,
+	Switch,
+	Typography,
+} from '@mui/material';
 import {
 	Area,
 	AreaChart,
@@ -29,6 +37,15 @@ const strokeColors = [
 	'purple',
 	'brown',
 ];
+
+const loadIndicator = (
+	<Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+		<CircularProgress />
+		<Typography variant='button' sx={{marginLeft: '0.25rem'}}>
+			Generating Model...
+		</Typography>
+	</Box>
+);
 
 export const MinMaxAvgGraph = (props: {modelData: any[]}) => {
 	return (
@@ -57,6 +74,7 @@ export const MinMaxAvgGraph = (props: {modelData: any[]}) => {
 
 export const InvestmentModelGraph = (props: {investmentId: number}) => {
 	const [modelData, setModelData] = React.useState<any[] | undefined>(undefined);
+	const [loading, setLoading] = React.useState<boolean>(false);
 
 	const navigation = useNavigation();
 
@@ -67,16 +85,24 @@ export const InvestmentModelGraph = (props: {investmentId: number}) => {
 	}, [navigation.state]);
 
 	const getModelData = () => {
-		getInvestmentModel(props.investmentId).then((data: InvestmentModel) => {
-			setModelData(convertInvestmentModelData(data));
-		});
+		setLoading(true);
+		getInvestmentModel(props.investmentId)
+			.then((data: InvestmentModel) => {
+				setModelData(convertInvestmentModelData(data));
+			})
+			.then(() => setLoading(false));
 	};
 
 	return (
 		<div>
-			<Button onClick={getModelData} disabled={modelData !== undefined}>
-				Get Model Data
-			</Button>
+			{!loading && modelData === undefined && (
+				<Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+					<Button onClick={getModelData} disabled={modelData !== undefined}>
+						Get Model Data
+					</Button>
+				</Box>
+			)}
+			{loading && loadIndicator}
 			{modelData ? <MinMaxAvgGraph modelData={modelData} /> : <div></div>}
 		</div>
 	);
@@ -87,6 +113,7 @@ export const VehicleModelGraph = (props: {vehicleId: number}) => {
 		undefined,
 	);
 	const [showTaxedModel, setShowTaxedModel] = React.useState<boolean>(false);
+	const [loading, setLoading] = React.useState<boolean>(false);
 	const navigation = useNavigation();
 
 	React.useEffect(() => {
@@ -96,17 +123,25 @@ export const VehicleModelGraph = (props: {vehicleId: number}) => {
 	}, [navigation.state]);
 
 	const getModelData = () => {
-		getVehicleModel(props.vehicleId).then((data: any) => {
-			setModelData(convertVehicleModelData(data));
-		});
+		setLoading(true);
+		getVehicleModel(props.vehicleId)
+			.then((data: any) => {
+				setModelData(convertVehicleModelData(data));
+			})
+			.then(() => setLoading(false));
 	};
 
 	return (
 		<div>
 			<Box>
-				<Button onClick={getModelData} disabled={modelData !== undefined}>
-					Get Model Data
-				</Button>
+				{!loading && modelData === undefined && (
+					<Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+						<Button onClick={getModelData} disabled={modelData !== undefined}>
+							Get Model Data
+						</Button>
+					</Box>
+				)}
+				{loading && loadIndicator}
 				<FormGroup>
 					<FormControlLabel
 						control={

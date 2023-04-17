@@ -49,5 +49,12 @@ namespace RetireSimple.Backend.Controllers {
 			var analysis = _portfolioApi.GetAnalysis(1, null);
 			return Ok(analysis);
 		}
+
+		[HttpGet]
+		[Route("Presets")]
+		public ActionResult GetPresets() {
+
+			return Ok(ReflectionUtils.GetAllPresets());
+		}
 	}
 }

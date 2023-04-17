@@ -1,4 +1,4 @@
-import {Box, Button, Typography} from '@mui/material';
+import {Box, Button, CircularProgress, Typography} from '@mui/material';
 import React from 'react';
 import {useNavigation} from 'react-router-dom';
 import {getAggregateModel} from '../api/InvestmentApi';
@@ -8,6 +8,7 @@ export const Root = () => {
 	const [hasData, setHasData] = React.useState<boolean>(false);
 	const [portfolioData, setPortfolioData] = React.useState<any[]>([]);
 	const [breakdownData, setBreakdownData] = React.useState<any[]>([]);
+	const [loadIndicator, setLoadIndicator] = React.useState<boolean>(false);
 	const navigation = useNavigation();
 
 	React.useEffect(() => {
@@ -17,11 +18,14 @@ export const Root = () => {
 	}, [navigation.state]);
 
 	const getData = () => {
-		getAggregateModel().then((res) => {
-			setPortfolioData(convertPortfolioModelData(res.portfolioModel));
-			setBreakdownData(createAggregateStackData(res.investmentModels));
-			setHasData(true);
-		});
+		setLoadIndicator(true);
+		getAggregateModel()
+			.then((res) => {
+				setPortfolioData(convertPortfolioModelData(res.portfolioModel));
+				setBreakdownData(createAggregateStackData(res.investmentModels));
+				setHasData(true);
+			})
+			.then(() => setLoadIndicator(false));
 	};
 
 	return (
@@ -57,10 +61,18 @@ export const Root = () => {
 					</>
 				)}
 
-				{!hasData && (
+				{!loadIndicator && !hasData && (
 					<Button onClick={getData} disabled={hasData} size='large' sx={{width: 'auto'}}>
 						Get Portfolio Analysis
 					</Button>
+				)}
+				{loadIndicator && (
+					<Box sx={{display: 'flex', alignItems: 'center'}}>
+						<CircularProgress />
+						<Typography variant='button' sx={{marginLeft: '0.25rem'}}>
+							Generating Full Portfolio Model, this may take a minute...
+						</Typography>
+					</Box>
 				)}
 				{hasData && (
 					<Box>

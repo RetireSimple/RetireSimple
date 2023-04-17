@@ -1,4 +1,5 @@
-﻿using RetireSimple.Engine.Data.Base;
+﻿using RetireSimple.Engine.Analysis.Presets;
+using RetireSimple.Engine.Data.Base;
 
 namespace RetireSimple.Tests.Misc {
 	public class ReflectionTests {
@@ -8,13 +9,8 @@ namespace RetireSimple.Tests.Misc {
 			new object[]{
 				new StockInvestment(""),
 				Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(StockInvestment)),
-										typeof(StockAS).GetMethod("MonteCarlo_NormalDist"))
+										typeof(StockAS).GetMethod("MonteCarlo"))
 			},
-			new object[]{
-				new StockInvestment(""),
-				Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(StockInvestment)),
-										typeof(StockAS).GetMethod("MonteCarlo_LogNormalDist"))
-				},
 			new object[]{
 				new BondInvestment(""),
 				Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(BondInvestment)),
@@ -33,13 +29,10 @@ namespace RetireSimple.Tests.Misc {
 			var type = investment.GetType();
 			var delegateType = typeof(AnalysisModule<>).MakeGenericType(type);
 
-			//Use Reflection to use the correct generic
 			var genericSetMethod = typeof(ReflectionUtils).GetMethod("SetAnalysisModuleDelegate")?.MakeGenericMethod(type);
 
-			//Set the delegate
 			genericSetMethod?.Invoke(null, new object[] { investment, expectedDelegate });
 
-			//Check if the delegate was set correctly
 			analysisMethodProp?.GetValue(investment).Should().NotBeNull();
 			analysisMethodProp?.GetValue(investment).Should().BeOfType(delegateType);
 		}
@@ -47,11 +40,8 @@ namespace RetireSimple.Tests.Misc {
 #pragma warning disable CS8604
 		public static readonly IEnumerable<object[]> ExpectedAnalysisModuleResolution = new List<object[]> {
 			new object[] {"StockInvestment", new Dictionary<string,Delegate>(){
-				["MonteCarlo_NormalDist"] = Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(StockInvestment)),
-																	typeof(StockAS).GetMethod("MonteCarlo_NormalDist")),
-				["MonteCarlo_LogNormalDist"] = Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(StockInvestment)),
-																	typeof(StockAS).GetMethod("MonteCarlo_LogNormalDist"))
-				}
+				["MonteCarlo"] = Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(StockInvestment)),
+																	typeof(StockAS).GetMethod("MonteCarlo"))}
 			},
 			new object[] {"BondInvestment", new Dictionary<string,Delegate>(){
 				["StdBondValuation"] = Delegate.CreateDelegate(typeof(AnalysisModule<>).MakeGenericType(typeof(BondInvestment)),
@@ -99,7 +89,48 @@ namespace RetireSimple.Tests.Misc {
 			moduleList.Should().Contain(typeof(VehicleIRA));
 			moduleList.Should().Contain(typeof(VehicleRothIRA));
 		}
+
+		[Fact]
+		public void GetAnalysisPresets_GivenAnalysisNameWithPresets_CorrectlyReturnsPresets() {
+			var presetList = ReflectionUtils.GetAnalysisPresets("MonteCarlo");
+
+			presetList.Should().NotBeNull();
+			presetList.Should().HaveCountGreaterThanOrEqualTo(7);
+			presetList.Should().ContainKey("DefaultStockAnalysis");
+			presetList["DefaultStockAnalysis"].Should().NotBeNull();
+			presetList["DefaultStockAnalysis"].Should().BeEquivalentTo(MonteCarloPresets.DefaultStockAnalysis);
+
+			presetList.Should().ContainKey("LargeCapGrowth");
+			presetList["LargeCapGrowth"].Should().NotBeNull();
+			presetList["LargeCapGrowth"].Should().BeEquivalentTo(MonteCarloPresets.LargeCapGrowth);
+
+			presetList.Should().ContainKey("LargeCapValue");
+			presetList["LargeCapValue"].Should().NotBeNull();
+			presetList["LargeCapValue"].Should().BeEquivalentTo(MonteCarloPresets.LargeCapValue);
+
+			presetList.Should().ContainKey("MidCapGrowth");
+			presetList["MidCapGrowth"].Should().NotBeNull();
+			presetList["MidCapGrowth"].Should().BeEquivalentTo(MonteCarloPresets.MidCapGrowth);
+
+			presetList.Should().ContainKey("MidCapValue");
+			presetList["MidCapValue"].Should().NotBeNull();
+			presetList["MidCapValue"].Should().BeEquivalentTo(MonteCarloPresets.MidCapValue);
+
+			presetList.Should().ContainKey("SmallCapGrowth");
+			presetList["SmallCapGrowth"].Should().NotBeNull();
+			presetList["SmallCapGrowth"].Should().BeEquivalentTo(MonteCarloPresets.SmallCapGrowth);
+
+			presetList.Should().ContainKey("SmallCapValue");
+			presetList["SmallCapValue"].Should().NotBeNull();
+			presetList["SmallCapValue"].Should().BeEquivalentTo(MonteCarloPresets.SmallCapValue);
+		}
+
+		[Fact]
+		public void GetAnalysisPresets_GivenAnalysisNameWithNoPresets_ReturnsEmpty() {
+			var presetList = ReflectionUtils.GetAnalysisPresets("StdBondValuation");
+
+			presetList.Should().NotBeNull();
+			presetList.Should().BeEmpty();
+		}
 	}
-
-
 }
