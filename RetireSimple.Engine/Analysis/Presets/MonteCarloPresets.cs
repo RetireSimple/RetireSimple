@@ -9,70 +9,79 @@ namespace RetireSimple.Engine.Analysis.Presets {
 			["randomVariableMu"] = "0",
 			["randomVariableSigma"] = "1",
 			["randomVariableScaleFactor"] = "1",
-			["simCount"] = "1000"
+			["simCount"] = "100000000"
 		};
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict LargeCapGrowth = new() {
-			["randomVariableType"] = "Normal",
-			["randomVariableMu"] = "0.1",
-			["randomVariableSigma"] = "0.2",
+			["randomVariableType"] = "LogNormal",
+			["randomVariableMu"] = "1",
+			["randomVariableSigma"] = "1.2",
 			["randomVariableScaleFactor"] = "1",
-			["simCount"] = "1000"
+			["simCount"] = "100000000"
 		};
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict LargeCapValue = new() {
 			["randomVariableType"] = "Normal",
-			["randomVariableMu"] = "0.05",
-			["randomVariableSigma"] = "0.2",
+			["randomVariableMu"] = "0.65",
+			["randomVariableSigma"] = "0.85",
 			["randomVariableScaleFactor"] = "1",
-			["simCount"] = "1000"
+			["simCount"] = "100000000"
 		};
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict SmallCapGrowth = new() {
-			["randomVariableType"] = "Normal",
-			["randomVariableMu"] = "0.15",
+			["randomVariableType"] = "LogNormal",
+			["randomVariableMu"] = "0.25",
 			["randomVariableSigma"] = "0.3",
 			["randomVariableScaleFactor"] = "1",
-			["simCount"] = "1000"
+			["simCount"] = "100000000"
 		};
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict SmallCapValue = new() {
 			["randomVariableType"] = "Normal",
 			["randomVariableMu"] = "0.1",
-			["randomVariableSigma"] = "0.3",
+			["randomVariableSigma"] = "0.2",
 			["randomVariableScaleFactor"] = "1",
-			["simCount"] = "1000"
+			["simCount"] = "100000000"
 		};
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict MidCapGrowth = new() {
-			["randomVariableType"] = "Normal",
-			["randomVariableMu"] = "0.1",
-			["randomVariableSigma"] = "0.25",
+			["randomVariableType"] = "LogNormal",
+			["randomVariableMu"] = "0.5",
+			["randomVariableSigma"] = "0.75",
 			["randomVariableScaleFactor"] = "1",
-			["simCount"] = "1000"
+			["simCount"] = "100000000"
 		};
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict MidCapValue = new() {
 			["randomVariableType"] = "Normal",
-			["randomVariableMu"] = "0.05",
-			["randomVariableSigma"] = "0.25",
+			["randomVariableMu"] = "0.35",
+			["randomVariableSigma"] = "0.5",
 			["randomVariableScaleFactor"] = "1",
-			["simCount"] = "1000"
+			["simCount"] = "100000000"
 		};
 
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict InternationalStock = new() {
-			["randomVariableType"] = "Normal",
-			["randomVariableMu"] = "0.1",
-			["randomVariableSigma"] = "0.3",
+			["randomVariableType"] = "LogNormal",
+			["randomVariableMu"] = "0.2",
+			["randomVariableSigma"] = "2",
 			["randomVariableScaleFactor"] = "1",
-			["simCount"] = "1000"
+			["simCount"] = "100000000"
+		};
+
+		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
+		public static readonly OptionsDict HighVolatility = new() {
+			["randomVariableType"] = "Normal",
+			["randomVariableMu"] = "0",
+			["randomVariableSigma"] = "5",
+			["randomVariableScaleFactor"] = "2",
+			["simCount"] = "100000000"
 		};
 
 		public static OptionsDict ResolveMonteCarloPreset(StockInvestment investment, OptionsDict options) {
