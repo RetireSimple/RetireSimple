@@ -12,7 +12,6 @@
 			"name": "Start Backend",
 			"type": "coreclr",
 			"request": "launch",
-			"preLaunchTask": "watch",
 			"program": "${workspaceFolder}/RetireSimple.Backend/bin/Debug/net6.0/RetireSimple.Backend.dll",
 			"args": [],
 			"cwd": "${workspaceFolder}/RetireSimple.Backend",

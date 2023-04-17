@@ -13,13 +13,21 @@ export const MonteCarloAnalysisForm = () => {
 	const formContext = useFormContext();
 	const {errors} = formContext.formState;
 	const presets = React.useContext(PresetContext)?.['MonteCarlo'];
-	const currentPreset = useWatch({control: formContext.control, name: 'analysis_analysisPreset'});
+	const currentPreset = useWatch({
+		control: formContext.control,
+		name: 'analysis_analysisPreset',
+		defaultValue: formContext.getValues('analysis_analysisPreset'),
+	});
 	const [showSettings, setShowSettings] = React.useState(false);
+	const [showAdvanced, setShowAdvanced] = React.useState(false);
 
-	const showCustomFields = currentPreset === 'Custom';
+	React.useEffect(() => {
+		setShowAdvanced(currentPreset === 'Custom');
+	}, [currentPreset]);
 
 	const presetOptions = React.useMemo(() => {
-		if (!presets) return [] as {label: string; value: string}[];
+		if (!presets)
+			return [{label: 'Custom', value: 'Custom'}] as {label: string; value: string}[];
 		const presetList: {label: string; value: string}[] = Object.keys(presets).map(
 			(presetName) => ({
 				label: addSpacesCapitalCase(presetName),
@@ -182,7 +190,7 @@ export const MonteCarloAnalysisForm = () => {
 			<Grid item xs={4}>
 				{analysisPresetField}
 			</Grid>
-			{!showCustomFields && currentPreset && (
+			{!showAdvanced && (
 				<>
 					<Grid item xs={4}>
 						<FormControlLabel
@@ -227,7 +235,7 @@ export const MonteCarloAnalysisForm = () => {
 					)}
 				</>
 			)}
-			{showCustomFields && (
+			{showAdvanced && (
 				<>
 					<Grid item xs={12}>
 						<Typography variant='subtitle2'>Custom Monte Carlo Parameters</Typography>
