@@ -59,6 +59,21 @@ namespace RetireSimple.Engine.Data.Investment {
 		//Constructor used by EF
 		public BondInvestment(string analysisType) : base(analysisType) { }
 
+		//Constructor used by InvestmentApi
+		public BondInvestment(OptionsDict parameters)
+			: base(parameters.GetValueOrDefault("analysisType", "StdBondValuation")) {
+
+			BondTicker = parameters.GetValueOrDefault("bondTicker", "N/A");
+			BondCouponRate = double.Parse(parameters.GetValueOrDefault("bondCouponRate", "0.05"));
+			BondYTM = decimal.Parse(parameters.GetValueOrDefault("bondYieldToMaturity", "0.05"));
+			BondMaturityDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("bondMaturityDate",
+																	DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd"))));
+			BondFaceValue = decimal.Parse(parameters.GetValueOrDefault("bondFaceValue", "0"));
+			BondPurchaseDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("bondPurchaseDate",
+																	 DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd"))));
+			BondCurrentPrice = decimal.Parse(parameters.GetValueOrDefault("bondCurrentPrice", "0"));
+		}
+
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null
 			? AnalysisMethod(this, options)

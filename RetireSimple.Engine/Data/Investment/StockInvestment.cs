@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 
@@ -88,6 +90,21 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		//Constructor used by EF
 		public StockInvestment(string analysisType) : base(analysisType) { }
+
+		//Constructor used by InvestmentApi
+		public StockInvestment(OptionsDict parameters) :
+			base(parameters.GetValueOrDefault("analysisType", "MonteCarlo")) {
+			StockPrice = decimal.Parse(parameters.GetValueOrDefault("stockPrice", "0"));
+			StockTicker = parameters.GetValueOrDefault("stockTicker", "N/A");
+			StockQuantity = decimal.Parse(parameters.GetValueOrDefault("stockQuantity", "0"));
+			StockPurchaseDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("stockPurchaseDate",
+																	DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd"))));
+			StockDividendPercent = decimal.Parse(parameters.GetValueOrDefault("stockDividendPercent", "0"));
+			StockDividendDistributionInterval = parameters.GetValueOrDefault("stockDividendDistributionInterval", "Month");
+			StockDividendDistributionMethod = parameters.GetValueOrDefault("stockDividendDistributionMethod", "Stock");
+			StockDividendFirstPaymentDate = DateOnly.FromDateTime(DateTime.Parse(parameters.GetValueOrDefault("stockDividendFirstPaymentDate",
+																				DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd"))));
+		}
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 			AnalysisMethod is not null
