@@ -206,7 +206,7 @@ namespace RetireSimple.Tests.Api {
 		public void AddInvestmentUnknownTypeThrowsException() {
 			Action act = () => { api.Add("test"); };
 
-			act.Should().Throw<ArgumentException>();
+			act.Should().Throw<InvalidOperationException>();
 		}
 
 		[Fact]
@@ -829,7 +829,9 @@ namespace RetireSimple.Tests.Api {
 				{ "analysisType", "DummyStock" }
 			};
 
-			var stock = InvestmentApiUtil.CreateStock(paramsDict);
+			api.Add("StockInvestment", paramsDict);
+
+			var stock = context.Investment.First();
 
 			stock.AnalysisType.Should().Be("DummyStock");
 		}
@@ -837,7 +839,9 @@ namespace RetireSimple.Tests.Api {
 		//Regression Test: #183
 		[Fact]
 		public void CreateStockFieldNotFoundSetsDefaultType() {
-			var stock = InvestmentApiUtil.CreateStock(new OptionsDict());
+			api.Add("StockInvestment");
+
+			var stock = context.Investment.First();
 
 			stock.AnalysisType.Should().Be("MonteCarlo");
 		}
@@ -851,7 +855,8 @@ namespace RetireSimple.Tests.Api {
 				{ "analysisType", "StdBondValuation" }
 			};
 
-			var bond = InvestmentApiUtil.CreateBond(paramsDict);
+			api.Add("BondInvestment", paramsDict);
+			var bond = context.Investment.First();
 
 			bond.AnalysisType.Should().Be("StdBondValuation");
 		}
@@ -859,8 +864,9 @@ namespace RetireSimple.Tests.Api {
 		//Regression Test: #183
 		[Fact]
 		public void CreateBondFieldNotFoundSetsDefaultType() {
-			var bond = InvestmentApiUtil.CreateBond(new OptionsDict());
+			api.Add("BondInvestment");
 
+			var bond = context.Investment.First();
 			bond.AnalysisType.Should().Be("StdBondValuation");
 		}
 	}

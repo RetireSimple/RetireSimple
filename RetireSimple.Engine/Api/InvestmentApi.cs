@@ -1,9 +1,12 @@
-﻿using RetireSimple.Engine.Data;
+﻿using Microsoft.Extensions.Options;
+
+using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 using RetireSimple.Engine.Data.Expense;
 
 using System.Diagnostics;
+using System.Reflection;
 
 namespace RetireSimple.Engine.Api {
 	internal interface IInvestmentApi {
@@ -68,13 +71,14 @@ namespace RetireSimple.Engine.Api {
 		/// <exception cref="ArgumentException">The specified investment type was not found</exception>
 		public int Add(string type, OptionsDict? parameters = null) {
 			parameters ??= new OptionsDict();
-			Investment newInvestment = type switch {
-				"StockInvestment" => InvestmentApiUtil.CreateStock(parameters),
-				"BondInvestment" => InvestmentApiUtil.CreateBond(parameters),
-				_ => throw new ArgumentException("The specified investment type was not found"),
-			};
-			newInvestment.InvestmentName = parameters.GetValueOrDefault("investmentName", "");
+			var moduleType = typeof(Investment).Assembly.GetTypes().First(x => x.Name == type)
+				?? throw new ArgumentException($"There is no defined investment module called {type}");
+			var moduleCtor = moduleType.GetConstructor(new[] { typeof(OptionsDict) })
+				?? throw new InvalidOperationException($"The investment module {type} is missing a required constructor. Please recompile the Engine after fixing this issue");
+			var newInvestment = moduleCtor.Invoke(new[] { parameters }) as Investment
+			?? throw new InvalidOperationException($"Could not create instance of {type}");
 
+			newInvestment.InvestmentName = parameters.GetValueOrDefault("investmentName", "");
 
 			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
 			mainPortfolio.Investments.Add(newInvestment);

@@ -25,11 +25,11 @@ namespace RetireSimple.Tests.Api {
 		}
 
 		[Theory]
-		[InlineData("401k"),
-		 InlineData("403b"),
-		 InlineData("457"),
-		 InlineData("IRA"),
-		 InlineData("RothIRA")]
+		[InlineData("Vehicle401k"),
+		 InlineData("Vehicle403b"),
+		 InlineData("Vehicle457"),
+		 InlineData("VehicleIRA"),
+		 InlineData("VehicleRothIRA")]
 		public void InvestmentVehicleAdd(string type) {
 			var result = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test", ["cashHoldings"] = "10" });
 
@@ -44,11 +44,11 @@ namespace RetireSimple.Tests.Api {
 		}
 
 		[Theory]
-		[InlineData("401k"),
-		 InlineData("403b"),
-		 InlineData("457"),
-		 InlineData("IRA"),
-		 InlineData("RothIRA")]
+		[InlineData("Vehicle401k"),
+		 InlineData("Vehicle403b"),
+		 InlineData("Vehicle457"),
+		 InlineData("VehicleIRA"),
+		 InlineData("VehicleRothIRA")]
 		public void InvestmentVehicleAddWithNoCashSpecifiedUsesZero(string type) {
 			var result = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test" });
 
@@ -63,11 +63,11 @@ namespace RetireSimple.Tests.Api {
 		}
 
 		[Theory]
-		[InlineData("401k"),
-		 InlineData("403b"),
-		 InlineData("457"),
-		 InlineData("IRA"),
-		 InlineData("RothIRA")]
+		[InlineData("Vehicle401k"),
+		 InlineData("Vehicle403b"),
+		 InlineData("Vehicle457"),
+		 InlineData("VehicleIRA"),
+		 InlineData("VehicleRothIRA")]
 		public void InvestmentVehicleAddIgnoresInvalidKeys(string type) {
 			var result = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test", ["cashHoldings"] = "10", ["invalid"] = "test" });
 
@@ -97,7 +97,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleAddInvestmentThrowsIfNoInvestment() {
-			api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 
 			Action act = () => {
 				api.AddInvestmentToVehicle(1, 1);
@@ -107,11 +107,11 @@ namespace RetireSimple.Tests.Api {
 		}
 
 		[Theory]
-		[InlineData("401k"),
-		 InlineData("403b"),
-		 InlineData("457"),
-		 InlineData("IRA"),
-		 InlineData("RothIRA")]
+		[InlineData("Vehicle401k"),
+		 InlineData("Vehicle403b"),
+		 InlineData("Vehicle457"),
+		 InlineData("VehicleIRA"),
+		 InlineData("VehicleRothIRA")]
 		public void InvestmentVehicleAddInvestmentCreatesRelationship(string type) {
 			var vehicleId = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
@@ -140,7 +140,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleRemoveInvestmentThrowsIfNoInvestment() {
-			api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 
 			Action act = () => {
 				api.RemoveInvestmentFromVehicle(1, 1);
@@ -151,7 +151,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleRemoveInvestmentThrowsIfInvestmentNotInVehicle() {
-			api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment);
 			context.SaveChanges();
@@ -164,11 +164,11 @@ namespace RetireSimple.Tests.Api {
 		}
 
 		[Theory]
-		[InlineData("401k"),
-		 InlineData("403b"),
-		 InlineData("457"),
-		 InlineData("IRA"),
-		 InlineData("RothIRA")]
+		[InlineData("Vehicle401k"),
+		 InlineData("Vehicle403b"),
+		 InlineData("Vehicle457"),
+		 InlineData("VehicleIRA"),
+		 InlineData("VehicleRothIRA")]
 		public void InvestmentVehicleRemoveInvestmentDeletesInvestment(string type) {
 			var vehicleId = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
@@ -193,11 +193,11 @@ namespace RetireSimple.Tests.Api {
 		}
 
 		[Theory]
-		[InlineData("401k"),
-		InlineData("403b"),
-		InlineData("457"),
-		InlineData("IRA"),
-		InlineData("RothIRA")]
+		[InlineData("Vehicle401k"),
+		InlineData("Vehicle403b"),
+		InlineData("Vehicle457"),
+		InlineData("VehicleIRA"),
+		InlineData("VehicleRothIRA")]
 		public void InvestmentVehicleRemoveCascadeDeletesDependents(string type) {
 			var vehicleId = api.Add(type, new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
@@ -227,7 +227,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateAnalysisOverridesAddsOptionIfNotExist() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			var vehicleId = api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			api.UpdateAnalysisOverrides(vehicleId, new OptionsDict { ["test"] = "test" });
 
 			var vehicle = context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
@@ -238,7 +238,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateAnalysisOverridesUpdatesOptionIfExist() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			var vehicleId = api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			api.UpdateAnalysisOverrides(vehicleId, new OptionsDict { ["test"] = "test" });
 			api.UpdateAnalysisOverrides(vehicleId, new OptionsDict { ["test"] = "test2" });
 
@@ -250,7 +250,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateAnalysisOverridesRemovesOptionIfExistAndNullValue() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			var vehicleId = api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			api.UpdateAnalysisOverrides(vehicleId, new OptionsDict { ["test"] = "test" });
 			api.UpdateAnalysisOverrides(vehicleId, new OptionsDict { ["test"] = "" });
 
@@ -271,7 +271,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleGetVehicleInvestmentsReturnsInvestmentList() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			var vehicleId = api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment);
 			context.SaveChanges();
@@ -293,7 +293,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleGetAllVehicleInvestmentsSingleVehicleReturnsDictionaryWithInvestments() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			var vehicleId = api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment);
 			context.SaveChanges();
@@ -309,13 +309,13 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleGetAllVehicleInvestmentsMultipleVehiclesReturnsDictionaryWithInvestments() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			var vehicleId = api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			var tempInvestment = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment);
 			context.SaveChanges();
 			api.AddInvestmentToVehicle(vehicleId, tempInvestment.InvestmentId);
 
-			var vehicleId2 = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test2" });
+			var vehicleId2 = api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test2" });
 			var tempInvestment2 = new StockInvestment("");
 			context.Portfolio.First().Investments.Add(tempInvestment2);
 			context.SaveChanges();
@@ -344,7 +344,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateNameOnlyUpdatesName() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			var vehicleId = api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			api.Update(vehicleId, new OptionsDict { ["investmentVehicleName"] = "test2" });
 
 			var vehicle = context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
@@ -354,7 +354,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateCashHoldingsOnlyUpdatesCashHoldings() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			var vehicleId = api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			api.Update(vehicleId, new OptionsDict { ["cashHoldings"] = "100" });
 
 			var vehicle = context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
@@ -363,7 +363,7 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateMultipleOptionsOnlyUpdatesSpecifiedOptions() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			var vehicleId = api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			api.Update(vehicleId, new OptionsDict { ["cashHoldings"] = "100", ["investmentVehicleName"] = "test2" });
 
 			var vehicle = context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
@@ -373,13 +373,30 @@ namespace RetireSimple.Tests.Api {
 
 		[Fact]
 		public void InvestmentVehicleUpdateInvalidOptionsAreIgnored() {
-			var vehicleId = api.Add("401k", new OptionsDict { ["investmentVehicleName"] = "test" });
+			var vehicleId = api.Add("Vehicle401k", new OptionsDict { ["investmentVehicleName"] = "test" });
 			api.Update(vehicleId, new OptionsDict { ["cashHoldings"] = "100", ["investmentVehicleName"] = "test2", ["test"] = "test" });
 
 			var vehicle = context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
 			vehicle.CashHoldings.Should().Be(100);
 			vehicle.InvestmentVehicleName.Should().Be("test2");
 			vehicle.AnalysisOptionsOverrides.Should().BeEmpty();
+		}
+
+		public static readonly IEnumerable<object[]> ApiAddData = new List<object[]>{
+			new object[]{"Vehicle401k", typeof(Vehicle401k)},
+			new object[]{"Vehicle403b", typeof(Vehicle403b)},
+			new object[]{"Vehicle457", typeof(Vehicle457)},
+			new object[]{"VehicleIRA", typeof(VehicleIRA)},
+			new object[]{"VehicleRothIRA", typeof(VehicleRothIRA)},
+		};
+
+		[Theory, MemberData(nameof(ApiAddData))]
+		public void InvestmentVehicleAddValidTypeCreatesVehicleOfCorrectType(string givenType, Type expected) {
+			var vehicleId = api.Add(givenType, new OptionsDict { ["investmentVehicleName"] = "test" });
+
+			var vehicle = context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
+
+			vehicle.Should().BeOfType(expected);
 		}
 	}
 }
