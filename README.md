@@ -1,7 +1,7 @@
 # RetireSimple
 
 [![Nightly Builder](https://github.com/RetireSimple/RetireSimple/actions/workflows/ci-main.yml/badge.svg?branch=main)](https://github.com/RetireSimple/RetireSimple/actions/workflows/ci-main.yml)
-[![codecov](https://codecov.io/github/RetireSimple/RetireSimple/branch/main/graph/badge.svg?token=0DDVBGJ5RM)](https://codecov.io/github/RetireSimple/RetireSimple)
+[![codecov](https://codecov.io/gh/RetireSimple/RetireSimple/branch/main/graph/badge.svg?token=0DDVBGJ5RM)](https://codecov.io/gh/RetireSimple/RetireSimple)
 
 A financial modeling framework focused on retirement, designed around extensibility and user choice.
 
@@ -19,15 +19,15 @@ We have a general release plan with some of the rationale in the following excel
 
 We provide the following versions main RetireSimple Executable (which launches a web server and launches your browser to our Frontend):
 
-| OS | Release Suffix | DIY Build | Prebuilt Binary |
-| --- | --- | --- | --- |
-| Windows 32-bit | `win-x86` | :white_check_mark: | :white_check_mark: |
-| Windows 64-bit | `win-x64` | :white_check_mark: | :white_check_mark: |
-| Windows ARM64 | `win-arm64` | :white_check_mark: | :white_check_mark: |
-| Linux 64-bit | `linux-x64` | :white_check_mark: | :white_check_mark: |
-| Linux ARM64 | `linux-arm64` | :white_check_mark: | :white_check_mark: |
-| MacOS 11+ Intel | `osx.11-x64` | :white_check_mark: | :x: |
-| MacOS 11+ Apple Silicon | `osx.11-arm64` | :white_check_mark: | :x: |
+| OS                      | Release Suffix | DIY Build          | Prebuilt Binary    |
+| ----------------------- | -------------- | ------------------ | ------------------ |
+| Windows 32-bit          | `win-x86`      | :white_check_mark: | :white_check_mark: |
+| Windows 64-bit          | `win-x64`      | :white_check_mark: | :white_check_mark: |
+| Windows ARM64           | `win-arm64`    | :white_check_mark: | :white_check_mark: |
+| Linux 64-bit            | `linux-x64`    | :white_check_mark: | :white_check_mark: |
+| Linux ARM64             | `linux-arm64`  | :white_check_mark: | :white_check_mark: |
+| MacOS 11+ Intel         | `osx.11-x64`   | :white_check_mark: | :x:                |
+| MacOS 11+ Apple Silicon | `osx.11-arm64` | :white_check_mark: | :x:                |
 
 > For more information about MacOS Release Limitations, checkout the respective wiki page: TBD
 
