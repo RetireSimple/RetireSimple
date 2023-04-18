@@ -73,14 +73,21 @@ namespace RetireSimple.Engine.Api {
 		/// relationship fields.
 		/// </summary>
 		public int Add(string type, OptionsDict options) {
-			InvestmentVehicle vehicle = type switch {
-				"401k" => new Vehicle401k(),
-				"403b" => new Vehicle403b(),
-				"457" => new Vehicle457(),
-				"IRA" => new VehicleIRA(),
-				"RothIRA" => new VehicleRothIRA(),
-				_ => throw new ArgumentException("Unknown Investment Vehicle type")
-			};
+			var moduleType = typeof(InvestmentVehicle).Assembly.GetTypes().First(t => t.Name == $"{type}")
+				?? throw new ArgumentException($"The investment vehicle {type} does not exist");
+			var moduleCtor = moduleType.GetConstructor(Array.Empty<Type>())
+				?? throw new InvalidOperationException($"The investment vehicle {type} does not have a parameterless constructor");
+			var vehicle = (InvestmentVehicle)moduleCtor.Invoke(Array.Empty<object>())
+				?? throw new InvalidOperationException($"Failed to create an instance of {type}");
+
+			// InvestmentVehicle vehicle = type switch {
+			// 	"401k" => new Vehicle401k(),
+			// 	"403b" => new Vehicle403b(),
+			// 	"457" => new Vehicle457(),
+			// 	"IRA" => new VehicleIRA(),
+			// 	"RothIRA" => new VehicleRothIRA(),
+			// 	_ => throw new ArgumentException("Unknown Investment Vehicle type")
+			// };
 
 			vehicle.InvestmentVehicleName = options["investmentVehicleName"];
 			vehicle.CashHoldings = decimal.Parse(options.GetValueOrDefault("cashHoldings", "0"));
