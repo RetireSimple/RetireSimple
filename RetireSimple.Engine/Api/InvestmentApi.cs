@@ -75,17 +75,10 @@ namespace RetireSimple.Engine.Api {
 				?? throw new ArgumentException($"There is no defined investment module called {type}");
 			var moduleCtor = moduleType.GetConstructor(new[] { typeof(OptionsDict) })
 				?? throw new InvalidOperationException($"The investment module {type} is missing a required constructor. Please recompile the Engine after fixing this issue");
-
 			var newInvestment = moduleCtor.Invoke(new[] { parameters }) as Investment
-			?? throw new InvalidOperationException($"The constructor used to construct {type} returned null");
+			?? throw new InvalidOperationException($"Could not create instance of {type}");
 
-			// Investment newInvestment = type switch {
-			// 	"StockInvestment" => InvestmentApiUtil.CreateStock(parameters),
-			// 	"BondInvestment" => InvestmentApiUtil.CreateBond(parameters),
-			// 	_ => throw new ArgumentException("The specified investment type was not found"),
-			// };
 			newInvestment.InvestmentName = parameters.GetValueOrDefault("investmentName", "");
-
 
 			var mainPortfolio = _context.Portfolio.First(p => p.PortfolioId == 1);
 			mainPortfolio.Investments.Add(newInvestment);
