@@ -112,6 +112,23 @@ export const PensionForm = (props: PensionFormProps) => {
 					{pensionStartDateField}
 				</Grid>
 				<Grid item xs={12}>
+					<Typography variant='subtitle2'>Note about Modeling Social Security</Typography>
+				</Grid>
+				<Grid item xs={12}>
+					<Typography variant='body2'>
+						Currently, we treate Social Security Payments to function similarly to that
+						of a pension. However, this does mean that we don't provide the direct
+						calculation of your estimated Social Security benefits by the time you
+						retire.
+					</Typography>
+					<Typography variant='body2'>
+						This is currently documented as a possible feature, but we recommend using
+						other soruces (such as the Official Social Security Administration's
+						Calculators) to determine your benefits.
+					</Typography>
+				</Grid>
+
+				<Grid item xs={12}>
 					<Typography variant='subtitle2'>Analysis Configuration</Typography>
 				</Grid>
 				<Grid item xs={4}>
