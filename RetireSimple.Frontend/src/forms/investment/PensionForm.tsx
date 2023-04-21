@@ -4,9 +4,9 @@ import {useFormContext, useWatch} from 'react-hook-form';
 import {
 	FormDatePicker,
 	FormTextFieldCurrency,
-	FormTextFieldMonthUnits,
 	FormTextFieldPercent,
 } from '../../components/InputComponents';
+import {PensionSimAnalysisForm} from '../analysis/PensionSimAnalysisForm';
 
 export interface PensionFormProps {
 	defaultValues?: any;
@@ -23,35 +23,10 @@ export const PensionForm = (props: PensionFormProps) => {
 
 	const {errors} = formContext.formState;
 
-	const expectedTaxRateField = React.useMemo(
-		() => (
-			<FormTextFieldPercent
-				name='expectedTaxRate'
-				label='Expected Tax Rate'
-				control={formContext.control}
-				errorField={errors.expectedTaxRate}
-				tooltip={
-					<>
-						<Typography variant='inherit'>
-							The expected tax rate on the pension payments.
-						</Typography>
-					</>
-				}
-			/>
-		),
-		[formContext.control, errors.expectedTaxRate],
-	);
-
 	const analysisSubForm = React.useCallback(() => {
 		switch (analysisType) {
 			case 'PensionSimulation':
-				return (
-					<>
-						<Grid item xs={4}>
-							{expectedTaxRateField}
-						</Grid>
-					</>
-				);
+				return <PensionSimAnalysisForm />;
 			default:
 				return (
 					<Grid item xs={12}>
@@ -61,7 +36,7 @@ export const PensionForm = (props: PensionFormProps) => {
 					</Grid>
 				);
 		}
-	}, [analysisType, expectedTaxRateField]);
+	}, [analysisType]);
 
 	//==============================================
 	//Field definitions (To reduce indent depth)
@@ -121,22 +96,6 @@ export const PensionForm = (props: PensionFormProps) => {
 		/>
 	);
 
-	const analysisLengthField = (
-		<FormTextFieldMonthUnits
-			name='analysis_analysisLength'
-			label='Analysis Length'
-			control={formContext.control}
-			errorField={errors.analysis_analysisLength}
-			tooltip={
-				<>
-					<Typography variant='inherit'>
-						The length of time to run the analysis for.
-					</Typography>
-				</>
-			}
-		/>
-	);
-
 	return (
 		<Box sx={{flexGrow: 1, marginTop: '1rem'}}>
 			<Grid container spacing={2}>
@@ -157,9 +116,6 @@ export const PensionForm = (props: PensionFormProps) => {
 				</Grid>
 				<Grid item xs={4}>
 					{props.analysisTypeField}
-				</Grid>
-				<Grid item xs={4}>
-					{analysisLengthField}
 				</Grid>
 				{analysisSubForm()}
 			</Grid>

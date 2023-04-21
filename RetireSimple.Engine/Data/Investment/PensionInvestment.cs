@@ -12,20 +12,20 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		[JsonIgnore, NotMapped]
 		public DateOnly PensionStartDate {
-			get => DateOnly.Parse(InvestmentData["PensionStartDate"]);
-			set => InvestmentData["PensionStartDate"] = value.ToString();
+			get => DateOnly.Parse(InvestmentData["pensionStartDate"]);
+			set => InvestmentData["pensionStartDate"] = value.ToString();
 		}
 
 		[JsonIgnore, NotMapped]
 		public decimal PensionInitialMonthlyPayment {
-			get => decimal.Parse(InvestmentData["PensionInitialMonthlyPayment"]);
-			set => InvestmentData["PensionInitialMonthlyPayment"] = value.ToString();
+			get => decimal.Parse(InvestmentData["pensionInitialMonthlyPayment"]);
+			set => InvestmentData["pensionInitialMonthlyPayment"] = value.ToString();
 		}
 
 		[JsonIgnore, NotMapped]
 		public decimal PensionYearlyIncrease {
-			get => decimal.Parse(InvestmentData["PensionYearlyIncrease"]);
-			set => InvestmentData["PensionYearlyIncrease"] = value.ToString();
+			get => decimal.Parse(InvestmentData["pensionYearlyIncrease"]);
+			set => InvestmentData["pensionYearlyIncrease"] = value.ToString();
 		}
 
 		[JsonIgnore, NotMapped]
@@ -36,9 +36,9 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		public PensionInvestment(OptionsDict parameters)
 			: base(parameters.GetValueOrDefault("analysisType") ?? "PensionSimulation") {
-			PensionInitialMonthlyPayment = decimal.Parse(parameters.GetValueOrDefault("PensionInitialMonthlyPayment", "0"));
-			PensionStartDate = DateOnly.Parse(parameters.GetValueOrDefault("PensionStartDate", "1/1/2021"));
-			PensionYearlyIncrease = decimal.Parse(parameters.GetValueOrDefault("PensionYearlyIncrease", "0"));
+			PensionInitialMonthlyPayment = decimal.Parse(parameters.GetValueOrDefault("pensionInitialMonthlyPayment", "0"));
+			PensionStartDate = DateOnly.Parse(parameters.GetValueOrDefault("pensionStartDate", "1/1/2021"));
+			PensionYearlyIncrease = decimal.Parse(parameters.GetValueOrDefault("pensionYearlyIncrease", "0"));
 		}
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>

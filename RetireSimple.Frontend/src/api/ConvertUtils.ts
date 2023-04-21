@@ -15,6 +15,9 @@ export const convertDates = (data: {[key: string]: string}) => {
 	if (data['bondMaturityDate']) {
 		data['bondMaturityDate'] = dayjs(data['bondMaturityDate']).format('YYYY-MM-DD');
 	}
+	if(data['pensionStartDate']) {
+		data['pensionStartDate'] = dayjs(data['pensionStartDate']).format('YYYY-MM-DD');
+	}
 };
 
 const percentageFields = [
