@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace RetireSimple.Engine.Data.Investment {
+	[InvestmentModule(nameof(AnalysisMethod))]
 	public class PensionInvestment : Base.Investment {
 
 		[JsonIgnore, NotMapped]
@@ -29,7 +30,7 @@ namespace RetireSimple.Engine.Data.Investment {
 		public AnalysisModule<PensionInvestment>? AnalysisMethod { get; private set; }
 
 		//Constructor used by EF
-		public PensionInvestment(string analysisType) : base(analysisType) {}
+		public PensionInvestment(string analysisType) : base(analysisType) { }
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 		AnalysisMethod is not null
