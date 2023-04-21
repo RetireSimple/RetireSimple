@@ -15,6 +15,9 @@ export const convertDates = (data: {[key: string]: string}) => {
 	if (data['bondMaturityDate']) {
 		data['bondMaturityDate'] = dayjs(data['bondMaturityDate']).format('YYYY-MM-DD');
 	}
+	if(data['pensionStartDate']) {
+		data['pensionStartDate'] = dayjs(data['pensionStartDate']).format('YYYY-MM-DD');
+	}
 };
 
 const percentageFields = [
@@ -25,6 +28,8 @@ const percentageFields = [
 	'analysis_employerMatchPercentage',
 	'analysis_shortTermCapitalGainsTax',
 	'analysis_longTermCapitalGainsTax',
+	'pensionYearlyIncrease',
+	'analysis_expectedTaxRate',
 ];
 
 export const convertFromDecimal = (data: {[key: string]: string}) => {

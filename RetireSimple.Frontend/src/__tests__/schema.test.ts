@@ -162,6 +162,26 @@ describe('schema validation', () => {
 		});
 	});
 
+	describe('investmentType: PensionInvestment', () => {
+		describe('General Pension Validation', () => {
+			test('standardPension_Valid', () => {
+				const schema = investmentFormSchema;
+				const data = {
+					investmentName: 'Test',
+					investmentType: 'PensionInvestment',
+					pensionStartDate: '2023-01-30',
+					pensionInitialMonthlyPayment: '123.45',
+					pensionYearlyIncrease: '0.05',
+					analysisType: 'PensionSimulation',
+					analysis_analysisLength: '60',
+					analysis_expectedTaxRate: '0.0',
+				};
+
+				expect(schema.isValidSync(data)).toBeTruthy();
+			});
+		});
+	});
+
 	describe('investmentVehicles', () => {
 		describe('General 401k Validation', () => {
 			test('standard401k_Valid: fixed contribution', () => {
