@@ -11,7 +11,7 @@ export const investmentFormSchema = object().shape({
 	investmentName: string().defined('Required').required(),
 	investmentType: string()
 		.defined('Required')
-		.oneOf(['StockInvestment', 'BondInvestment'])
+		.oneOf(['StockInvestment', 'BondInvestment', 'PensionInvestment'])
 		.required(),
 	analysisType: string()
 		.required()
@@ -22,6 +22,10 @@ export const investmentFormSchema = object().shape({
 		.when('investmentType', {
 			is: 'BondInvestment',
 			then: (schema) => schema.defined('Required').oneOf(['StdBondValuation']),
+		})
+		.when('investmentType', {
+			is: 'PensionInvestment',
+			then: (schema) => schema.defined('Required').oneOf(['PensionSimulation']),
 		}),
 
 	//========================================
@@ -180,6 +184,54 @@ export const investmentFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 
+	analysis_isAnnual: string().when('analysisType', {
+		is: (value: string) => value === 'StdBondValuation',
+		then: (schema) => schema.defined().required().oneOf(['true', 'false']),
+		otherwise: (schema) => schema.strip(),
+	}),
+	//========================================
+	// Pension Investment Specific Fields
+	//========================================
+	pensionStartDate: string().when('investmentType', {
+		is: 'PensionInvestment',
+		then: (schema) => schema.defined('Required').required('Required'),
+		otherwise: (schema) => schema.strip(),
+	}),
+	pensionInitialMonthlyPayment: number().when('investmentType', {
+		is: 'PensionInvestment',
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.required('Required')
+				.positive('Must be positive')
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(2, value),
+				),
+		otherwise: (schema) => schema.strip(),
+	}),
+	pensionYearlyIncrease: number().when('investmentType', {
+		is: 'PensionInvestment',
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.required('Required')
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(2, value),
+				),
+		otherwise: (schema) => schema.strip(),
+	}),
+	analysis_expectedTaxRate: number().when('investmentType', {
+		is: 'PensionInvestment',
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.required('Required')
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(2, value),
+				),
+		otherwise: (schema) => schema.strip(),
+	}),
+
 	//========================================
 	// Monte Carlo Analysis Specific Fields
 	//========================================
@@ -236,11 +288,6 @@ export const investmentFormSchema = object().shape({
 					isNaN(value) ? false : decimalValidation(4, value),
 				)
 				.required(),
-		otherwise: (schema) => schema.strip(),
-	}),
-	analysis_isAnnual: string().when('analysisType', {
-		is: (value: string) => value === 'StdBondValuation',
-		then: (schema) => schema.defined().required().oneOf(['true', 'false']),
 		otherwise: (schema) => schema.strip(),
 	}),
 });

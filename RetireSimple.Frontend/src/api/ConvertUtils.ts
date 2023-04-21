@@ -25,6 +25,8 @@ const percentageFields = [
 	'analysis_employerMatchPercentage',
 	'analysis_shortTermCapitalGainsTax',
 	'analysis_longTermCapitalGainsTax',
+	'pensionYearlyIncrease',
+	'analysis_expectedTaxRate',
 ];
 
 export const convertFromDecimal = (data: {[key: string]: string}) => {

@@ -4,6 +4,7 @@ import {useFormContext, useWatch} from 'react-hook-form';
 import {FormSelectField, FormTextField} from '../components/InputComponents';
 import {BondForm} from './investment/BondForm';
 import {StockForm} from './investment/StockForm';
+import {PensionForm} from './investment/PensionForm';
 
 export interface InvestmentDataFormProps {
 	defaultValues?: any;
@@ -44,6 +45,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 			options={[
 				{value: 'StockInvestment', label: 'Stock'},
 				{value: 'BondInvestment', label: 'Bond'},
+				{value: 'PensionInvestment', label: 'Pension/Social Security'},
 			]}
 			disable={props.disableTypeSelect ?? false}
 			tooltip='The type of security this investment represents.'
@@ -87,6 +89,28 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 								defaultOption=''
 								disable={false}
 								tooltip='The type of analysis to run on this investment. Only standard bond valuation is currently supported.'
+							/>
+						}
+					/>
+				);
+			case 'PensionInvestment':
+				return (
+					<PensionForm
+						analysisTypeField={
+							<FormSelectField
+								name='analysisType'
+								label='Analysis Type'
+								control={formContext.control}
+								errorField={errors.analysisType}
+								options={[
+									{
+										value: 'PensionSimulation',
+										label: 'Pension Simulation',
+									},
+								]}
+								defaultOption=''
+								disable={false}
+								tooltip='The type of analysis to run on this investment. Only pension simulations are currently supported.'
 							/>
 						}
 					/>

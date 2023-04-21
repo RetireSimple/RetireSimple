@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 
@@ -31,6 +33,13 @@ namespace RetireSimple.Engine.Data.Investment {
 
 		//Constructor used by EF
 		public PensionInvestment(string analysisType) : base(analysisType) { }
+
+		public PensionInvestment(OptionsDict parameters)
+			: base(parameters.GetValueOrDefault("analysisType") ?? "PensionSimulation") {
+			PensionInitialMonthlyPayment = decimal.Parse(parameters.GetValueOrDefault("PensionInitialMonthlyPayment", "0"));
+			PensionStartDate = DateOnly.Parse(parameters.GetValueOrDefault("PensionStartDate", "1/1/2021"));
+			PensionYearlyIncrease = decimal.Parse(parameters.GetValueOrDefault("PensionYearlyIncrease", "0"));
+		}
 
 		public override InvestmentModel InvokeAnalysis(OptionsDict options) =>
 		AnalysisMethod is not null

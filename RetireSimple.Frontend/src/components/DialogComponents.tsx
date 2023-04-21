@@ -40,6 +40,8 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 	const handleAdd = (data: FieldValues) => {
 		const requestData: {[key: string]: string} = {};
 
+		console.log('clicked');
+
 		Object.entries(data)
 			.map(([key, value]) => [key, value.toString()])
 			.forEach(([key, value]) => (requestData[key] = value));
