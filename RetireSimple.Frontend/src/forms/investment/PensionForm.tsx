@@ -116,7 +116,7 @@ export const PensionForm = (props: PensionFormProps) => {
 				</Grid>
 				<Grid item xs={12}>
 					<Typography variant='body2'>
-						Currently, we treate Social Security Payments to function similarly to that
+						Currently, we treat Social Security Payments to function similarly to that
 						of a pension. However, this does mean that we don't provide the direct
 						calculation of your estimated Social Security benefits by the time you
 						retire.
