@@ -57,6 +57,19 @@ export const Root = () => {
 								You can come back here using the "Home" item in the top of the
 								sidebar list.
 							</Typography>
+							<br />
+							<Typography variant='h6'>DISCLAIMER</Typography>
+							<Typography variant='body1'>
+								<strong>
+									The information provided by RetireSimple is for informational
+									purposes only. It should not be considered as solid financial
+									advice and should not be the only source of information you use
+									to make financial decisions. You should consult with a certified
+									financial professional (especially one that is a certified
+									fiduciary) before making any financial decisions or taking any
+									actions related to your finances.
+								</strong>
+							</Typography>
 						</Box>
 					</>
 				)}
