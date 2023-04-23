@@ -1,12 +1,21 @@
 ﻿using MathNet.Numerics.Distributions;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Complex;
+using MathNet.Numerics.LinearRegression;
+
+using Microsoft.Extensions.Logging;
 
 using RetireSimple.Engine.Data.Investment;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using static RetireSimple.Engine.Analysis.MonteCarlo;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace RetireSimple.Engine.Analysis {
 	public enum RegressionRV {
@@ -19,74 +28,123 @@ namespace RetireSimple.Engine.Analysis {
 		QUANTILE,
 		BAYESIAN,
 		Bayesian,
-		PCR,	//Principal Components Regression
-		PLSR,	//Partial Least Squares Regression
-		ENR,	//Elastic Net Regression
-
+		PCR,    //Principal Components Regression
+		PLSR,   //Partial Least Squares Regression
+		ENR,    //Elastic Net Regression
 	}
 
-	private static IContinuousDistribution CreateRandomVarInstance(MonteCarloRV type, Dictionary<string, double> parameters) {
-		return type switch {
-			RegressionRV.LINEAR => new 
-			_ => throw new NotImplementedException(),
-		};
-	}
-	internal class Regression {
+	public class Regression {
 
-		public static List<decimal> LinearRegression(BondInvestment investment, OptionsDict options) {
-			// Get the list of bond prices and yields from the investment object
-			List<double> bondPrices = investment.BondPrices;
-			List<double> yields = investment.Yields;
-
-			// Check if the lists have the same length
-			if (bondPrices.Count != yields.Count) {
-				throw new ArgumentException("The bond prices and yields lists must have the same length.");
-			}
-
-			// Convert the lists to arrays
-			double[] pricesArray = bondPrices.ToArray();
-			double[] yieldsArray = yields.ToArray();
-
-			// Calculate the slope and intercept of the linear regression
-			double slope, intercept;
-			LinearRegression(yieldsArray, pricesArray, out slope, out intercept);
-
-			// Calculate the predicted bond prices for the given yields
-			List<decimal> predictedPrices = new List<decimal>();
-			foreach (decimal yield in options.Yields) {
-				decimal predictedPrice = (decimal)(slope * (double)yield + intercept);
-				predictedPrices.Add(predictedPrice);
-			}
-
-			// Return the list of predicted bond prices
-			return predictedPrices;
+		public readonly record struct RegressionOptions {
+			public decimal CurrentPrice { get; init; }
+			public decimal PurchasePrice { get; init; }
+			public int AnalysisLength { get; init; }
+			//public IContinuousDistribution RandomVariable { get; init; }
 		}
 
-		// Helper method to perform linear regression
-		public static void LinearRegression(double[] xVals, double[] yVals, out double slope, out double yIntercept) {
-			int n = xVals.Length;
-			double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+		/// <summary>
+		/// Utility Function to generate a Math.NET Continuous Distribution for use in Regression analysis.
+		/// <param name="type"></param>
+		/// <param name="parameters"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
 
-			for (int i = 0; i < n; i++) {
-				sumX += xVals[i];
-				sumY += yVals[i];
-				sumXY += xVals[i] * yVals[i];
-				sumX2 += xVals[i] * xVals[i];
+		//internal static icontinuousdistribution createrandomvarinstance(montecarlorv type, dictionary<string, double> parameters) {
+		//	return type switch {
+		//		regressionrv.logistic =>
+		//		_ => throw new notimplementedexception(),
+		//	};
+		//}
+
+		public static List<decimal> SimpleRegressionSim(StockInvestment stock, OptionsDict options) {
+			var simOptions = new RegressionOptions() {
+				BasePrice = stock.StockPrice,
+				AnalysisLength = int.Parse(options["AnalysisLength"]),
+			};
+
+			var currentPrice = simOptions.BasePrice;
+			var purchasePrice = simOptions.PurchasePrice;
+			var quantity = stock.StockQuantity;
+			var analysisLength = simOptions.AnalysisLength;
+			int monthPurchased = stock.StockPurchaseDate.Month + stock.StockPurchaseDate.Year * 12;
+			int monthCurrent = DateTime.Now.Month + DateTime.Now.Year * 12;
+
+			var projectedDividend = ProjectStockDividend(stock, options);
+
+			List<decimal> futurePrices = new List<decimal>();
+			decimal slope = (currentPrice - purchasePrice) / (monthCurrent - monthPurchased);
+			decimal intercept = currentPrice - slope * monthPurchased;
+			decimal averageGrowth = slope / intercept;
+
+			for (int i = 0; i < analysisLength; i++) {
+				monthCurrent++;
+				decimal price = intercept + (slope * monthCurrent);
+				price += projectedDividend[i];
+				futurePrices.Add(price);
+
+			}
+			return futurePrices;
+		}
+
+		public static List<decimal> SimpleRegressionSimWithSector(StockInvestment stock, OptionsDict options) {
+			var simOptions = new RegressionOptions() {
+				BasePrice = stock.StockPrice,
+				AnalysisLength = int.Parse(options["AnalysisLength"]),
+			};
+
+			var currentPrice = simOptions.BasePrice;
+			var purchasePrice = simOptions.PurchasePrice;
+			var sector = stock.Sector;
+
+			var quantity = stock.StockQuantity;
+			var analysisLength = simOptions.AnalysisLength;
+			int monthPurchased = stock.StockPurchaseDate.Month + stock.StockPurchaseDate.Year * 12;
+			int monthCurrent = DateTime.Now.Month + DateTime.Now.Year * 12;
+
+			var projectedDividend = ProjectStockDividend(stock, options);
+
+			List<decimal> futurePrices = new List<decimal>();
+			decimal slope = (currentPrice - purchasePrice) / (monthCurrent - monthPurchased);
+			decimal intercept = currentPrice - slope * monthPurchased;
+			decimal averageGrowth = slope / intercept;
+
+			for (int i = 0; i < analysisLength; i++) {
+				monthCurrent++;
+				decimal price = intercept + (slope * monthCurrent);
+				price += projectedDividend[i];
+				futurePrices.Add(price);
+			}
+			return futurePrices;
+		}
+
+		private static int GetDividendIntervalMonths(string interval) => interval switch {
+			"Month" => 1,
+			"Quarter" => 3,
+			"Annual" => 12,
+			_ => throw new ArgumentException("Invalid Dividend Interval")
+		};
+
+		public static List<decimal> ProjectStockDividend(StockInvestment investment, OptionsDict options) {
+			var quantityList = new List<decimal>();
+			var stockQuantity = investment.StockQuantity;
+			var dividendPercent = investment.StockDividendPercent;
+			var currentMonth = DateTime.Now.Month;
+			var firstDividendMonth = investment.StockDividendFirstPaymentDate.Month;
+			var monthInterval = GetDividendIntervalMonths(investment.StockDividendDistributionInterval);
+
+			//quantityList.Add(stockQuantity);
+			for (int i = 0; i < int.Parse(options["AnalysisLength"]); i++) {
+				if ((currentMonth - firstDividendMonth) % monthInterval == 0) {
+					stockQuantity += stockQuantity * dividendPercent;
+				}
+				quantityList.Add(stockQuantity);
+				currentMonth++;
+				if (currentMonth > 12) {
+					currentMonth = 1;
+				}
 			}
 
-			double xMean = sumX / n;
-			double yMean = sumY / n;
-
-			double denominator = sumX2 - (sumX * sumX / n);
-
-			if (denominator == 0) {
-				slope = 0;
-				yIntercept = yMean;
-				return;
-			}
-
-			slope = (sumXY - sumX * yMean) / denominator;
-			yIntercept = yMean - slope * xMean;
+			return quantityList;
 		}
 	}
 }
