@@ -18,6 +18,7 @@ import {SidebarInvestment, VehicleListItem} from './components/SidebarComponents
 import {AddInvestmentDialog, AddVehicleDialog} from './components/DialogComponents';
 
 import {getAnalysisPresets} from './api/ApiCommon';
+import {AboutDialog} from './components/AboutDialog';
 
 export const PresetContext = React.createContext<ApiPresetData | undefined>(undefined);
 
@@ -29,6 +30,7 @@ export const Layout = () => {
 	const [invAddDialogOpen, setInvAddDialogOpen] = React.useState(false);
 	const [vehicleAddDialogOpen, setVehicleAddDialogOpen] = React.useState(false);
 	const [vehicleAddInvTarget, setVehicleAddInvTarget] = React.useState<number>(-1); //by default, adds as individual investment
+	const [aboutOpen, setAboutOpen] = React.useState(false);
 
 	React.useEffect(() => {
 		if (presetData === undefined) {
@@ -123,6 +125,11 @@ export const Layout = () => {
 							RetireSimple
 						</Typography>
 						<Box component='span' sx={{flex: '1 1 auto'}} />
+						<Tooltip title='About'>
+							<IconButton color='inherit' onClick={() => setAboutOpen(true)}>
+								<Icon baseClassName='material-icons'>info</Icon>
+							</IconButton>
+						</Tooltip>
 						<Tooltip title='Report Bug/Issue on GitHub'>
 							<IconButton
 								color='inherit'
@@ -153,6 +160,7 @@ export const Layout = () => {
 					open={vehicleAddDialogOpen}
 					onClose={() => setVehicleAddDialogOpen(false)}
 				/>
+				<AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} />
 			</PresetContext.Provider>
 		</div>
 	);
