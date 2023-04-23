@@ -22,20 +22,6 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 		public override InvestmentModel GeneratePreTaxModels(OptionsDict options, List<InvestmentModel> models, List<decimal>? cashContribution = null)
 			=> VehicleDefaultAS.GeneratePreTaxModelDefault(options, models, cashContribution);
 
-
-		//  ["payFrequency"] = "weekly",
-		//	["salary"] = "60000",
-		//	["maxEmployerContributionPercentage"] = "0.06",
-		//	["userContributionPercentage"] = "0.1",
-		//	["employerMatchPercentage"] = "1.2",
-		//	["userContributionType"] = "fixed",
-		//	["user_monthly_contribution"] = "50",
-
-		//	User_contribution = ["userContributionAmount"] = 50
-		//  Max_Employer_Contribution = 3600
-		//	Employer_match = 50 * 1.20 = 60
-		//	Contribution_per_month = 50 + 60 = 160;
-
 		public override List<decimal> SimulateCashContributions(OptionsDict options) {
 			var analysisLength = int.Parse(options["analysisLength"]);
 			var currentHoldings = this.CashHoldings;
@@ -49,15 +35,14 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 					break;
 				case "weekly":
 					pay_freq = 52;
-					contribution_multiplier = (13 / 3);
+					contribution_multiplier = (52 / 12);
 					break;
 				case "biweekly":
 					pay_freq = 26;
-					contribution_multiplier = (13 / 6);
+					contribution_multiplier = (52 / 24);
 					break;
 			}
 			decimal salary = decimal.Parse(options["salary"]);
-			decimal maxEmployerContribution = decimal.Parse(options["maxEmployerContributionPercentage"]);
 			decimal userContributionPercentage = decimal.Parse(options["userContributionPercentage"]);
 			decimal employerMatchPercentage = decimal.Parse(options["employerMatchPercentage"]);
 			decimal userContribution = 0M;
@@ -68,9 +53,6 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 				userContribution = salary / pay_freq * userContributionPercentage;
 			}
 			var employer_match = userContribution * employerMatchPercentage;
-			if (employer_match >= (maxEmployerContribution / pay_freq)) {
-				employer_match = (maxEmployerContribution / pay_freq);
-			}
 			var contribution_per_month = userContribution + employer_match;
 
 			return Enumerable.Range(0, analysisLength)

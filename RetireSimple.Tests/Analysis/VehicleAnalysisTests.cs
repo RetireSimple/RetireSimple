@@ -1,3 +1,5 @@
+using MathNet.Numerics;
+
 using Moq;
 
 using RetireSimple.Engine.Data.Analysis;
@@ -52,40 +54,75 @@ namespace RetireSimple.Tests.Analysis {
 		}
 
 		[Fact]
-		public void Test401kCashContributionsPercentage_WeeklyPaycheck() {
+		public void Test401kCashContributionsPercentage_MonthlyPaycheck() {
 			var vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401k };
 			var actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401k);
-			var expectedData = new List<decimal>() { 0, 800, 1600, 2400, 3200, 4000, 4800, 5600, 6400, 7200 };
+			var expectedData = new List<decimal>() { 0, 506, 1012, 1518, 2024, 2530, 3036, 3542, 4048, 4554 };
 
 			actual.Should().HaveSameCount(expectedData);
 			actual.Should().BeEquivalentTo(expectedData);
-
-			VehicleAnalysisTestData.Options401k["payFrequency"] = "weekly";
-			vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401k };
-			actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401k);
-			var expectedData2 = new List<string> { "", "738.462", "1476.923", "2215.385", "2953.846", "3692.308", "4430.769", "5169.231", "5907.692", "6646.154" };
-
-			var newData = new List<string>();
-			foreach (var data in actual) {
-				newData.Add(data.ToString("#.###"));
-			}
-			newData.Should().HaveSameCount(expectedData2);
-			newData.Should().BeEquivalentTo(expectedData2);
 		}
 
 		[Fact]
-		public void Test401kCashContributionsFixed() {
+		public void Test401kCashContributionsPercentage_WeeklyPaycheck() {
+			var testDict = new OptionsDict(VehicleAnalysisTestData.Options401k) {
+				["payFrequency"] = "weekly"
+			};
+			var vehicle = new Vehicle401k { InvestmentVehicleData = testDict };
+			var actual = vehicle.SimulateCashContributions(testDict).Select(x => x.Round(2)).ToList();
+			var expectedData = new List<decimal> { 0, 467.08M, 934.15M, 1401.23M, 1868.31M, 2335.38M, 2802.46M, 3269.54M, 3736.62M, 4203.69M };
+
+			actual.Should().HaveSameCount(expectedData);
+			actual.Should().BeEquivalentTo(expectedData);
+		}
+
+		[Fact]
+		public void Test401kCashContributionsPercentage_BiWeeklyPaycheck() {
+			var testDict = new OptionsDict(VehicleAnalysisTestData.Options401k) {
+				["payFrequency"] = "biweekly"
+			};
+			var vehicle = new Vehicle401k { InvestmentVehicleData = testDict };
+			var actual = vehicle.SimulateCashContributions(testDict).Select(x => x.Round(2)).ToList();
+			var expectedData = new List<decimal>() { 0, 467.08M, 934.15M, 1401.23M, 1868.31M, 2335.38M, 2802.46M, 3269.54M, 3736.62M, 4203.69M };
+
+			actual.Should().HaveSameCount(expectedData);
+			actual.Should().BeEquivalentTo(expectedData);
+		}
+
+		[Fact]
+		public void Test401kCashContributionsFixed_MonthlyPaycheck() {
 			var vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401kFixed };
+			var expected = new List<decimal>() { 0, 50.6M, 101.2M, 151.8M, 202.4M, 253M, 303.6M, 354.2M, 404.8M, 455.4M };
+
 			var actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401kFixed);
-			var expected = new List<decimal>() { 0, 110, 220, 330, 440, 550, 660, 770, 880, 990 };
 
 			actual.Should().HaveSameCount(expected);
 			actual.Should().BeEquivalentTo(expected);
+		}
 
-			VehicleAnalysisTestData.Options401kFixed["payFrequency"] = "weekly";
-			vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401kFixed };
-			actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401kFixed);
-			expected = new List<decimal>() { 0, 440, 880, 1320, 1760, 2200, 2640, 3080, 3520, 3960 };
+		[Fact]
+		public void Test401kCashContributionsFixed_WeeklyPaycheck() {
+			var testDict = new OptionsDict(VehicleAnalysisTestData.Options401kFixed) {
+				["payFrequency"] = "weekly"
+			};
+			var vehicle = new Vehicle401k { InvestmentVehicleData = testDict };
+			var expected = new List<decimal>() { 0, 202.4M, 404.8M, 607.2M, 809.6M, 1012M, 1214.4M, 1416.8M, 1619.2M, 1821.6M };
+
+			var actual = vehicle.SimulateCashContributions(testDict);
+
+			actual.Should().HaveSameCount(expected);
+			actual.Should().BeEquivalentTo(expected);
+		}
+
+		[Fact]
+		public void Test401kCashContributionsFixed_BiWeeklyPaycheck() {
+			var testDict = new OptionsDict(VehicleAnalysisTestData.Options401kFixed) {
+				["payFrequency"] = "biweekly"
+			};
+			var vehicle = new Vehicle401k { InvestmentVehicleData = testDict };
+			var expected = new List<decimal>() { 0, 101.2M, 202.4M, 303.6M, 404.8M, 506M, 607.2M, 708.4M, 809.6M, 910.8M };
+
+			var actual = vehicle.SimulateCashContributions(testDict);
 
 			actual.Should().HaveSameCount(expected);
 			actual.Should().BeEquivalentTo(expected);
@@ -117,9 +154,8 @@ namespace RetireSimple.Tests.Analysis {
 			["cashHoldings"] = "0",
 			["payFrequency"] = "monthly",
 			["salary"] = "60000",
-			["maxEmployerContributionPercentage"] = "3600",
 			["userContributionPercentage"] = "0.1",
-			["employerMatchPercentage"] = "1.2",
+			["employerMatchPercentage"] = "0.012",
 			["userContributionType"] = "percentage",
 		};
 
@@ -128,9 +164,8 @@ namespace RetireSimple.Tests.Analysis {
 			["cashHoldings"] = "0",
 			["payFrequency"] = "monthly",
 			["salary"] = "60000",
-			["maxEmployerContributionPercentage"] = "3600",
 			["userContributionPercentage"] = "0.1",
-			["employerMatchPercentage"] = "1.2",
+			["employerMatchPercentage"] = "0.012",
 			["userContributionType"] = "fixed",
 			["userContributionAmount"] = "50",
 		};
@@ -158,36 +193,7 @@ namespace RetireSimple.Tests.Analysis {
 			},
 		};
 
-		public static readonly List<InvestmentModel> ExpectedModelsDefault = new() {
-			new InvestmentModel(){
-				MinModelData = new List<decimal>(){ 100, 105, 110, 115, 120, 125, 130, 135, 140, 145 },
-				AvgModelData = new List<decimal>(){ 100, 110, 120, 130, 140, 150, 160, 170, 180, 190 },
-				MaxModelData = new List<decimal>(){ 100, 115, 130, 145, 160, 175, 190, 205, 220, 235 },
-			},
-			new InvestmentModel(){
-				MinModelData = new List<decimal>(){ 150, 160, 170, 180, 190, 200, 210, 220, 230, 240 },
-				AvgModelData = new List<decimal>(){ 150, 170, 190, 210, 230, 250, 270, 290, 310, 330 },
-				MaxModelData = new List<decimal>(){ 150, 180, 210, 240, 270, 300, 330, 360, 390, 420 },
-			},
-			new InvestmentModel(){
-				MinModelData = new List<decimal>(){ 200, 205, 210, 215, 220, 225, 230, 235, 240, 245 },
-				AvgModelData = new List<decimal>(){ 200, 220, 240, 260, 280, 300, 320, 340, 360, 380 },
-				MaxModelData = new List<decimal>(){ 200, 235, 270, 305, 340, 375, 410, 445, 480, 515 },
-			},
-			new InvestmentModel(){
-				MinModelData = new List<decimal>(){ 250, 250, 265, 250, 285, 250, 305, 250, 325, 250 },
-				AvgModelData = new List<decimal>(){ 250, 270, 290, 310, 330, 350, 370, 390, 410, 430 },
-				MaxModelData = new List<decimal>(){ 250, 290, 315, 370, 375, 450, 435, 530, 495, 610 },
-			},
-		};
 
-		public static readonly List<InvestmentModel> ExpectedModels401k = new() {
-			new InvestmentModel(){
-				MinModelData = new List<decimal>(){ 0, 800, 1600, 2400, 3200, 4000, 4800, 5600, 6400, 7200 },
-				AvgModelData = new List<decimal>(){ 0, 800, 1600, 2400, 3200, 4000, 4800, 5600, 6400, 7200 },
-				MaxModelData = new List<decimal>(){ 0, 800, 1600, 2400, 3200, 4000, 4800, 5600, 6400, 7200 },
-			},
-		};
 
 		/********************************************************
 		 * 		 Test Parameters
@@ -212,21 +218,6 @@ namespace RetireSimple.Tests.Analysis {
 				new OptionsDict(DefaultOptions){ ["userContributionAmount"] = "10"},
 				100.0m,
 				new List<decimal>(){100m, 110m, 120m, 130m, 140m, 150m, 160m, 170m, 180m, 190m}
-			}
-		};
-
-		public static readonly IEnumerable<object[]> CashSimVars_PostTax = new List<object[]> {
-			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" }, 0.0m,
-				new List<decimal>(){0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-			},
-			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "10" }, 0.0m,
-				new List<decimal>(){0, 7,14, 21, 28, 35, 42, 49, 56, 63}
-			},
-			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "0" }, 100.0m,
-				new List<decimal>(){100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, 100m, }
-			},
-			new object[] { new OptionsDict(DefaultOptions){ ["cashContribution"] = "10" }, 100.0m,
-				new List<decimal>(){100m, 107m, 114m, 121m, 128m, 135m, 142m, 149m, 156m, 163m}
 			}
 		};
 

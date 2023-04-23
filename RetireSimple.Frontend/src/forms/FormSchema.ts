@@ -370,17 +370,6 @@ export const vehicleFormSchema = object().shape({
 				.oneOf(['weekly', 'biweekly', 'monthly']),
 		otherwise: (schema) => schema.strip(),
 	}),
-	analysis_maxEmployerContributionPercentage: number().when('investmentVehicleType', {
-		is: 'Vehicle401k',
-		then: (schema) =>
-			schema
-				.defined('Required')
-				.required('Required')
-				.test('is-decimal', decimalErrorString, (value) =>
-					isNaN(value) ? false : decimalValidation(2, value),
-				),
-		otherwise: (schema) => schema.strip(),
-	}),
 	analysis_employerMatchPercentage: number().when('investmentVehicleType', {
 		is: 'Vehicle401k',
 		then: (schema) =>
@@ -442,7 +431,6 @@ export const VehicleFormDefaults = {
 	analysis_longTermCapitalGainsTax: '0.0',
 	analysis_salary: '0',
 	analysis_payFrequency: 'weekly',
-	analysis_maxEmployerContributionPercentage: '0.0',
 	analysis_employerMatchPercentage: '0.0',
 	analysis_userContributionType: 'fixed',
 	analysis_userContributionAmount: '0.0',
