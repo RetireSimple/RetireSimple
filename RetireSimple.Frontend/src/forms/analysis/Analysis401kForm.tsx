@@ -3,7 +3,6 @@ import React from 'react';
 import {useFormContext, useWatch} from 'react-hook-form';
 import {
 	FormSelectField,
-	FormTextField,
 	FormTextFieldCurrency,
 	FormTextFieldPercent,
 } from '../../components/InputComponents';
@@ -62,26 +61,6 @@ export const Analysis401kForm = () => {
 					</Typography>
 					<Typography variant='inherit'>
 						This is used to determine monthly contribution amounts and limits.
-					</Typography>
-				</>
-			}
-		/>
-	);
-
-	const maxEmployerContributionField = (
-		<FormTextField
-			name='analysis_maxEmployerContributionPercentage'
-			label='Max Employer Contribution'
-			control={formContext.control}
-			errorField={errors.analysis_maxEmployerContributionPercentage}
-			tooltip={
-				<>
-					<Typography variant='inherit'>
-						The maximum amount that the employer can contribute to the vehicle.
-					</Typography>
-					<Typography variant='inherit'>
-						This is used to reflect legal limits on employer contributions to 401k
-						plans.
 					</Typography>
 				</>
 			}
@@ -168,9 +147,6 @@ export const Analysis401kForm = () => {
 				{payFrequencyField}
 			</Grid>
 			<Grid item xs={0} sm={4} />
-			<Grid item xs={6} sm={4}>
-				{maxEmployerContributionField}
-			</Grid>
 			<Grid item xs={6} sm={4}>
 				{employerMatchField}
 			</Grid>
