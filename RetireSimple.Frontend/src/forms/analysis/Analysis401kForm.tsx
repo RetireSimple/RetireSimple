@@ -150,7 +150,6 @@ export const Analysis401kForm = () => {
 			<Grid item xs={6} sm={4}>
 				{employerMatchField}
 			</Grid>
-			<Grid item xs={0} sm={4} />
 			<Grid item xs={6} sm={4}>
 				{userContributionTypeField}
 			</Grid>
