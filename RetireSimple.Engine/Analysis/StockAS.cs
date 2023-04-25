@@ -4,6 +4,8 @@ using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Investment;
 
+using System.Linq;
+
 namespace RetireSimple.Engine.Analysis {
 
 	public class StockAS {
@@ -16,6 +18,12 @@ namespace RetireSimple.Engine.Analysis {
 			["randomVariableSigma"] = "1",
 			["randomVariableScaleFactor"] = "1",
 			["simCount"] = "1000"
+		};
+
+		public static readonly OptionsDict DefaultStockAnalysisOptionsRegression = new() {
+			["analysisLength"] = "60",                          //Number of months to project
+			["percentGrowth"] = "0.012",
+			["uncertainty"] = "0.50"
 		};
 
 		private static int GetDividendIntervalMonths(string interval) => interval switch {
@@ -53,6 +61,21 @@ namespace RetireSimple.Engine.Analysis {
 			}
 
 			return quantityList;
+		}
+
+		[AnalysisModule("StockInvestment")]
+		public static InvestmentModel SimpleRegression(StockInvestment investment, OptionsDict options) {
+			var simPreset = RegressionPresets.ResolveRegressionPreset(investment, options);
+
+			var priceSim = new Regression(simPreset);
+			var pricemodel = priceSim.RunSimulation();
+			var dividendModel = ProjectStockDividend(investment, DefaultStockAnalysisOptionsRegression);
+
+			pricemodel.MinModelData = pricemodel.MinModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
+			pricemodel.AvgModelData = pricemodel.AvgModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
+			pricemodel.MaxModelData = pricemodel.MaxModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
+
+			return pricemodel;
 		}
 
 		[AnalysisModule("StockInvestment")]

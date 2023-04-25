@@ -16,7 +16,7 @@ namespace RetireSimple.Tests.Analysis {
 		}
 
 		public static readonly IEnumerable<object[]> PresetResolutionData = new List<object[]>() {
-			new object[]{"LargeCapGrowth", MonteCarloPresets.LargeCapGrowth},
+			new object[] {"LargeCapGrowth", MonteCarloPresets.LargeCapGrowth},
 			new object[] {"LargeCapValue", MonteCarloPresets.LargeCapValue },
 			new object[] {"MidCapGrowth", MonteCarloPresets.MidCapGrowth },
 			new object[] {"MidCapValue", MonteCarloPresets.MidCapValue},
