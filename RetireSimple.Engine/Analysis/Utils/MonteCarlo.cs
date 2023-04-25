@@ -3,6 +3,7 @@ using MathNet.Numerics.Distributions;
 using RetireSimple.Engine.Data.Analysis;
 
 using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace RetireSimple.Engine.Analysis.Utils {
 
@@ -67,24 +68,7 @@ namespace RetireSimple.Engine.Analysis.Utils {
 			};
 		}
 
-		internal virtual List<decimal> MonteCarloSingleSimulation(IContinuousDistribution rv) {
-			var currentPrice = BasePrice;
-			var iterModel = new List<decimal>();
-			//Monitor.Enter(RandomVariable);
-			var rvSamples = new double[AnalysisLength];
-			rv.Samples(rvSamples);
-			//Monitor.Exit(RandomVariable);
-
-			for (var step = 0; step < AnalysisLength; step++) {
-				iterModel.Add(currentPrice);
-				currentPrice += RandomVarScaleFactor
-								* (decimal)rvSamples[step];
-			}
-
-			return iterModel;
-		}
-
-		internal virtual void MonteCarloSingleSimNewMethod(IContinuousDistribution rv, List<decimal> outModel) {
+		internal virtual void MonteCarloSingleSimulation(IContinuousDistribution rv, ref List<decimal> outModel) {
 			var currentPrice = BasePrice;
 			for (var step = 0; step < AnalysisLength; step++) {
 				outModel.Add(currentPrice);
@@ -94,63 +78,38 @@ namespace RetireSimple.Engine.Analysis.Utils {
 		}
 
 		public InvestmentModel RunSimulation() {
-			var simLists = new ConcurrentBag<List<decimal>>();
-			Parallel.For(0, SimulationCount, x => {
-				var rv = CreateRandomVariable(RandomVariableOptions);
-				simLists.Add(MonteCarloSingleSimulation(rv));
-			});
-
-			return FilterSimulationData(simLists, AnalysisLength);
-		}
-
-		internal virtual InvestmentModel FilterSimulationData(ConcurrentBag<List<decimal>> simLists, int analysisLength) {
-			var model = new InvestmentModel();
-			for (var i = 0; i < analysisLength; i++) {
-				model.MinModelData.Add(simLists.Select(x => x[i]).Min());
-				model.MaxModelData.Add(simLists.Select(x => x[i]).Max());
-				model.AvgModelData.Add(simLists.Select(x => x[i]).Average());
-			}
-
-			return model;
-		}
-
-		public InvestmentModel RunSimulationImproved() {
-			var finalModel = new InvestmentModel() {
-				MinModelData = Enumerable.Repeat(0M, AnalysisLength).ToList(),
-				MaxModelData = Enumerable.Repeat(0M, AnalysisLength).ToList(),
-				AvgModelData = Enumerable.Repeat(0M, AnalysisLength).ToList(),
-			};
+			var finalModel = new InvestmentModel();
 
 			var threads = Environment.ProcessorCount * 2;
-
-			var subIterations = SimulationCount / threads;
+			var subIterations = (int)Math.Ceiling((double)SimulationCount / threads);
 			var mergedIterations = 0;
 			var tasks = new Task[threads];
 			for (int i = 0; i < tasks.Length; i++) {
 				tasks[i] = new Task(() => {
 					var subModel = new InvestmentModel();
 					var rv = CreateRandomVariable(RandomVariableOptions);
-					var iterResults = new List<decimal>();
 
+					var iterResults = new List<decimal>();
 					for (int iter = 0; iter < subIterations; iter++) {
-						MonteCarloSingleSimNewMethod(rv, iterResults);
+						MonteCarloSingleSimulation(rv, ref iterResults);
 						if (iter == 0) {
 							subModel.MinModelData = new List<decimal>(iterResults);
 							subModel.MaxModelData = new List<decimal>(iterResults);
 							subModel.AvgModelData = new List<decimal>(iterResults);
 							continue;
-						}
-						for (int step = 0; step < AnalysisLength; step++) {
-							subModel.MinModelData[step] = Math.Min(subModel.MinModelData[step], iterResults[step]);
-							subModel.MaxModelData[step] = Math.Max(subModel.MaxModelData[step], iterResults[step]);
-							subModel.AvgModelData[step] = subModel.AvgModelData[step]
-														+ (iterResults[step] - subModel.AvgModelData[step]) / (iter + 1); //Cumulative Moving Average
+						} else {
+							for (int step = 0; step < AnalysisLength; step++) {
+								subModel.MinModelData[step] = Math.Min(subModel.MinModelData[step], iterResults[step]);
+								subModel.MaxModelData[step] = Math.Max(subModel.MaxModelData[step], iterResults[step]);
+								subModel.AvgModelData[step] = subModel.AvgModelData[step]
+															+ (iterResults[step] - subModel.AvgModelData[step]) / (iter + 1); //Cumulative Moving Average
+							}
 						}
 						iterResults.Clear();
 					}
 
 					lock (finalModel) {
-						if (finalModel.MinModelData == null) {
+						if (finalModel.MinModelData.Count == 0) {
 							finalModel.MinModelData = new List<decimal>(subModel.MinModelData);
 							finalModel.MaxModelData = new List<decimal>(subModel.MaxModelData);
 							finalModel.AvgModelData = new List<decimal>(subModel.AvgModelData);
@@ -160,7 +119,7 @@ namespace RetireSimple.Engine.Analysis.Utils {
 							finalModel.AvgModelData = finalModel.AvgModelData.Zip(subModel.AvgModelData, (x, y) => x + (y - x) / (mergedIterations + 1)).ToList();
 						}
 
-						mergedIterations++;
+						Interlocked.Increment(ref mergedIterations);
 					}
 				});
 				tasks[i].Start();

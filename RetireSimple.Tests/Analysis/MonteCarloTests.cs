@@ -39,58 +39,39 @@ namespace RetireSimple.Tests.Analysis {
 			act.Should().Throw<NotImplementedException>();
 		}
 
-		//[Fact]
-		//public void FilterSimulationData_PerformsExpectedFilterning() {
-		//	var data = new ConcurrentBag<List<decimal>>() {
-		//		new List<decimal> {
-		//			1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-		//		},
-		//		new List<decimal>{10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-		//	};
-		//	var expected = new InvestmentModel() {
-		//		MinModelData = { 1, 2, 3, 4, 5, 5, 4, 3, 2, 1 },
-		//		MaxModelData = { 10, 9, 8, 7, 6, 6, 7, 8, 9, 10 },
-		//		AvgModelData = { 5.5M, 5.5M, 5.5M, 5.5M, 5.5M, 5.5M, 5.5M, 5.5M, 5.5M, 5.5M },
-		//	};
-		//	var dummyRV = new Mock<IContinuousDistribution>();
+		[Fact]
+		public void RunSimulation_SingleSimulation_ReturnsExpectedData() {
+			var dummyRV = new Mock<IContinuousDistribution>();
+			dummyRV.Setup(x => x.Sample()).Returns(1);
+			var monteCarlo = new MonteCarlo(TestOptions);
 
 
-		//	var monteCarlo = new MonteCarlo(TestOptions);
+			var actual = new List<decimal>();
+			monteCarlo.MonteCarloSingleSimulation(dummyRV.Object, ref actual);
+			actual.Should().BeEquivalentTo(new List<decimal> { 100, 101, 102, 103, 104, 105, 106, 107, 108, 109 });
+		}
 
-		//	var actual = monteCarlo.FilterSimulationData(data, 10);
-		//	//Quickly set LastUpdated to prevent equality errors
-		//	var now = DateTime.Now;
-		//	expected.LastUpdated = now;
-		//	actual.LastUpdated = now;
+		delegate void MonteCarloSingleSimulationCallback(IContinuousDistribution rv, ref List<decimal> list);
 
-		//	actual.Should().BeEquivalentTo(expected);
-		//}
+		[Fact]
+		public void RunFullSimulation_PerformsExpectedSteps() {
+			//While we can't exactly or effectively predict probability, we can
+			//verify the steps performed by the simulation are correct
 
-		//[Fact]
-		//public void RunSimulation_SingleSimulation_ReturnsExpectedData() {
-		//	var dummyRV = new Mock<IContinuousDistribution>();
-		//	dummyRV.Setup(x => x.Sample()).Returns(1);
-		//	var monteCarlo = new MonteCarlo(TestOptions, dummyRV.Object);
-		//	var actual = monteCarlo.MonteCarloSingleSimulation();
-		//	actual.Should().BeEquivalentTo(new List<decimal> { 100, 101, 102, 103, 104, 105, 106, 107, 108, 109 });
-		//}
+			var dummyRV = new Mock<IContinuousDistribution>();
+			dummyRV.Setup(x => x.Sample()).Returns(1);
+			var monteCarlo = new Mock<MonteCarlo>(TestOptions) { CallBase = true };
+			monteCarlo.Setup(x => x.MonteCarloSingleSimulation(It.IsAny<IContinuousDistribution>(), ref It.Ref<List<decimal>>.IsAny))
+			.Callback(new MonteCarloSingleSimulationCallback((IContinuousDistribution rv, ref List<decimal> list)
+															=> list.AddRange(Enumerable.Range(0, 10).Select(x => 100m + x))));
 
-		//[Fact]
-		//public void RunFullSimulation_PerformsExpectedSteps() {
-		//	//While we can't exactly or effectively predict probability, we can 
-		//	//verify the steps performed by the simulation are correct
+			var actual = monteCarlo.Object.RunSimulation();
 
-		//	var dummyRV = new Mock<IContinuousDistribution>();
-		//	dummyRV.Setup(x => x.Sample()).Returns(1);
-		//	var monteCarlo = new Mock<MonteCarlo>(TestOptions, dummyRV.Object);
-		//	monteCarlo.Setup(x => x.MonteCarloSingleSimulation())
-		//				.Returns(new List<decimal>());
-		//	monteCarlo.Setup(x => x.FilterSimulationData(It.IsAny<ConcurrentBag<List<decimal>>>(), It.IsAny<int>()))
-		//				.Returns(new InvestmentModel());
+			actual.MinModelData.Should().HaveCount(10);
+			actual.MaxModelData.Should().HaveCount(10);
+			actual.AvgModelData.Should().HaveCount(10);
 
-		//	var actual = monteCarlo.Object.RunSimulation();
-		//	monteCarlo.Verify(x => x.MonteCarloSingleSimulation(), Times.Exactly(1000));
-		//	monteCarlo.Verify(x => x.FilterSimulationData(It.IsAny<ConcurrentBag<List<decimal>>>(), It.IsAny<int>()), Times.Once);
-		//}
+			monteCarlo.Verify(x => x.MonteCarloSingleSimulation(It.IsAny<IContinuousDistribution>(), ref It.Ref<List<decimal>>.IsAny), Times.AtLeast(1000));  //Accounts for rounding from threading
+		}
 	}
 }
