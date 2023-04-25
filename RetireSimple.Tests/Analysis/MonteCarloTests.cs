@@ -47,7 +47,7 @@ namespace RetireSimple.Tests.Analysis {
 
 
 			var actual = new List<decimal>();
-			monteCarlo.MonteCarloSingleSimulation(dummyRV.Object, ref actual);
+			monteCarlo.SingleIteration(dummyRV.Object, ref actual);
 			actual.Should().BeEquivalentTo(new List<decimal> { 100, 101, 102, 103, 104, 105, 106, 107, 108, 109 });
 		}
 
@@ -61,7 +61,7 @@ namespace RetireSimple.Tests.Analysis {
 			var dummyRV = new Mock<IContinuousDistribution>();
 			dummyRV.Setup(x => x.Sample()).Returns(1);
 			var monteCarlo = new Mock<MonteCarlo>(TestOptions) { CallBase = true };
-			monteCarlo.Setup(x => x.MonteCarloSingleSimulation(It.IsAny<IContinuousDistribution>(), ref It.Ref<List<decimal>>.IsAny))
+			monteCarlo.Setup(x => x.SingleIteration(It.IsAny<IContinuousDistribution>(), ref It.Ref<List<decimal>>.IsAny))
 			.Callback(new MonteCarloSingleSimulationCallback((IContinuousDistribution rv, ref List<decimal> list)
 															=> list.AddRange(Enumerable.Range(0, 10).Select(x => 100m + x))));
 
@@ -71,7 +71,7 @@ namespace RetireSimple.Tests.Analysis {
 			actual.MaxModelData.Should().HaveCount(10);
 			actual.AvgModelData.Should().HaveCount(10);
 
-			monteCarlo.Verify(x => x.MonteCarloSingleSimulation(It.IsAny<IContinuousDistribution>(), ref It.Ref<List<decimal>>.IsAny), Times.AtLeast(1000));  //Accounts for rounding from threading
+			monteCarlo.Verify(x => x.SingleIteration(It.IsAny<IContinuousDistribution>(), ref It.Ref<List<decimal>>.IsAny), Times.AtLeast(1000));  //Accounts for rounding from threading
 		}
 	}
 }

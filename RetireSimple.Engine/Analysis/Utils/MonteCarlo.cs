@@ -68,7 +68,7 @@ namespace RetireSimple.Engine.Analysis.Utils {
 			};
 		}
 
-		internal virtual void MonteCarloSingleSimulation(IContinuousDistribution rv, ref List<decimal> outModel) {
+		internal virtual void SingleIteration(IContinuousDistribution rv, ref List<decimal> outModel) {
 			var currentPrice = BasePrice;
 			for (var step = 0; step < AnalysisLength; step++) {
 				outModel.Add(currentPrice);
@@ -91,7 +91,7 @@ namespace RetireSimple.Engine.Analysis.Utils {
 
 					var iterResults = new List<decimal>();
 					for (int iter = 0; iter < subIterations; iter++) {
-						MonteCarloSingleSimulation(rv, ref iterResults);
+						SingleIteration(rv, ref iterResults);
 						if (iter == 0) {
 							subModel.MinModelData = new List<decimal>(iterResults);
 							subModel.MaxModelData = new List<decimal>(iterResults);
