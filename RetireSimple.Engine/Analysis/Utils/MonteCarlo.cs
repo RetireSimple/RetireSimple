@@ -1,10 +1,6 @@
 using MathNet.Numerics.Distributions;
 
-using Microsoft.Extensions.Options;
-
 using RetireSimple.Engine.Data.Analysis;
-using RetireSimple.Engine.Data.Base;
-using RetireSimple.Engine.Data.Investment;
 
 using System.Collections.Concurrent;
 
@@ -35,18 +31,30 @@ namespace RetireSimple.Engine.Analysis.Utils {
 
 
 	public class MonteCarlo {
-		internal IContinuousDistribution RandomVariable { get; init; }
+		//internal IContinuousDistribution RandomVariable { get; init; }
 		internal decimal BasePrice { get; init; }
 		internal int AnalysisLength { get; init; }
 		internal int SimulationCount { get; init; }
 		internal decimal RandomVarScaleFactor { get; init; }
+		internal OptionsDict RandomVariableOptions { get; init; }
 
-		public MonteCarlo(OptionsDict options, IContinuousDistribution randomVariable) {
+		public MonteCarlo(OptionsDict options) {
 			BasePrice = decimal.Parse(options["basePrice"]);
 			AnalysisLength = int.Parse(options["analysisLength"]);
 			RandomVarScaleFactor = decimal.Parse(options["randomVariableScaleFactor"]);
 			SimulationCount = int.Parse(options["simCount"]);
-			RandomVariable = randomVariable;
+			//RandomVariable = randomVariable;
+
+			RandomVariableOptions = new OptionsDict() {
+				["randomVariableType"] = options["randomVariableType"],
+				["randomVariableMu"] = options["randomVariableMu"],
+				["randomVariableSigma"] = options["randomVariableSigma"],
+			};
+
+			RandomVariableOptions.Remove("basePrice");
+			RandomVariableOptions.Remove("analysisLength");
+			RandomVariableOptions.Remove("randomVariableScaleFactor");
+			RandomVariableOptions.Remove("simCount");
 		}
 
 		public static IContinuousDistribution CreateRandomVariable(OptionsDict parameters) {
@@ -59,23 +67,37 @@ namespace RetireSimple.Engine.Analysis.Utils {
 			};
 		}
 
-		internal virtual List<decimal> MonteCarloSingleSimulation() {
+		internal virtual List<decimal> MonteCarloSingleSimulation(IContinuousDistribution rv) {
 			var currentPrice = BasePrice;
 			var iterModel = new List<decimal>();
+			//Monitor.Enter(RandomVariable);
+			var rvSamples = new double[AnalysisLength];
+			rv.Samples(rvSamples);
+			//Monitor.Exit(RandomVariable);
 
 			for (var step = 0; step < AnalysisLength; step++) {
 				iterModel.Add(currentPrice);
 				currentPrice += RandomVarScaleFactor
-								* (decimal)RandomVariable.Sample();
+								* (decimal)rvSamples[step];
 			}
 
 			return iterModel;
 		}
 
+		internal virtual void MonteCarloSingleSimNewMethod(IContinuousDistribution rv, List<decimal> outModel) {
+			var currentPrice = BasePrice;
+			for (var step = 0; step < AnalysisLength; step++) {
+				outModel.Add(currentPrice);
+				currentPrice += RandomVarScaleFactor
+								* (decimal)rv.Sample();
+			}
+		}
+
 		public InvestmentModel RunSimulation() {
 			var simLists = new ConcurrentBag<List<decimal>>();
 			Parallel.For(0, SimulationCount, x => {
-				simLists.Add(MonteCarloSingleSimulation());
+				var rv = CreateRandomVariable(RandomVariableOptions);
+				simLists.Add(MonteCarloSingleSimulation(rv));
 			});
 
 			return FilterSimulationData(simLists, AnalysisLength);
@@ -90,6 +112,75 @@ namespace RetireSimple.Engine.Analysis.Utils {
 			}
 
 			return model;
+		}
+
+		public InvestmentModel RunSimulationImproved() {
+			var finalModel = new InvestmentModel() {
+				MinModelData = Enumerable.Repeat(0M, AnalysisLength).ToList(),
+				MaxModelData = Enumerable.Repeat(0M, AnalysisLength).ToList(),
+				AvgModelData = Enumerable.Repeat(0M, AnalysisLength).ToList(),
+			};
+
+			var threads = Environment.ProcessorCount * 2;
+
+			var subIterations = SimulationCount / threads;
+			var mergedIterations = 0;
+			var tasks = new Task[threads];
+			for (int i = 0; i < tasks.Length; i++) {
+				tasks[i] = new Task(() => {
+					var subModel = new InvestmentModel();
+					var rv = CreateRandomVariable(RandomVariableOptions);
+					var iterResults = new List<decimal>();
+
+					for (int iter = 0; iter < subIterations; iter++) {
+						MonteCarloSingleSimNewMethod(rv, iterResults);
+						if (iter == 0) {
+							subModel.MinModelData = new List<decimal>(iterResults);
+							subModel.MaxModelData = new List<decimal>(iterResults);
+							subModel.AvgModelData = new List<decimal>(iterResults);
+							continue;
+						}
+						for (int step = 0; step < AnalysisLength; step++) {
+							subModel.MinModelData[step] = Math.Min(subModel.MinModelData[step], iterResults[step]);
+							subModel.MaxModelData[step] = Math.Max(subModel.MaxModelData[step], iterResults[step]);
+							subModel.AvgModelData[step] = subModel.AvgModelData[step]
+														+ (iterResults[step] - subModel.AvgModelData[step]) / (iter + 1); //Cumulative Moving Average
+						}
+						iterResults.Clear();
+					}
+
+					lock (finalModel) {
+						if (finalModel.MinModelData == null) {
+							finalModel.MinModelData = new List<decimal>(subModel.MinModelData);
+							finalModel.MaxModelData = new List<decimal>(subModel.MaxModelData);
+							finalModel.AvgModelData = new List<decimal>(subModel.AvgModelData);
+						} else {
+							finalModel.MinModelData = finalModel.MinModelData.Zip(subModel.MinModelData, (x, y) => Math.Min(x, y)).ToList();
+							finalModel.MaxModelData = finalModel.MaxModelData.Zip(subModel.MaxModelData, (x, y) => Math.Max(x, y)).ToList();
+							finalModel.AvgModelData = finalModel.AvgModelData.Zip(subModel.AvgModelData, (x, y) => x + (y - x) / (mergedIterations + 1)).ToList();
+						}
+
+						mergedIterations++;
+					}
+				});
+				tasks[i].Start();
+			}
+
+			try {
+				Task.WaitAll(tasks);
+			} catch (AggregateException e) {
+				Console.WriteLine("Exception %s Thrown in subtask e");
+				foreach (var v in e.InnerExceptions) {
+					Console.WriteLine(e.Message + " " + v.Message);
+				}
+			} finally {
+				foreach (var task in tasks) {
+					task.Dispose();
+				}
+			}
+			//Force GC of Simulation Assets
+			GC.Collect(2);
+			return finalModel;
 		}
 
 	}

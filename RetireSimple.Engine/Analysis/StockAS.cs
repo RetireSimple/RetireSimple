@@ -59,8 +59,8 @@ namespace RetireSimple.Engine.Analysis {
 		public static InvestmentModel MonteCarlo(StockInvestment investment, OptionsDict options) {
 			var simPreset = MonteCarloPresets.ResolveMonteCarloPreset(investment, options);
 
-			var priceSim = new MonteCarlo(simPreset, Utils.MonteCarlo.CreateRandomVariable(simPreset));
-			var priceModel = priceSim.RunSimulation();
+			var priceSim = new MonteCarlo(simPreset);
+			var priceModel = priceSim.RunSimulationImproved();
 			var dividendModel = ProjectStockDividend(investment, DefaultStockAnalysisOptions);
 
 			priceModel.MinModelData = priceModel.MinModelData.Zip(dividendModel, (price, dividend) => price * dividend).ToList();
