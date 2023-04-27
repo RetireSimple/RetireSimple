@@ -14,12 +14,11 @@ import {
 import React from 'react';
 import {Link, Outlet, useLoaderData} from 'react-router-dom';
 import {ApiPresetData, Investment, Portfolio} from './Interfaces';
-import {SidebarInvestment, VehicleListItem} from './components/SidebarComponents';
 import {AddInvestmentDialog, AddVehicleDialog} from './components/DialogComponents';
+import {SidebarInvestment, VehicleListItem} from './components/SidebarComponents';
 
 import {getAnalysisPresets} from './api/ApiCommon';
 import {AboutDialog} from './components/AboutDialog';
-import {height} from '@mui/system';
 
 export const PresetContext = React.createContext<ApiPresetData | undefined>(undefined);
 
