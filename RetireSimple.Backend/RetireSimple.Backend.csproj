@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
@@ -11,6 +10,7 @@
 		<AnalysisMode>Recommended</AnalysisMode>
 		<AnalysisModeGlobalization>None</AnalysisModeGlobalization>
 	</PropertyGroup>
+	<Import Project="../OutputTarget.props" />
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
