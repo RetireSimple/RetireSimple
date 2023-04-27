@@ -144,12 +144,6 @@ jobs:
           node-version: 16
           cache: pnpm
           cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
-      - name: Build Frontend
-        run: |
-          cd RetireSimple.Frontend
-          pnpm install
-          pnpm run build
-          cd ..
       - name: Build Backend Executable
         run: dotnet publish ./RetireSimple.Backend/RetireSimple.Backend.csproj
           --configuration Release
