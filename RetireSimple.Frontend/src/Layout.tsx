@@ -20,6 +20,8 @@ import {SidebarInvestment, VehicleListItem} from './components/SidebarComponents
 import {getAnalysisPresets} from './api/ApiCommon';
 import {AboutDialog} from './components/AboutDialog';
 
+import logo from '../../logo.png';
+
 export const PresetContext = React.createContext<ApiPresetData | undefined>(undefined);
 
 export const Layout = () => {
@@ -122,7 +124,7 @@ export const Layout = () => {
 				<AppBar position='static' sx={{padding: '1rem', maxHeight: '4rem'}}>
 					<Box sx={{display: 'flex'}}>
 						<img
-							src='logo.png'
+							src={logo}
 							alt='logo'
 							style={{
 								marginRight: '1rem',
