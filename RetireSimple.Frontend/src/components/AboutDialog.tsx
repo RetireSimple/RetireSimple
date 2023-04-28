@@ -24,6 +24,35 @@ export const AboutDialog = (props: AboutDialogProps) => {
 					<Link href='https://github.com/RetireSimple/RetireSimple'>GitHub</Link>.
 				</Typography>
 				<br />
+				<Typography variant='body1'>
+					The RetireSimple Logo is based on multiple icons from the FontAwesome free icon
+					set. These icons are licensed under the Creative Commons BY 4.0 License as
+					stated <Link href='https://fontawesome.com/license/free'>here</Link>.
+				</Typography>
+				<br />
+				<Typography variant='body1'>
+					The following libraries are used by the RetireSimple Engine and are subject to
+					their respective licenses:
+					<ul>
+						<li>
+							<Link href='https://github.com/dotnet/runtime'>.NET 6</Link> (MIT
+							License)
+						</li>
+						<li>
+							<Link href='https://github.com/dotnet/efcore'>
+								Entity Framework Core 6
+							</Link>{' '}
+							(MIT License)
+						</li>
+						<li>
+							<Link href='https://github.com/mathnet/mathnet-numerics'>
+								Math.NET Numerics
+							</Link>{' '}
+							(MIT License)
+						</li>
+					</ul>
+				</Typography>
+				<br />
 				<Typography variant='h6'>DISCLAIMER</Typography>
 				<Typography variant='body1'>
 					<strong>
