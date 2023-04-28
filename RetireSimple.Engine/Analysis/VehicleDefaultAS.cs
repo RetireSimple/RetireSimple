@@ -110,5 +110,45 @@ namespace RetireSimple.Engine.Analysis {
 				.Select((val, idx) => currentHoldings + cashContribution * idx)
 				.ToList();
 		}
+
+		public static List<decimal> SimulateCashContributions401kLike(InvestmentVehicle vehicle, OptionsDict options) {
+			var analysisLength = int.Parse(options["analysisLength"]);
+			var currentHoldings = vehicle.CashHoldings;
+			decimal contribution_multiplier = 0M;
+
+			int pay_freq = 12;
+			switch (options["payFrequency"]) {
+				case "monthly":
+					pay_freq = 12;
+					contribution_multiplier = 1;
+					break;
+				case "weekly":
+					pay_freq = 52;
+					contribution_multiplier = (52 / 12);
+					break;
+				case "biweekly":
+					pay_freq = 26;
+					contribution_multiplier = (52 / 24);
+					break;
+			}
+			decimal salary = decimal.Parse(options["salary"]);
+			decimal userContributionPercentage = decimal.Parse(options["userContributionPercentage"]);
+			decimal employerMatchPercentage = decimal.Parse(options["employerMatchPercentage"]);
+			decimal userContribution = 0M;
+
+			if (options["userContributionType"] == "fixed") {
+				userContribution = decimal.Parse(options["userContributionAmount"]);
+			} else {
+				userContribution = salary / pay_freq * userContributionPercentage;
+			}
+			var employer_match = userContribution * employerMatchPercentage;
+			var contribution_per_month = userContribution + employer_match;
+
+			return Enumerable.Range(0, analysisLength)
+				.Select(idx => contribution_per_month * contribution_multiplier * idx)
+				.Select(val => currentHoldings + val)
+				.ToList();
+		}
+
 	}
 }
