@@ -58,20 +58,6 @@ namespace RetireSimple.Engine.Data.Base {
 		public List<Expense> Expenses { get; set; } = new List<Expense>();
 
 		/// <summary>
-		/// List of transfers objects associated with this investment that pull value from the investment. <br/>
-		/// This is not passed during JSON Serialization and should be accessed through EF.
-		/// </summary>
-		[JsonIgnore]
-		public List<InvestmentTransfer> TransfersFrom { get; set; } = new List<InvestmentTransfer>();
-
-		/// <summary>
-		/// List of transfers objects associated with this investment that add value to the investment. <br/>
-		/// This is not passed during JSON Serialization and should be accessed through EF.
-		/// </summary>
-		[JsonIgnore]
-		public List<InvestmentTransfer> TransfersTo { get; set; } = new List<InvestmentTransfer>();
-
-		/// <summary>
 		/// Value of the last time the object was updated. Can be used with <see cref="InvestmentModel.LastUpdated"/> to determine if analysis needs to be run again.
 		/// </summary>
 		public DateTime? LastUpdated { get; set; }
@@ -141,16 +127,6 @@ namespace RetireSimple.Engine.Data.Base {
 			builder.HasMany(i => i.Expenses)
 				.WithOne(i => i.SourceInvestment)
 				.OnDelete(DeleteBehavior.Cascade);
-
-			builder.HasMany(i => i.TransfersFrom)
-				.WithOne(i => i.SourceInvestment)
-				.HasForeignKey(t => t.SourceInvestmentId)
-				.OnDelete(DeleteBehavior.Restrict);
-
-			builder.HasMany(i => i.TransfersTo)
-				.WithOne(i => i.DestinationInvestment)
-				.HasForeignKey(t => t.DestinationInvestmentId)
-				.OnDelete(DeleteBehavior.Restrict);
 
 			//Discriminator Configuration via Reflection
 			var investmentModules = ReflectionUtils.GetInvestmentModules();

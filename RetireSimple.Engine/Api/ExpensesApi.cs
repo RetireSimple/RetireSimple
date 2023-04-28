@@ -1,4 +1,4 @@
 ﻿namespace RetireSimple.Engine.Api {
-	public class ExpenseAndTransferApi {
+	public class ExpensesApi {
 	}
 }

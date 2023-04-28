@@ -11,5 +11,8 @@
 		<BaseIntermediateOutputPath>$(BuildDir)obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
 		<BaseOutputPath>$(BuildDir)bin\$(MSBuildProjectName)\</BaseOutputPath>
 		<PackageOutputPath>$(BaseOutDir)</PackageOutputPath>
+
+		<!-- Used by Tools such as dotnet-ef-->
+		<MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
 	</PropertyGroup>
 </Project>
