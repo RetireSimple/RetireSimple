@@ -350,7 +350,7 @@ export const vehicleFormSchema = object().shape({
 	// 401k Specific Fields
 	//========================================
 	analysis_salary: number().when('investmentVehicleType', {
-		is: 'Vehicle401k',
+		is: (val: string) => ['Vehicle401k', 'Vehicle403b', 'Vehicle457'].includes(val),
 		then: (schema) =>
 			schema
 				.defined('Required')
@@ -362,7 +362,7 @@ export const vehicleFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_payFrequency: string().when('investmentVehicleType', {
-		is: 'Vehicle401k',
+		is: (val: string) => ['Vehicle401k', 'Vehicle403b', 'Vehicle457'].includes(val),
 		then: (schema) =>
 			schema
 				.defined('Required')
@@ -371,7 +371,7 @@ export const vehicleFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_employerMatchPercentage: number().when('investmentVehicleType', {
-		is: 'Vehicle401k',
+		is: (val: string) => ['Vehicle401k', 'Vehicle403b', 'Vehicle457'].includes(val),
 		then: (schema) =>
 			schema
 				.defined('Required')
@@ -382,7 +382,7 @@ export const vehicleFormSchema = object().shape({
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_userContributionType: string().when('investmentVehicleType', {
-		is: 'Vehicle401k',
+		is: (val: string) => ['Vehicle401k', 'Vehicle403b', 'Vehicle457'].includes(val),
 		then: (schema) =>
 			schema.defined('Required').required('Required').oneOf(['fixed', 'percentage']),
 		otherwise: (schema) => schema.strip(),
@@ -391,9 +391,9 @@ export const vehicleFormSchema = object().shape({
 		['investmentVehicleType', 'analysis_userContributionType'],
 		{
 			is: (investmentVehicleType: string, analysis_userContributionType: string) =>
-				(investmentVehicleType === 'Vehicle401k' &&
+				(['Vehicle401k', 'Vehicle403b', 'Vehicle457'].includes(investmentVehicleType) &&
 					analysis_userContributionType === 'fixed') ||
-				investmentVehicleType !== 'Vehicle401k',
+				!['Vehicle401k', 'Vehicle403b', 'Vehicle457'].includes(investmentVehicleType),
 			then: (schema) =>
 				schema
 					.defined('Required')
@@ -408,7 +408,7 @@ export const vehicleFormSchema = object().shape({
 		['investmentVehicleType', 'analysis_userContributionType'],
 		{
 			is: (investmentVehicleType: string, analysis_userContributionType: string) =>
-				investmentVehicleType === 'Vehicle401k' &&
+				['Vehicle401k', 'Vehicle403b', 'Vehicle457'].includes(investmentVehicleType) &&
 				analysis_userContributionType === 'percentage',
 			then: (schema) =>
 				schema

@@ -13,6 +13,6 @@ namespace RetireSimple.Engine.Data.InvestmentVehicle {
 															List<decimal>? cashContribution = null)
 			=> VehicleDefaultAS.GeneratePostTaxModelDefault(options, models, cashContribution);
 		public override List<decimal> SimulateCashContributions(OptionsDict options)
-			=> VehicleDefaultAS.SimulateCashContributionsDefault(this, options);
+			=> VehicleDefaultAS.SimulateCashContributions401kLike(this, options);
 	}
 }
