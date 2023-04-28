@@ -1,9 +1,5 @@
 <Project>
 	<PropertyGroup>
-
-		<Platform Condition="$(Platform) == ''">AnyCPU</Platform>
-		<Configuration Condition="$(Configuration) == ''">Debug</Configuration>
-
 		<!-- Custom properties -->
 		<BuildDir>$(MSBuildThisFileDirectory)\build\</BuildDir>
 		<ProjectBuildDirectoryName>$(MSBuildProjectName)_$(Platform)_$(Configuration)</ProjectBuildDirectoryName>
@@ -15,22 +11,5 @@
 		<BaseIntermediateOutputPath>$(BuildDir)obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
 		<BaseOutputPath>$(BuildDir)bin\$(MSBuildProjectName)\</BaseOutputPath>
 		<PackageOutputPath>$(BaseOutDir)</PackageOutputPath>
-		<!-- <Configuration Condition="$(Configuration) == ''">Debug</Configuration> -->
-		<!-- <BuildDir>$(MSBuildThisFileDirectory)build\</BuildDir> -->
-		<!-- <BaseIntermediateOutputPath>$(BuildDir)obj\$(MSBuildProjectName)\$(Configuration)</BaseIntermediateOutputPath> -->
-		<!-- <ProjectBuildDirectoryName>$(MSBuildProjectName)\$(Configuration)</ProjectBuildDirectoryName> -->
-		<!-- <OutputPathWithoutEndSlash>$(BuildDir)\$(MSBuildProjectName)\$(Configuration)</OutputPathWithoutEndSlash> -->
-		<!-- <OutputPath>$(OutputPathWithoutEndSlash)/</OutputPath> -->
-		<!-- <SolutionDir Condition=" '$(SolutionDir)' == '' ">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), RetireSimple.sln))\</SolutionDir> -->
-		<!-- <BinariesFolder>$(SolutionDir)bin\$(MSBuildProjectName)\$(Configuration)</BinariesFolder> -->
-		<!-- <BaseIntermediateOutputPath>$(SolutionDir)obj\$(MSBuildProjectName)\$(Configuration)\</BaseIntermediateOutputPath> -->
-		<!-- <Configuration Condition="$(Configuration) == ''">Debug</Configuration> -->
-		<!-- <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath> -->
-		<!-- <OutputPath Condition="'$(OutputPath)' == ''">$(BinariesFolder)\$(Configuration)\$(MSBuildProjectName)</OutputPath> -->
-		<!-- <OutputPath Condition="'$(BuildToCommonOutputDirectory)' == 'true'">$(CommonOutputDirectory)\</OutputPath> -->
-		<!-- <OutDir>$(OutputPath)</OutDir> -->
-		<!-- <TargetFrameworkMonikerAssemblyAttributesPath>$(IntermediateOutputPath)\$(TargetFramework)\$(MSBuildProjectName)\AssemblyAttributes.cs</TargetFrameworkMonikerAssemblyAttributesPath> -->
-		<!-- <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies> -->
-		<!-- <DefaultItemExcludes>$(DefaultItemExcludes);..\build\**\*.cs</DefaultItemExcludes> -->
 	</PropertyGroup>
 </Project>
