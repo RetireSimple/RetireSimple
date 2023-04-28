@@ -221,6 +221,44 @@ describe('schema validation', () => {
 
 				expect(schema.isValidSync(data)).toBeTruthy();
 			});
+
+			test('standard403b_treatedAs401k', () => {
+				const schema = vehicleFormSchema;
+				const data = {
+					investmentVehicleName: 'Test',
+					investmentVehicleType: 'Vehicle403b',
+					cashHoldings: '0',
+					analysis_analysisLength: '60',
+					analysis_shortTermCapitalGainsTax: '0.0',
+					analysis_longTermCapitalGainsTax: '0.0',
+					analysis_salary: '0',
+					analysis_payFrequency: 'weekly',
+					analysis_employerMatchPercentage: '0.0',
+					analysis_userContributionType: 'fixed',
+					analysis_userContributionAmount: '0.0',
+				};
+
+				expect(schema.isValidSync(data)).toBeTruthy();
+			});
+
+			test('standard457_treatedAs401k', () => {
+				const schema = vehicleFormSchema;
+				const data = {
+					investmentVehicleName: 'Test',
+					investmentVehicleType: 'Vehicle457',
+					cashHoldings: '0',
+					analysis_analysisLength: '60',
+					analysis_shortTermCapitalGainsTax: '0.0',
+					analysis_longTermCapitalGainsTax: '0.0',
+					analysis_salary: '0',
+					analysis_payFrequency: 'weekly',
+					analysis_employerMatchPercentage: '0.0',
+					analysis_userContributionType: 'fixed',
+					analysis_userContributionAmount: '0.0',
+				};
+
+				expect(schema.isValidSync(data)).toBeTruthy();
+			});
 		});
 
 		describe('Other Vehicle Types', () => {
