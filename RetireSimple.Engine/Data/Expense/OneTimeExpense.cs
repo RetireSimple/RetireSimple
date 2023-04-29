@@ -6,11 +6,11 @@
 		/// <summary>
 		/// The date the expense is applied to the investment
 		/// </summary>
-		public DateTime Date { get; set; }
+		public DateOnly Date {
+			get => DateOnly.Parse(ExpenseData["date"]);
+			set => ExpenseData["date"] = value.ToShortDateString();
+		}
 
-		public override List<DateTime> GetExpenseDates() => new() { Date };
-
-
+		public override List<DateOnly> GetExpenseDates() => new() { Date };
 	}
-
 }

@@ -5,18 +5,39 @@
 namespace RetireSimple.Engine.Migrations
 {
     /// <inheritdoc />
-    public partial class RemoveTransfers : Migration
+    public partial class UpdatedExpenses : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "InvestmentTransfers");
+
+            migrationBuilder.RenameColumn(
+                name: "Discriminator",
+                table: "Expenses",
+                newName: "ExpenseType");
+
+            migrationBuilder.AddColumn<string>(
+                name: "ExpenseData",
+                table: "Expenses",
+                type: "TEXT",
+                nullable: false,
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "ExpenseData",
+                table: "Expenses");
+
+            migrationBuilder.RenameColumn(
+                name: "ExpenseType",
+                table: "Expenses",
+                newName: "Discriminator");
+
             migrationBuilder.CreateTable(
                 name: "InvestmentTransfers",
                 columns: table => new

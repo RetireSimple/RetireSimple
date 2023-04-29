@@ -11,8 +11,8 @@ using RetireSimple.Engine.Data;
 namespace RetireSimple.Engine.Migrations
 {
     [DbContext(typeof(EngineDbContext))]
-    [Migration("20230428190251_RemoveTransfers")]
-    partial class RemoveTransfers
+    [Migration("20230429172601_UpdatedExpenses")]
+    partial class UpdatedExpenses
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,7 +139,11 @@ namespace RetireSimple.Engine.Migrations
                         .HasColumnType("REAL")
                         .HasDefaultValue(0.0);
 
-                    b.Property<string>("Discriminator")
+                    b.Property<string>("ExpenseData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExpenseType")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -152,7 +156,7 @@ namespace RetireSimple.Engine.Migrations
 
                     b.ToTable("Expenses", (string)null);
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Expense");
+                    b.HasDiscriminator<string>("ExpenseType").HasValue("Expense");
 
                     b.UseTphMappingStrategy();
                 });
@@ -313,7 +317,7 @@ namespace RetireSimple.Engine.Migrations
                 {
                     b.HasBaseType("RetireSimple.Engine.Data.Base.Expense");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateOnly>("Date")
                         .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue("OneTime");
@@ -323,13 +327,13 @@ namespace RetireSimple.Engine.Migrations
                 {
                     b.HasBaseType("RetireSimple.Engine.Data.Base.Expense");
 
-                    b.Property<DateTime?>("EndDate")
+                    b.Property<DateOnly>("EndDate")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Frequency")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateOnly>("StartDate")
                         .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue("Recurring");
