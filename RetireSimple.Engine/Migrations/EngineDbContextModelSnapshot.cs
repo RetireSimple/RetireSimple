@@ -131,10 +131,10 @@ namespace RetireSimple.Engine.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Amount")
+                    b.Property<decimal>("Amount")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("REAL")
-                        .HasDefaultValue(0.0);
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue(0m);
 
                     b.Property<string>("ExpenseData")
                         .IsRequired()

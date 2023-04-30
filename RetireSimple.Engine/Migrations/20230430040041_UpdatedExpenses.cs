@@ -35,6 +35,16 @@ namespace RetireSimple.Engine.Migrations
                 table: "Expenses",
                 newName: "ExpenseType");
 
+            migrationBuilder.AlterColumn<decimal>(
+                name: "Amount",
+                table: "Expenses",
+                type: "TEXT",
+                nullable: false,
+                defaultValue: 0m,
+                oldClrType: typeof(double),
+                oldType: "REAL",
+                oldDefaultValue: 0.0);
+
             migrationBuilder.AddColumn<string>(
                 name: "ExpenseData",
                 table: "Expenses",
@@ -54,6 +64,16 @@ namespace RetireSimple.Engine.Migrations
                 name: "ExpenseType",
                 table: "Expenses",
                 newName: "Discriminator");
+
+            migrationBuilder.AlterColumn<double>(
+                name: "Amount",
+                table: "Expenses",
+                type: "REAL",
+                nullable: false,
+                defaultValue: 0.0,
+                oldClrType: typeof(decimal),
+                oldType: "TEXT",
+                oldDefaultValue: 0m);
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "Date",

@@ -11,7 +11,7 @@ using RetireSimple.Engine.Data;
 namespace RetireSimple.Engine.Migrations
 {
     [DbContext(typeof(EngineDbContext))]
-    [Migration("20230430031719_UpdatedExpenses")]
+    [Migration("20230430040041_UpdatedExpenses")]
     partial class UpdatedExpenses
     {
         /// <inheritdoc />
@@ -134,10 +134,10 @@ namespace RetireSimple.Engine.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Amount")
+                    b.Property<decimal>("Amount")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("REAL")
-                        .HasDefaultValue(0.0);
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue(0m);
 
                     b.Property<string>("ExpenseData")
                         .IsRequired()

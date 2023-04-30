@@ -30,7 +30,7 @@ namespace RetireSimple.Engine.Api {
 			}
 
 			var data = new OptionsDict(expenseData);
-			var amount = double.Parse(expenseData["amount"]);
+			var amount = decimal.Parse(expenseData["amount"]);
 			var expenseType = expenseData["expenseType"];
 			data.Remove("amount");
 			data.Remove("expenseType");
@@ -88,7 +88,7 @@ namespace RetireSimple.Engine.Api {
 			var updates = new OptionsDict(expenseData);
 
 			if (updates.ContainsKey("amount")) {
-				expense.Amount = double.Parse(updates["amount"]);
+				expense.Amount = decimal.Parse(updates["amount"]);
 				updates.Remove("amount");
 			}
 

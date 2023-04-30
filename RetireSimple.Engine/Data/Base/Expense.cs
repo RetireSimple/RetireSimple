@@ -34,7 +34,7 @@ namespace RetireSimple.Engine.Data.Base {
 		/// <summary>
 		/// The amount this expense deducts from the investment.
 		/// </summary>
-		public double Amount { get; set; }
+		public decimal Amount { get; set; }
 
 		///	 <summary>
 		/// Common Storage for fields that are unique to the expense type.
