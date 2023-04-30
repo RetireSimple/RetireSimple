@@ -11,7 +11,7 @@ using RetireSimple.Engine.Data;
 namespace RetireSimple.Engine.Migrations
 {
     [DbContext(typeof(EngineDbContext))]
-    [Migration("20230429172601_UpdatedExpenses")]
+    [Migration("20230430031719_UpdatedExpenses")]
     partial class UpdatedExpenses
     {
         /// <inheritdoc />
@@ -317,24 +317,12 @@ namespace RetireSimple.Engine.Migrations
                 {
                     b.HasBaseType("RetireSimple.Engine.Data.Base.Expense");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("TEXT");
-
                     b.HasDiscriminator().HasValue("OneTime");
                 });
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Expense.RecurringExpense", b =>
                 {
                     b.HasBaseType("RetireSimple.Engine.Data.Base.Expense");
-
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Frequency")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue("Recurring");
                 });

@@ -314,24 +314,12 @@ namespace RetireSimple.Engine.Migrations
                 {
                     b.HasBaseType("RetireSimple.Engine.Data.Base.Expense");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("TEXT");
-
                     b.HasDiscriminator().HasValue("OneTime");
                 });
 
             modelBuilder.Entity("RetireSimple.Engine.Data.Expense.RecurringExpense", b =>
                 {
                     b.HasBaseType("RetireSimple.Engine.Data.Base.Expense");
-
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Frequency")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue("Recurring");
                 });

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -12,6 +13,22 @@ namespace RetireSimple.Engine.Migrations
         {
             migrationBuilder.DropTable(
                 name: "InvestmentTransfers");
+
+            migrationBuilder.DropColumn(
+                name: "Date",
+                table: "Expenses");
+
+            migrationBuilder.DropColumn(
+                name: "EndDate",
+                table: "Expenses");
+
+            migrationBuilder.DropColumn(
+                name: "Frequency",
+                table: "Expenses");
+
+            migrationBuilder.DropColumn(
+                name: "StartDate",
+                table: "Expenses");
 
             migrationBuilder.RenameColumn(
                 name: "Discriminator",
@@ -37,6 +54,30 @@ namespace RetireSimple.Engine.Migrations
                 name: "ExpenseType",
                 table: "Expenses",
                 newName: "Discriminator");
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "Date",
+                table: "Expenses",
+                type: "TEXT",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "EndDate",
+                table: "Expenses",
+                type: "TEXT",
+                nullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "Frequency",
+                table: "Expenses",
+                type: "INTEGER",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "StartDate",
+                table: "Expenses",
+                type: "TEXT",
+                nullable: true);
 
             migrationBuilder.CreateTable(
                 name: "InvestmentTransfers",
