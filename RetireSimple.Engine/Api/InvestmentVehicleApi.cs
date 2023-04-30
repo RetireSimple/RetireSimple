@@ -253,16 +253,7 @@ namespace RetireSimple.Engine.Api {
 				_context.SaveChanges();
 			}
 
-			//Zero Floor Data
-			var tempModel = vehicle.InvestmentVehicleModel;
-			tempModel.MinModelData = tempModel.MinModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.AvgModelData = tempModel.AvgModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.MaxModelData = tempModel.MaxModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.TaxDeductedMinModelData = tempModel.TaxDeductedMinModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.TaxDeductedAvgModelData = tempModel.TaxDeductedAvgModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.TaxDeductedMaxModelData = tempModel.TaxDeductedMaxModelData.Select(d => Math.Max(d, 0)).ToList();
-
-			return tempModel;
+			return vehicle.InvestmentVehicleModel;
 		}
 	}
 }

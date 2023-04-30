@@ -27,15 +27,9 @@ namespace RetireSimple.Engine.Api {
 				analysis.LastUpdated = invokeTime;
 				portfolio.PortfolioModel = analysis;
 			}
-
 			_context.SaveChanges();
 
-			var tempModel = portfolio.PortfolioModel;
-			tempModel.MinModelData = tempModel.MinModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.AvgModelData = tempModel.AvgModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.MaxModelData = tempModel.MaxModelData.Select(d => Math.Max(d, 0)).ToList();
-
-			return tempModel;
+			return analysis;
 		}
 
 		public Portfolio GetPortfolio(int id) {
