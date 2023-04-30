@@ -264,33 +264,6 @@ namespace RetireSimple.Engine.Api {
 
 			return tempModel;
 		}
-
-		//TODO: Implement Later when adding vehicle breakdowns
-		public List<InvestmentModel> GetVehicleInvestmentModels(int vehicleId, OptionsDict? options = null) {
-			// if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
-			// 	throw new ArgumentException("Investment Vehicle not found");
-			// }
-
-			// var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
-			// var modelList = new List<InvestmentModel>();
-
-			// if(vehicle.Investments.Any()){
-			// 	foreach(var investment in vehicle.Investments){
-			// 		if(investment.InvestmentModel is not null){
-			// 			modelList.Add(investment.InvestmentModel);
-			// 		} else {
-			// 			var model = investment.InvokeAnalysis(options ?? new OptionsDict());
-			// 			investment.InvestmentModel = model;
-			// 			modelList.Add(model);
-			// 		}
-			// 	}
-			// }
-
-			// return modelList;
-
-			throw new NotImplementedException();
-		}
-
 	}
 }
 

@@ -31,7 +31,10 @@ namespace RetireSimple.Tests.Analysis {
 
 		[Fact]
 		public void ProjectExpenses_NoExpenses_ReturnsAllZeroes() {
-			var expenses = ExpenseUtils.ProjectExpenses(context, 1, 12);
+			var investment = context.Investment.Find(1)
+			?? throw new ArgumentNullException("Investment not found");
+
+			var expenses = ExpenseUtils.ProjectExpenses(investment, 12);
 			expenses.Should().BeEquivalentTo(Enumerable.Repeat(0M, 12));
 		}
 
@@ -46,7 +49,10 @@ namespace RetireSimple.Tests.Analysis {
 			context.Expense.Add(expense);
 			context.SaveChanges();
 
-			var expenses = ExpenseUtils.ProjectExpenses(context, 1, 12);
+			var investment = context.Investment.Find(1)
+			?? throw new ArgumentNullException("Investment not found");
+
+			var expenses = ExpenseUtils.ProjectExpenses(investment, 12);
 			expenses.Should().BeEquivalentTo(new List<decimal>() {
 				0, 0, 0, 0, 0, 0, 100, 100, 100, 100, 100, 100
 			});
@@ -65,7 +71,10 @@ namespace RetireSimple.Tests.Analysis {
 			context.Expense.Add(expense);
 			context.SaveChanges();
 
-			var expenses = ExpenseUtils.ProjectExpenses(context, 1, 12);
+			var investment = context.Investment.Find(1)
+			?? throw new ArgumentNullException("Investment not found");
+
+			var expenses = ExpenseUtils.ProjectExpenses(investment, 12);
 			expenses.Should().BeEquivalentTo(new List<decimal>() {
 				0, 0, 0, 0, 0, 0, 100, 200, 300, 400, 500, 600
 			});
@@ -92,7 +101,10 @@ namespace RetireSimple.Tests.Analysis {
 			context.Expense.Add(expense2);
 			context.SaveChanges();
 
-			var expenses = ExpenseUtils.ProjectExpenses(context, 1, 12);
+			var investment = context.Investment.Find(1)
+			?? throw new ArgumentNullException("Investment not found");
+
+			var expenses = ExpenseUtils.ProjectExpenses(investment, 12);
 			expenses.Should().BeEquivalentTo(new List<decimal>() {
 				0, 0, 0, 0, 0, 0, 200, 300, 400, 500, 600, 700
 			});
@@ -122,7 +134,7 @@ namespace RetireSimple.Tests.Analysis {
 		}
 
 		[Fact]
-		public void ApplyExpenses_ExpensesExceedValue_FloorsToZero(){
+		public void ApplyExpenses_ExpensesExceedValue_FloorsToZero() {
 			var model = new InvestmentModel() {
 				AvgModelData = Enumerable.Repeat(100M, 12).ToList(),
 				MinModelData = Enumerable.Repeat(100M, 12).ToList(),

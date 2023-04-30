@@ -35,7 +35,7 @@ namespace RetireSimple.Engine.Data.User {
 		public PortfolioModel GenerateFullAnalysis() {
 			var investments = Investments;
 			foreach (var investment in investments) {
-				investment.InvestmentModel ??= investment.InvokeAnalysis(new OptionsDict());
+				investment.InvestmentModel ??= investment.PerformAnalysis(new OptionsDict());
 			}
 			var models = investments.Select(i => i.InvestmentModel).ToList();
 

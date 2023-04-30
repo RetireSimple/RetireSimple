@@ -1,5 +1,6 @@
 using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Analysis;
+using RetireSimple.Engine.Data.Base;
 
 namespace RetireSimple.Engine.Analysis.Utils {
 	public static class ExpenseUtils {
@@ -9,8 +10,8 @@ namespace RetireSimple.Engine.Analysis.Utils {
 			return (date.Year - today.Year) * 12 + (date.Month - today.Month);
 		}
 
-		internal static List<decimal> ProjectExpenses(EngineDbContext context, int investmentId, int length) {
-			var expenses = context.Expense.Where(e => e.SourceInvestmentId == investmentId).ToList();
+		internal static List<decimal> ProjectExpenses(Investment investment, int length) {
+			var expenses = investment.Expenses;
 			//God bless C# Collections/LINQ
 			var expensePairs = expenses.SelectMany(e => e.GetExpenseDates().Select(Date => (Date, e.Amount)))
 										.Select(e => (Date: MonthsFromToday(e.Date), e.Amount))

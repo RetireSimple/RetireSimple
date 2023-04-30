@@ -14,8 +14,6 @@ namespace RetireSimple.Engine.Api {
 			var portfolio = _context.Portfolio.Find(id);
 			if (portfolio is null) throw new InvalidOperationException("Portfolio not found");
 
-			//TODO add smart update logic
-			// if (portfolio.PortfolioModel is null){
 			var analysis = portfolio.GenerateFullAnalysis();
 			var invokeTime = DateTime.Now;
 			portfolio.LastUpdated = invokeTime;
@@ -31,8 +29,6 @@ namespace RetireSimple.Engine.Api {
 			}
 
 			_context.SaveChanges();
-			// }
-
 
 			var tempModel = portfolio.PortfolioModel;
 			tempModel.MinModelData = tempModel.MinModelData.Select(d => Math.Max(d, 0)).ToList();

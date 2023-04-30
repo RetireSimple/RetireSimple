@@ -190,7 +190,7 @@ namespace RetireSimple.Engine.Api {
 			if ((options is not null && options.Count > 0) ||
 					investment.InvestmentModel is null ||
 					investment.LastUpdated > investment.InvestmentModel.LastUpdated) {
-				var model = investment.InvokeAnalysis(options ?? new OptionsDict() { });
+				var model = investment.PerformAnalysis(options ?? new OptionsDict() { });
 				var updateTime = DateTime.Now;
 				if (investment.InvestmentModel is not null) {
 					investment.InvestmentModel.MinModelData = model.MinModelData;
@@ -207,12 +207,7 @@ namespace RetireSimple.Engine.Api {
 				_context.SaveChanges();
 			}
 
-			var tempModel = investment.InvestmentModel;
-			tempModel.MinModelData = tempModel.MinModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.AvgModelData = tempModel.AvgModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.MaxModelData = tempModel.MaxModelData.Select(d => Math.Max(d, 0)).ToList();
-
-			return tempModel;
+			return investment.InvestmentModel;
 		}
 
 

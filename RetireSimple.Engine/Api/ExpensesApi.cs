@@ -11,7 +11,6 @@ namespace RetireSimple.Engine.Api {
 			_context = context;
 		}
 
-
 		/// <summary>
 		///	Adds a new expense to the investment with the specified id.
 		/// The speficied expense data in <paramref name="expenseData"/>
