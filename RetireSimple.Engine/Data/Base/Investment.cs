@@ -189,6 +189,8 @@ namespace RetireSimple.Engine.Data.Base {
 
 			builder.Navigation(i => i.InvestmentModel).AutoInclude();
 
+			builder.Navigation(i => i.Expenses).AutoInclude();
+
 		}
 	}
 }
