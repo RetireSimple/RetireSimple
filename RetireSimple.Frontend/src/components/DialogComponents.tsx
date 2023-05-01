@@ -1,13 +1,19 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
-import {FieldValues, FormProvider, useForm} from 'react-hook-form';
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid} from '@mui/material';
+import {FieldValues, FormProvider, useForm, useWatch} from 'react-hook-form';
 import {useFormAction, useSubmit} from 'react-router-dom';
 import {convertDates} from '../api/ConvertUtils';
-import {addInvestment} from '../api/InvestmentApi';
+import {addExpense, addInvestment} from '../api/InvestmentApi';
 import {addInvestmentToVehicle, addVehicle} from '../api/VehicleApi';
 import {investmentFormSchema, vehicleFormSchema} from '../forms/FormSchema';
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
 import {VehicleDataForm} from '../forms/VehicleDataForm';
+import {
+	FormTextFieldCurrency,
+	FormSelectField,
+	FormDatePicker,
+	FormTextField,
+} from './InputComponents';
 
 export interface AddInvestmentDialogProps {
 	open: boolean;
@@ -139,6 +145,136 @@ export const ConfirmDeleteDialog = (props: ConfirmDeleteDialogProps) => {
 				<Button color='error' onClick={handleConfirm}>
 					Delete
 				</Button>
+			</DialogActions>
+		</Dialog>
+	);
+};
+
+interface AddExpenseDialogProps {
+	show: boolean;
+	onClose: () => void;
+	investmentId: number;
+	setNeedsUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const AddExpenseDialog = (props: AddExpenseDialogProps) => {
+	const formContext = useForm({
+		shouldUnregister: true,
+	});
+	const expenseType = useWatch({
+		control: formContext.control,
+		name: 'expenseType',
+		defaultValue: 'OneTime',
+	});
+
+	const submitExpense = (data: any) => {
+		const expenseData = {
+			sourceInvestmentId: props.investmentId,
+			...data,
+		};
+
+		addExpense(expenseData).then(() => {
+			props.setNeedsUpdate(true);
+			props.onClose();
+		});
+	};
+
+	const amountField = (
+		<FormTextFieldCurrency
+			control={formContext.control}
+			name='amount'
+			label='Expense Amount'
+			errorField={undefined}
+		/>
+	);
+
+	const expenseTypeField = (
+		<FormSelectField
+			control={formContext.control}
+			name='expenseType'
+			label='Expense Type'
+			options={[
+				{value: 'OneTime', label: 'One Time'},
+				{value: 'Recurring', label: 'Recurring'},
+			]}
+			defaultOption='OneTime'
+			errorField={undefined}
+			disable={false}
+		/>
+	);
+
+	const expenseDateField = (
+		<FormDatePicker
+			control={formContext.control}
+			name='date'
+			label='Expense Date'
+			errorField={undefined}
+			defaultValue={''}
+		/>
+	);
+
+	const frequencyField = (
+		<FormTextField
+			control={formContext.control}
+			name='frequency'
+			label='Frequency (mos.)'
+			errorField={undefined}
+		/>
+	);
+
+	const startDateField = (
+		<FormDatePicker
+			control={formContext.control}
+			name='startDate'
+			label='Start Date'
+			errorField={undefined}
+			defaultValue={''}
+		/>
+	);
+
+	const endDateField = (
+		<FormDatePicker
+			control={formContext.control}
+			name='endDate'
+			label='End Date'
+			errorField={undefined}
+			defaultValue={''}
+		/>
+	);
+
+	return (
+		<Dialog open={props.show} onClose={props.onClose}>
+			<DialogTitle>Add Expense</DialogTitle>
+			<DialogContent>
+				<Grid container spacing={2}>
+					<Grid item xs={12}>
+						{amountField}
+					</Grid>
+					<Grid item xs={12}>
+						{expenseTypeField}
+					</Grid>
+					{expenseType === 'OneTime' ? (
+						<Grid item xs={12}>
+							{expenseDateField}
+						</Grid>
+					) : (
+						<>
+							<Grid item xs={12}>
+								{frequencyField}
+							</Grid>
+							<Grid item xs={12}>
+								{startDateField}
+							</Grid>
+							<Grid item xs={12}>
+								{endDateField}
+							</Grid>
+						</>
+					)}
+				</Grid>
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={props.onClose}>Cancel</Button>
+				<Button onClick={formContext.handleSubmit(submitExpense)}>Add</Button>
 			</DialogActions>
 		</Dialog>
 	);

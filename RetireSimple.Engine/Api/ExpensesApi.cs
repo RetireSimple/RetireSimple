@@ -50,6 +50,8 @@ namespace RetireSimple.Engine.Api {
 			};
 
 			_context.Expense.Add(expense);
+			var investment = _context.Investment.Find(investmentId) ?? throw new ArgumentException($"No investment with id {investmentId} exists");
+			investment.LastUpdated = DateTime.Now;
 			_context.SaveChanges();
 
 			return expense.ExpenseId;
@@ -65,6 +67,11 @@ namespace RetireSimple.Engine.Api {
 				throw new ArgumentException($"No expense with id {id} exists");
 			}
 			var expense = _context.Expense.Find(id) ?? throw new ArgumentException($"No expense with id {id} exists");
+			var investment = _context.Investment.Find(expense.SourceInvestmentId);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+			// The investment will always be found because the expense was found
+			investment.LastUpdated = DateTime.Now;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 			_context.Expense.Remove(expense);
 			_context.SaveChanges();
 		}
@@ -94,6 +101,12 @@ namespace RetireSimple.Engine.Api {
 			foreach (var key in updates.Keys) {
 				expense.ExpenseData[key] = updates[key];
 			}
+
+			var investment = _context.Investment.Find(expense.SourceInvestmentId);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+			// The investment will always be found because the expense was found
+			investment.LastUpdated = DateTime.Now;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 			_context.SaveChanges();
 		}
 
