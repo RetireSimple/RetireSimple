@@ -194,13 +194,13 @@ jobs:
           --output ./publish
           -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
           -p:VersionSuffix=nightly-${{ needs.get-info.outputs.hash }}
-      - name: Delete Older Prerelease Package Versions
-        uses: actions/delete-package-versions@v4.1.1
-        with:
-          ignore-versions: '^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$'
-          package-name: RetireSimple.Engine
-          package-type: nuget
-          min-versions-to-keep: 0
+      # - name: Delete Older Prerelease Package Versions
+      #   uses: actions/delete-package-versions@v4.1.1
+      #   with:
+      #     ignore-versions: '^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$'
+      #     package-name: RetireSimple.Engine
+      #     package-type: nuget
+      #     min-versions-to-keep: 0
       - name: Push NuGet Package
         run: dotnet nuget push ./publish/RetireSimple.Engine.*.nupkg
           --source "https://nuget.pkg.github.com/RetireSimple/index.json"
@@ -320,6 +320,7 @@ jobs:
       - name: Delete Older Releases
         uses: dev-drprasad/delete-older-releases@v0.2.1
         with:
+          keep_latest: true
           delete_tags: true
           delete_tag_pattern: "nightly"
         env:
