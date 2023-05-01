@@ -22,7 +22,7 @@ interface InvestmentViewTabProps {
 const InvestmentViewTab = (props: InvestmentViewTabProps) => {
 	return (
 		<Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
-			{props.tab === props.value && <Box sx={{p: 3}}>{props.children}</Box>}
+			{props.tab === props.value && <Box sx={{p: 1}}>{props.children}</Box>}
 		</Box>
 	);
 };
@@ -65,7 +65,7 @@ export const InvestmentView = () => {
 	});
 
 	return (
-		<Box sx={{display: 'flex', flexDirection: 'column'}}>
+		<Box sx={{display: 'flex', flexDirection: 'column', minWidth: '60rem'}}>
 			<Tabs value={tab} onChange={(e, v) => setTab(v)}>
 				<Tab label='Investment Details' />
 				<Tab label='Expense Information' />
