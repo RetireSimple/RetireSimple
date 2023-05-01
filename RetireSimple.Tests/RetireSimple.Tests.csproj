@@ -9,7 +9,7 @@
 		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 		<IsPackable>false</IsPackable>
 		<CollectCoverage>true</CollectCoverage>
-		<CoverletOutputFormat>opencover</CoverletOutputFormat>
+		<CoverletOutputFormat>cobertura</CoverletOutputFormat>
 		<ExcludeByFile>**/Migrations/EngineDbContextModelSnapshot.cs, **/*.Designer.cs</ExcludeByFile>
 		<SkipAutoProps>true</SkipAutoProps>
 	</PropertyGroup>

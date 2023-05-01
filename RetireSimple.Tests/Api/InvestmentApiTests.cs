@@ -450,35 +450,6 @@ namespace RetireSimple.Tests.Api {
 			context.InvestmentModel.Should().BeEmpty();
 		}
 
-		[Fact]
-		public void RemoveInvestmentIsTransferSourceThrows() {
-			context.Portfolio.First().Investments.Add(new StockInvestment(""));
-			context.Portfolio.First().Investments.Add(new StockInvestment(""));
-			context.SaveChanges();
-
-			context.InvestmentTransfer.Add(new InvestmentTransfer {
-				SourceInvestmentId = 1,
-				DestinationInvestmentId = 2,
-			});
-
-			Action act = () => api.Remove(1);
-			act.Should().Throw<InvalidOperationException>();
-		}
-
-		[Fact]
-		public void RemoveInvestmentIsTransferDestinationThrows() {
-			context.Portfolio.First().Investments.Add(new StockInvestment(""));
-			context.Portfolio.First().Investments.Add(new StockInvestment(""));
-			context.SaveChanges();
-
-			context.InvestmentTransfer.Add(new InvestmentTransfer {
-				SourceInvestmentId = 2,
-				DestinationInvestmentId = 1,
-			});
-
-			Action act = () => api.Remove(1);
-			act.Should().Throw<InvalidOperationException>();
-		}
 
 		[Fact]
 		public void UpdateInvestmentNotFoundThrows() {

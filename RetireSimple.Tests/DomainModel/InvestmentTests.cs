@@ -125,69 +125,6 @@ namespace RetireSimple.Tests.DomainModel {
 			act.Should().Throw<DbUpdateException>();
 		}
 
-		[Fact]
-		public void TestInvestmentFKTransfersFromConstraint() {
-			var investment = new StockInvestment("") {
-				StockPrice = 100,
-				StockQuantity = 10,
-				StockTicker = "TST"
-			};
-			var investment2 = new StockInvestment("") {
-				StockPrice = 200,
-				StockQuantity = 50,
-				StockTicker = "TST2"
-			};
-
-			Context.Portfolio.First().Investments.Add(investment);
-			Context.Portfolio.First().Investments.Add(investment2);
-			Context.SaveChanges();
-
-			var transfer = new InvestmentTransfer {
-				SourceInvestment = Context.Investment.First(i => i.InvestmentId == 1),
-				DestinationInvestment = Context.Investment.First(i => i.InvestmentId == 2)
-			};
-			Context.InvestmentTransfer.Add(transfer);
-			Context.SaveChanges();
-
-			Action act = () => {
-				Context.Investment.Remove(investment);
-				Context.SaveChanges();
-			};
-
-			act.Should().Throw<InvalidOperationException>();
-		}
-
-		[Fact]
-		public void TestInvestmentFKTransfersConstraint() {
-			var investment = new StockInvestment("") {
-				StockPrice = 100,
-				StockQuantity = 10,
-				StockTicker = "TST"
-			};
-			var investment2 = new StockInvestment("") {
-				StockPrice = 200,
-				StockQuantity = 50,
-				StockTicker = "TST2"
-			};
-
-			Context.Portfolio.First().Investments.Add(investment);
-			Context.Portfolio.First().Investments.Add(investment2);
-			Context.SaveChanges();
-
-			var transfer = new InvestmentTransfer {
-				DestinationInvestment = Context.Investment.First(i => i.InvestmentId == 1),
-				SourceInvestment = Context.Investment.First(i => i.InvestmentId == 2)
-			};
-			Context.InvestmentTransfer.Add(transfer);
-			Context.SaveChanges();
-
-			Action act = () => {
-				Context.Investment.Remove(investment);
-				Context.SaveChanges();
-			};
-
-			act.Should().Throw<InvalidOperationException>();
-		}
 
 	}
 }

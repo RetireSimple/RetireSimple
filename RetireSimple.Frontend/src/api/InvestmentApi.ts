@@ -1,6 +1,6 @@
-import {FullModelData, Investment, InvestmentModel} from '../Interfaces';
+import {ApiExpense, FullModelData, Investment, InvestmentModel} from '../Interfaces';
 import {API_BASE_URL} from './ApiCommon';
-import {convertToDecimal} from './ConvertUtils';
+import {convertDates, convertToDecimal} from './ConvertUtils';
 
 export const getInvestmentModel = async (id: number): Promise<InvestmentModel> => {
 	const response = await fetch(`${API_BASE_URL}/Analysis/Investment/${id}`, {
@@ -73,4 +73,28 @@ export const getAggregateModel = async (): Promise<FullModelData> => {
 	};
 
 	return result;
+};
+
+export const getExpenses = async (id: number): Promise<ApiExpense[]> => {
+	const response = await fetch(`${API_BASE_URL}/Expenses/${id}`);
+	return await response.json();
+};
+
+export const addExpense = async (data: any) => {
+	convertToDecimal(data);
+	convertDates(data);
+	await fetch(`${API_BASE_URL}/Expenses`, {
+		method: 'POST',
+		body: JSON.stringify(data),
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json; charset=utf-8',
+		},
+	});
+};
+
+export const deleteExpense = async (id: number) => {
+	await fetch(`${API_BASE_URL}/Expenses/${id}`, {
+		method: 'DELETE',
+	});
 };

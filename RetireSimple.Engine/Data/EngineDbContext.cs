@@ -16,7 +16,6 @@ namespace RetireSimple.Engine.Data {
 		public DbSet<Profile> Profile { get; set; }
 		public DbSet<Portfolio> Portfolio { get; set; }
 		public DbSet<Base.Expense> Expense { get; set; }
-		public DbSet<InvestmentTransfer> InvestmentTransfer { get; set; }
 		public DbSet<VehicleModel> InvestmentVehicleModel { get; set; }
 		public DbSet<PortfolioModel> PortfolioModel { get; set; }
 
@@ -27,7 +26,6 @@ namespace RetireSimple.Engine.Data {
 			modelBuilder.ApplyConfiguration(new InvestmentModelConfiguration());
 			modelBuilder.ApplyConfiguration(new ProfileConfiguration());
 			modelBuilder.ApplyConfiguration(new ExpenseBaseConfiguration());
-			modelBuilder.ApplyConfiguration(new InvestmentTransferConfiguration());
 			modelBuilder.ApplyConfiguration(new InvestmentVehicleModelConfiguration());
 			modelBuilder.ApplyConfiguration(new PortfolioModelConfiguration());
 		}

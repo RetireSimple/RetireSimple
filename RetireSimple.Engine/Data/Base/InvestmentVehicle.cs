@@ -64,7 +64,6 @@ namespace RetireSimple.Engine.Data.Base {
 			var newModel =
 				new VehicleModel(InvestmentVehicleId, preTaxModel, postTaxModel);
 
-			//NOTE don't add to EF in this method, that should be an API level responsibility
 			return newModel;
 		}
 
@@ -83,7 +82,7 @@ namespace RetireSimple.Engine.Data.Base {
 		internal virtual List<InvestmentModel> GetContainedInvestmentModels(OptionsDict options) {
 			var models = new List<InvestmentModel>();
 			foreach (var investment in Investments) {
-				models.Add(investment.InvokeAnalysis(options));
+				models.Add(investment.PerformAnalysis(options));
 			}
 			return models;
 		}
