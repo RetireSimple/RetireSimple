@@ -317,12 +317,12 @@ jobs:
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
-      - name: Delete Older Releases
-        uses: dev-drprasad/delete-older-releases@v0.2.1
-        with:
-          keep_latest: true
-          delete_tags: true
-          delete_tag_pattern: "nightly"
+      # - name: Delete Older Releases
+      #   uses: dev-drprasad/delete-older-releases@v0.2.1
+      #   with:
+      #     keep_latest: 0
+      #     delete_tags: true
+      #     delete_tag_pattern: "nightly"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Nightly - ${{ vars.VERSION_PREFIX }}-nightly-${{ needs.get-info.outputs.hash }}
