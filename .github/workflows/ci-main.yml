@@ -324,7 +324,7 @@ jobs:
           delete_tag_pattern: "nightly"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Nightly - ${{ vars.VERSION_PREFIX }}-nightly-${{ needs.get-info.outputs.hash }
+      - name: Nightly - ${{ vars.VERSION_PREFIX }}-nightly-${{ needs.get-info.outputs.hash }}
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
