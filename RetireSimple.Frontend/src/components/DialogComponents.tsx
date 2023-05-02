@@ -43,6 +43,7 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 
 	const submit = useSubmit();
 	const addAction = useFormAction('/add');
+	const {enqueueSnackbar} = useSnackbar();
 
 	const handleAdd = (data: FieldValues) => {
 		const requestData: {[key: string]: string} = {};
@@ -56,13 +57,18 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 		//Check if we have known date fields, and convert them to yyyy-MM-dd
 		convertDates(requestData);
 
-		addInvestment(requestData).then((investmentId) => {
-			if (props.vehicleTarget > -1) {
-				addInvestmentToVehicle(props.vehicleTarget, Number.parseInt(investmentId));
-			} //Add investment to vehicle
-			props.onClose();
-			submit(null, {method: 'post', action: addAction});
-		});
+		addInvestment(requestData)
+			.then((investmentId) => {
+				if (props.vehicleTarget > -1) {
+					addInvestmentToVehicle(props.vehicleTarget, Number.parseInt(investmentId));
+				} //Add investment to vehicle
+				enqueueSnackbar('Investment added successfully.', {variant: 'success'});
+				props.onClose();
+				submit(null, {method: 'post', action: addAction});
+			})
+			.catch((error) => {
+				enqueueSnackbar(`Failed to add investment: ${error.message}`, {variant: 'error'});
+			});
 	};
 
 	return (
@@ -93,6 +99,8 @@ export const AddVehicleDialog = (props: AddVehicleDialogProps) => {
 	const submit = useSubmit();
 	const addAction = useFormAction('/addVehicle');
 
+	const {enqueueSnackbar} = useSnackbar();
+
 	const handleVehicleAdd = (data: FieldValues) => {
 		const requestData: {[key: string]: string} = {};
 
@@ -102,10 +110,15 @@ export const AddVehicleDialog = (props: AddVehicleDialogProps) => {
 
 		convertDates(requestData);
 
-		addVehicle(requestData).then(() => {
-			props.onClose();
-			submit(null, {method: 'post', action: addAction});
-		});
+		addVehicle(requestData)
+			.then(() => {
+				enqueueSnackbar('Vehicle added successfully.', {variant: 'success'});
+				props.onClose();
+				submit(null, {method: 'post', action: addAction});
+			})
+			.catch((error) => {
+				enqueueSnackbar(`Failed to add vehicle: ${error.message}`, {variant: 'error'});
+			});
 	};
 
 	return (
@@ -132,7 +145,10 @@ export const ConfirmDeleteDialog = (props: ConfirmDeleteDialogProps) => {
 
 	const handleConfirm = () => {
 		props.onConfirm();
-		enqueueSnackbar('Investment was deleted', {variant: 'success'});
+		enqueueSnackbar(
+			`${props.deleteTargetType === 'vehicle' ? 'Vehicle' : 'Invesetment'} was deleted`,
+			{variant: 'success'},
+		);
 		props.onClose();
 	};
 

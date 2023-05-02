@@ -34,7 +34,6 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
 	const updateAction = useFormAction('update');
 
 	const {enqueueSnackbar} = useSnackbar();
-	// const emptyRows = page > 0 ? Math.max(0, (1 + page) * 10 - expenses.length) : 0;
 
 	const handleChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -45,13 +44,16 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
 
 	React.useEffect(() => {
 		if (needsUpdate) {
-			getExpenses(props.investmentId).then((data) => {
-				setExpenses(data);
-				setNeedsUpdate(false);
-				submit(null, {action: updateAction, method: 'post'});
-			});
+			getExpenses(props.investmentId)
+				.then((data) => {
+					setExpenses(data);
+					setNeedsUpdate(false);
+				})
+				.catch((error) => {
+					enqueueSnackbar(`Failed to get expenses: ${error.message}`, {variant: 'error'});
+				});
 		}
-	}, [needsUpdate, props.investmentId, submit, updateAction]);
+	}, [enqueueSnackbar, needsUpdate, props.investmentId, submit, updateAction]);
 
 	const handleDelete = (expenseId: number) => {
 		deleteExpense(expenseId)

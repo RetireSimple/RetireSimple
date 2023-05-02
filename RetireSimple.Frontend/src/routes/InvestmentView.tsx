@@ -60,10 +60,16 @@ export const InvestmentView = () => {
 
 		convertDates(requestData);
 
-		updateInvestment(currentInvestmentData.investmentId, requestData).then(() => {
-			enqueueSnackbar('Investment updated successfully.', {variant: 'success'});
-			submit(null, {action: updateAction, method: 'post'});
-		});
+		updateInvestment(currentInvestmentData.investmentId, requestData)
+			.then(() => {
+				enqueueSnackbar('Investment updated successfully.', {variant: 'success'});
+				submit(null, {action: updateAction, method: 'post'});
+			})
+			.catch((error) => {
+				enqueueSnackbar(`Failed to update investment: ${error.message}`, {
+					variant: 'error',
+				});
+			});
 	});
 
 	return (
