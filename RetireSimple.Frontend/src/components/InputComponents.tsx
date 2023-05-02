@@ -1,4 +1,5 @@
 import {
+	Box,
 	FormControl,
 	FormHelperText,
 	InputAdornment,
@@ -167,28 +168,30 @@ export const FormSelectField = (props: FormSelectFieldProps) => {
 
 export const FormDatePicker = (props: FormDatePickerProps) => {
 	return (
-		<Controller
-			name={props.name}
-			control={props.control}
-			defaultValue={props.defaultValue ?? ''}
-			render={({field}) => (
-				<LocalizationProvider dateAdapter={AdapterDayjs}>
-					<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
-						<DatePicker
-							{...field}
-							label={props.label}
-							value={dayjs(field.value)}
-							slotProps={{
-								textField: {
-									size: 'small',
-									error: !!props.errorField,
-									helperText: props.errorField?.message as string,
-								},
-							}}
-						/>
-					</Tooltip>
-				</LocalizationProvider>
-			)}
-		/>
+		<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
+			<Box>
+				<Controller
+					name={props.name}
+					control={props.control}
+					defaultValue={props.defaultValue ?? ''}
+					render={({field}) => (
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<DatePicker
+								{...field}
+								label={props.label}
+								value={dayjs(field.value)}
+								slotProps={{
+									textField: {
+										size: 'small',
+										error: !!props.errorField,
+										helperText: props.errorField?.message as string,
+									},
+								}}
+							/>
+						</LocalizationProvider>
+					)}
+				/>
+			</Box>
+		</Tooltip>
 	);
 };
