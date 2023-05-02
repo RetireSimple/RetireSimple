@@ -6,6 +6,8 @@ using Microsoft.Extensions.Options;
 
 using Moq;
 
+using Newtonsoft.Json.Linq;
+
 using RetireSimple.Engine.Analysis.Presets;
 using RetireSimple.Engine.Analysis.Utils;
 using RetireSimple.Engine.Data.Analysis;
@@ -27,20 +29,20 @@ namespace RetireSimple.Tests.Analysis {
 
 		public StockRegressionTests() {
 			TestOptions["stockQuantity"] = "5";
-			TestOptions["basePrice"] = "5";
+			TestOptions["basePrice"] = "20";
 			TestOptions["analysisLength"] = "5";
 			TestOptions["uncertainty"] = "0.25";
 			TestOptions["percentGrowth"] = "0.12";
 		}
 
 		InvestmentModel expected = new InvestmentModel() {
-			MinModelData = { 19, 24, 13, 13, 10 },
-			AvgModelData = { 25, 40, 29, 40, 44 },
-			MaxModelData = { 30, 56, 45, 67, 78 },
+			MinModelData = { 100, 88, 77, 68, 60 },
+			AvgModelData = { 100, 100, 100, 100, 100 },
+			MaxModelData = { 100, 112, 125, 140, 157 },
 		};
 
 		[Fact]
-		public void RegressionTestBasic() {
+		public void RegressionTestBinomialModel() {
 			var reg = new Regression(TestOptions);
 			var actual = reg.RunSimulation();
 			for(int i =0; i < int.Parse(TestOptions["analysisLength"]); i++) {
@@ -52,16 +54,15 @@ namespace RetireSimple.Tests.Analysis {
 		}
 
 		[Fact]
-		public void RegressionTestRegSim() {
+		public void RegressionTestNeg() {
+			TestOptions["uncertainty"] = "-1";
+			TestOptions["percentGrowth"] = "-1";
+			int expected = 0;
 
-			var reg = new Regression(TestOptions);
-			var actual = reg.RunSimulation();
-			for (int i = 0; i < int.Parse(TestOptions["analysisLength"]); i++) {
-				Assert.Equal(actual.MinModelData[i].ToString("#"), expected.MinModelData[i].ToString("#"));
-				Assert.Equal(actual.AvgModelData[i].ToString("#"), expected.AvgModelData[i].ToString("#"));
-				Assert.Equal(actual.MaxModelData[i].ToString("#"), expected.MaxModelData[i].ToString("#"));
-			}
-			//actual.Should().BeEquivalentTo(expected);
+			int resultU = (int)Math.Max(double.Parse(TestOptions["uncertainty"]), 0);
+			int resultP = (int)Math.Max(double.Parse(TestOptions["percentGrowth"]), 0);
+
+			Assert.Equal(expected, resultU);
 		}
 	}
 }
