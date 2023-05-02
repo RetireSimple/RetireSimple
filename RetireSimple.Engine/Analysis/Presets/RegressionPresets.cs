@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RetireSimple.Engine.Data;
+﻿using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Investment;
 
 namespace RetireSimple.Engine.Analysis.Presets {

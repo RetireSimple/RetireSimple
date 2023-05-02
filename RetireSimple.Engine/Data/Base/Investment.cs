@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using RetireSimple.Engine.Analysis.Utils;
 using RetireSimple.Engine.Data.Analysis;
-using RetireSimple.Engine.Data.Expense;
 using RetireSimple.Engine.Data.User;
 
 using System.ComponentModel.DataAnnotations.Schema;

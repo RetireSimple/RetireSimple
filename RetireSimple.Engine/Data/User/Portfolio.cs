@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using RetireSimple.Engine.Data.Analysis;
-using RetireSimple.Engine.Data.Base;
 
 namespace RetireSimple.Engine.Data.User {
 	public class Portfolio {

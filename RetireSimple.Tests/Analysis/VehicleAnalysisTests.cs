@@ -5,8 +5,6 @@ using Moq;
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 
-using System.Reflection;
-
 namespace RetireSimple.Tests.Analysis {
 
 	public class VehicleAnalysisTests {

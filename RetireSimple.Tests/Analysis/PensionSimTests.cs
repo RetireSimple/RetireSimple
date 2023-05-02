@@ -1,7 +1,3 @@
-using Microsoft.Extensions.Options;
-
-using System.Collections;
-
 namespace RetireSimple.Tests.Analysis {
 	public class PensionSimTests {
 		PensionInvestment Investment { get; init; }

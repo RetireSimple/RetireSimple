@@ -1,12 +1,6 @@
-﻿using Microsoft.Extensions.Options;
-
-using RetireSimple.Engine.Data;
+﻿using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
-using RetireSimple.Engine.Data.Expense;
-
-using System.Diagnostics;
-using System.Reflection;
 
 namespace RetireSimple.Engine.Api {
 	internal interface IInvestmentApi {

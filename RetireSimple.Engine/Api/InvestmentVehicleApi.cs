@@ -2,7 +2,6 @@
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 using RetireSimple.Engine.Data.Investment;
-using RetireSimple.Engine.Data.InvestmentVehicle;
 
 namespace RetireSimple.Engine.Api {
 
@@ -221,7 +220,6 @@ namespace RetireSimple.Engine.Api {
 		/// <param name="id"></param>
 		/// <param name="options"></param>
 		/// <returns></returns>
-		//TODO Need to figure out how to add testing (is based on InvestmentApi logic that works)
 		public VehicleModel GetAnalysis(int id, OptionsDict? options = null) {
 			if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == id)) {
 				throw new ArgumentException("Investment Vehicle not found");

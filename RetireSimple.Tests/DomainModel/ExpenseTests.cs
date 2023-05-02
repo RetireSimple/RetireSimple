@@ -26,7 +26,6 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestExpenseAdd() {
-			//TODO: add manual constraint of Expense's investments
 			var expense = new OneTimeExpense {
 				Amount = 100.0M,
 				SourceInvestment = Context.Investment.First(i => i.InvestmentId == 1)

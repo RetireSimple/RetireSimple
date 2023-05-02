@@ -4,8 +4,6 @@ using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Investment;
 
-using System.Linq;
-
 namespace RetireSimple.Engine.Analysis {
 
 	public class StockAS {
