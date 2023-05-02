@@ -66,6 +66,12 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
 
 	return (
 		<Box sx={{width: '100%', alignSelf: 'start'}}>
+			<Button
+				sx={{margin: '0.25rem'}}
+				startIcon={<Icon baseClassName='material-icons'>add</Icon>}
+				onClick={() => setAddDialogOpen(true)}>
+				Add Expense
+			</Button>
 			<TableContainer component={Paper} sx={{minWidth: '100%'}}>
 				<Table sx={{minWidth: '100%'}} size='small'>
 					<TableHead>
@@ -103,12 +109,6 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
 						))}
 					</TableBody>
 					<TableFooter>
-						<Button
-							sx={{margin: '0.25rem'}}
-							startIcon={<Icon baseClassName='material-icons'>add</Icon>}
-							onClick={() => setAddDialogOpen(true)}>
-							Add Expense
-						</Button>
 						<TablePagination
 							count={expenses.length}
 							rowsPerPage={10}
