@@ -12,6 +12,7 @@ import {InvestmentFormDefaults, investmentFormSchema} from '../forms/FormSchema'
 import {InvestmentDataForm} from '../forms/InvestmentDataForm';
 import {convertDates} from '../api/ConvertUtils';
 import {ExpensesTable} from '../forms/ExpenseTable';
+import {useSnackbar} from 'notistack';
 
 interface InvestmentViewTabProps {
 	tab: number;
@@ -40,12 +41,12 @@ export const InvestmentView = () => {
 		resolver: yupResolver(investmentFormSchema),
 		defaultValues: currentInvestmentData ?? InvestmentFormDefaults,
 	});
+	const {enqueueSnackbar} = useSnackbar();
 
 	const {reset, control, handleSubmit} = formContext;
 	const {isDirty, dirtyFields} = useFormState({control});
 
 	React.useEffect(() => {
-		console.log('currentInvestmentData is defined, resetting form');
 		reset(currentInvestmentData, {keepErrors: true});
 	}, [currentInvestmentData, reset]);
 
@@ -60,6 +61,7 @@ export const InvestmentView = () => {
 		convertDates(requestData);
 
 		updateInvestment(currentInvestmentData.investmentId, requestData).then(() => {
+			enqueueSnackbar('Investment updated successfully.', {variant: 'success'});
 			submit(null, {action: updateAction, method: 'post'});
 		});
 	});

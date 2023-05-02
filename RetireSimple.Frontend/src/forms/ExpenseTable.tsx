@@ -19,6 +19,7 @@ import {deleteExpense, getExpenses} from '../api/InvestmentApi';
 import {AddExpenseDialog} from '../components/DialogComponents';
 import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
 import {useFormAction, useSubmit} from 'react-router-dom';
+import {useSnackbar} from 'notistack';
 
 interface ExpensesTableProps {
 	investmentId: number;
@@ -32,6 +33,7 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
 	const submit = useSubmit();
 	const updateAction = useFormAction('update');
 
+	const {enqueueSnackbar} = useSnackbar();
 	// const emptyRows = page > 0 ? Math.max(0, (1 + page) * 10 - expenses.length) : 0;
 
 	const handleChangePage = (
@@ -52,9 +54,14 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
 	}, [needsUpdate, props.investmentId, submit, updateAction]);
 
 	const handleDelete = (expenseId: number) => {
-		deleteExpense(expenseId).then(() => {
-			setNeedsUpdate(true);
-		});
+		deleteExpense(expenseId)
+			.then(() => {
+				enqueueSnackbar('Expense deleted successfully.', {variant: 'success'});
+				setNeedsUpdate(true);
+			})
+			.catch((error) => {
+				enqueueSnackbar(`Failed to delete expense:${error.message}`, {variant: 'error'});
+			});
 	};
 
 	return (

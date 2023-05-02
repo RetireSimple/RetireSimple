@@ -14,6 +14,7 @@ import {
 	FormDatePicker,
 	FormTextField,
 } from './InputComponents';
+import {enqueueSnackbar, useSnackbar} from 'notistack';
 
 export interface AddInvestmentDialogProps {
 	open: boolean;
@@ -127,8 +128,11 @@ export const AddVehicleDialog = (props: AddVehicleDialogProps) => {
 };
 
 export const ConfirmDeleteDialog = (props: ConfirmDeleteDialogProps) => {
+	const {enqueueSnackbar} = useSnackbar();
+
 	const handleConfirm = () => {
 		props.onConfirm();
+		enqueueSnackbar('Investment was deleted', {variant: 'success'});
 		props.onClose();
 	};
 
@@ -173,10 +177,16 @@ export const AddExpenseDialog = (props: AddExpenseDialogProps) => {
 			...data,
 		};
 
-		addExpense(expenseData).then(() => {
-			props.setNeedsUpdate(true);
-			props.onClose();
-		});
+		addExpense(expenseData)
+			.then(() => {
+				enqueueSnackbar('Expense added', {variant: 'success'});
+				props.setNeedsUpdate(true);
+				props.onClose();
+			})
+			.catch((error) => {
+				enqueueSnackbar(`Error adding expense: ${error.message}`, {variant: 'error'});
+				console.log(error);
+			});
 	};
 
 	const amountField = (
@@ -246,26 +256,27 @@ export const AddExpenseDialog = (props: AddExpenseDialogProps) => {
 		<Dialog open={props.show} onClose={props.onClose}>
 			<DialogTitle>Add Expense</DialogTitle>
 			<DialogContent>
-				<Grid container spacing={2}>
-					<Grid item xs={12}>
+				<Grid container spacing={2} sx={{marginTop: '0.25rem'}}>
+					<Grid item xs={4}>
 						{amountField}
 					</Grid>
-					<Grid item xs={12}>
+					<Grid item xs={4}>
 						{expenseTypeField}
 					</Grid>
+					<Grid item xs={4} />
 					{expenseType === 'OneTime' ? (
-						<Grid item xs={12}>
+						<Grid item xs={4}>
 							{expenseDateField}
 						</Grid>
 					) : (
 						<>
-							<Grid item xs={12}>
+							<Grid item xs={4}>
 								{frequencyField}
 							</Grid>
-							<Grid item xs={12}>
+							<Grid item xs={4}>
 								{startDateField}
 							</Grid>
-							<Grid item xs={12}>
+							<Grid item xs={4}>
 								{endDateField}
 							</Grid>
 						</>
