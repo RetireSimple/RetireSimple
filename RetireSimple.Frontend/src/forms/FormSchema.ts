@@ -17,7 +17,8 @@ export const investmentFormSchema = object().shape({
 		.required()
 		.when('investmentType', {
 			is: 'StockInvestment',
-			then: (schema) => schema.defined('Required').oneOf(['MonteCarlo']),
+			then: (schema) =>
+				schema.defined('Required').oneOf(['MonteCarlo', 'BinomialRegression']),
 		})
 		.when('investmentType', {
 			is: 'BondInvestment',
@@ -233,24 +234,28 @@ export const investmentFormSchema = object().shape({
 	}),
 
 	//========================================
-	// Monte Carlo Analysis Specific Fields
+	// General Stock Analysis Specific Fields
 	//========================================
-	analysis_analysisLength: number().defined('Required').positive().required(),
+	analysis_analysisLength: number().defined('Required').positive().required('Required'),
 	analysis_analysisPreset: string().when('analysisType', {
-		is: (value: string) => value === 'MonteCarlo',
-		then: (schema) => schema.defined('Required').required(),
+		is: (value: string) => ['MonteCarlo', 'BinomialRegression'].includes(value),
+		then: (schema) => schema.defined('Required').required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
+	//========================================
+	// Monte Carlo Analysis Specific Fields
+	//========================================
 	analysis_simCount: number().when(['analysisType', 'analysis_analysisPreset'], {
 		is: (analysisType: string, analysis_analysisPreset: string) =>
 			analysisType === 'MonteCarlo' && analysis_analysisPreset === 'Custom',
-		then: (schema) => schema.defined('Required').positive().required(),
+		then: (schema) => schema.defined('Required').positive().required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_randomVariableType: string().when(['analysisType', 'analysis_analysisPreset'], {
 		is: (analysisType: string, analysis_analysisPreset: string) =>
 			analysisType === 'MonteCarlo' && analysis_analysisPreset === 'Custom',
-		then: (schema) => schema.defined('Required').oneOf(['Normal', 'LogNormal']).required(),
+		then: (schema) =>
+			schema.defined('Required').oneOf(['Normal', 'LogNormal']).required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_randomVariableMu: number().when(['analysisType', 'analysis_analysisPreset'], {
@@ -262,7 +267,7 @@ export const investmentFormSchema = object().shape({
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(4, value),
 				)
-				.required(),
+				.required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_randomVariableSigma: number().when(['analysisType', 'analysis_analysisPreset'], {
@@ -275,7 +280,7 @@ export const investmentFormSchema = object().shape({
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(4, value),
 				)
-				.required(),
+				.required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
 	analysis_randomVariableScaleFactor: number().when(['analysisType', 'analysis_analysisPreset'], {
@@ -287,7 +292,36 @@ export const investmentFormSchema = object().shape({
 				.test('is-decimal', decimalErrorString, (value) =>
 					isNaN(value) ? false : decimalValidation(4, value),
 				)
-				.required(),
+				.required('Required'),
+		otherwise: (schema) => schema.strip(),
+	}),
+
+	//========================================
+	// Binomial Regression Specific Fields
+	//========================================
+	analysis_percentGrowth: number().when(['analysisType', 'analysis_analysisPreset'], {
+		is: (analysisType: string, analysis_analysisPreset: string) =>
+			analysisType === 'BinomialRegression' && analysis_analysisPreset === 'Custom',
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.positive('Must be positive')
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(4, value),
+				)
+				.required('Required'),
+		otherwise: (schema) => schema.strip(),
+	}),
+	analysis_uncertainty: number().when(['analysisType', 'analysis_analysisPreset'], {
+		is: (analysisType: string, analysis_analysisPreset: string) =>
+			analysisType === 'BinomialRegression' && analysis_analysisPreset === 'Custom',
+		then: (schema) =>
+			schema
+				.defined('Required')
+				.test('is-decimal', decimalErrorString, (value) =>
+					isNaN(value) ? false : decimalValidation(4, value),
+				)
+				.required('Required'),
 		otherwise: (schema) => schema.strip(),
 	}),
 });

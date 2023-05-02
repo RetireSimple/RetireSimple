@@ -10,6 +10,7 @@ import {
 	FormTextFieldPercent,
 } from '../../components/InputComponents';
 import {MonteCarloAnalysisForm} from '../analysis/MonteCarloAnalysisForm';
+import {BinomialRegressionAnalysisForm} from '../analysis/BinomialRegressionAnalysisForm';
 
 export interface StockFormProps {
 	defaultValues?: any;
@@ -21,7 +22,7 @@ export const StockForm = (props: StockFormProps) => {
 	const analysisType = useWatch({
 		name: 'analysisType',
 		control: formContext.control,
-		defaultValue: props.defaultValues?.analysisType ?? 'MonteCarlo_NormalDist',
+		defaultValue: props.defaultValues?.analysisType ?? 'MonteCarlo',
 	});
 
 	const {errors} = formContext.formState;
@@ -30,6 +31,8 @@ export const StockForm = (props: StockFormProps) => {
 		switch (analysisType) {
 			case 'MonteCarlo':
 				return <MonteCarloAnalysisForm />;
+			case 'BinomialRegression':
+				return <BinomialRegressionAnalysisForm />;
 			default:
 				return (
 					<Grid item xs={12}>

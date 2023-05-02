@@ -12,7 +12,7 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		//high volatility	high uncertainty and crazy jumps between new highs and lows in a small period of time
 
 		[AnalysisPreset(new string[] { nameof(StockAS.BinomialRegression) })]
-		public static readonly OptionsDict LargeCap = new () {
+		public static readonly OptionsDict LargeCap = new() {
 			["percentGrowth"] = "0.0008",
 			["uncertainty"] = "0.25",
 		};
@@ -24,21 +24,15 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		};
 
 		[AnalysisPreset(new string[] { nameof(StockAS.BinomialRegression) })]
-		public static readonly OptionsDict SmallCap = new () {
+		public static readonly OptionsDict SmallCap = new() {
 			["percentGrowth"] = "0.002",
 			["uncertainty"] = "0.65",
 		};
 
 		[AnalysisPreset(new string[] { nameof(StockAS.BinomialRegression) })]
-		public static readonly OptionsDict HighVolatility = new () {
+		public static readonly OptionsDict HighVolatility = new() {
 			["percentGrowth"] = "0.0015",
 			["uncertainty"] = "0.80",
-		};
-
-		[AnalysisPreset(new string[] { nameof(StockAS.BinomialRegression) })]
-		public static readonly OptionsDict Custom = new () {
-			["percentGrowth"] = "0.0016",
-			["uncertainty"] = "0.30",
 		};
 
 		public static OptionsDict ResolveRegressionPreset(StockInvestment investment, OptionsDict options) {
@@ -49,7 +43,8 @@ namespace RetireSimple.Engine.Analysis.Presets {
 				["basePrice"] = investment.StockPrice.ToString(),
 				["analysisLength"] = options.GetValueOrDefault("analysisLength")
 									?? investment.AnalysisOptionsOverrides.GetValueOrDefault("analysisLength")
-									?? "60"
+									?? "60",
+				["stockQuantity"] = investment.StockQuantity.ToString(),
 			};
 			if (simPreset == "Custom") {
 				//Extact the requisite options from the options dictionary and return them.

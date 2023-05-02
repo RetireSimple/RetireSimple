@@ -41,6 +41,27 @@ describe('schema validation', () => {
 			expect(schema.isValidSync(data)).toBeTruthy();
 		});
 
+		test('BinomialRegression_DefinedPreset_Valid', () => {
+			const schema = investmentFormSchema;
+			const data = {
+				investmentName: 'Test',
+				investmentType: 'StockInvestment',
+				stockTicker: 'TEST',
+				stockPrice: '123.45',
+				stockQuantity: '123.45',
+				stockPurchaseDate: '2023-01-30',
+				stockDividendPercent: '0.05',
+				stockDividendDistributionInterval: 'Month',
+				stockDividendDistributionMethod: 'Stock',
+				stockDividendFirstPaymentDate: '2023-01-30',
+				analysisType: 'BinomialRegression',
+				analysis_analysisLength: '60',
+				analysis_analysisPreset: 'DefaultStockAnalysis', //NOTE validation for the actual value is kinda pointless, but it's here for completeness
+			};
+
+			expect(schema.isValidSync(data)).toBeTruthy();
+		});
+
 		test('MonteCarlo_CustomPreset_Valid', () => {
 			const schema = investmentFormSchema;
 			const data = {
@@ -117,6 +138,29 @@ describe('schema validation', () => {
 			};
 
 			expect(schema.isValidSync(data)).toBeFalsy();
+		});
+
+		test('BinomialRegression_CustomPreset_Valid', () => {
+			const schema = investmentFormSchema;
+			const data = {
+				investmentName: 'Test',
+				investmentType: 'StockInvestment',
+				stockTicker: 'TEST',
+				stockPrice: '123.45',
+				stockQuantity: '123.45',
+				stockPurchaseDate: '2023-01-30',
+				stockDividendPercent: '0.05',
+				stockDividendDistributionInterval: 'Month',
+				stockDividendDistributionMethod: 'Stock',
+				stockDividendFirstPaymentDate: '2023-01-30',
+				analysisType: 'BinomialRegression',
+				analysis_analysisLength: '60',
+				analysis_analysisPreset: 'Custom',
+				analysis_percentGrowth: '0.05',
+				analysis_uncertainty: '0.05',
+			};
+
+			expect(schema.isValidSync(data)).toBeTruthy();
 		});
 
 		test('#176 - Short Tickers', () => {

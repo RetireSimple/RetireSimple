@@ -68,6 +68,10 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 										value: 'MonteCarlo',
 										label: 'Monte Carlo',
 									},
+									{
+										value: 'BinomialRegression',
+										label: 'Binomial Regression',
+									},
 								]}
 								defaultOption=''
 								disable={false}

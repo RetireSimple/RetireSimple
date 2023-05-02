@@ -55,6 +55,16 @@ namespace RetireSimple.Engine.Analysis.Utils {
 					strikecolumn.Add(strike * u);
 					strikecolumn.Add(strike * d);
 				}
+				//Clear everything but the max/min/avg
+				var strikeMax = strikecolumn.Max();
+				var strikeMin = strikecolumn.Min();
+				var strikeAvg = strikecolumn.Average();
+
+				strikecolumn.Clear();
+				strikecolumn.Add(strikeMax);
+				strikecolumn.Add(strikeMin);
+				strikecolumn.Add(strikeAvg);
+
 				striketree.Add(strikecolumn);
 			}
 
