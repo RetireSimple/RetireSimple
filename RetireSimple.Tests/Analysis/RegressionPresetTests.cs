@@ -5,21 +5,13 @@ namespace RetireSimple.Tests.Analysis {
 		StockInvestment TestInvestment { get; init; }
 
 		public RegressionPresetTests() {
-			//testinvestment = new stockinvestment("") {
-			//	stockprice = 100,
-			//	stockquantity = 5,
-			//	stockpurchasedate = new dateonly(2023, 12, 25),
-
-			//analysisoptionsoverrides = {
-			//		["analysislength"] = "50",
-			//		["analysispreset"] = ""
-			//	}
 			TestInvestment = new StockInvestment("") {
 				StockPrice = 100,
 				AnalysisOptionsOverrides = {
 					["analysisLength"] = "50",
 					["analysisPreset"] = ""
-				}
+				},
+				StockQuantity = 5,
 			};
 
 		}
@@ -39,11 +31,12 @@ namespace RetireSimple.Tests.Analysis {
 			var actual = RegressionPresets.ResolveRegressionPreset(TestInvestment, new OptionsDict());
 
 			actual.Should().IntersectWith(expectedSubset);
-			actual.Should().HaveCount(expectedSubset.Count + 2);
+			actual.Should().HaveCount(expectedSubset.Count + 3);
 			actual.Should().ContainKey("basePrice");
 			actual["basePrice"].Should().Be(TestInvestment.StockPrice.ToString());
 			actual.Should().ContainKey("analysisLength");
 			actual["analysisLength"].Should().Be(TestInvestment.AnalysisOptionsOverrides["analysisLength"]);
+			actual["stockQuantity"].Should().Be(TestInvestment.StockQuantity.ToString());
 		}
 
 		[Theory, MemberData(nameof(PresetList))]
@@ -66,11 +59,12 @@ namespace RetireSimple.Tests.Analysis {
 			var actual = RegressionPresets.ResolveRegressionPreset(TestInvestment, overrideParams);
 
 			actual.Should().IntersectWith(expectedSubset);
-			actual.Should().HaveCount(expectedSubset.Count + 2);
+			actual.Should().HaveCount(expectedSubset.Count + 3);
 			actual.Should().ContainKey("basePrice");
 			actual["basePrice"].Should().Be(TestInvestment.StockPrice.ToString());
 			actual.Should().ContainKey("analysisLength");
 			actual["analysisLength"].Should().Be(TestInvestment.AnalysisOptionsOverrides["analysisLength"]);
+			actual["stockQuantity"].Should().Be(TestInvestment.StockQuantity.ToString());
 		}
 
 		[Fact]

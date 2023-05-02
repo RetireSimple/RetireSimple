@@ -44,8 +44,9 @@ namespace RetireSimple.Engine.Analysis.Utils {
 
 			// Initialize strike price tree
 			List<List<decimal>> striketree = new List<List<decimal>>();
-			List<decimal> strikecolumn = new List<decimal>();
-			strikecolumn.Add(initialPrice);
+			List<decimal> strikecolumn = new List<decimal> {
+				initialPrice
+			};
 			striketree.Add(strikecolumn);
 
 			// produce strike price tree see example above
@@ -58,14 +59,13 @@ namespace RetireSimple.Engine.Analysis.Utils {
 				//Clear everything but the max/min/avg
 				var strikeMax = strikecolumn.Max();
 				var strikeMin = strikecolumn.Min();
-				var strikeAvg = strikecolumn.Average();
 
 				strikecolumn.Clear();
 				strikecolumn.Add(strikeMax);
 				strikecolumn.Add(strikeMin);
-				strikecolumn.Add(strikeAvg);
 
 				striketree.Add(strikecolumn);
+				Console.WriteLine($"Strike Tree: {i}: {string.Join(",", strikecolumn)}");
 			}
 
 			foreach (List<decimal> val in striketree) {
