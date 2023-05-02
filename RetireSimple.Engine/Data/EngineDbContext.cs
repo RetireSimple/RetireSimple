@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Design;
 
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
-using RetireSimple.Engine.Data.Expense;
 using RetireSimple.Engine.Data.User;
 
 namespace RetireSimple.Engine.Data {

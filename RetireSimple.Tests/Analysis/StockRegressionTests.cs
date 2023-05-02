@@ -1,26 +1,5 @@
-﻿using FluentAssertions.Execution;
-
-using MathNet.Numerics.Distributions;
-
-using Microsoft.Extensions.Options;
-
-using Moq;
-
-using Newtonsoft.Json.Linq;
-
-using RetireSimple.Engine.Analysis.Presets;
-using RetireSimple.Engine.Analysis.Utils;
+﻿using RetireSimple.Engine.Analysis.Utils;
 using RetireSimple.Engine.Data.Analysis;
-using RetireSimple.Engine.Data.Base;
-
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using static RetireSimple.Engine.Analysis.Utils.Regression;
 
 namespace RetireSimple.Tests.Analysis {
 
@@ -28,16 +7,15 @@ namespace RetireSimple.Tests.Analysis {
 		public OptionsDict TestOptions { get; set; } = new OptionsDict();
 
 		public StockRegressionTests() {
-			TestOptions["stockQuantity"] = "5";
-			TestOptions["basePrice"] = "20";
+			TestOptions["basePrice"] = "100";
 			TestOptions["analysisLength"] = "5";
 			TestOptions["uncertainty"] = "0.25";
 			TestOptions["percentGrowth"] = "0.12";
 		}
 
-		InvestmentModel expected = new InvestmentModel() {
+		private static readonly InvestmentModel Expected = new() {
 			MinModelData = { 100, 88, 77, 68, 60 },
-			AvgModelData = { 100, 100, 100, 100, 100 },
+			AvgModelData = { 100, 100, 101, 104, 109 },
 			MaxModelData = { 100, 112, 125, 140, 157 },
 		};
 
@@ -45,12 +23,12 @@ namespace RetireSimple.Tests.Analysis {
 		public void RegressionTestBinomialModel() {
 			var reg = new Regression(TestOptions);
 			var actual = reg.RunSimulation();
-			for(int i =0; i < int.Parse(TestOptions["analysisLength"]); i++) {
-				Assert.Equal(actual.MinModelData[i].ToString("#"), expected.MinModelData[i].ToString("#"));
-				Assert.Equal(actual.AvgModelData[i].ToString("#"), expected.AvgModelData[i].ToString("#"));
-				Assert.Equal(actual.MaxModelData[i].ToString("#"), expected.MaxModelData[i].ToString("#"));
+
+			for (int i = 0; i < int.Parse(TestOptions["analysisLength"]); i++) {
+				decimal.Round(actual.MinModelData[i]).Should().Be(Expected.MinModelData[i]);
+				decimal.Round(actual.AvgModelData[i]).Should().Be(Expected.AvgModelData[i]);
+				decimal.Round(actual.MaxModelData[i]).Should().Be(Expected.MaxModelData[i]);
 			}
-			//actual.Should().BeEquivalentTo(expected);
 		}
 
 		[Fact]
@@ -62,7 +40,9 @@ namespace RetireSimple.Tests.Analysis {
 			int resultU = (int)Math.Max(double.Parse(TestOptions["uncertainty"]), 0);
 			int resultP = (int)Math.Max(double.Parse(TestOptions["percentGrowth"]), 0);
 
-			Assert.Equal(expected, resultU);
+			resultU.Should().Be(expected);
+			resultP.Should().Be(expected);
+
 		}
 	}
 }

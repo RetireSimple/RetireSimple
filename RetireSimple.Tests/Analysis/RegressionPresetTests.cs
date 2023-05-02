@@ -1,34 +1,18 @@
 ﻿using RetireSimple.Engine.Analysis.Presets;
-using RetireSimple.Engine.Data.Base;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RetireSimple.Tests.Analysis {
 	public class RegressionPresetTests {
 		StockInvestment TestInvestment { get; init; }
 
 		public RegressionPresetTests() {
-			//testinvestment = new stockinvestment("") {
-			//	stockprice = 100,
-			//	stockquantity = 5,
-			//	stockpurchasedate = new dateonly(2023, 12, 25),
 
-			//analysisoptionsoverrides = {
-			//		["analysislength"] = "50",
-			//		["analysispreset"] = ""
-			//	}
 			TestInvestment = new StockInvestment("") {
 				StockPrice = 100,
 				AnalysisOptionsOverrides = {
 					["analysisLength"] = "50",
 					["analysisPreset"] = ""
-				}
+				},
 			};
-
 		}
 
 		public static readonly IEnumerable<object[]> PresetResolutionData = new List<object[]>() {
@@ -85,7 +69,7 @@ namespace RetireSimple.Tests.Analysis {
 			TestInvestment.AnalysisOptionsOverrides["analysisPreset"] = "Custom";
 			TestInvestment.AnalysisOptionsOverrides["percentGrowth"] = "0.0102";
 			TestInvestment.AnalysisOptionsOverrides["uncertainty"] = "0.48";
-			
+
 			var actual = RegressionPresets.ResolveRegressionPreset(TestInvestment, new OptionsDict());
 
 			actual.Should().ContainKey("percentGrowth");
@@ -108,7 +92,7 @@ namespace RetireSimple.Tests.Analysis {
 			actual["percentGrowth"].Should().Be("0.01");
 			actual.Should().ContainKey("uncertainty");
 			actual["uncertainty"].Should().Be("0.99");
-			
+
 		}
 
 		[Fact]

@@ -1,15 +1,6 @@
-﻿using MathNet.Numerics;
-
-using RetireSimple.Engine.Data;
+﻿using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Investment;
-
-using System;
-using System.Diagnostics.Metrics;
-using System.Drawing;
-
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace RetireSimple.Engine.Analysis {
 

@@ -1,11 +1,7 @@
-using Microsoft.Extensions.Options;
-
-using System.Collections;
-
 namespace RetireSimple.Tests.Analysis {
 	public class PensionSimTests {
 		PensionInvestment Investment { get; init; }
-		OptionsDict options { get; init; }
+		OptionsDict Options { get; init; }
 
 		public PensionSimTests() {
 			Investment = new PensionInvestment("PensionSimulation") {
@@ -17,14 +13,14 @@ namespace RetireSimple.Tests.Analysis {
 					["expectedTaxRate"] = "0.0",
 				}
 			};
-			options = new OptionsDict();
+			Options = new OptionsDict();
 		}
 
 		[Fact]
 		public void PensionSim_PensionStartsBeyondAnalysisPeriod_ReturnsAllZeros() {
 			Investment.PensionStartDate = DateOnly.FromDateTime(DateTime.Now.AddYears(10));
 
-			var result = PensionAS.PensionSimulation(Investment, options);
+			var result = PensionAS.PensionSimulation(Investment, Options);
 			result.MinModelData.Should().AllBeEquivalentTo(0);
 			result.MaxModelData.Should().AllBeEquivalentTo(0);
 			result.AvgModelData.Should().AllBeEquivalentTo(0);
@@ -39,7 +35,7 @@ namespace RetireSimple.Tests.Analysis {
 		public void PensionSim_PensionStartsDuringAnalysisPeriod_OffsetsByNecessaryZeroes(int startOffset) {
 			Investment.PensionStartDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(startOffset));
 
-			var result = PensionAS.PensionSimulation(Investment, options);
+			var result = PensionAS.PensionSimulation(Investment, Options);
 			result.MinModelData.Should().StartWith(Enumerable.Repeat(0M, startOffset));
 			result.MaxModelData.Should().StartWith(Enumerable.Repeat(0M, startOffset));
 			result.AvgModelData.Should().StartWith(Enumerable.Repeat(0M, startOffset));
@@ -54,7 +50,7 @@ namespace RetireSimple.Tests.Analysis {
 			Investment.PensionYearlyIncrease = 0;
 			Investment.PensionStartDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-startOffset));
 
-			var result = PensionAS.PensionSimulation(Investment, options);
+			var result = PensionAS.PensionSimulation(Investment, Options);
 			result.MinModelData.Should().StartWith(ExpectedPensionValuesCase1.Skip(startOffset).Take(10));
 			result.MaxModelData.Should().StartWith(ExpectedPensionValuesCase1.Skip(startOffset).Take(10));
 			result.AvgModelData.Should().StartWith(ExpectedPensionValuesCase1.Skip(startOffset).Take(10));
@@ -68,9 +64,9 @@ namespace RetireSimple.Tests.Analysis {
 		[Fact]
 		public void PensionSim_PensionHasNonZeroYearlyIncrease_SimulatesCorrectly() {
 			Investment.PensionYearlyIncrease = 0.1M;
-			options["analysisLength"] = "36";
+			Options["analysisLength"] = "36";
 
-			var result = PensionAS.PensionSimulation(Investment, options);
+			var result = PensionAS.PensionSimulation(Investment, Options);
 			result.MinModelData.Should().StartWith(ExpectedPensionValuesWithYearlyIncrease.Take(10));
 			result.MaxModelData.Should().StartWith(ExpectedPensionValuesWithYearlyIncrease.Take(10));
 			result.AvgModelData.Should().StartWith(ExpectedPensionValuesWithYearlyIncrease.Take(10));
@@ -86,9 +82,9 @@ namespace RetireSimple.Tests.Analysis {
 		};
 		[Fact]
 		public void PensionSim_UsesTaxRateAsExpected() {
-			options["expectedTaxRate"] = "0.1";
+			Options["expectedTaxRate"] = "0.1";
 
-			var result = PensionAS.PensionSimulation(Investment, options);
+			var result = PensionAS.PensionSimulation(Investment, Options);
 			result.MinModelData.Should().StartWith(ExpectedPensionValuesUsingTaxRate.Take(10));
 			result.MaxModelData.Should().StartWith(ExpectedPensionValuesUsingTaxRate.Take(10));
 			result.AvgModelData.Should().StartWith(ExpectedPensionValuesUsingTaxRate.Take(10));

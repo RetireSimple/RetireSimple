@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RetireSimple.Engine.Data;
+﻿using RetireSimple.Engine.Data;
 using RetireSimple.Engine.Data.Investment;
 
 namespace RetireSimple.Engine.Analysis.Presets {
@@ -16,34 +11,28 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		//custom	user defined uncertainty and growth
 		//high volatility	high uncertainty and crazy jumps between new highs and lows in a small period of time
 
-		[AnalysisPreset(new string[] { nameof(StockAS.Regression) })]
-		public static readonly OptionsDict LargeCap = new () {
+		[AnalysisPreset(new string[] { nameof(StockAS.BinomialRegression) })]
+		public static readonly OptionsDict LargeCap = new() {
 			["percentGrowth"] = "0.0008",
 			["uncertainty"] = "0.25",
 		};
 
-		[AnalysisPreset(new string[] { nameof(StockAS.Regression) })]
+		[AnalysisPreset(new string[] { nameof(StockAS.BinomialRegression) })]
 		public static readonly OptionsDict MidCap = new() {
 			["percentGrowth"] = "0.0012",
 			["uncertainty"] = "0.40",
 		};
 
-		[AnalysisPreset(new string[] { nameof(StockAS.Regression) })]
-		public static readonly OptionsDict SmallCap = new () {
+		[AnalysisPreset(new string[] { nameof(StockAS.BinomialRegression) })]
+		public static readonly OptionsDict SmallCap = new() {
 			["percentGrowth"] = "0.002",
 			["uncertainty"] = "0.65",
 		};
 
-		[AnalysisPreset(new string[] { nameof(StockAS.Regression) })]
-		public static readonly OptionsDict HighVolatility = new () {
+		[AnalysisPreset(new string[] { nameof(StockAS.BinomialRegression) })]
+		public static readonly OptionsDict HighVolatility = new() {
 			["percentGrowth"] = "0.0015",
 			["uncertainty"] = "0.80",
-		};
-
-		[AnalysisPreset(new string[] { nameof(StockAS.Regression) })]
-		public static readonly OptionsDict Custom = new () {
-			["percentGrowth"] = "0.0016",
-			["uncertainty"] = "0.30",
 		};
 
 		public static OptionsDict ResolveRegressionPreset(StockInvestment investment, OptionsDict options) {
@@ -54,7 +43,7 @@ namespace RetireSimple.Engine.Analysis.Presets {
 				["basePrice"] = investment.StockPrice.ToString(),
 				["analysisLength"] = options.GetValueOrDefault("analysisLength")
 									?? investment.AnalysisOptionsOverrides.GetValueOrDefault("analysisLength")
-									?? "60"
+									?? "60",
 			};
 			if (simPreset == "Custom") {
 				//Extact the requisite options from the options dictionary and return them.

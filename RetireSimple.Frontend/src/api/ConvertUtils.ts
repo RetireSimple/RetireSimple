@@ -40,6 +40,8 @@ const percentageFields = [
 	'analysis_longTermCapitalGainsTax',
 	'pensionYearlyIncrease',
 	'analysis_expectedTaxRate',
+	'analysis_percentGrowth',
+	'analysis_uncertainty',
 ];
 
 export const convertFromDecimal = (data: {[key: string]: string}) => {

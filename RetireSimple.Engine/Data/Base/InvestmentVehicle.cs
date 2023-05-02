@@ -55,7 +55,6 @@ namespace RetireSimple.Engine.Data.Base {
 			var combinedOptions = MergeOverrideOptions(options);
 			var containedModels = GetContainedInvestmentModels(combinedOptions);
 
-			//TODO allow contributing to other investments as well, requires post-processing logic
 			var cashSim = SimulateCashContributions(combinedOptions);
 
 			var preTaxModel = GeneratePreTaxModels(combinedOptions, containedModels, cashSim);
