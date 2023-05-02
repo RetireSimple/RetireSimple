@@ -25,10 +25,8 @@ namespace RetireSimple.Engine.Analysis.Utils {
 		internal int AnalysisLength { get; init; }
 		internal decimal Uncertainty { get; init; }
 		internal decimal ExpectedGrowth { get; init; }
-		internal int Quantity { get; init; }
 
 		public Regression(OptionsDict options) {
-			Quantity = Math.Max(int.Parse(options["stockQuantity"]), 0);
 			BasePrice = Math.Max(decimal.Parse(options["basePrice"]), 0);
 			AnalysisLength = Math.Max(int.Parse(options["analysisLength"]), 0);
 			Uncertainty = Math.Max(decimal.Parse(options["uncertainty"]), 0);
@@ -38,7 +36,7 @@ namespace RetireSimple.Engine.Analysis.Utils {
 		public InvestmentModel RunSimulation() {
 
 			var model = new InvestmentModel();
-			var initialPrice = BasePrice * Quantity;
+			var initialPrice = BasePrice;
 			var u = 1 + ExpectedGrowth;
 			var d = 1 - ExpectedGrowth;
 
@@ -56,7 +54,6 @@ namespace RetireSimple.Engine.Analysis.Utils {
 					strikecolumn.Add(strike * u);
 					strikecolumn.Add(strike * d);
 				}
-				//Clear everything but the max/min/avg
 				var strikeMax = strikecolumn.Max();
 				var strikeMin = strikecolumn.Min();
 
@@ -65,7 +62,6 @@ namespace RetireSimple.Engine.Analysis.Utils {
 				strikecolumn.Add(strikeMin);
 
 				striketree.Add(strikecolumn);
-				Console.WriteLine($"Strike Tree: {i}: {string.Join(",", strikecolumn)}");
 			}
 
 			foreach (List<decimal> val in striketree) {

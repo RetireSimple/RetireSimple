@@ -44,7 +44,6 @@ namespace RetireSimple.Engine.Analysis.Presets {
 				["analysisLength"] = options.GetValueOrDefault("analysisLength")
 									?? investment.AnalysisOptionsOverrides.GetValueOrDefault("analysisLength")
 									?? "60",
-				["stockQuantity"] = investment.StockQuantity.ToString(),
 			};
 			if (simPreset == "Custom") {
 				//Extact the requisite options from the options dictionary and return them.
