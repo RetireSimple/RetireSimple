@@ -64,7 +64,7 @@ namespace RetireSimple.Engine.Analysis {
 		}
 
 		[AnalysisModule("StockInvestment")]
-		public static InvestmentModel Regression(StockInvestment investment, OptionsDict options) {
+		public static InvestmentModel BinomialRegression(StockInvestment investment, OptionsDict options) {
 			var simPreset = RegressionPresets.ResolveRegressionPreset(investment, options);
 
 			var priceSim = new Regression(simPreset);
