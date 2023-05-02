@@ -58,16 +58,12 @@ namespace RetireSimple.Engine.Data.Base {
 			//TODO allow contributing to other investments as well, requires post-processing logic
 			var cashSim = SimulateCashContributions(combinedOptions);
 
-			//TODO Pre-process expenses/transfers (from investment in vehicle) to adjust for taxes
-			// This will be more relevant when expenses become a factor in analysis.
-
 			var preTaxModel = GeneratePreTaxModels(combinedOptions, containedModels, cashSim);
 			var postTaxModel = GeneratePostTaxModels(combinedOptions, containedModels, cashSim);
 
 			var newModel =
 				new VehicleModel(InvestmentVehicleId, preTaxModel, postTaxModel);
 
-			//NOTE don't add to EF in this method, that should be an API level responsibility
 			return newModel;
 		}
 
@@ -86,7 +82,7 @@ namespace RetireSimple.Engine.Data.Base {
 		internal virtual List<InvestmentModel> GetContainedInvestmentModels(OptionsDict options) {
 			var models = new List<InvestmentModel>();
 			foreach (var investment in Investments) {
-				models.Add(investment.InvokeAnalysis(options));
+				models.Add(investment.PerformAnalysis(options));
 			}
 			return models;
 		}

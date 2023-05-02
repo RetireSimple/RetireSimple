@@ -15,8 +15,18 @@ export const convertDates = (data: {[key: string]: string}) => {
 	if (data['bondMaturityDate']) {
 		data['bondMaturityDate'] = dayjs(data['bondMaturityDate']).format('YYYY-MM-DD');
 	}
-	if(data['pensionStartDate']) {
+	if (data['pensionStartDate']) {
 		data['pensionStartDate'] = dayjs(data['pensionStartDate']).format('YYYY-MM-DD');
+	}
+	if (data['date']) {
+		data['date'] = dayjs(data['date']).format('YYYY-MM-DD');
+	}
+
+	if (data['startDate']) {
+		data['startDate'] = dayjs(data['startDate']).format('YYYY-MM-DD');
+	}
+	if (data['endDate']) {
+		data['endDate'] = dayjs(data['endDate']).format('YYYY-MM-DD');
 	}
 };
 

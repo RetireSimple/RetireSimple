@@ -28,7 +28,7 @@ namespace RetireSimple.Tests.DomainModel {
 		public void TestExpenseAdd() {
 			//TODO: add manual constraint of Expense's investments
 			var expense = new OneTimeExpense {
-				Amount = 100.0,
+				Amount = 100.0M,
 				SourceInvestment = Context.Investment.First(i => i.InvestmentId == 1)
 			};
 			Context.Expense.Add(expense);
@@ -40,7 +40,7 @@ namespace RetireSimple.Tests.DomainModel {
 		[Fact]
 		public void TestExpenseRemove() {
 			var expense = new OneTimeExpense {
-				Amount = 100.0,
+				Amount = 100.0M,
 				SourceInvestment = Context.Investment.First(i => i.InvestmentId == 1)
 			};
 			Context.Expense.Add(expense);
@@ -53,7 +53,7 @@ namespace RetireSimple.Tests.DomainModel {
 
 		[Fact]
 		public void TestExpenseFKConstraint() {
-			var expense = new OneTimeExpense { Amount = 100.0 };
+			var expense = new OneTimeExpense { Amount = 100.0M };
 
 			Action act = () => {
 				Context.Expense.Add(expense);

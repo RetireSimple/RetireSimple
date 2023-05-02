@@ -14,11 +14,13 @@ import {
 import React from 'react';
 import {Link, Outlet, useLoaderData} from 'react-router-dom';
 import {ApiPresetData, Investment, Portfolio} from './Interfaces';
-import {SidebarInvestment, VehicleListItem} from './components/SidebarComponents';
 import {AddInvestmentDialog, AddVehicleDialog} from './components/DialogComponents';
+import {SidebarInvestment, VehicleListItem} from './components/SidebarComponents';
 
 import {getAnalysisPresets} from './api/ApiCommon';
 import {AboutDialog} from './components/AboutDialog';
+
+import logo from '../../logo.png';
 
 export const PresetContext = React.createContext<ApiPresetData | undefined>(undefined);
 
@@ -119,8 +121,18 @@ export const Layout = () => {
 	return (
 		<div>
 			<PresetContext.Provider value={presetData}>
-				<AppBar position='static' sx={{padding: '1rem'}}>
+				<AppBar position='static' sx={{padding: '1rem', maxHeight: '4rem'}}>
 					<Box sx={{display: 'flex'}}>
+						<img
+							src={logo}
+							alt='logo'
+							style={{
+								marginRight: '1rem',
+								height: '2rem',
+								width: 'auto',
+								objectFit: 'contain',
+							}}
+						/>
 						<Typography variant='h6' component='div'>
 							RetireSimple
 						</Typography>

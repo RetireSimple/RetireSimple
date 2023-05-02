@@ -46,7 +46,7 @@ jobs:
         run: echo "date=$(date +'%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
       - name: Get Short Commit Hash for Nightly Versioning
         id: commithash
-        run: echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: echo "hash=$(date +'%Y%m%d%H%M')" >> $GITHUB_OUTPUT
 
   build-win:
     name: Build Executable (Windows)
@@ -144,12 +144,6 @@ jobs:
           node-version: 16
           cache: pnpm
           cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
-      - name: Build Frontend
-        run: |
-          cd RetireSimple.Frontend
-          pnpm install
-          pnpm run build
-          cd ..
       - name: Build Backend Executable
         run: dotnet publish ./RetireSimple.Backend/RetireSimple.Backend.csproj
           --configuration Release
@@ -200,6 +194,13 @@ jobs:
           --output ./publish
           -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
           -p:VersionSuffix=nightly-${{ needs.get-info.outputs.hash }}
+      # - name: Delete Older Prerelease Package Versions
+      #   uses: actions/delete-package-versions@v4.1.1
+      #   with:
+      #     ignore-versions: '^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$'
+      #     package-name: RetireSimple.Engine
+      #     package-type: nuget
+      #     min-versions-to-keep: 0
       - name: Push NuGet Package
         run: dotnet nuget push ./publish/RetireSimple.Engine.*.nupkg
           --source "https://nuget.pkg.github.com/RetireSimple/index.json"
@@ -316,11 +317,19 @@ jobs:
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
-      - name: Nightly
+      # - name: Delete Older Releases
+      #   uses: dev-drprasad/delete-older-releases@v0.2.1
+      #   with:
+      #     keep_latest: 0
+      #     delete_tags: true
+      #     delete_tag_pattern: "nightly"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Nightly - ${{ vars.VERSION_PREFIX }}-nightly-${{ needs.get-info.outputs.hash }}
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: nightly-${{ needs.get-info.outputs.hash }}
+          tag: ${{ vars.VERSION_PREFIX }}-nightly-${{ needs.get-info.outputs.hash }}
           name: Nightly
           allowUpdates: true
           draft: false

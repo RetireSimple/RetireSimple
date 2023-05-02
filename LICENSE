@@ -20,7 +20,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-END MIT LICENSE
+END PROJECT MIT LICENSE
+
+The RetireSimple Logo is based on multiple icons from the FontAwesome free icon set. These icons are licensed under the Creative Commons BY 4.0 License as stated here: https://fontawesome.com/license/free.
+
+The following libraries are used by the RetireSimple Engine and are subject to their respective licenses:
+ - [.NET 6](https://github.com/dotnet/runtime) (MIT License)
+ - [Entity Framework Core](https://github.com/dotnet/efcore) (MIT License)
+ - [Math.NET Numerics](https://github.com/mathnet/mathnet-numerics) (MIT License)
+
 
 Additional Disclaimer:
 

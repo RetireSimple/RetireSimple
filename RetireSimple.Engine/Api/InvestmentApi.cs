@@ -91,21 +91,13 @@ namespace RetireSimple.Engine.Api {
 		/// <summary>
 		/// Removes the investment with the specified ID. If the specified investment has any
 		/// <see cref="InvestmentModel"/> or <see cref="Expense"/>
-		/// associated with it, those are deleted as well. <strong>However</strong>, if there are any
-		/// <see cref="InvestmentTransfer"/> objects related to this investment in any form, an
-		/// <see cref="InvalidOperationException"/> is thrown.
+		/// associated with it, those are deleted as well.
 		/// </summary>
 		/// <param name="id"></param>
 		/// <exception cref="ArgumentException">If the specified investment does not exist</exception>
-		/// <exception cref="InvalidOperationException">If the remove occurs while the investment still has
-		/// some <see cref="InvestmentTransfer"/> objects related to it.</exception>
 		public void Remove(int id) {
 			if (!_context.Investment.Any(i => i.InvestmentId == id)) {
 				throw new ArgumentException("Investment not found");
-			}
-			if (_context.InvestmentTransfer.Any(t => t.SourceInvestmentId == id
-												|| t.DestinationInvestmentId == id)) {
-				throw new InvalidOperationException("Cannot remove investment while it still has transfers");
 			}
 
 			_context.Investment.Remove(_context.Investment.First(i => i.InvestmentId == id));
@@ -198,7 +190,7 @@ namespace RetireSimple.Engine.Api {
 			if ((options is not null && options.Count > 0) ||
 					investment.InvestmentModel is null ||
 					investment.LastUpdated > investment.InvestmentModel.LastUpdated) {
-				var model = investment.InvokeAnalysis(options ?? new OptionsDict() { });
+				var model = investment.PerformAnalysis(options ?? new OptionsDict() { });
 				var updateTime = DateTime.Now;
 				if (investment.InvestmentModel is not null) {
 					investment.InvestmentModel.MinModelData = model.MinModelData;
@@ -215,12 +207,7 @@ namespace RetireSimple.Engine.Api {
 				_context.SaveChanges();
 			}
 
-			var tempModel = investment.InvestmentModel;
-			tempModel.MinModelData = tempModel.MinModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.AvgModelData = tempModel.AvgModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.MaxModelData = tempModel.MaxModelData.Select(d => Math.Max(d, 0)).ToList();
-
-			return tempModel;
+			return investment.InvestmentModel;
 		}
 
 

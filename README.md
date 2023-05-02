@@ -67,3 +67,14 @@ Most of the documentation is still under construction and is subject to change u
 We have a general release plan with some of the rationale in the following excel sheet. Items in the sheet will include links to the corresponding GitHub Issues to validate progress. Items that were completed before this plan was created my not have a linked issue.
 
 [Release Plan](https://1drv.ms/x/s!ApAyK07lZKjs5aVw3Fn2t7cW0NeymQ?e=aZJfgg)
+
+## License / Legal Information
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+
+The RetireSimple Logo is based on multiple icons from the FontAwesome free icon set. These icons are licensed under the Creative Commons BY 4.0 License as stated here: https://fontawesome.com/license/free.
+
+The following libraries are used by the RetireSimple Engine and are subject to their respective licenses:
+ - [.NET 6](https://github.com/dotnet/runtime) (MIT License)
+ - [Entity Framework Core](https://github.com/dotnet/efcore) (MIT License)
+ - [Math.NET Numerics](https://github.com/mathnet/mathnet-numerics) (MIT License)

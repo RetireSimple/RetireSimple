@@ -39,10 +39,8 @@ var app = builder.Build();
 //Only Apply Migrations for Sqlite
 if (app.Configuration["Provider"] == "sqlite") {
 	using (var scope = app.Services.CreateScope()) {
-
 		var context = scope.ServiceProvider.GetRequiredService<EngineDbContext>();
 		context.Database.Migrate();
-		context.Database.EnsureCreated();
 	}
 }
 

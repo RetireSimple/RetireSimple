@@ -68,3 +68,12 @@ export interface InvestmentVehicleModel {
 
 export type ApiFormData = {[key: string]: string};
 export type ApiPresetData = {[analysis: string]: {[preset: string]: {[presetkey: string]: string}}};
+
+export interface ApiExpense {
+	expenseId: number;
+	sourceInvestmentId: number;
+	expenseType: 'OneTime' | 'Recurring';
+	amount: number;
+	expenseData: {[key: string]: string};
+}
+

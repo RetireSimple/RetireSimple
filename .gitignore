@@ -309,3 +309,5 @@ jspm_packages/
 *.db-wal
 *.db-shm
 *.diagsession
+
+build/

@@ -97,12 +97,6 @@ jobs:
           node-version: 16
           cache: pnpm
           cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
-      - name: Build Frontend
-        run: |
-          cd RetireSimple.Frontend
-          pnpm install
-          pnpm run build
-          cd ..
       - name: Build Backend Executable
         run: dotnet publish ./RetireSimple.Backend/RetireSimple.Backend.csproj
           --configuration Release
@@ -164,7 +158,6 @@ jobs:
           path: publish/RetireSimple.Engine.*.nupkg
           retention-days: 1
 
-
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
@@ -184,4 +177,3 @@ jobs:
           artifacts: |
             RetireSimple-*/RetireSimple-*.zip
             RetireSimple-*/RetireSimple.Engine.*.nupkg
-

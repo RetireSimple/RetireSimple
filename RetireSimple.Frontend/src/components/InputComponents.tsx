@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 import React from 'react';
 import {Control, Controller} from 'react-hook-form';
 
@@ -172,24 +173,20 @@ export const FormDatePicker = (props: FormDatePickerProps) => {
 			defaultValue={props.defaultValue ?? ''}
 			render={({field}) => (
 				<LocalizationProvider dateAdapter={AdapterDayjs}>
-					<DatePicker
-						{...field}
-						label={props.label}
-						renderInput={(params) => (
-							<Tooltip
-								title={props.tooltip ?? ''}
-								arrow
-								describeChild
-								placement='top'>
-								<TextField
-									{...params}
-									size='small'
-									error={!!props.errorField}
-									helperText={props.errorField?.message as string}
-								/>
-							</Tooltip>
-						)}
-					/>
+					<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
+						<DatePicker
+							{...field}
+							label={props.label}
+							value={dayjs(field.value)}
+							slotProps={{
+								textField: {
+									size: 'small',
+									error: !!props.errorField,
+									helperText: props.errorField?.message as string,
+								},
+							}}
+						/>
+					</Tooltip>
 				</LocalizationProvider>
 			)}
 		/>

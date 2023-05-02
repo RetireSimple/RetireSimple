@@ -5,6 +5,8 @@ using Moq;
 using RetireSimple.Engine.Data.Analysis;
 using RetireSimple.Engine.Data.Base;
 
+using System.Reflection;
+
 namespace RetireSimple.Tests.Analysis {
 
 	public class VehicleAnalysisTests {
@@ -46,16 +48,18 @@ namespace RetireSimple.Tests.Analysis {
 		[Theory, MemberData(nameof(VehicleAnalysisTestData.CashSimVars), MemberType = typeof(VehicleAnalysisTestData))]
 		public void TestSimulateCashContributionsDefault(OptionsDict options, decimal initialHoldings, List<decimal> expected) {
 
-			var vehicle = new Vehicle403b { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
+			var vehicle = new VehicleIRA { InvestmentVehicleData = new OptionsDict() { ["cashHoldings"] = initialHoldings.ToString() } };
 			var actual = vehicle.SimulateCashContributions(options);
 
 			actual.Should().HaveSameCount(expected);
 			actual.Should().BeEquivalentTo(expected);
 		}
 
-		[Fact]
-		public void Test401kCashContributionsPercentage_MonthlyPaycheck() {
-			var vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401k };
+		[Theory, MemberData(nameof(VehicleAnalysisTestData.VechicleTypes401kLike), MemberType = typeof(VehicleAnalysisTestData))]
+		public void Test401kCashContributionsPercentage_MonthlyPaycheck(Type vehicleType) {
+			var vehicle = Activator.CreateInstance(vehicleType) as InvestmentVehicle
+					?? throw new InvalidOperationException("Could not create instance of type " + vehicleType.Name);
+			vehicle.InvestmentVehicleData = VehicleAnalysisTestData.Options401k;
 			var actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401k);
 			var expectedData = new List<decimal>() { 0, 506, 1012, 1518, 2024, 2530, 3036, 3542, 4048, 4554 };
 
@@ -63,12 +67,14 @@ namespace RetireSimple.Tests.Analysis {
 			actual.Should().BeEquivalentTo(expectedData);
 		}
 
-		[Fact]
-		public void Test401kCashContributionsPercentage_WeeklyPaycheck() {
+		[Theory, MemberData(nameof(VehicleAnalysisTestData.VechicleTypes401kLike), MemberType = typeof(VehicleAnalysisTestData))]
+		public void Test401kCashContributionsPercentage_WeeklyPaycheck(Type vehicleType) {
 			var testDict = new OptionsDict(VehicleAnalysisTestData.Options401k) {
 				["payFrequency"] = "weekly"
 			};
-			var vehicle = new Vehicle401k { InvestmentVehicleData = testDict };
+			var vehicle = Activator.CreateInstance(vehicleType) as InvestmentVehicle
+					?? throw new InvalidOperationException("Could not create instance of type " + vehicleType.Name);
+			vehicle.InvestmentVehicleData = testDict;
 			var actual = vehicle.SimulateCashContributions(testDict).Select(x => x.Round(2)).ToList();
 			var expectedData = new List<decimal> { 0, 467.08M, 934.15M, 1401.23M, 1868.31M, 2335.38M, 2802.46M, 3269.54M, 3736.62M, 4203.69M };
 
@@ -76,12 +82,14 @@ namespace RetireSimple.Tests.Analysis {
 			actual.Should().BeEquivalentTo(expectedData);
 		}
 
-		[Fact]
-		public void Test401kCashContributionsPercentage_BiWeeklyPaycheck() {
+		[Theory, MemberData(nameof(VehicleAnalysisTestData.VechicleTypes401kLike), MemberType = typeof(VehicleAnalysisTestData))]
+		public void Test401kCashContributionsPercentage_BiWeeklyPaycheck(Type vehicleType) {
 			var testDict = new OptionsDict(VehicleAnalysisTestData.Options401k) {
 				["payFrequency"] = "biweekly"
 			};
-			var vehicle = new Vehicle401k { InvestmentVehicleData = testDict };
+			var vehicle = Activator.CreateInstance(vehicleType) as InvestmentVehicle
+					?? throw new InvalidOperationException("Could not create instance of type " + vehicleType.Name);
+			vehicle.InvestmentVehicleData = testDict;
 			var actual = vehicle.SimulateCashContributions(testDict).Select(x => x.Round(2)).ToList();
 			var expectedData = new List<decimal>() { 0, 467.08M, 934.15M, 1401.23M, 1868.31M, 2335.38M, 2802.46M, 3269.54M, 3736.62M, 4203.69M };
 
@@ -89,9 +97,11 @@ namespace RetireSimple.Tests.Analysis {
 			actual.Should().BeEquivalentTo(expectedData);
 		}
 
-		[Fact]
-		public void Test401kCashContributionsFixed_MonthlyPaycheck() {
-			var vehicle = new Vehicle401k { InvestmentVehicleData = VehicleAnalysisTestData.Options401kFixed };
+		[Theory, MemberData(nameof(VehicleAnalysisTestData.VechicleTypes401kLike), MemberType = typeof(VehicleAnalysisTestData))]
+		public void Test401kCashContributionsFixed_MonthlyPaycheck(Type vehicleType) {
+			var vehicle = Activator.CreateInstance(vehicleType) as InvestmentVehicle
+					?? throw new InvalidOperationException("Could not create instance of type " + vehicleType.Name);
+			vehicle.InvestmentVehicleData = VehicleAnalysisTestData.Options401k;
 			var expected = new List<decimal>() { 0, 50.6M, 101.2M, 151.8M, 202.4M, 253M, 303.6M, 354.2M, 404.8M, 455.4M };
 
 			var actual = vehicle.SimulateCashContributions(VehicleAnalysisTestData.Options401kFixed);
@@ -100,13 +110,15 @@ namespace RetireSimple.Tests.Analysis {
 			actual.Should().BeEquivalentTo(expected);
 		}
 
-		[Fact]
-		public void Test401kCashContributionsFixed_WeeklyPaycheck() {
+		[Theory, MemberData(nameof(VehicleAnalysisTestData.VechicleTypes401kLike), MemberType = typeof(VehicleAnalysisTestData))]
+		public void Test401kCashContributionsFixed_WeeklyPaycheck(Type vehicleType) {
 			var testDict = new OptionsDict(VehicleAnalysisTestData.Options401kFixed) {
 				["payFrequency"] = "weekly"
 			};
-			var vehicle = new Vehicle401k { InvestmentVehicleData = testDict };
 			var expected = new List<decimal>() { 0, 202.4M, 404.8M, 607.2M, 809.6M, 1012M, 1214.4M, 1416.8M, 1619.2M, 1821.6M };
+			var vehicle = Activator.CreateInstance(vehicleType) as InvestmentVehicle
+					?? throw new InvalidOperationException("Could not create instance of type " + vehicleType.Name);
+			vehicle.InvestmentVehicleData = testDict;
 
 			var actual = vehicle.SimulateCashContributions(testDict);
 
@@ -114,13 +126,15 @@ namespace RetireSimple.Tests.Analysis {
 			actual.Should().BeEquivalentTo(expected);
 		}
 
-		[Fact]
-		public void Test401kCashContributionsFixed_BiWeeklyPaycheck() {
+		[Theory, MemberData(nameof(VehicleAnalysisTestData.VechicleTypes401kLike), MemberType = typeof(VehicleAnalysisTestData))]
+		public void Test401kCashContributionsFixed_BiWeeklyPaycheck(Type vehicleType) {
 			var testDict = new OptionsDict(VehicleAnalysisTestData.Options401kFixed) {
 				["payFrequency"] = "biweekly"
 			};
-			var vehicle = new Vehicle401k { InvestmentVehicleData = testDict };
 			var expected = new List<decimal>() { 0, 101.2M, 202.4M, 303.6M, 404.8M, 506M, 607.2M, 708.4M, 809.6M, 910.8M };
+			var vehicle = Activator.CreateInstance(vehicleType) as InvestmentVehicle
+					?? throw new InvalidOperationException("Could not create instance of type " + vehicleType.Name);
+			vehicle.InvestmentVehicleData = testDict;
 
 			var actual = vehicle.SimulateCashContributions(testDict);
 
@@ -141,6 +155,11 @@ namespace RetireSimple.Tests.Analysis {
 	}
 
 	static class VehicleAnalysisTestData {
+		public static readonly IEnumerable<object[]> VechicleTypes401kLike = new List<object[]>{
+			new object[]{typeof(Vehicle401k)},
+			new object[]{typeof(Vehicle403b)},
+			new object[]{typeof(Vehicle457)},
+		};
 
 		public static readonly OptionsDict DefaultOptions = new() {
 			["analysisLength"] = "10",

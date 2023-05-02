@@ -253,44 +253,8 @@ namespace RetireSimple.Engine.Api {
 				_context.SaveChanges();
 			}
 
-			//Zero Floor Data
-			var tempModel = vehicle.InvestmentVehicleModel;
-			tempModel.MinModelData = tempModel.MinModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.AvgModelData = tempModel.AvgModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.MaxModelData = tempModel.MaxModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.TaxDeductedMinModelData = tempModel.TaxDeductedMinModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.TaxDeductedAvgModelData = tempModel.TaxDeductedAvgModelData.Select(d => Math.Max(d, 0)).ToList();
-			tempModel.TaxDeductedMaxModelData = tempModel.TaxDeductedMaxModelData.Select(d => Math.Max(d, 0)).ToList();
-
-			return tempModel;
+			return vehicle.InvestmentVehicleModel;
 		}
-
-		//TODO: Implement Later when adding vehicle breakdowns
-		public List<InvestmentModel> GetVehicleInvestmentModels(int vehicleId, OptionsDict? options = null) {
-			// if (!_context.InvestmentVehicle.Any(i => i.InvestmentVehicleId == vehicleId)) {
-			// 	throw new ArgumentException("Investment Vehicle not found");
-			// }
-
-			// var vehicle = _context.InvestmentVehicle.First(i => i.InvestmentVehicleId == vehicleId);
-			// var modelList = new List<InvestmentModel>();
-
-			// if(vehicle.Investments.Any()){
-			// 	foreach(var investment in vehicle.Investments){
-			// 		if(investment.InvestmentModel is not null){
-			// 			modelList.Add(investment.InvestmentModel);
-			// 		} else {
-			// 			var model = investment.InvokeAnalysis(options ?? new OptionsDict());
-			// 			investment.InvestmentModel = model;
-			// 			modelList.Add(model);
-			// 		}
-			// 	}
-			// }
-
-			// return modelList;
-
-			throw new NotImplementedException();
-		}
-
 	}
 }
 
