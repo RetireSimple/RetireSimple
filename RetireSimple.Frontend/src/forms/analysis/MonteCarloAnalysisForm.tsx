@@ -1,4 +1,4 @@
-import {Checkbox, FormControlLabel, Grid, Typography} from '@mui/material';
+import {FormControlLabel, Grid, Switch, Typography} from '@mui/material';
 import React from 'react';
 import {useFormContext, useWatch} from 'react-hook-form';
 import {PresetContext} from '../../Layout';
@@ -178,7 +178,8 @@ export const MonteCarloAnalysisForm = () => {
 	);
 
 	const getPresetValue = (field: string) => {
-		if (!presets || !currentPreset) return 'Not Set';
+		if (!presets || !currentPreset || !Object.keys(presets).includes(currentPreset))
+			return 'Not Set';
 		return presets[currentPreset][field];
 	};
 
@@ -194,9 +195,9 @@ export const MonteCarloAnalysisForm = () => {
 				<>
 					<Grid item xs={4}>
 						<FormControlLabel
-							label='Show Parameter Values'
+							label='What Is This Analysis?'
 							control={
-								<Checkbox
+								<Switch
 									checked={showSettings}
 									onChange={() => setShowSettings(!showSettings)}
 								/>
@@ -205,6 +206,25 @@ export const MonteCarloAnalysisForm = () => {
 					</Grid>
 					{showSettings && (
 						<Grid item xs={12}>
+							<Typography variant='subtitle2'>
+								Summary of This Analysis Method
+							</Typography>
+							<Typography variant='body2'>
+								{`A Monte Carlo Simulation (also referred to as a method), is a type of algorithm where results are obtained after
+								 a large number of trials that invlove some form of randomness. The idea behind a Monte Carlo simulation is
+								 that by the Law of Large Numbers, running more trials will increase the accuracy of results (such as the
+								 average value) determined from those trials. In this case, the trials are based on the "random walk" of
+								 a stock price with an asserted average increase and volatility. It assumes the random walk of the stock
+								 price is "normally or log-normally distributed" and for each trial adds a random value to the stock price
+								  by "taking a sample of the random walk" for each month to model.`}
+							</Typography>
+							<br />
+							<Typography variant='body2'>
+								Monte Carlo Simulations tend to be computationally intensive, even
+								with optimizations. Default presets use around 500,000 trials, which
+								is a good balance between accuracy and speed.
+							</Typography>
+							<br />
 							<Typography variant='subtitle2'>Monte Carlo Parameters</Typography>
 							<Typography variant='body2'>
 								{`Simulations to Run (Number of Trials): ${getPresetValue(
