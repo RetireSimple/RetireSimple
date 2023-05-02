@@ -32,17 +32,10 @@ namespace RetireSimple.Tests.Analysis {
 		}
 
 		public static readonly IEnumerable<object[]> PresetResolutionData = new List<object[]>() {
-			new object[] { "EnergySector", RegressionPresets.EnergySector},
-			new object[] { "FinancialSector", RegressionPresets.FinancialSector },
-			new object[] { "HealthCareSector", RegressionPresets.HealthCareSector },
-			new object[] { "TechnologySector", RegressionPresets.TechnologySector },
-			new object[] { "ConsumerDiscretionarySector", RegressionPresets.ConsumerDiscretionarySector },
-			new object[] { "ConsumerStaplesSector", RegressionPresets.ConsumerStaplesSector },
-			new object[] { "MaterialsSector", RegressionPresets.MaterialsSector },
-			new object[] { "CommunicationServicesSector", RegressionPresets.CommunicationServicesSector },
-			new object[] { "IndustrialsSector", RegressionPresets.IndustrialsSector },
-			new object[] { "UtilitiesSector", RegressionPresets.UtilitiesSector },
-			new object[] { "RealEstateSector", RegressionPresets.RealEstateSector },
+			new object[] { "LargeCap", RegressionPresets.LargeCap},
+			new object[] { "MidCap", RegressionPresets.MidCap },
+			new object[] { "SmallCap", RegressionPresets.SmallCap },
+			new object[] { "HighVolatility", RegressionPresets.HighVolatility },
 		};
 		public static readonly IEnumerable<object[]> PresetList = PresetResolutionData.Select(x => new object[] { x.First() });
 

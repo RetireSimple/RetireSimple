@@ -9,65 +9,41 @@ using RetireSimple.Engine.Data.Investment;
 namespace RetireSimple.Engine.Analysis.Presets {
 
 	internal class RegressionPresets {
-		[AnalysisPreset(new string[] { nameof(StockAS.SimpleRegression) })]
-		public static readonly OptionsDict EnergySector = new() {
-			["percentGrowth"] = "0.012",
-			["uncertainty"] = "0.50",
-		};
 
-		[AnalysisPreset(new string[] { nameof(StockAS.SimpleRegression) })]
-		public static readonly OptionsDict FinancialSector = new() {
-			["percentGrowth"] = "0.010",
-			["uncertainty"] = "0.30",
-		};
+		//large cap low uncertainty and growth
+		//mid cap	medium uncertainty and growth
+		//small cap	high uncertainty and growth
+		//custom	user defined uncertainty and growth
+		//high volatility	high uncertainty and crazy jumps between new highs and lows in a small period of time
 
-		[AnalysisPreset(new string[] { nameof(StockAS.SimpleRegression) })]
-		public static readonly OptionsDict HealthCareSector = new () {
-			["percentGrowth"] = "0.06",
+		[AnalysisPreset(new string[] { nameof(StockAS.Regression) })]
+		public static readonly OptionsDict LargeCap = new () {
+			["percentGrowth"] = "0.0008",
 			["uncertainty"] = "0.25",
 		};
 
-		[AnalysisPreset(new string[] { nameof(StockAS.SimpleRegression) })]
-		public static readonly OptionsDict TechnologySector = new () {
-			["percentGrowth"] = "0.14",
+		[AnalysisPreset(new string[] { nameof(StockAS.Regression) })]
+		public static readonly OptionsDict MidCap = new() {
+			["percentGrowth"] = "0.0012",
 			["uncertainty"] = "0.40",
 		};
 
-		[AnalysisPreset(new string[] { nameof(StockAS.SimpleRegression) })]
-		public static readonly OptionsDict ConsumerDiscretionarySector = new () {
-			["percentGrowth"] = "0.05",
-			["uncertainty"] = "0.25",
+		[AnalysisPreset(new string[] { nameof(StockAS.Regression) })]
+		public static readonly OptionsDict SmallCap = new () {
+			["percentGrowth"] = "0.002",
+			["uncertainty"] = "0.65",
 		};
 
-		[AnalysisPreset(new string[] { nameof(StockAS.SimpleRegression) })]
-		public static readonly OptionsDict ConsumerStaplesSector = new() {
-			["percentGrowth"] = "0.012",
-			["uncertainty"] = "0.50",
+		[AnalysisPreset(new string[] { nameof(StockAS.Regression) })]
+		public static readonly OptionsDict HighVolatility = new () {
+			["percentGrowth"] = "0.0015",
+			["uncertainty"] = "0.80",
 		};
-		[AnalysisPreset(new string[] { nameof(StockAS.SimpleRegression) })]
-		public static readonly OptionsDict MaterialsSector = new() {
-			["percentGrowth"] = "0.07",
-			["uncertainty"] = "0.10",
-		};
-		[AnalysisPreset(new string[] { nameof(StockAS.SimpleRegression) })]
-		public static readonly OptionsDict CommunicationServicesSector = new () {
-			["percentGrowth"] = "0.09",
-			["uncertainty"] = "0.20",
-		};
-		[AnalysisPreset(new string[] { nameof(StockAS.SimpleRegression) })]
-		public static readonly OptionsDict IndustrialsSector = new() {
-			["percentGrowth"] = "0.10",
-			["uncertainty"] = "0.50",
-		};
-		[AnalysisPreset(new string[] { nameof(StockAS.SimpleRegression) })]
-		public static readonly OptionsDict UtilitiesSector = new() {
-			["percentGrowth"] = "0.03",
-			["uncertainty"] = "0.10",
-		};
-		[AnalysisPreset(new string[] { nameof(StockAS.SimpleRegression) })]
-		public static readonly OptionsDict RealEstateSector = new() {
-			["percentGrowth"] = "0.05",
-			["uncertainty"] = "0.50",
+
+		[AnalysisPreset(new string[] { nameof(StockAS.Regression) })]
+		public static readonly OptionsDict Custom = new () {
+			["percentGrowth"] = "0.0016",
+			["uncertainty"] = "0.30",
 		};
 
 		public static OptionsDict ResolveRegressionPreset(StockInvestment investment, OptionsDict options) {
@@ -87,7 +63,7 @@ namespace RetireSimple.Engine.Analysis.Presets {
 				simOptions["uncertainty"] = options.GetValueOrDefault("uncertainty") ??
 													investment.AnalysisOptionsOverrides["uncertainty"];
 			} else {
-				var preset = ReflectionUtils.GetAnalysisPresets("SimpleRegression")[simPreset];
+				var preset = ReflectionUtils.GetAnalysisPresets("BinomialRegression")[simPreset];
 				simOptions = simOptions.Union(preset).ToDictionary(x => x.Key, x => x.Value);
 			}
 			return simOptions;

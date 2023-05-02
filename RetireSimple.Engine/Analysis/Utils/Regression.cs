@@ -2,19 +2,20 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 
 
 namespace RetireSimple.Engine.Analysis.Utils {
 	public enum RegressionRV {
-		LINEAR,
+		BINOMIAL,
 		//The following are currently not implemented, but are supported by Math.NET
+		LINEAR,
 		LOGISTIC,
 		POLYNOMIAL,
 		RIDGE,
 		LASSO,
 		QUANTILE,
 		BAYESIAN,
-		Bayesian,
 		PCR,    //Principal Components Regression
 		PLSR,   //Partial Least Squares Regression
 		ENR,    //Elastic Net Regression
@@ -28,58 +29,65 @@ namespace RetireSimple.Engine.Analysis.Utils {
 		internal decimal ExpectedGrowth { get; init; }
 		internal int Quantity { get; init; }
 
-
-		/// <summary>
-		/// Utility Function to generate a Math.NET Continuous Distribution for use in Regression analysis.
-		/// <param name="type"></param>
-		/// <param name="parameters"></param>
-		/// <returns></returns>
-		/// <exception cref="NotImplementedException"></exception>
-
-		//internal static icontinuousdistribution createrandomvarinstance(montecarlorv type, dictionary<string, double> parameters) {
-		//	return type switch {
-		//		regressionrv.logistic =>
-		//		_ => throw new notimplementedexception(),
-		//	};
-		//}
 		public Regression(OptionsDict options) {
-			Quantity = int.Parse(options["stockQuantity"]);
-			BasePrice = decimal.Parse(options["basePrice"]);
-			AnalysisLength = int.Parse(options["analysisLength"]);
-			Uncertainty = decimal.Parse(options["uncertainty"]);
+			Quantity = Math.Max(int.Parse(options["stockQuantity"]), 0);
+			BasePrice = Math.Max(decimal.Parse(options["basePrice"]),0);
+			AnalysisLength = Math.Max(int.Parse(options["analysisLength"]),0);
+			Uncertainty = Math.Max(decimal.Parse(options["uncertainty"]),0);
 			ExpectedGrowth = decimal.Parse(options["percentGrowth"]);
 		}
 
 		public InvestmentModel RunSimulation() {
-			
+
 			var model = new InvestmentModel();
-			var price = BasePrice * Quantity;
-			var finalPrice = price + (price * ExpectedGrowth);
-			decimal[] residuals = new decimal[60];
-
-			// Generate random residuals with normal distribution
-			Random random = new Random(1);
+			var initialPrice = BasePrice * Quantity;
+			var u = 1 + ExpectedGrowth;
+			var d = 1 - ExpectedGrowth;
+			
+			// Initialize strike price tree
+			List<List<decimal>> striketree = new List<List<decimal>>();
+			List<decimal> strikecolumn = new List<decimal>();
+			strikecolumn.Add(initialPrice);
+			striketree.Add(strikecolumn);
+			
+			// produce strike price tree see example above
 			for (int i = 0; i < AnalysisLength; i++) {
-				double u1 = 1.0 - random.NextDouble();
-				double u2 = 1.0 - random.NextDouble();
-				double normal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
-				residuals[i] = 0 + Uncertainty * (decimal)normal;
-			}
-			decimal mingrowth = 0;
-			decimal avggrowth = 0;
-			decimal maxgrowth = 0;
-
-			// Compute predicted prices
-			decimal[] predictedPrices = new decimal[60];
-			for (int i = 0; i < 60; i++) {
-				mingrowth = ExpectedGrowth - Uncertainty;
-				avggrowth = ExpectedGrowth;
-				maxgrowth = ExpectedGrowth + Uncertainty;
-				model.MinModelData.Add(price * (1 + mingrowth * (i + 1)) * (1 + residuals[i]));
-				model.MaxModelData.Add(price * (1 + maxgrowth * (i + 1)) * (1 + residuals[i]));
-				model.AvgModelData.Add(price * (1 + avggrowth * (i + 1)) * (1 + residuals[i]));
+				strikecolumn = new List<decimal>();
+				foreach (decimal strike in striketree[i]) {
+					strikecolumn.Add(strike * u);
+					strikecolumn.Add(strike * d);
+				}
+				striketree.Add(strikecolumn);
 			}
 
+			//// initialize put value at end nodes
+			//foreach (decimal strike in striketree[analysislength-1].keys) {
+			//	var put = strike - k;
+			//	if(put < 0) {
+			//		put = 0;
+			//	}
+			//	striketree[analysislength - 1][strike] = put;
+			//}
+
+			//// compute put values on remainder of tree 
+			//for(int i = analysislength-1; i >= 0; i--) {
+			//	var strikesabove = striketree[i];
+			//	for (decimal strike in striketree[i].keys) {
+			//		var maxstrike = strikesabove.max();
+			//		var minstrike = strikesabove.min();
+			//	}
+			//}
+
+			//timevalues.add(initialprice);
+			//listoflists.add(timevalues);
+			// generate put values
+			
+			foreach (List<decimal> val in striketree) {
+					model.MinModelData.Add(val.Min());
+					model.AvgModelData.Add(val.Average());
+					model.MaxModelData.Add(val.Max());
+			}
+			
 			return model;
 			}
 	}
