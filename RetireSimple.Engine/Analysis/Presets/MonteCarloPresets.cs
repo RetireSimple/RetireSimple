@@ -7,7 +7,7 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		public static readonly OptionsDict DefaultStockAnalysis = new() {
 			["randomVariableType"] = "Normal",
 			["randomVariableMu"] = "0",
-			["randomVariableSigma"] = "1",
+			["randomVariableSigma"] = "0.5",
 			["randomVariableScaleFactor"] = "1",
 			["simCount"] = "500000"
 		};
@@ -15,8 +15,8 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict LargeCapGrowth = new() {
 			["randomVariableType"] = "LogNormal",
-			["randomVariableMu"] = "1",
-			["randomVariableSigma"] = "1.2",
+			["randomVariableMu"] = "0.35",
+			["randomVariableSigma"] = "0.65",
 			["randomVariableScaleFactor"] = "1",
 			["simCount"] = "500000"
 		};
@@ -24,8 +24,8 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict LargeCapValue = new() {
 			["randomVariableType"] = "Normal",
-			["randomVariableMu"] = "0.65",
-			["randomVariableSigma"] = "0.85",
+			["randomVariableMu"] = "0.25",
+			["randomVariableSigma"] = "0.5",
 			["randomVariableScaleFactor"] = "1",
 			["simCount"] = "500000"
 		};
@@ -33,8 +33,8 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict SmallCapGrowth = new() {
 			["randomVariableType"] = "LogNormal",
-			["randomVariableMu"] = "0.25",
-			["randomVariableSigma"] = "0.3",
+			["randomVariableMu"] = "0.1",
+			["randomVariableSigma"] = "0.25",
 			["randomVariableScaleFactor"] = "1",
 			["simCount"] = "500000"
 		};
@@ -42,8 +42,8 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict SmallCapValue = new() {
 			["randomVariableType"] = "Normal",
-			["randomVariableMu"] = "0.1",
-			["randomVariableSigma"] = "0.2",
+			["randomVariableMu"] = "0.05",
+			["randomVariableSigma"] = "0.15",
 			["randomVariableScaleFactor"] = "1",
 			["simCount"] = "500000"
 		};
@@ -51,8 +51,8 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict MidCapGrowth = new() {
 			["randomVariableType"] = "LogNormal",
-			["randomVariableMu"] = "0.5",
-			["randomVariableSigma"] = "0.75",
+			["randomVariableMu"] = "0.15",
+			["randomVariableSigma"] = "0.35",
 			["randomVariableScaleFactor"] = "1",
 			["simCount"] = "500000"
 		};
@@ -60,8 +60,8 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		[AnalysisPreset(new string[] { nameof(StockAS.MonteCarlo) })]
 		public static readonly OptionsDict MidCapValue = new() {
 			["randomVariableType"] = "Normal",
-			["randomVariableMu"] = "0.35",
-			["randomVariableSigma"] = "0.5",
+			["randomVariableMu"] = "0.125",
+			["randomVariableSigma"] = "0.3",
 			["randomVariableScaleFactor"] = "1",
 			["simCount"] = "500000"
 		};
@@ -70,7 +70,7 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		public static readonly OptionsDict InternationalStock = new() {
 			["randomVariableType"] = "LogNormal",
 			["randomVariableMu"] = "0.2",
-			["randomVariableSigma"] = "2",
+			["randomVariableSigma"] = "0.4",
 			["randomVariableScaleFactor"] = "1",
 			["simCount"] = "500000"
 		};
@@ -79,7 +79,7 @@ namespace RetireSimple.Engine.Analysis.Presets {
 		public static readonly OptionsDict HighVolatility = new() {
 			["randomVariableType"] = "Normal",
 			["randomVariableMu"] = "0",
-			["randomVariableSigma"] = "5",
+			["randomVariableSigma"] = "2",
 			["randomVariableScaleFactor"] = "2",
 			["simCount"] = "500000"
 		};
