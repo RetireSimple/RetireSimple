@@ -8,6 +8,7 @@ import {ConfirmDeleteDialog} from '../components/DialogComponents';
 import {VehicleModelGraph} from '../components/GraphComponents';
 import {VehicleFormDefaults, vehicleFormSchema} from '../forms/FormSchema';
 import {VehicleDataForm} from '../forms/VehicleDataForm';
+import {useSnackbar} from 'notistack';
 
 export const VehicleView = () => {
 	const [showDelete, setShowDelete] = React.useState(false);
@@ -23,6 +24,7 @@ export const VehicleView = () => {
 
 	const {reset, control, handleSubmit} = formContext;
 	const {isDirty, dirtyFields} = useFormState({control});
+	const {enqueueSnackbar} = useSnackbar();
 
 	React.useEffect(() => {
 		reset(vehicleData, {keepErrors: true});
@@ -36,9 +38,14 @@ export const VehicleView = () => {
 			}
 		});
 
-		updateVehicle(vehicleData.investmentVehicleId, requestData).then(() => {
-			submit(null, {action: updateAction, method: 'post'});
-		});
+		updateVehicle(vehicleData.investmentVehicleId, requestData)
+			.then(() => {
+				enqueueSnackbar('Vehicle updated successfully.', {variant: 'success'});
+				submit(null, {action: updateAction, method: 'post'});
+			})
+			.catch((error) => {
+				enqueueSnackbar(`Failed to update vehicle: ${error.message}`, {variant: 'error'});
+			});
 	});
 
 	return (

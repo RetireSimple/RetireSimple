@@ -14,6 +14,7 @@ import {
 	FormDatePicker,
 	FormTextField,
 } from './InputComponents';
+import {enqueueSnackbar, useSnackbar} from 'notistack';
 
 export interface AddInvestmentDialogProps {
 	open: boolean;
@@ -42,6 +43,7 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 
 	const submit = useSubmit();
 	const addAction = useFormAction('/add');
+	const {enqueueSnackbar} = useSnackbar();
 
 	const handleAdd = (data: FieldValues) => {
 		const requestData: {[key: string]: string} = {};
@@ -55,13 +57,18 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 		//Check if we have known date fields, and convert them to yyyy-MM-dd
 		convertDates(requestData);
 
-		addInvestment(requestData).then((investmentId) => {
-			if (props.vehicleTarget > -1) {
-				addInvestmentToVehicle(props.vehicleTarget, Number.parseInt(investmentId));
-			} //Add investment to vehicle
-			props.onClose();
-			submit(null, {method: 'post', action: addAction});
-		});
+		addInvestment(requestData)
+			.then((investmentId) => {
+				if (props.vehicleTarget > -1) {
+					addInvestmentToVehicle(props.vehicleTarget, Number.parseInt(investmentId));
+				} //Add investment to vehicle
+				enqueueSnackbar('Investment added successfully.', {variant: 'success'});
+				props.onClose();
+				submit(null, {method: 'post', action: addAction});
+			})
+			.catch((error) => {
+				enqueueSnackbar(`Failed to add investment: ${error.message}`, {variant: 'error'});
+			});
 	};
 
 	return (
@@ -92,6 +99,8 @@ export const AddVehicleDialog = (props: AddVehicleDialogProps) => {
 	const submit = useSubmit();
 	const addAction = useFormAction('/addVehicle');
 
+	const {enqueueSnackbar} = useSnackbar();
+
 	const handleVehicleAdd = (data: FieldValues) => {
 		const requestData: {[key: string]: string} = {};
 
@@ -101,10 +110,15 @@ export const AddVehicleDialog = (props: AddVehicleDialogProps) => {
 
 		convertDates(requestData);
 
-		addVehicle(requestData).then(() => {
-			props.onClose();
-			submit(null, {method: 'post', action: addAction});
-		});
+		addVehicle(requestData)
+			.then(() => {
+				enqueueSnackbar('Vehicle added successfully.', {variant: 'success'});
+				props.onClose();
+				submit(null, {method: 'post', action: addAction});
+			})
+			.catch((error) => {
+				enqueueSnackbar(`Failed to add vehicle: ${error.message}`, {variant: 'error'});
+			});
 	};
 
 	return (
@@ -127,8 +141,14 @@ export const AddVehicleDialog = (props: AddVehicleDialogProps) => {
 };
 
 export const ConfirmDeleteDialog = (props: ConfirmDeleteDialogProps) => {
+	const {enqueueSnackbar} = useSnackbar();
+
 	const handleConfirm = () => {
 		props.onConfirm();
+		enqueueSnackbar(
+			`${props.deleteTargetType === 'vehicle' ? 'Vehicle' : 'Invesetment'} was deleted`,
+			{variant: 'success'},
+		);
 		props.onClose();
 	};
 
@@ -173,10 +193,16 @@ export const AddExpenseDialog = (props: AddExpenseDialogProps) => {
 			...data,
 		};
 
-		addExpense(expenseData).then(() => {
-			props.setNeedsUpdate(true);
-			props.onClose();
-		});
+		addExpense(expenseData)
+			.then(() => {
+				enqueueSnackbar('Expense added', {variant: 'success'});
+				props.setNeedsUpdate(true);
+				props.onClose();
+			})
+			.catch((error) => {
+				enqueueSnackbar(`Error adding expense: ${error.message}`, {variant: 'error'});
+				console.log(error);
+			});
 	};
 
 	const amountField = (
@@ -246,26 +272,27 @@ export const AddExpenseDialog = (props: AddExpenseDialogProps) => {
 		<Dialog open={props.show} onClose={props.onClose}>
 			<DialogTitle>Add Expense</DialogTitle>
 			<DialogContent>
-				<Grid container spacing={2}>
-					<Grid item xs={12}>
+				<Grid container spacing={2} sx={{marginTop: '0.25rem'}}>
+					<Grid item xs={4}>
 						{amountField}
 					</Grid>
-					<Grid item xs={12}>
+					<Grid item xs={4}>
 						{expenseTypeField}
 					</Grid>
+					<Grid item xs={4} />
 					{expenseType === 'OneTime' ? (
-						<Grid item xs={12}>
+						<Grid item xs={4}>
 							{expenseDateField}
 						</Grid>
 					) : (
 						<>
-							<Grid item xs={12}>
+							<Grid item xs={4}>
 								{frequencyField}
 							</Grid>
-							<Grid item xs={12}>
+							<Grid item xs={4}>
 								{startDateField}
 							</Grid>
-							<Grid item xs={12}>
+							<Grid item xs={4}>
 								{endDateField}
 							</Grid>
 						</>

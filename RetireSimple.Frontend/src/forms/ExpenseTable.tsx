@@ -19,6 +19,7 @@ import {deleteExpense, getExpenses} from '../api/InvestmentApi';
 import {AddExpenseDialog} from '../components/DialogComponents';
 import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
 import {useFormAction, useSubmit} from 'react-router-dom';
+import {useSnackbar} from 'notistack';
 
 interface ExpensesTableProps {
 	investmentId: number;
@@ -32,7 +33,7 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
 	const submit = useSubmit();
 	const updateAction = useFormAction('update');
 
-	// const emptyRows = page > 0 ? Math.max(0, (1 + page) * 10 - expenses.length) : 0;
+	const {enqueueSnackbar} = useSnackbar();
 
 	const handleChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -43,22 +44,36 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
 
 	React.useEffect(() => {
 		if (needsUpdate) {
-			getExpenses(props.investmentId).then((data) => {
-				setExpenses(data);
-				setNeedsUpdate(false);
-				submit(null, {action: updateAction, method: 'post'});
-			});
+			getExpenses(props.investmentId)
+				.then((data) => {
+					setExpenses(data);
+					setNeedsUpdate(false);
+				})
+				.catch((error) => {
+					enqueueSnackbar(`Failed to get expenses: ${error.message}`, {variant: 'error'});
+				});
 		}
-	}, [needsUpdate, props.investmentId, submit, updateAction]);
+	}, [enqueueSnackbar, needsUpdate, props.investmentId, submit, updateAction]);
 
 	const handleDelete = (expenseId: number) => {
-		deleteExpense(expenseId).then(() => {
-			setNeedsUpdate(true);
-		});
+		deleteExpense(expenseId)
+			.then(() => {
+				enqueueSnackbar('Expense deleted successfully.', {variant: 'success'});
+				setNeedsUpdate(true);
+			})
+			.catch((error) => {
+				enqueueSnackbar(`Failed to delete expense:${error.message}`, {variant: 'error'});
+			});
 	};
 
 	return (
 		<Box sx={{width: '100%', alignSelf: 'start'}}>
+			<Button
+				sx={{margin: '0.25rem'}}
+				startIcon={<Icon baseClassName='material-icons'>add</Icon>}
+				onClick={() => setAddDialogOpen(true)}>
+				Add Expense
+			</Button>
 			<TableContainer component={Paper} sx={{minWidth: '100%'}}>
 				<Table sx={{minWidth: '100%'}} size='small'>
 					<TableHead>
@@ -96,12 +111,6 @@ export const ExpensesTable = (props: ExpensesTableProps) => {
 						))}
 					</TableBody>
 					<TableFooter>
-						<Button
-							sx={{margin: '0.25rem'}}
-							startIcon={<Icon baseClassName='material-icons'>add</Icon>}
-							onClick={() => setAddDialogOpen(true)}>
-							Add Expense
-						</Button>
 						<TablePagination
 							count={expenses.length}
 							rowsPerPage={10}

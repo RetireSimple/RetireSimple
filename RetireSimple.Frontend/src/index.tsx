@@ -1,19 +1,22 @@
-import {CircularProgress, Typography} from '@mui/material';
+import {Box, CircularProgress, Icon, Link, Typography} from '@mui/material';
+import {SnackbarProvider} from 'notistack';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
-	createBrowserRouter,
-	createRoutesFromElements,
 	Route,
 	RouterProvider,
+	createBrowserRouter,
+	createRoutesFromElements,
+	isRouteErrorResponse,
+	useRouteError,
 } from 'react-router-dom';
+import {Layout} from './Layout';
 import {getPortfolio} from './api/ApiCommon';
 import {flattenApiInvestment, getFlatVehicleData} from './api/ApiMapper';
 import {convertFromDecimal} from './api/ConvertUtils';
 import {deleteInvestment, getInvestment} from './api/InvestmentApi';
 import {deleteVehicle, getVehicle} from './api/VehicleApi';
 import './index.css';
-import {Layout} from './Layout';
 
 /************************
  * Lazy Loaded Components
@@ -72,12 +75,64 @@ const deleteVehicleAction = async ({params}: {params: any}) => {
 	return new Response(null, {status: 302, headers: {Location: '/'}});
 };
 
+/**********************************
+ * Error Page
+ *********************************/
+const ErrorPage = () => {
+	const error = useRouteError();
+
+	return (
+		<Box
+			sx={{
+				display: 'flex',
+				justifyContent: 'space-around',
+				alignItems: 'center',
+				flexDirection: 'column',
+			}}>
+			<Box sx={{display: 'flex', flexDirection: 'row'}}>
+				<Icon
+					baseClassName='material-icons'
+					color='error'
+					sx={{fontSize: '4rem', marginRight: '1rem', padding: '0.25rem'}}>
+					error
+				</Icon>
+				<Typography variant='h2'>Oops...</Typography>
+			</Box>
+			<br />
+			<Typography variant='h4'>Something went wrong and RetireSimple crashed.</Typography>
+			<br />
+			<Typography variant='h5'>
+				Try refreshing this page, or restarting the <code>RetireSimple.Backend</code>{' '}
+				application.
+			</Typography>
+			<br />
+			<Typography variant='h5'>
+				If the problem persists, please report a bug{' '}
+				<Link href='https://github.com/RetireSimple/RetireSimple/issues/new/choose'>
+					on the GitHub Issues page
+				</Link>
+				.
+			</Typography>
+			{isRouteErrorResponse(error) && (
+				<Typography variant='h1' component='div' sx={{textAlign: 'center'}}>
+					{error.status}
+				</Typography>
+			)}
+		</Box>
+	);
+};
+
 /************************
  * React Router Route Defs.
  ************************/
 const router = createBrowserRouter(
 	createRoutesFromElements([
-		<Route path='/' element={<Layout />} id='root' loader={async () => await getPortfolio()}>
+		<Route
+			path='/'
+			element={<Layout />}
+			errorElement={<ErrorPage />}
+			id='root'
+			loader={async () => await getPortfolio()}>
 			<Route
 				path='/'
 				element={
@@ -127,8 +182,18 @@ const router = createBrowserRouter(
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
+const fallback = (
+	<Box>
+		<Typography variant='h1' component='div' sx={{textAlign: 'center'}}>
+			Loading...
+		</Typography>
+	</Box>
+);
+
 root.render(
 	<React.StrictMode>
-		<RouterProvider router={router} fallbackElement={<Typography>Testing</Typography>} />
+		<SnackbarProvider>
+			<RouterProvider router={router} fallbackElement={fallback} />
+		</SnackbarProvider>
 	</React.StrictMode>,
 );

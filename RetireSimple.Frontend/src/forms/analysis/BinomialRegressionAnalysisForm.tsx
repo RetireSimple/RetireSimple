@@ -87,7 +87,8 @@ export const BinomialRegressionAnalysisForm = () => {
 	);
 
 	const getPresetValues = (field: string) => {
-		if (!presets || !currentPreset) return 'Not Set';
+		if (!presets || !currentPreset || !Object.keys(presets).includes(currentPreset))
+			return 'Not Set';
 		return presets[currentPreset][field];
 	};
 
@@ -115,6 +116,23 @@ export const BinomialRegressionAnalysisForm = () => {
 
 					{showSettings && (
 						<Grid item xs={12}>
+							<Typography variant='subtitle2'>
+								Summary of This Analysis Method
+							</Typography>
+							<Typography variant='body2'>{`
+								This method is a simple binomial tree regression analysis for Put Options.
+								It is based on the idea that the next month's price is either a fixed percent
+								higher or lower than the current price. This creates a "tree" that branches
+								in a binomial fashion (in a very similar pattern to Pascal's Triangle) and
+								each node represents a possible price. This grows exponentially, so this version of
+								algorithm trims the "center of the tree" as the analysis currently assumes
+								 a symmetrical increase/decrease percentage.
+							`}</Typography>
+							<br />
+							<Typography variant='body2'>
+								This method is generally faster to compute than a Monte Carlo
+								Simulation, but it is less accurate.
+							</Typography>
 							<Typography variant='h6'>Binomial Regression Parameters</Typography>
 							<Typography variant='body2'>
 								{`Expected Percent Growth: ${getPresetValues(
