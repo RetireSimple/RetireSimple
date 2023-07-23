@@ -12,7 +12,6 @@
 		<ApplicationIcon>logo.ico</ApplicationIcon>
 		<SignAssembly>False</SignAssembly>
 	</PropertyGroup>
-	<Import Project="../OutputTarget.props" />
 	<ItemGroup>
 	  <Content Include="logo.ico" />
 	</ItemGroup>

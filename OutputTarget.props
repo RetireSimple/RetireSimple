@@ -1,9 +1,0 @@
-<Project>
-	<PropertyGroup>
-		<OutDir>$(BaseOutDir)_$(TargetFramework)\</OutDir>
-		<TargetDir>$(OutDir)</TargetDir>
-		<PublishDir>$(BasePublishDir)$(ProjectBuildDirectoryName)</PublishDir>
-		<PublishDir Condition="$(TargetFramework) != ''">$(PublishDir)_$(TargetFramework)</PublishDir>
-		<PublishDir Condition="$(RuntimeIdentifier) != ''">$(PublishDir)_$(RuntimeIdentifier)</PublishDir>
-	</PropertyGroup>
-</Project>

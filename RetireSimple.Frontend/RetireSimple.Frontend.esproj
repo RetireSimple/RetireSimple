@@ -11,6 +11,4 @@
 		<!-- Folder where production build objects will be placed -->
 		<BuildOutputFolder>$(MSBuildProjectDirectory)\build</BuildOutputFolder>
 	</PropertyGroup>
-
-	<Import Project="../OutputTarget.props"/>
 </Project>
