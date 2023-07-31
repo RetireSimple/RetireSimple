@@ -6,16 +6,14 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 
-//For Production builds, move DB to respective local appdata folder
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddCommandLine(args);
-builder.Configuration["Provider"] ??= "sqlite";
-var dbPath = "EngineDB.db";
-
 if (builder.Environment.IsProduction()) {
-	builder.Configuration["Provider"] = "sqlite";
+	builder.Configuration["Data:EngineDbContext:ConnectionString"] = "Data Source="
+		+ Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RetireSimple", "EngineDB.db");
+} else {
+	builder.Configuration["Data:EngineDbContext:ConnectionString"] = "Data Source=EngineDB.db";
 }
 
 builder.Services.AddControllers()
@@ -26,25 +24,17 @@ builder.Services.AddControllers()
 	});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<EngineDbContext>(options => _ =
-	builder.Configuration["Provider"] switch {
-		"sqlite" =>
-			options.UseSqlite("Data Source=" + dbPath),
-		_ => throw new ArgumentException("Invalid provider")
-	});
+builder.Services.AddDbContext<EngineDbContext>(options => {
+	options.UseSqlite(builder.Configuration["Data:EngineDbContext:ConnectionString"]);
+});
 
 var app = builder.Build();
 
-//Only Apply Migrations for Sqlite
-if (app.Configuration["Provider"] == "sqlite") {
-	using (var scope = app.Services.CreateScope()) {
-		var context = scope.ServiceProvider.GetRequiredService<EngineDbContext>();
-		context.Database.Migrate();
-	}
+using (var scope = app.Services.CreateScope()) {
+	var context = scope.ServiceProvider.GetRequiredService<EngineDbContext>();
+	context.Database.Migrate();
 }
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
 	app.UseSwagger();
 	app.UseSwaggerUI();
@@ -56,30 +46,6 @@ if (app.Environment.IsProduction()) {
 }
 
 app.MapControllers();
-
-//invoke browser to app window
-if (app.Environment.IsProduction()) {
-	var url = "http://localhost:5000/";
-	try {
-		Process.Start(url);
-	}
-	catch {
-		// hack because of this: https://github.com/dotnet/corefx/issues/10361
-		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-			url = url.Replace("&", "^&");
-			Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-		}
-		else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
-			Process.Start("xdg-open", url);
-		}
-		else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
-			Process.Start("open", url);
-		}
-		else {
-			throw;
-		}
-	}
-}
 
 app.Run();
 

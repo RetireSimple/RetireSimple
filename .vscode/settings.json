@@ -16,4 +16,5 @@
 		"off": true
 	},
 	"jest.jestCommandLine": "./RetireSimple.Frontend/node_modules/.bin/jest",
+	"dotnet.defaultSolution": "RetireSimple.sln",
 }
