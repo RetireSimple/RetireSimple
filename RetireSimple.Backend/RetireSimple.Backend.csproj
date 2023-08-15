@@ -12,6 +12,7 @@
 		<ApplicationIcon>logo.ico</ApplicationIcon>
 		<SignAssembly>False</SignAssembly>
 		<ElectronWrapperDir>$(MSBuildProjectDirectory)/../RetireSimple.App</ElectronWrapperDir>
+		<ElectronPublish>False</ElectronPublish>
 	</PropertyGroup>
 	<ItemGroup>
 		<Content Include="logo.ico" />

@@ -28,6 +28,7 @@ const createWindow = (): void => {
 
 //Keep track of child processes
 ipcMain.on('child-pid', (event, arg) => {
+	console.log(`Child process ${arg} started`);
 	child_pid.push(arg);
 });
 
