@@ -10,11 +10,16 @@ using System.Text.Json;
 var builder = WebApplication.CreateBuilder(args);
 
 if (builder.Environment.IsProduction()) {
+	if (!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RetireSimple"))) {
+		Console.WriteLine("Creating directory");
+		Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RetireSimple"));
+	}
 	builder.Configuration["Data:EngineDbContext:ConnectionString"] = "Data Source="
 		+ Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RetireSimple", "EngineDB.db");
 } else {
 	builder.Configuration["Data:EngineDbContext:ConnectionString"] = "Data Source=EngineDB.db";
 }
+Console.WriteLine(builder.Configuration["Data:EngineDbContext:ConnectionString"]);
 
 builder.Services.AddControllers()
 	.AddJsonOptions(options => {
