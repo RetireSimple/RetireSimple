@@ -14,10 +14,11 @@
 	</body>
 
 	<script>
-		setTimeout(() => {
+		let intervalId = setInterval(() => {
 			//Test if web server is running
 			fetch('http://localhost:5000/api/Heartbeat', {method: 'GET'}).then((response) => {
 				if (response.status === 200) {
+					clearInterval(intervalId);
 					//Web server is running, redirect to login page
 					window.location.href = 'http://localhost:5000/index.html';
 				} else {
@@ -26,7 +27,6 @@
 						"<h1>Uh Oh!</h1><p>It seems that RetireSimple didn't load properly. Please restart the application and try again.</p>";
 				}
 			});
-
 		}, 5000);
 	</script>
 </html>

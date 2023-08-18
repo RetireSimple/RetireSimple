@@ -46,8 +46,8 @@ if (app.Environment.IsDevelopment()) {
 }
 
 if (app.Environment.IsProduction()) {
-	app.UseDefaultFiles();
 	app.UseStaticFiles();
+	app.UseDefaultFiles();
 }
 
 app.MapControllers();

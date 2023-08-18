@@ -12,8 +12,9 @@ export const plugins = [
 	new CopyPlugin({
 		patterns: [
 			{
-				from: 'resources/**',
-				to: '.',
+				from: '**/*',
+				to: '[path][name].[ext]',
+				context: 'resources',
 				globOptions: {dot: true, ignore: ['**/node_modules/**']},
 			},
 		], // eslint-disable-line @typescript-eslint/no-unsafe-member-access

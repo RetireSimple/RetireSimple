@@ -1,4 +1,6 @@
 import {app, BrowserWindow, ipcMain} from 'electron';
+import * as ps from 'ps-node';
+
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
@@ -41,7 +43,6 @@ app.on('window-all-closed', () => {
 	}
 });
 
-
 app.on('activate', () => {
 	// On OS X it's common to re-create a window in the app when the
 	// dock icon is clicked and there are no other windows open.
@@ -53,7 +54,11 @@ app.on('activate', () => {
 app.on('before-quit', () => {
 	child_pid.forEach((pid) => {
 		console.log(`Killing child process ${pid}`);
-		process.kill(pid, 'SIGKILL');
+		ps.kill(pid, (err) => {
+			if (err) {
+				throw new Error(err.message);
+			}
+		});
 	});
 });
 

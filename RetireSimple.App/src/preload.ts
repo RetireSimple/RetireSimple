@@ -4,14 +4,41 @@ import path from 'path';
 
 import os from 'os';
 
-import {spawn} from 'child_process';
+import {spawn, exec} from 'child_process';
 import {ipcRenderer} from 'electron';
 
 const platform = os.platform();
-let binName = 'RetireSimple.Backend.exe';
-if (platform === 'darwin' || platform === 'linux') {
-	binName = 'RetireSimple.Backend';
-}
+const isBackendSpawned = () => {
+	let cmd = '';
+	switch (platform) {
+		case 'win32':
+			cmd = `tasklist`;
+			break;
+		case 'darwin':
+			cmd = `ps -ax | grep RetireSimple.Backend`;
+			break;
+		case 'linux':
+			cmd = `ps -A`;
+			break;
+		default:
+			break;
+	}
+
+	let exec_result = false;
+	const callback = (result: boolean) => {
+		exec_result = result;
+	};
+
+	exec(cmd, (err, stdout) => {
+		callback(stdout.toLowerCase().indexOf('retireSimple.backend') > -1);
+	});
+	return exec_result;
+};
+
+const binName =
+	platform === 'darwin' || platform === 'linux'
+		? 'RetireSimple.Backend'
+		: 'RetireSimple.Backend.exe';
 
 const binPath =
 	process.env.NODE_ENV === 'development'
@@ -22,22 +49,27 @@ const cwdPath =
 		? path.join(__dirname, '..', 'resources')
 		: process.resourcesPath;
 
-console.log(`Starting backend at ${binPath}`);
+//check if backend is already running
+if (!isBackendSpawned()) {
+	console.log(`Spawning backend at ${binPath}`);
 
-const backendProc = spawn(binPath, [], {
-	detached: true,
-	shell: true,
-	cwd: cwdPath,
-	stdio: 'inherit',
-});
+	const backendProc = spawn(binPath, [], {
+		detached: true,
+		shell: true,
+		cwd: cwdPath,
+		stdio: 'inherit',
+	});
 
-ipcRenderer.send('child-pid', backendProc.pid);
+	ipcRenderer.send('child-pid', backendProc.pid);
 
-backendProc.on('error', (err) => {
-	console.error(`Backend Error: ${err}`);
-});
+	backendProc.on('error', (err) => {
+		console.error(`Backend Error: ${err}`);
+	});
 
-backendProc.on('exit', (code, signal) => {
-	console.error(`Backend exited with code ${code} and signal ${signal}`);
-});
+	backendProc.on('exit', (code, signal) => {
+		console.error(`Backend exited with code ${code} and signal ${signal}`);
+	});
+} else {
+	console.log(`Backend already running, skipping spawn step`);
+}
 
