@@ -36,6 +36,7 @@
     "eslint-plugin-import": "^2.28.0",
     "fork-ts-checker-webpack-plugin": "^7.3.0",
     "node-loader": "^2.0.0",
+    "noop-webpack-plugin": "^1.0.1",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",

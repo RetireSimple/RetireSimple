@@ -1,16 +1,86 @@
-import {app, BrowserWindow, ipcMain} from 'electron';
-import * as ps from 'ps-node';
-
+import {exec, spawn, ChildProcess} from 'child_process';
+import {app, BrowserWindow} from 'electron';
+import os from 'os';
+import path from 'path';
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-
-const child_pid: number[] = [];
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
 	app.quit();
 }
 
+const child_procs: ChildProcess[] = [];
+
+const spawnBackend = () => {
+	const platform = os.platform();
+	const isBackendSpawned = () => {
+		let cmd = '';
+		switch (platform) {
+			case 'win32':
+				cmd = `tasklist`;
+				break;
+			case 'darwin':
+				cmd = `ps -ax | grep RetireSimple.Backend`;
+				break;
+			case 'linux':
+				cmd = `ps -A`;
+				break;
+			default:
+				break;
+		}
+
+		let exec_result = false;
+		const callback = (result: boolean) => {
+			exec_result = result;
+		};
+
+		exec(cmd, (err, stdout) => {
+			callback(stdout.toLowerCase().indexOf('retiresimple.backend') > -1);
+		});
+		return exec_result;
+	};
+
+	const binName =
+		platform === 'darwin' || platform === 'linux'
+			? 'RetireSimple.Backend'
+			: 'RetireSimple.Backend.exe';
+
+	const binPath =
+		process.env.NODE_ENV === 'development'
+			? path.join(__dirname, '..', 'resources', binName)
+			: path.join(process.resourcesPath, 'backend', binName);
+	const cwdPath =
+		process.env.NODE_ENV === 'development'
+			? path.join(__dirname, '..', 'resources')
+			: path.join(process.resourcesPath, 'backend');
+
+	//check if backend is already running
+	if (!isBackendSpawned()) {
+		console.log(`Spawning backend at ${binPath}`);
+
+		const backendProc = spawn(binPath, [], {
+			detached: true,
+			shell: true,
+			cwd: cwdPath,
+			stdio: 'inherit',
+		});
+
+		child_procs.push(backendProc);
+
+		backendProc.on('error', (err) => {
+			console.error(`Backend Error: ${err}`);
+		});
+
+		backendProc.on('exit', (code, signal) => {
+			console.error(`Backend exited with code ${code} and signal ${signal}`);
+		});
+	} else {
+		console.log(`Backend already running, skipping spawn step`);
+	}
+};
+
+//check if we have a port
 const createWindow = (): void => {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
@@ -25,15 +95,19 @@ const createWindow = (): void => {
 	// and load the index.html of the app.
 	mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
+	spawnBackend();
+
+	const reload_interval = setInterval(() => {
+		fetch('http://localhost:5000/api/Heartbeat').then((res) => {
+			if (res.status === 200) {
+				clearInterval(reload_interval);
+				mainWindow.loadURL('http://localhost:5000');
+			}
+		});
+	}, 5000);
 	// Open the DevTools.
 	if (process.env.NODE_ENV === 'development') mainWindow.webContents.openDevTools();
 };
-
-//Keep track of child processes
-ipcMain.on('child-pid', (event, arg) => {
-	console.log(`Child process ${arg} started`);
-	child_pid.push(arg);
-});
 
 app.on('ready', createWindow);
 
@@ -52,13 +126,9 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
-	child_pid.forEach((pid) => {
-		console.log(`Killing child process ${pid}`);
-		ps.kill(pid, (err) => {
-			if (err) {
-				throw new Error(err.message);
-			}
-		});
+	child_procs.forEach((proc) => {
+		console.log(`Killing process ${proc.pid}`);
+		proc.kill('SIGKILL');
 	});
 });
 

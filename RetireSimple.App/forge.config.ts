@@ -1,43 +1,40 @@
-import type {ForgeConfig} from '@electron-forge/shared-types';
-import {MakerSquirrel} from '@electron-forge/maker-squirrel';
-import {MakerZIP} from '@electron-forge/maker-zip';
 import {MakerDeb} from '@electron-forge/maker-deb';
 import {MakerRpm} from '@electron-forge/maker-rpm';
+import {MakerSquirrel} from '@electron-forge/maker-squirrel';
+import {MakerZIP} from '@electron-forge/maker-zip';
 import {AutoUnpackNativesPlugin} from '@electron-forge/plugin-auto-unpack-natives';
 import {WebpackPlugin} from '@electron-forge/plugin-webpack';
+import type {ForgeConfig} from '@electron-forge/shared-types';
 
 import {mainConfig} from './webpack.main.config';
 import {rendererConfig} from './webpack.renderer.config';
 
-import path from 'path';
-import fs from 'fs';
+// //Used to get all files in the resources folder
+// const getResourceFileList = (): string[] => {
+// 	const files: string[] = [];
+// 	const resourcePath = path.join(__dirname, 'resources');
+// 	const walkSync = (dir: string, fileList: string[] = []) => {
+// 		fs.readdirSync(dir).forEach((file: string) => {
+// 			const filePath = path.join(dir, file);
+// 			const fileStat = fs.statSync(filePath);
 
-//Used to get all files in the resources folder
-const getResourceFileList = (): string[] => {
-	const files: string[] = [];
-	const resourcePath = path.join(__dirname, 'resources');
-	const walkSync = (dir: string, fileList: string[] = []) => {
-		fs.readdirSync(dir).forEach((file: string) => {
-			const filePath = path.join(dir, file);
-			const fileStat = fs.statSync(filePath);
+// 			if (fileStat.isDirectory()) {
+// 				walkSync(filePath, fileList);
+// 			} else {
+// 				fileList.push(filePath);
+// 			}
+// 		});
+// 	};
 
-			if (fileStat.isDirectory()) {
-				walkSync(filePath, fileList);
-			} else {
-				fileList.push(filePath);
-			}
-		});
-	};
+// 	walkSync(resourcePath, files);
 
-	walkSync(resourcePath, files);
-
-	return files;
-};
+// 	return files;
+// };
 
 const config: ForgeConfig = {
 	packagerConfig: {
 		asar: true,
-		extraResource: getResourceFileList(),
+		extraResource: ['./backend/'],
 		win32metadata: {
 			CompanyName: 'RetireSimple Team',
 			FileDescription: 'RetireSimple',
@@ -45,7 +42,7 @@ const config: ForgeConfig = {
 			ProductName: 'RetireSimple',
 			InternalName: 'RetireSimple',
 		},
-		icon: './resources/wwwroot/favicon.ico',
+		icon: './backend/wwwroot/favicon.ico',
 	},
 	rebuildConfig: {},
 	makers: [
