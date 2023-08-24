@@ -9,28 +9,6 @@ import type {ForgeConfig} from '@electron-forge/shared-types';
 import {mainConfig} from './webpack.main.config';
 import {rendererConfig} from './webpack.renderer.config';
 
-// //Used to get all files in the resources folder
-// const getResourceFileList = (): string[] => {
-// 	const files: string[] = [];
-// 	const resourcePath = path.join(__dirname, 'resources');
-// 	const walkSync = (dir: string, fileList: string[] = []) => {
-// 		fs.readdirSync(dir).forEach((file: string) => {
-// 			const filePath = path.join(dir, file);
-// 			const fileStat = fs.statSync(filePath);
-
-// 			if (fileStat.isDirectory()) {
-// 				walkSync(filePath, fileList);
-// 			} else {
-// 				fileList.push(filePath);
-// 			}
-// 		});
-// 	};
-
-// 	walkSync(resourcePath, files);
-
-// 	return files;
-// };
-
 const config: ForgeConfig = {
 	packagerConfig: {
 		asar: true,

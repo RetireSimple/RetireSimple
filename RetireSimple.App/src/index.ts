@@ -48,11 +48,11 @@ const spawnBackend = () => {
 
 	const binPath =
 		process.env.NODE_ENV === 'development'
-			? path.join(__dirname, '..', 'resources', binName)
+			? path.join(__dirname, '..', '..', 'backend', binName)
 			: path.join(process.resourcesPath, 'backend', binName);
 	const cwdPath =
 		process.env.NODE_ENV === 'development'
-			? path.join(__dirname, '..', 'resources')
+			? path.join(__dirname, '..', '..', 'backend')
 			: path.join(process.resourcesPath, 'backend');
 
 	//check if backend is already running
@@ -104,7 +104,7 @@ const createWindow = (): void => {
 				mainWindow.loadURL('http://localhost:5000');
 			}
 		});
-	}, 5000);
+	}, 3000);
 	// Open the DevTools.
 	if (process.env.NODE_ENV === 'development') mainWindow.webContents.openDevTools();
 };
@@ -128,7 +128,7 @@ app.on('activate', () => {
 app.on('before-quit', () => {
 	child_procs.forEach((proc) => {
 		console.log(`Killing process ${proc.pid}`);
-		proc.kill('SIGKILL');
+		os.platform() === 'win32' ? proc.kill('SIGTERM') : proc.kill('SIGINT');
+		//send ctrl+c, which is SIGINT on linux/mac and SIGTERM on windows
 	});
 });
-
