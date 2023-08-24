@@ -61,7 +61,7 @@ const spawnBackend = () => {
 
 		const backendProc = spawn(binPath, [], {
 			detached: true,
-			shell: true,
+			// shell: true, // uncomment if you need backend logs
 			cwd: cwdPath,
 			stdio: 'inherit',
 		});
