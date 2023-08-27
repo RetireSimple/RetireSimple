@@ -13,10 +13,13 @@ jobs:
         include:
           - name: "Windows x64"
             platform: "win-x64"
+            electron-arch: "x64"
           - name: "Windows x86"
             platform: "win-x86"
+            electron-arch: "ia32"
           - name: "Windows ARM64"
             platform: "win-arm64"
+            electron-arch: "arm64"
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
@@ -34,12 +37,18 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 7
-      - name: Setup Node.js
+      - name: Setup Node.js/pnpm
         uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: pnpm
           cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
+      - name: Setup Node.js/npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: RetireSimple.App/package-lock.json
       - name: Init Frontend Dependencies
         run: |
           cd RetireSimple.Frontend
@@ -49,20 +58,24 @@ jobs:
         run: dotnet publish ./RetireSimple.Backend/RetireSimple.Backend.csproj
           --configuration Release
           --runtime ${{ matrix.platform }}
-          --output ./publish/RetireSimple-${{ matrix.platform }}
           -p:PublishProfile=./RetireSimple.Backend/Properties/PublishProfiles/FolderProfile.pubxml
           -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
+          -p:ElectronPublish=true
+      - name: Electron Packaging
+        run: |
+          cd RetireSimple.App
+          npm ci
+          npm run package -- --platform=win32 --arch=${{ matrix.electron-arch }}
       - name: Zip Executable
         run: |
-          cd publish/RetireSimple-${{ matrix.platform }}
+          cd RetireSimple.App/out/RetireSimple-win32-${{ matrix.electron-arch }}
           7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip .
       - name: Upload Artifact for Release Job
         uses: actions/upload-artifact@v3
         with:
           name: RetireSimple-${{ matrix.platform }}
-          path: publish/RetireSimple-${{ matrix.platform }}.zip
+          path: RetireSimple.App/out/RetireSimple-${{ matrix.platform }}.zip
           retention-days: 1
-
   build-linux:
     name: Build Executable (Linux)
     runs-on: ubuntu-latest
@@ -72,8 +85,10 @@ jobs:
         include:
           - name: "Linux x64"
             platform: "linux-x64"
+            electron-arch: "x64"
           - name: "Linux ARM64"
             platform: "linux-arm64"
+            electron-arch: "arm64"
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
@@ -91,12 +106,18 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 7
-      - name: Setup Node.js
+      - name: Setup Node.js/pnpm
         uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: pnpm
           cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
+      - name: Setup Node.js/npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: RetireSimple.App/package-lock.json
       - name: Build Backend Executable
         run: dotnet publish ./RetireSimple.Backend/RetireSimple.Backend.csproj
           --configuration Release
@@ -104,18 +125,24 @@ jobs:
           --output ./publish/RetireSimple-${{ matrix.platform }}
           -p:PublishProfile=./RetireSimple.Backend/Properties/PublishProfiles/FolderProfile.pubxml
           -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
+          -p:ElectronPublish=true
+      - name: Electron Packaging
+        run: |
+          cd RetireSimple.App
+          npm ci
+          npm run package -- --platform=linux --arch=${{ matrix.electron-arch }}
       - name: Zip Executable
         run: |
-          cd publish/RetireSimple-${{ matrix.platform }}
-          chmod +x RetireSimple.Backend
+          cd RetireSimple.App/out/RetireSimple-linux-${{ matrix.electron-arch }}
+          chmod +x RetireSimple
+          chmod +x resources/backend/RetireSimple.Backend
           7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip .
       - name: Upload Artifact for Release Job
         uses: actions/upload-artifact@v3
         with:
           name: RetireSimple-${{ matrix.platform }}
-          path: publish/RetireSimple-${{ matrix.platform }}.zip
+          path: RetireSimple.App/out/RetireSimple-${{ matrix.platform }}.zip
           retention-days: 1
-
   build-nuget:
     name: Build NuGet Package
     runs-on: ubuntu-latest

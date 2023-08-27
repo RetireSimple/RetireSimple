@@ -47,6 +47,7 @@ jobs:
         id: commithash
         run: echo "hash=$(date +'%Y%m%d%H%M')" >> $GITHUB_OUTPUT
 
+
   build-win:
     name: Build Executable (Windows)
     runs-on: windows-latest
@@ -81,12 +82,18 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 7
-      - name: Setup Node.js
+      - name: Setup Node.js/pnpm
         uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: pnpm
           cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
+      - name: Setup Node.js/npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: RetireSimple.App/package-lock.json
       - name: Init Frontend Dependencies
         run: |
           cd RetireSimple.Frontend
@@ -103,17 +110,17 @@ jobs:
       - name: Electron Packaging
         run: |
           cd RetireSimple.App
-          npm run publish -- --platform=win32 --arch=${{ matrix.electron-arch }}
-
+          npm ci
+          npm run package -- --platform=win32 --arch=${{ matrix.electron-arch }}
       - name: Zip Executable
         run: |
-          cd out/RetireSimple-win32-${{ matrix.electron-arch }}
+          cd RetireSimple.App/out/RetireSimple-win32-${{ matrix.electron-arch }}
           7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip .
       - name: Upload Artifact for Release Job
         uses: actions/upload-artifact@v3
         with:
           name: RetireSimple-${{ matrix.platform }}
-          path: publish/RetireSimple-${{ matrix.platform }}.zip
+          path: RetireSimple.App/out/RetireSimple-${{ matrix.platform }}.zip
           retention-days: 1
 
   build-linux:
@@ -147,12 +154,18 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 7
-      - name: Setup Node.js
+      - name: Setup Node.js/pnpm
         uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: pnpm
           cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
+      - name: Setup Node.js/npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: RetireSimple.App/package-lock.json
       - name: Build Backend Executable
         run: dotnet publish ./RetireSimple.Backend/RetireSimple.Backend.csproj
           --configuration Release
@@ -161,22 +174,26 @@ jobs:
           -p:PublishProfile=./RetireSimple.Backend/Properties/PublishProfiles/FolderProfile.pubxml
           -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
           -p:VersionSuffix=nightly-${{ needs.get-info.outputs.hash }}
+          -p:ElectronPublish=true
       - name: Electron Packaging
         run: |
           cd RetireSimple.App
-          npm run publish -- --platform=linux --arch=${{ matrix.electron-arch }}
+          npm ci
+          npm run package -- --platform=linux --arch=${{ matrix.electron-arch }}
       - name: Zip Executable
         run: |
-          cd ./out/RetireSimple-linux-${{ matrix.electron-arch }}
+          cd RetireSimple.App/out/RetireSimple-linux-${{ matrix.electron-arch }}
           chmod +x RetireSimple
-          chmod +x ./resources/backend/RetireSimple.Backend
+          chmod +x resources/backend/RetireSimple.Backend
           7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip .
       - name: Upload Artifact for Release Job
         uses: actions/upload-artifact@v3
         with:
           name: RetireSimple-${{ matrix.platform }}
-          path: publish/RetireSimple-${{ matrix.platform }}.zip
+          path: RetireSimple.App/out/RetireSimple-${{ matrix.platform }}.zip
           retention-days: 1
+
+
 
   build-nuget:
     name: Build NuGet Package
@@ -208,13 +225,6 @@ jobs:
           --output ./publish
           -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
           -p:VersionSuffix=nightly-${{ needs.get-info.outputs.hash }}
-      # - name: Delete Older Prerelease Package Versions
-      #   uses: actions/delete-package-versions@v4.1.1
-      #   with:
-      #     ignore-versions: '^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$'
-      #     package-name: RetireSimple.Engine
-      #     package-type: nuget
-      #     min-versions-to-keep: 0
       - name: Push NuGet Package
         run: dotnet nuget push ./publish/RetireSimple.Engine.*.nupkg
           --source "https://nuget.pkg.github.com/RetireSimple/index.json"
@@ -227,103 +237,6 @@ jobs:
           path: publish/RetireSimple.Engine.*.nupkg
           retention-days: 1
 
-  ###############################################################
-  # DISABLED BECAUSE MACOS CROSS-MACHINE RELEASE BUILDS BE BROKEY
-  ###############################################################
-  #build-macos:
-  #  name: MacOS Build
-  #  runs-on: macos-latest
-  #  needs: [get-info]
-  #  strategy:
-  #    fail-fast: true
-  #    matrix:
-  #      include:
-  #        - name: MacOS x64 (Intel)
-  #          platform: "osx-x64"
-  #        - name: "MacOS ARM64 (Apple Silicon)"
-  #          platform: "osx.12-arm64"
-  #  steps:
-  #    - uses: actions/checkout@v3
-  #    - name: Setup .NET
-  #      uses: actions/setup-dotnet@v3
-  #      with:
-  #        dotnet-version: 6.x
-  #    - name: Restore NuGet Cache
-  #      uses: actions/cache@v3
-  #      with:
-  #        path: ~/.nuget/packages
-  #        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-  #        restore-keys: |
-  #          ${{ runner.os }}-nuget-
-  #    - name: Setup pnpm
-  #      uses: pnpm/action-setup@v2
-  #      with:
-  #        version: 7
-  #    - name: Setup Node.js
-  #      uses: actions/setup-node@v3
-  #      with:
-  #        node-version: 16
-  #        cache: pnpm
-  #        cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
-  #    - name: Build Frontend
-  #      run: |
-  #        cd RetireSimple.Frontend
-  #        pnpm install
-  #        pnpm run build
-  #        cd ..
-  #    - name: Build Executable
-  #      run: dotnet publish ./RetireSimple.Backend/RetireSimple.Backend.csproj
-  #        --configuration Release
-  #        --runtime ${{ matrix.platform }}
-  #        --output ./publish/RetireSimple-${{ matrix.platform }}
-  #        -p:PublishProfile=./RetireSimple.Backend/Properties/PublishProfiles/FolderProfile.pubxml
-  #        -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
-  #        -p:VersionSuffix=nightly-${{ needs.get-info.outputs.hash }}
-  #    - name: Copy Frontend Resources
-  #      run: |
-  #        mkdir -p publish/RetireSimple-${{ matrix.platform }}/wwwroot
-  #        cp -r RetireSimple.Frontend/build/* publish/RetireSimple-${{ matrix.platform }}/wwwroot
-  #    - name: Install + Setup Platypus
-  #      run: |
-  #        brew install platypus
-  #        sudo ln -s /usr/local/Cellar/platypus/5.3/share/platypus /usr/local/share/platypus
-  #       Unfortunately, the platypus executable expects its resources in /usr/local/share/platypus
-  #       and not the homebrew cellar. But my god symlinks are based
-  #    - name: Create MacOS App Bundle
-  #      run: |
-  #        cd publish/RetireSimple-${{ matrix.platform }}
-  #        echo "Creating Init Script"
-  #        echo '!/bin/sh' > init.sh
-  #        echo './RetireSimple.Backend' > init.sh
-  #        chmod +x init.sh
-  #        chmod +x RetireSimple.Backend
-  #        platypus \
-  #          --name 'RetireSimple' \
-  #          --interface-type 'Text Window' \
-  #          --interpreter '/bin/sh' \
-  #          --author 'Alex Westerman, Ryan Nikolic' \
-  #          --app-version ${{ vars.VERSION_PREFIX }}-nightly-${{ needs.get-info.output.hash }} \
-  #          --overwrite \
-  #          --bundle-identifier org.RetireSimple.RetireSimple \
-  #          --bundled-file './appsettings.Development.json' \
-  #          --bundled-file './appsettings.json' \
-  #          --bundled-file './libe_sqlite3.dylib' \
-  #          --bundled-file './packages.lock.json' \
-  #          --bundled-file './RetireSimple.Backend' \
-  #          --bundled-file './wwwroot' \
-  #          './init.sh'
-  #        cd ../..
-  #    - name: Zip Bundled Executable
-  #      run: |
-  #        cd publish/RetireSimple-${{ matrix.platform }}
-  #        7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip RetireSimple.app
-  #    - name: Upload Artifact for Release Job
-  #      uses: actions/upload-artifact@v3
-  #      with:
-  #        name: RetireSimple-${{ matrix.platform }}
-  #        path: publish/RetireSimple-${{ matrix.platform }}.zip
-  #        retention-days: 1
-
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
@@ -331,12 +244,6 @@ jobs:
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
-        # - name: Delete Older Releases
-        #   uses: dev-drprasad/delete-older-releases@v0.2.1
-        #   with:
-        #     keep_latest: 0
-        #     delete_tags: true
-        #     delete_tag_pattern: "nightly"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Nightly - ${{ vars.VERSION_PREFIX }}-nightly-${{ needs.get-info.outputs.hash }}
