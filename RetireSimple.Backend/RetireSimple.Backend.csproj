@@ -53,7 +53,7 @@
 			<PublishedBinaries Include="$(PublishDir)/**/*.*" />
 		</ItemGroup>
 		<Message Text="Copying binaries to Electron wrapper" Importance="high" />
-		<RemoveDir Directories="$(ElectronWrapperDir)/resources" />
-		<Copy SourceFiles="@(PublishedBinaries)" DestinationFolder="$(ElectronWrapperDir)/resources/%(RecursiveDir)" />
+		<RemoveDir Directories="$(ElectronWrapperDir)/backend" />
+		<Copy SourceFiles="@(PublishedBinaries)" DestinationFolder="$(ElectronWrapperDir)/backend/%(RecursiveDir)" />
 	</Target>
 </Project>

@@ -1,0 +1,166 @@
+name: TEST BUILDER
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  get-info:
+    name: Get Relevant Project Information
+    runs-on: ubuntu-latest
+    outputs:
+      date: ${{ steps.date.outputs.date }}
+      hash: ${{ steps.commithash.outputs.hash }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get date for Nightly Release body
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
+      - name: Get Short Commit Hash for Nightly Versioning
+        id: commithash
+        run: echo "hash=$(date +'%Y%m%d%H%M')" >> $GITHUB_OUTPUT
+
+  build-win:
+    name: Build Executable (Windows)
+    runs-on: windows-latest
+    needs: [get-info]
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - name: "Windows x64"
+            platform: "win-x64"
+            electron-arch: "x64"
+          - name: "Windows x86"
+            platform: "win-x86"
+            electron-arch: "ia32"
+          - name: "Windows ARM64"
+            platform: "win-arm64"
+            electron-arch: "arm64"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.x
+      - name: Restore NuGet Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - name: Setup Node.js/pnpm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+          cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
+      - name: Setup Node.js/npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: RetireSimple.App/package-lock.json
+      - name: Init Frontend Dependencies
+        run: |
+          cd RetireSimple.Frontend
+          pnpm install
+          cd ..
+      - name: Build Executable
+        run: dotnet publish ./RetireSimple.Backend/RetireSimple.Backend.csproj
+          --configuration Release
+          --runtime ${{ matrix.platform }}
+          -p:PublishProfile=./RetireSimple.Backend/Properties/PublishProfiles/FolderProfile.pubxml
+          -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
+          -p:VersionSuffix=nightly-${{ needs.get-info.outputs.hash }}
+          -p:ElectronPublish=true
+      - name: Electron Packaging
+        run: |
+          cd RetireSimple.App
+          npm ci
+          npm run package -- --platform=win32 --arch=${{ matrix.electron-arch }}
+      - name: Zip Executable
+        run: |
+          cd RetireSimple.App/out/RetireSimple-win32-${{ matrix.electron-arch }}
+          7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip .
+      - name: Upload Artifact for Release Job
+        uses: actions/upload-artifact@v3
+        with:
+          name: RetireSimple-${{ matrix.platform }}
+          path: RetireSimple.App/out/RetireSimple-${{ matrix.platform }}.zip
+          retention-days: 1
+
+  build-linux:
+    name: Build Executable (Linux)
+    runs-on: ubuntu-latest
+    needs: [get-info]
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - name: "Linux x64"
+            platform: "linux-x64"
+            electron-arch: "x64"
+          - name: "Linux ARM64"
+            platform: "linux-arm64"
+            electron-arch: "arm64"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.x
+      - name: Restore NuGet Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - name: Setup Node.js/pnpm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+          cache-dependency-path: RetireSimple.Frontend/pnpm-lock.yaml
+      - name: Setup Node.js/npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: RetireSimple.App/package-lock.json
+      - name: Build Backend Executable
+        run: dotnet publish ./RetireSimple.Backend/RetireSimple.Backend.csproj
+          --configuration Release
+          --runtime ${{ matrix.platform }}
+          --output ./publish/RetireSimple-${{ matrix.platform }}
+          -p:PublishProfile=./RetireSimple.Backend/Properties/PublishProfiles/FolderProfile.pubxml
+          -p:VersionPrefix=${{ vars.VERSION_PREFIX }}
+          -p:VersionSuffix=nightly-${{ needs.get-info.outputs.hash }}
+          -p:ElectronPublish=true
+      - name: Electron Packaging
+        run: |
+          cd RetireSimple.App
+          npm ci
+          npm run package -- --platform=linux --arch=${{ matrix.electron-arch }}
+      - name: Zip Executable
+        run: |
+          cd RetireSimple.App/out/RetireSimple-linux-${{ matrix.electron-arch }}
+          chmod +x RetireSimple
+          chmod +x resources/backend/RetireSimple.Backend
+          7z a -tzip ../RetireSimple-${{ matrix.platform }}.zip .
+      - name: Upload Artifact for Release Job
+        uses: actions/upload-artifact@v3
+        with:
+          name: RetireSimple-${{ matrix.platform }}
+          path: RetireSimple.App/out/RetireSimple-${{ matrix.platform }}.zip
+          retention-days: 1
