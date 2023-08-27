@@ -1,0 +1,46 @@
+{
+	"name": "retiresimple.app",
+	"productName": "RetireSimple",
+	"version": "1.0.0",
+	"description": "RetireSimple as a Desktop App, wrapper for the backend",
+	"main": ".webpack/main",
+	"scripts": {
+		"start": "electron-forge start -- --trace-warnings",
+		"package": "electron-forge package",
+		"make": "electron-forge make",
+		"publish": "electron-forge publish",
+		"lint": "eslint --ext .ts,.tsx ."
+	},
+	"keywords": [],
+	"author": {
+		"name": "Alex Westerman",
+		"email": "alex@faceftw.dev"
+	},
+	"license": "MIT",
+	"devDependencies": {
+		"@electron-forge/cli": "^6.2.1",
+		"@electron-forge/maker-zip": "^6.2.1",
+		"@electron-forge/plugin-auto-unpack-natives": "^6.2.1",
+		"@electron-forge/plugin-webpack": "^6.2.1",
+		"@types/node": "^20.5.4",
+		"@types/ps-node": "^0.1.1",
+		"@typescript-eslint/eslint-plugin": "^5.62.0",
+		"@typescript-eslint/parser": "^5.62.0",
+		"@vercel/webpack-asset-relocator-loader": "^1.7.3",
+		"copy-webpack-plugin": "^11.0.0",
+		"css-loader": "^6.8.1",
+		"electron": "25.3.2",
+		"eslint": "^8.46.0",
+		"eslint-plugin-import": "^2.28.0",
+		"fork-ts-checker-webpack-plugin": "^7.3.0",
+		"node-loader": "^2.0.0",
+		"noop-webpack-plugin": "^1.0.1",
+		"style-loader": "^3.3.3",
+		"ts-loader": "^9.4.4",
+		"ts-node": "^10.9.1",
+		"typescript": "~5.1"
+	},
+	"dependencies": {
+		"electron-squirrel-startup": "^1.0.0"
+	}
+}

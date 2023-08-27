@@ -11,9 +11,11 @@
 		<AnalysisModeGlobalization>None</AnalysisModeGlobalization>
 		<ApplicationIcon>logo.ico</ApplicationIcon>
 		<SignAssembly>False</SignAssembly>
+		<ElectronWrapperDir>$(MSBuildProjectDirectory)/../RetireSimple.App</ElectronWrapperDir>
+		<ElectronPublish>False</ElectronPublish>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Content Include="logo.ico" />
+		<Content Include="logo.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -46,5 +48,12 @@
 		<RemoveDir Directories="$(MSBuildProjectDirectory)/../RetireSimple.Frontend/build" />
 	</Target>
 
-
+	<Target Name="CopyToElectronWrapper" AfterTargets="AfterPublish" Condition="$(ElectronPublish)">
+		<ItemGroup>
+			<PublishedBinaries Include="$(PublishDir)/**/*.*" />
+		</ItemGroup>
+		<Message Text="Copying binaries to Electron wrapper" Importance="high" />
+		<RemoveDir Directories="$(ElectronWrapperDir)/backend" />
+		<Copy SourceFiles="@(PublishedBinaries)" DestinationFolder="$(ElectronWrapperDir)/backend/%(RecursiveDir)" />
+	</Target>
 </Project>
