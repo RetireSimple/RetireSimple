@@ -101,7 +101,7 @@ const createWindow = (): void => {
 		fetch('http://localhost:5000/api/Heartbeat').then((res) => {
 			if (res.status === 200) {
 				clearInterval(reload_interval);
-				mainWindow.loadURL('http://localhost:5000');
+				mainWindow.loadURL('http://localhost:5000/index.html');
 			}
 		});
 	}, 3000);
