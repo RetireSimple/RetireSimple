@@ -17,6 +17,7 @@
 		"@mui/x-date-pickers": "^6.3.0",
 		"dayjs": "^1.11.7",
 		"notistack": "^3.0.1",
+		"nvm": "^0.0.4",
 		"prop-types": "^15.8.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
