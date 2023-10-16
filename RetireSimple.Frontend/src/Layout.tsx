@@ -19,6 +19,7 @@ import {SidebarInvestment, VehicleListItem} from './components/SidebarComponents
 
 import {getAnalysisPresets} from './api/ApiCommon';
 import {AboutDialog} from './components/AboutDialog';
+import {HelpDialog} from './components/HelpDialog';
 
 import logo from '../../logo.png';
 
@@ -33,6 +34,7 @@ export const Layout = () => {
 	const [vehicleAddDialogOpen, setVehicleAddDialogOpen] = React.useState(false);
 	const [vehicleAddInvTarget, setVehicleAddInvTarget] = React.useState<number>(-1); //by default, adds as individual investment
 	const [aboutOpen, setAboutOpen] = React.useState(false);
+	const [helpOpen, setHelpOpen] = React.useState(false);
 
 	React.useEffect(() => {
 		if (presetData === undefined) {
@@ -56,6 +58,36 @@ export const Layout = () => {
 						Home
 					</Typography>
 				</MenuItem>
+				<Divider />
+				<MenuItem component={Link} to='/'>
+					<Icon baseClassName='material-icons'>show_chart</Icon>
+					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+						Investments
+					</Typography>
+				</MenuItem>
+				<Divider />
+				<MenuItem component={Link} to='/'>
+					<Icon baseClassName='material-icons'>stacked_line_chart</Icon>
+					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+						Vehicles
+					</Typography>
+				</MenuItem>
+				<Divider />
+				<MenuItem component={Link} onClick={() => setAboutOpen(true)} to='/'>
+					<Icon baseClassName='material-icons'>info</Icon>
+					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+						About
+					</Typography>
+				</MenuItem>
+				<Divider />
+				<MenuItem component={Link} onClick={() => setHelpOpen(true)} to='/'>
+					<Icon baseClassName='material-icons'>help</Icon>
+					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+						Help
+					</Typography>
+				</MenuItem>
+				<Divider />
+				{/* <Divider />
 				<Divider />
 				<ListSubheader>Investments</ListSubheader>
 				{investments.map((investment: Investment) => (
@@ -105,7 +137,8 @@ export const Layout = () => {
 						Add Vehicle
 					</Typography>
 				</MenuItem>
-				<Divider />
+				<Divider /> */}
+				
 			</List>
 		</Box>
 	);
@@ -137,11 +170,11 @@ export const Layout = () => {
 							RetireSimple
 						</Typography>
 						<Box component='span' sx={{flex: '1 1 auto'}} />
-						<Tooltip title='About'>
+						{/* <Tooltip title='About'>
 							<IconButton color='inherit' onClick={() => setAboutOpen(true)}>
 								<Icon baseClassName='material-icons'>info</Icon>
 							</IconButton>
-						</Tooltip>
+						</Tooltip> */}
 						<Tooltip title='Report Bug/Issue on GitHub'>
 							<IconButton
 								color='inherit'
@@ -173,6 +206,7 @@ export const Layout = () => {
 					onClose={() => setVehicleAddDialogOpen(false)}
 				/>
 				<AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} />
+				<HelpDialog open={helpOpen} onClose={() => setHelpOpen(false)} />
 			</PresetContext.Provider>
 		</div>
 	);
