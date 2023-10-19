@@ -16,6 +16,7 @@ import {flattenApiInvestment, getFlatVehicleData} from './api/ApiMapper';
 import {convertFromDecimal} from './api/ConvertUtils';
 import {deleteInvestment, getInvestment} from './api/InvestmentApi';
 import {deleteVehicle, getVehicle} from './api/VehicleApi';
+import {InvestmentPage} from './routes/InvestmentPage';
 import './index.css';
 
 /************************
@@ -25,6 +26,10 @@ import './index.css';
 const InvestmentView = React.lazy(() =>
 	import('./routes/InvestmentView').then((module) => ({default: module.InvestmentView})),
 );
+
+// const InvestmentPage = React.lazy(() =>
+// 	import('./routes/InvestmentPage').then((module) => ({default: InvestmentPage})),
+// );
 
 const RootView = React.lazy(() =>
 	import('./routes/Root').then((module) => ({default: module.Root})),
@@ -139,6 +144,12 @@ const router = createBrowserRouter(
 					<SuspenseRoute>
 						<RootView />
 					</SuspenseRoute>
+				}
+			/>
+			<Route
+				path='InvestmentPage/'
+				element={
+					<InvestmentPage />
 				}
 			/>
 			<Route
