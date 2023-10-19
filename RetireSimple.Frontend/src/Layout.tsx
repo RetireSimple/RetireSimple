@@ -66,21 +66,21 @@ export const Layout = () => {
 					</Typography>
 				</MenuItem>
 				<Divider />
-				<MenuItem component={Link} to='/'>
+				<MenuItem component={Link} to='/VehiclesPage'>
 					<Icon baseClassName='material-icons'>stacked_line_chart</Icon>
 					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 						Vehicles
 					</Typography>
 				</MenuItem>
 				<Divider />
-				<MenuItem component={Link} onClick={() => setAboutOpen(true)} to='/'>
+				<MenuItem component={Link} to='/AboutPage'>
 					<Icon baseClassName='material-icons'>info</Icon>
 					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 						About
 					</Typography>
 				</MenuItem>
 				<Divider />
-				<MenuItem component={Link} onClick={() => setHelpOpen(true)} to='/'>
+				<MenuItem component={Link} to='/HelpPage'>
 					<Icon baseClassName='material-icons'>help</Icon>
 					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 						Help
