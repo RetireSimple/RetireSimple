@@ -147,12 +147,14 @@ const router = createBrowserRouter(
 			/>
 			<Route
 				path='InvestmentPage/'
+				loader={async () => await getPortfolio()}
 				element={
 					<InvestmentsPage />
 				}
 			/>
 			<Route
 				path='VehiclesPage/'
+				loader={async () => await getPortfolio()}
 				element={
 					<VehiclesPage />
 				}

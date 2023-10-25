@@ -32,9 +32,9 @@ export const InvestmentsPage = () => {
 	const portfolio = useLoaderData() as Portfolio;
 
 	//the portfolio is undefined here- can't figure this out
-
-
-	//const {investments, investmentVehicles: vehicles} = portfolio;
+	const {investments, investmentVehicles: vehicles} = portfolio;
+	console.log("INVESTMENTS ");
+	console.log(investments);
 	const [presetData, setPresetData] = React.useState<ApiPresetData | undefined>(undefined);
 
 	const [invAddDialogOpen, setInvAddDialogOpen] = React.useState(false);
@@ -64,7 +64,7 @@ export const InvestmentsPage = () => {
 	console.log(portfolio);
 
 	return <div><PresetContext.Provider value={presetData}><h2>Investments</h2>
-		{investments2.map(() => (<h1> bray </h1>))}
+		{investments.map((investment: Investment) => (<h1> {investment.investmentName} </h1>))}
 		<Button onClick={() => openAddInvDialog(-1)}>
 			<Icon baseClassName='material-icons'>add_circle</Icon>
 			<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
