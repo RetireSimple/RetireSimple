@@ -29,6 +29,10 @@ export const Layout = () => {
 	const portfolio = useLoaderData() as Portfolio;
 	const {investments, investmentVehicles: vehicles} = portfolio;
 
+	// console.log("Portfolio in layout");
+	// console.log(portfolio);
+	// console.log(investments);
+
 	const [presetData, setPresetData] = React.useState<ApiPresetData | undefined>(undefined);
 	const [invAddDialogOpen, setInvAddDialogOpen] = React.useState(false);
 	const [vehicleAddDialogOpen, setVehicleAddDialogOpen] = React.useState(false);

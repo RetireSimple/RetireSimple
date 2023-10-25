@@ -38,7 +38,7 @@ export const InvestmentView = () => {
 	const updateAction = useFormAction('update');
 	const formContext = useForm({
 		shouldUnregister: true,
-		resolver: yupResolver(investmentFormSchema),
+		//resolver: yupResolver(investmentFormSchema),
 		defaultValues: currentInvestmentData ?? InvestmentFormDefaults,
 	});
 	const {enqueueSnackbar} = useSnackbar();
