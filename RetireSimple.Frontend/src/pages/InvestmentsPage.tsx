@@ -22,6 +22,7 @@ import {convertDates} from '../api/ConvertUtils';
 import {ExpensesTable} from '../forms/ExpenseTable';
 import {useSnackbar} from 'notistack';
 import { Link } from 'react-router-dom'; 
+import { InvestmentComponent } from '../components/InvestmentComponent';
 
 export const PresetContext = React.createContext<ApiPresetData | undefined>(undefined);
  
@@ -52,19 +53,16 @@ export const InvestmentsPage = () => {
 
 	//const [investments] = React.useState<any[]>([]);
 	//const [investments] = [1, 2, 3];
-	let investments2: string[] = ['Apple', 'Orange', 'Banana'];
 
 	const openAddInvDialog = (vehicleId: number) => {
 		setVehicleAddInvTarget(vehicleId);
 		setInvAddDialogOpen(true);
 	};
 
-	
-	console.log("Investments in investment page");
-	console.log(portfolio);
 
 	return <div><PresetContext.Provider value={presetData}><h2>Investments</h2>
-		{investments.map((investment: Investment) => (<h1> {investment.investmentName} </h1>))}
+		{/* {investments.map((investment: Investment) => (<h1> {investment.investmentName} </h1>))} */}
+		{investments.map((investment: Investment) => (InvestmentComponent(investment)))}
 		<Button onClick={() => openAddInvDialog(-1)}>
 			<Icon baseClassName='material-icons'>add_circle</Icon>
 			<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
@@ -79,8 +77,3 @@ export const InvestmentsPage = () => {
 	</PresetContext.Provider>
 	</div>;
 } 
-
-// export function InvestmentsPage() { 
-// 	const [investments] = React.useState<any[]>([]);
-// 	return <h2>Investments</h2>
-// } 

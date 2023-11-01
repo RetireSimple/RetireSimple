@@ -31,7 +31,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 			label='Name'
 			control={formContext.control}
 			errorField={errors.investmentName}
-			tooltip='The name of this investmnet. Can be a personally identifiable name.'
+			tooltip='The name of this investment. Can be a personally identifiable name.'
 		/>
 	);
 
