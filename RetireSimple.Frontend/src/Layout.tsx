@@ -77,6 +77,13 @@ export const Layout = () => {
 					</Typography>
 				</MenuItem>
 				<Divider />
+				<MenuItem component={Link} to='/ExpensesPage'>
+					<Icon baseClassName='material-icons'>paid</Icon>
+					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+						Expenses
+					</Typography>
+				</MenuItem>
+				<Divider />
 				<MenuItem component={Link} to='/AboutPage'>
 					<Icon baseClassName='material-icons'>info</Icon>
 					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
