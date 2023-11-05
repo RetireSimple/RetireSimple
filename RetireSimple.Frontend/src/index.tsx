@@ -21,6 +21,7 @@ import {VehiclesPage} from './pages/VehiclesPage';
 import {AboutPage} from './pages/AboutPage';
 import './index.css';
 import { HelpPage } from './pages/HelpPage';
+import { ExpensesPage } from './pages/ExpensesPage';
 
 /************************
  * Lazy Loaded Components
@@ -157,6 +158,12 @@ const router = createBrowserRouter(
 				loader={async () => await getPortfolio()}
 				element={
 					<VehiclesPage />
+				}
+			/>
+			<Route
+				path='ExpensesPage/'
+				element={
+					<ExpensesPage />
 				}
 			/>
 			<Route
