@@ -59,10 +59,14 @@ export const InvestmentsPage = () => {
 		setInvAddDialogOpen(true);
 	};
 
+	const openEditDialog = () => {
+		console.log("PRESS INVESTMENT FROM FUNC")
+	};
 
 	return <div><PresetContext.Provider value={presetData}><h2>Investments</h2>
 		{/* {investments.map((investment: Investment) => (<h1> {investment.investmentName} </h1>))} */}
-		{investments.map((investment: Investment) => (InvestmentComponent(investment)))}
+		{investments.map((investment: Investment) => 
+			(InvestmentComponent(investment, () => {openEditDialog()})))}
 		<Button onClick={() => openAddInvDialog(-1)}>
 			<Icon baseClassName='material-icons'>add_circle</Icon>
 			<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
