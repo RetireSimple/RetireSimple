@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@emotion/react':
     specifier: ^11.10.8
@@ -28,6 +32,9 @@ dependencies:
   notistack:
     specifier: ^3.0.1
     version: 3.0.1(csstype@3.1.2)(react-dom@18.2.0)(react@18.2.0)
+  nvm:
+    specifier: ^0.0.4
+    version: 0.0.4
   prop-types:
     specifier: ^15.8.1
     version: 15.8.1
@@ -5476,6 +5483,12 @@ packages:
     dependencies:
       path-key: 3.1.1
     dev: true
+
+  /nvm@0.0.4:
+    resolution: {integrity: sha512-jvmyELykYcdyd0VCGY0E8Aqe5MngEasVvlPvrcJHbwBMUbVqa72mPdQuPzyTcykEtEx7jDrMY0QA5MoV+8EhgA==}
+    deprecated: This is NOT the correct nvm. Visit https://nvm.sh and use the curl command to install it.
+    hasBin: true
+    dev: false
 
   /object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}

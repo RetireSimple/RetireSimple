@@ -46,6 +46,10 @@ namespace RetireSimple.Engine.Analysis {
 			var firstDividendMonth = investment.StockDividendFirstPaymentDate.Month;
 			var monthInterval = GetDividendIntervalMonths(investment.StockDividendDistributionInterval);
 
+
+			//Why are we doing it like this
+			//Why not use formulas???
+
 			//quantityList.Add(stockQuantity);
 			for (int i = 0; i < int.Parse(options["analysisLength"]); i++) {
 				if ((currentMonth - firstDividendMonth) % monthInterval == 0) {
