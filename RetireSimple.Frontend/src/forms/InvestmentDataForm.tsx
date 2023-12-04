@@ -5,11 +5,13 @@ import {FormSelectField, FormTextField} from '../components/InputComponents';
 import {BondForm} from './investment/BondForm';
 import {StockForm} from './investment/StockForm';
 import {PensionForm} from './investment/PensionForm';
+import { Investment } from '../Interfaces';
 
 export interface InvestmentDataFormProps {
 	defaultValues?: any;
 	disableTypeSelect?: boolean;
 	children?: React.ReactNode;
+	selectedInvestment?: Investment;
 }
 
 export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
@@ -29,6 +31,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 		<FormTextField
 			name='investmentName'
 			label='Name'
+			//defaultValue={props.selectedInvestment ? props.selectedInvestment.investmentName : ''}
 			control={formContext.control}
 			errorField={errors.investmentName}
 			tooltip='The name of this investment. Can be a personally identifiable name.'

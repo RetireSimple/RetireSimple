@@ -8,7 +8,7 @@ import {FieldValues} from 'react-hook-form/dist/types';
 import {useFormAction, useLoaderData, useSubmit} from 'react-router-dom';
 import {Investment, Portfolio, ApiPresetData} from '../Interfaces';
 import {getAnalysisPresets} from '../api/ApiCommon';
-import {AddInvestmentDialog, AddVehicleDialog} from '../components/DialogComponents';
+import {AddInvestmentDialog, AddVehicleDialog, EditInvestmentDialog} from '../components/DialogComponents';
 import {SidebarInvestment, VehicleListItem} from '../components/SidebarComponents';
 
 
@@ -39,6 +39,7 @@ export const InvestmentsPage = () => {
 	const [presetData, setPresetData] = React.useState<ApiPresetData | undefined>(undefined);
 
 	const [invAddDialogOpen, setInvAddDialogOpen] = React.useState(false);
+	const [editInvestmentDialogOpen, setEditInvestmentDialogOpen] = React.useState(false);
 	const [vehicleAddDialogOpen, setVehicleAddDialogOpen] = React.useState(false);
 	const [vehicleAddInvTarget, setVehicleAddInvTarget] = React.useState<number>(-1); //by default, adds as individual investment
 
@@ -60,7 +61,8 @@ export const InvestmentsPage = () => {
 	};
 
 	const openEditDialog = () => {
-		console.log("PRESS INVESTMENT FROM FUNC")
+		console.log("PRESS INVESTMENT FROM FUNC");
+		setEditInvestmentDialogOpen(true);
 	};
 
 	return <div><PresetContext.Provider value={presetData}><h2>Investments</h2>
@@ -77,6 +79,11 @@ export const InvestmentsPage = () => {
 			open={invAddDialogOpen}
 			onClose={() => setInvAddDialogOpen(false)}
 			vehicleTarget={vehicleAddInvTarget}
+		/>
+		<EditInvestmentDialog
+			open={editInvestmentDialogOpen}
+			onClose={() => setEditInvestmentDialogOpen(false)}
+			investment={investments[0]}
 		/>
 	</PresetContext.Provider>
 	</div>;

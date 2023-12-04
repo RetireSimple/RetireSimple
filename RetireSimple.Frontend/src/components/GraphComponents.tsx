@@ -49,7 +49,7 @@ const loadIndicator = (
 
 export const MinMaxAvgGraph = (props: {modelData: any[]}) => {
 	return (
-		<ResponsiveContainer width='100%' height={200}>
+		<ResponsiveContainer width={300} height={200}>
 			<LineChart data={props.modelData}>
 				<XAxis dataKey='year'>
 					<Label value='Months' offset={-5} position={'bottom'} />
@@ -84,6 +84,8 @@ export const InvestmentModelGraph = (props: {investmentId: number}) => {
 		}
 	}, [navigation.state]);
 
+	
+
 	const getModelData = () => {
 		setLoading(true);
 		getInvestmentModel(props.investmentId)
@@ -93,15 +95,20 @@ export const InvestmentModelGraph = (props: {investmentId: number}) => {
 			.then(() => setLoading(false));
 	};
 
+	if(!loading && modelData === undefined) {
+		getModelData();
+	}	
+
 	return (
 		<div>
-			{!loading && modelData === undefined && (
+						
+			{/* {!loading && modelData === undefined && (
 				<Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
 					<Button onClick={getModelData} disabled={modelData !== undefined}>
 						Get Model Data
 					</Button>
 				</Box>
-			)}
+			)} */}
 			{loading && loadIndicator}
 			{modelData ? <MinMaxAvgGraph modelData={modelData} /> : <div></div>}
 		</div>
