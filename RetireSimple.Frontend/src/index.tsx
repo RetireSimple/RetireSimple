@@ -146,8 +146,10 @@ const router = createBrowserRouter(
 					</SuspenseRoute>
 				}
 			/>
+			
 			<Route
 				path='InvestmentPage/'
+				//why are we loading in the entire portfolio???
 				loader={async () => await getPortfolio()}
 				element={
 					<InvestmentsPage />
@@ -155,6 +157,7 @@ const router = createBrowserRouter(
 			/>
 			<Route
 				path='VehiclesPage/'
+				//why are we loading in the entire portfolio???
 				loader={async () => await getPortfolio()}
 				element={
 					<VehiclesPage />

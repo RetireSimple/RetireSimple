@@ -48,6 +48,7 @@ export const convertInvestmentModelData = (model: InvestmentModel) => {
 export const convertPortfolioModelData = (model: PortfolioModel) => {
 	const result = [];
 
+
 	for (let i = 0; i < model.avgModelData.length; i++) {
 		result.push({
 			year: i,

@@ -38,6 +38,8 @@ namespace RetireSimple.Engine.Data.User {
 			}
 			var models = investments.Select(i => i.InvestmentModel).ToList();
 
+			
+
 			//TODO: This is a bit of a hack, but it works for now
 			if (!models.Any(m => m is null || m.MaxModelData == null || m.MinModelData == null || m.AvgModelData == null)) {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
