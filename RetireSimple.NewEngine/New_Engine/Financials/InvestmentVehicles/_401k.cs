@@ -1,10 +1,20 @@
-﻿using System;
+﻿using RetireSimple.Engine.New_Engine;
+using RetireSimple.NewEngine.New_Engine.GrowthModels;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles {
-	internal class _401k {
+	public class _401k : InvestmentVehicle {
+		public _401k(float value, IGrowthModel growthModel) : base(value, growthModel) 
+		{
+
+
+		}
+
+		public override Projection Calculate(int years) => throw new NotImplementedException();
 	}
 }

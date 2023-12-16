@@ -1,15 +1,15 @@
-using RetireSimple.NewEngine.New_Engine.Interfaces;
+using RetireSimple.Engine.New_Engine;
+using RetireSimple.NewEngine.New_Engine.TaxModels;
 
-namespace RetireSimple.Engine.New_Engine {
+namespace RetireSimple.NewEngine.New_Engine.Financials {
 
-	public abstract class Financial
-    {
+	public abstract class Financial {
 
-        private int id; 
+		private int id;
 
-        private ITax tax;
+		private ITax tax;
 
-        abstract public Projection calculate(int years);
-    }
+		abstract public Projection Calculate(int years);
+	}
 
 }

@@ -23,7 +23,7 @@ namespace RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles {
 
 		public override Projection calculate(int years) 
 		{
-			return this.growthModel.GenerateProjection(this.value,years)
+			return this.growthModel.GenerateProjection(this.value, years);
 		}
 
 
