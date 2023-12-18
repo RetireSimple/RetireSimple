@@ -9,6 +9,18 @@ namespace RetireSimple.NewEngine.New_Engine.Financials {
 
 		private ITax tax;
 
+		public readonly FinCategories category;
+
+		public Financial(ITax tax, int id, FinCategories category ) {
+			this.tax = tax;
+			this.category = category;
+			this.id = id;
+
+		}
+
+
+
+
 		abstract public Projection Calculate(int years);
 	}
 

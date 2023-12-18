@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace RetireSimple.NewEngine.New_Engine.Managers {
 	abstract public class Manager {
 
-		private List<Financial> items;
+		protected List<Financial> items;
 
 
 		public Manager() 
@@ -33,26 +33,26 @@ namespace RetireSimple.NewEngine.New_Engine.Managers {
 
 		}
 
-		public Boolean Add(Financial f) 
-		{
-			this.items.Add(f);
-			return true;
+		public abstract Boolean Add(Financial f); 
 
-		}
 
-		public Financial Read(int id) 
+		public Financial? Read(int id) 
 		{
-			return this.items[id];
+			if(id < this.items.Count) {
+
+				return this.DoRead(id);
+			} else {
+				return null;
+			}
 		}
+		public abstract Financial DoRead(int id);
 
 		public Boolean Update(Financial f, int id) 
 		{
 
 			if(id < this.items.Count) 
 			{
-				this.items[id] = f;
-
-				return true;
+				return this.DoUpdate(f, id);
 			}
 			else 
 			{
@@ -61,17 +61,16 @@ namespace RetireSimple.NewEngine.New_Engine.Managers {
 
 			}
 
-
-
 		}
+
+		public abstract Boolean DoUpdate(Financial f, int id);
 
 		public Boolean Delete(int id) 
 		{
 
 			if (id < this.items.Count) 
 			{
-				this.items.RemoveAt(id);
-				return true;
+				return this.DoDelete(id);
 			}
 			else 
 			{
@@ -79,8 +78,9 @@ namespace RetireSimple.NewEngine.New_Engine.Managers {
 			}
 			
 
-
 		}
+
+		public abstract Boolean DoDelete(int id);
 
 	}
 }
