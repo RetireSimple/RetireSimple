@@ -46,10 +46,6 @@ namespace RetireSimple.NewEngine.New_Engine.Managers {
 
 			}
 
-
-
-			
-
 		}
 
 		public override bool DoDelete(int id) {
