@@ -1,6 +1,7 @@
 ﻿using RetireSimple.Engine.New_Engine;
 using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles;
 using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles._401k;
+using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles.InvestmentVehicleInfos;
 using RetireSimple.NewEngine.New_Engine.GrowthModels;
 using RetireSimple.NewEngine.New_Engine.GrowthModels._401kGrowthModels;
 using RetireSimple.NewEngine.New_Engine.TaxModels;
@@ -19,11 +20,11 @@ namespace RetireSimple.NewTests {
 		public void TestUserGenerateProjections() {
 			User user = new User(new UserInfo(21, 65, 2000000));
 
-			user.AddInvestmentVehicle(new _401k(new NullTax(), 100, 1, new FixedGrowth(.05)));
+			user.AddInvestmentVehicle(new _401k(new NullTax(), 100, 1, new FixedGrowth(.05), new NullInfo()));
 
-			user.AddInvestmentVehicle(new _401k(new NullTax(), 133, 2, new FixedGrowth(.02)));
+			user.AddInvestmentVehicle(new _401k(new NullTax(), 133, 2, new FixedGrowth(.02), new NullInfo()));
 
-			user.AddInvestmentVehicle(new _401k(new NullTax(), 90, 3, new FixedGrowth(.1)));
+			user.AddInvestmentVehicle(new _401k(new NullTax(), 90, 3, new FixedGrowth(.1), new NullInfo()));
 
 			Projection projection1 = user.GenerateProjections();
 
@@ -42,9 +43,7 @@ namespace RetireSimple.NewTests {
 
 			_401kInfo info = new _401kInfo(.1, 40000, 0, .07, .5, .06);
 
-			growthModel.SetInfo(info);
-
-			_401k _401K = new _401k(new NullTax(), 1000, 1, growthModel);
+			_401k _401K = new _401k(new NullTax(), 1000, 1, growthModel, info);
 
 			user.AddInvestmentVehicle(_401K);
 

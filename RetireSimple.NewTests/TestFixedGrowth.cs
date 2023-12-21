@@ -1,5 +1,6 @@
 ﻿using RetireSimple.Engine.New_Engine;
-using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles;
+using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles._401k;
+using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles.InvestmentVehicleInfos;
 using RetireSimple.NewEngine.New_Engine.GrowthModels;
 using RetireSimple.NewEngine.New_Engine.TaxModels;
 
@@ -15,7 +16,7 @@ namespace RetireSimple.NewTests {
 		[TestMethod]
 		public void TestFixedGrowth1() {
 
-			_401k my401k = new _401k(new NullTax(), 100, 1, new FixedGrowth(.05));
+			_401k my401k = new _401k(new NullTax(), 100, 1, new FixedGrowth(.05), new NullInfo());
 
 
 			Projection myProjection = my401k.Calculate(10);

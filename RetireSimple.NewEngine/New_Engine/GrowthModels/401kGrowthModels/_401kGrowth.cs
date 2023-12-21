@@ -1,5 +1,5 @@
 ﻿using RetireSimple.Engine.New_Engine;
-using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles._401k;
+using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles.InvestmentVehicleInfos;
 
 using System;
 using System.Collections.Generic;
@@ -11,50 +11,56 @@ using System.Threading.Tasks;
 namespace RetireSimple.NewEngine.New_Engine.GrowthModels._401kGrowthModels {
 	public class _401kGrowth : IGrowthModel {
 
-		private _401kInfo? info;
-
 		public _401kGrowth() {
-			info = null;
-		}
-
-		public void SetInfo(_401kInfo info) {
-			this.info = info;
+		
 		}
 
 
-
-
-		public Projection GenerateProjection(double value, int years) {
+		private Projection doGenerateProjection(double value, int years, _401kInfo info) {
 			List<double> values = new List<double>();
 
 			values.Add(value);
 
-			for(int i=0; i < years; i++) {
+			for (int i = 0; i < years; i++) {
 
-				double personal_contribution = this.info.contributions * this.CalculateSalaryIncrease(i);
+				//percent of salary contributions * salary (considering increase)
+				double personal_contribution = info.contributions * this.CalculateSalaryIncrease(info, i);
 
-				double employer_contribution = this.CalculateEmployerContributions(i);
+				//employer contributions
+				double employer_contribution = this.CalculateEmployerContributions(info, i);
 
+				//previous value + personal contribution + employer contributions
 				double newVal = values[i] + personal_contribution + employer_contribution;
 
-				double newVal_withGrowth = newVal * (1 + this.info.rate);
+				//value above * (1 + the projected growth rate) 
+				double newVal_withGrowth = newVal * (1 + info.rate);
 
+				//add new value to list 
 				values.Add(newVal_withGrowth);
 
 			}
 
 			return new Projection(values);
+		}
+
+
+		public Projection GenerateProjection(double value, int years, InvestmentVehicleInfo info) {
+			return this.doGenerateProjection(value, years, (_401kInfo)info);
 
 		}
-		private double CalculateEmployerContributions(int i) {
+		private double CalculateEmployerContributions(_401kInfo info, int i) {
 
 			double contributions;
 
+			//If the percent contribution is less than the max employer match 
+			if(info.contributions < info.employerMatchCap) {
 
-			if(this.info.contributions < this.info.employerMatchCap) {
-				contributions = this.info.employerMatch * this.CalculateSalaryIncrease(i) * this.info.contributions;
+				//the percentage the employer will match * thhe salary (considering increase) * the percentage of contribution
+				contributions = info.employerMatch * this.CalculateSalaryIncrease(info, i) * info.contributions;
 			} else {
-				contributions = this.info.employerMatch * this.CalculateSalaryIncrease(i) * this.info.employerMatchCap;
+
+				//the percentage the employer will match * the salary (considering increase) * the max match of the employer
+				contributions = info.employerMatch * this.CalculateSalaryIncrease(info, i) * info.employerMatchCap;
 			}
 
 			return contributions;
@@ -62,8 +68,10 @@ namespace RetireSimple.NewEngine.New_Engine.GrowthModels._401kGrowthModels {
 
 		}
 
-		private double CalculateSalaryIncrease(int i) {
-			return this.info.salary * Math.Pow((1 + this.info.salaryIncrease), i);
+		private double CalculateSalaryIncrease(_401kInfo info, int i) {
+
+			//base salary * (1 + salary increase rate) ^ i 
+			return info.salary * Math.Pow((1 + info.salaryIncrease), i);
 		}
 	}
 }
