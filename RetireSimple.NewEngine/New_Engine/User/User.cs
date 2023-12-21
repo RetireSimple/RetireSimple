@@ -1,4 +1,6 @@
-﻿using RetireSimple.NewEngine.New_Engine.Managers;
+﻿using RetireSimple.Engine.New_Engine;
+using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles;
+using RetireSimple.NewEngine.New_Engine.Managers;
 
 using System;
 using System.Collections.Generic;
@@ -21,6 +23,23 @@ namespace RetireSimple.NewEngine.New_Engine.User {
 
 			this.portfolioManager = new PortfolioManager();
 		}
+
+
+		public Projection GenerateProjections() {
+
+			int years = this.userInfo.retirementAge - this.userInfo.age;
+
+			return this.portfolioManager.Calculate(years);
+
+		}
+
+
+		public void AddInvestmentVehicle(InvestmentVehicle vehicle) {
+			this.portfolioManager.Add(vehicle);
+		}
+
+
+
 
 
 

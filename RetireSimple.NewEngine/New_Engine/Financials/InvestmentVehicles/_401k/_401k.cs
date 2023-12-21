@@ -8,13 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles {
+namespace RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles._401k {
 	public class _401k : InvestmentVehicle {
-		public _401k(ITax tax, float value, int id, IGrowthModel growthModel) : base(tax, id, FinCategories.INVESTMENT_VEHICLE, value, growthModel) 
-		{
+		public _401k(ITax tax, float value, int id, IGrowthModel growthModel) : base(tax, id, FinCategories.INVESTMENT_VEHICLE, value, growthModel) {
 
 
 		}
+
+
 
 	}
 }

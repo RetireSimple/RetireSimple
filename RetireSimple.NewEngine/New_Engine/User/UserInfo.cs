@@ -9,15 +9,15 @@ namespace RetireSimple.NewEngine.New_Engine.User {
 	public class UserInfo {
 
 
-		public readonly DateOnly birthday;
+		public readonly int age;
 
 		public int retirementAge;
 
 		public long retirementGoal;
 
 
-		public UserInfo(DateOnly birthday, int retirementAge, long retirementGoal ) {
-			this.birthday = birthday;
+		public UserInfo(int age, int retirementAge, long retirementGoal ) {
+			this.age = age;
 			this.retirementAge = retirementAge;
 			this.retirementGoal = retirementGoal;
 		}
