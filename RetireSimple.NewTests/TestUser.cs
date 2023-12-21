@@ -35,7 +35,7 @@ namespace RetireSimple.NewTests {
 
 
 		[TestMethod]
-		public void Test401kGrowth() {
+		public void Test401kGrowth1() {
 
 			User user = new User(new UserInfo(30, 65, 1000000));
 
@@ -53,5 +53,45 @@ namespace RetireSimple.NewTests {
 
 
 		}
+
+		[TestMethod]
+		public void Test401kGrowth2() {
+
+			User user = new User(new UserInfo(30, 65, 1000000));
+
+			_401kGrowth growthModel = new _401kGrowth();
+
+			_401kInfo info = new _401kInfo(.076, 81000, .04, .04, 1, .06);
+
+			_401k _401K = new _401k(new NullTax(), 1000, 1, growthModel, info);
+
+			user.AddInvestmentVehicle(_401K);
+
+			Projection projection = user.GenerateProjections();
+
+			projection.yearly_projections[34].Equals(1498389.20);
+
+		}
+
+
+		[TestMethod]
+		public void Test401kGrowth3() {
+
+			User user = new User(new UserInfo(30, 65, 1000000));
+
+			_401kGrowth growthModel = new _401kGrowth();
+
+			_401kInfo info = new _401kInfo(.118, 54000, .017, .095, .517, .083);
+
+			_401k _401K = new _401k(new NullTax(), 1000, 1, growthModel, info);
+
+			user.AddInvestmentVehicle(_401K);
+
+			Projection projection = user.GenerateProjections();
+
+			projection.yearly_projections[34].Equals(2617434.99);
+
+		}
+
 	}
 }
