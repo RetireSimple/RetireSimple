@@ -8,6 +8,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+
+//used this website to verify calculations https://www.annuityexpertadvice.com/calculator/401k-calculator/ 
+
 namespace RetireSimple.NewEngine.New_Engine.GrowthModels._401kGrowthModels {
 	public class _401kGrowth : IGrowthModel {
 
@@ -16,7 +19,7 @@ namespace RetireSimple.NewEngine.New_Engine.GrowthModels._401kGrowthModels {
 		}
 
 
-		private Projection doGenerateProjection(double value, int years, _401kInfo info) {
+		private Projection DoGenerateProjection(double value, int years, _401kInfo info) {
 			List<double> values = new List<double>();
 
 			values.Add(value);
@@ -45,7 +48,7 @@ namespace RetireSimple.NewEngine.New_Engine.GrowthModels._401kGrowthModels {
 
 
 		public Projection GenerateProjection(double value, int years, InvestmentVehicleInfo info) {
-			return this.doGenerateProjection(value, years, (_401kInfo)info);
+			return this.DoGenerateProjection(value, years, (_401kInfo)info);
 
 		}
 		private double CalculateEmployerContributions(_401kInfo info, int i) {
@@ -73,5 +76,7 @@ namespace RetireSimple.NewEngine.New_Engine.GrowthModels._401kGrowthModels {
 			//base salary * (1 + salary increase rate) ^ i 
 			return info.salary * Math.Pow((1 + info.salaryIncrease), i);
 		}
+
+		
 	}
 }
