@@ -52,16 +52,21 @@ namespace RetireSimple.Engine.Analysis {
 
 			//quantityList.Add(stockQuantity);
 			for (int i = 0; i < int.Parse(options["analysisLength"]); i++) {
+				//if current month - first dividend month is a multiple of the monthly interval then...
 				if ((currentMonth - firstDividendMonth) % monthInterval == 0) {
+					//new stock quantity = previous stock quantity * (1 + dividend percent)
 					stockQuantity += stockQuantity * dividendPercent;
 				}
+				//add stock quanity to the list
 				quantityList.Add(stockQuantity);
+				//increment the current month
 				currentMonth++;
+				//if the month is going to be greater than 12 reset it to 1
 				if (currentMonth > 12) {
 					currentMonth = 1;
 				}
 			}
-
+			//return the list different stock quanity
 			return quantityList;
 		}
 

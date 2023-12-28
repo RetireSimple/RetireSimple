@@ -35,6 +35,8 @@ namespace RetireSimple.Engine.Analysis.Presets {
 			["uncertainty"] = "0.80",
 		};
 
+		//This makes no sense
+
 		public static OptionsDict ResolveRegressionPreset(StockInvestment investment, OptionsDict options) {
 			var simPreset = options.GetValueOrDefault("analysisPreset")
 							?? investment.AnalysisOptionsOverrides.GetValueOrDefault("analysisPreset")

@@ -19,10 +19,6 @@ namespace RetireSimple.Engine.Analysis {
 			var offset = GetStartingIterationOffset(pensionStart);
 			var pensionValue = 0M;
 			var pensionData = new List<decimal>();
-
-			//why are calculating things like this using iterations and not using formulas?
-
-			//would it not make more sense to use a formla like pert 
 			
 			for (int i = 0; i < monthsToSimulate; i++) {
 				pensionValue += pensionAmt * (1 - expectedTaxRate);

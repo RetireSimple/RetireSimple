@@ -9,7 +9,10 @@ export const Root = () => {
 	const [portfolioData, setPortfolioData] = React.useState<any[]>([]);
 	const [breakdownData, setBreakdownData] = React.useState<any[]>([]);
 	const [loadIndicator, setLoadIndicator] = React.useState<boolean>(true);
+	const [noInvestments, setNoInvestments] = React.useState<boolean>(false);
 	const navigation = useNavigation();
+
+	
 
 	React.useEffect(() => {
 		if (navigation.state === 'loading') {
@@ -20,8 +23,17 @@ export const Root = () => {
 	getAggregateModel()
 		.then((res) => {
 			setPortfolioData(convertPortfolioModelData(res.portfolioModel));
-			setBreakdownData(createAggregateStackData(res.investmentModels));
-			setHasData(true);
+			console.log(res.portfolioModel.portfolioModelId)
+			if(res.portfolioModel.portfolioModelId === -1)
+			{
+				setNoInvestments(true);
+				setHasData(false);
+				setLoadIndicator(false);
+			}
+			else{
+				setBreakdownData(createAggregateStackData(res.investmentModels));
+				setHasData(true);
+			}
 		})
 		.then(() => setLoadIndicator(false));
 
@@ -50,6 +62,11 @@ export const Root = () => {
 					<Box>
 						<PortfolioAggregateGraph modelData={portfolioData} height={350} />
 						<PortfolioBreakdownGraph modelData={breakdownData} height={350} />
+					</Box>
+				)}
+				{noInvestments && (
+					<Box>
+						<h1>No Investment Data</h1>
 					</Box>
 				)}
 			</Box>
