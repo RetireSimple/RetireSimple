@@ -46,12 +46,13 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 			errorField={errors.investmentType}
 			defaultOption='StockInvestment'
 			options={[
-				{value: 'StockInvestment', label: 'Stock'},
-				{value: 'BondInvestment', label: 'Bond'},
-				{value: 'PensionInvestment', label: 'Pension/Social Security'},
+				{value: 'StockInvestment', label: 'Stock', tooltip:'A stock investment is calculated as ...'},
+				{value: 'BondInvestment', label: 'Bond', tooltip:'This is a bond'},
+				{value: 'PensionInvestment', label: 'Pension/Social Security', tooltip:'This is a pension'},
 			]}
 			disable={props.disableTypeSelect ?? false}
-			tooltip='The type of security this investment represents.'
+			tooltip=''
+			// tooltip='The type of security this investment represents.'
 		/>
 	);
 
@@ -70,10 +71,12 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 									{
 										value: 'MonteCarlo',
 										label: 'Monte Carlo',
+										tooltip:'This is monte carlo',
 									},
 									{
 										value: 'BinomialRegression',
 										label: 'Binomial Regression',
+										tooltip:'This is binomial',
 									},
 								]}
 								defaultOption=''
@@ -92,7 +95,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 								label='Analysis Type'
 								control={formContext.control}
 								errorField={errors.analysisType}
-								options={[{value: 'StdBondValuation', label: 'Bond Valuation'}]}
+								options={[{value: 'StdBondValuation', label: 'Bond Valuation', tooltip:'This is monte bond form'}]}
 								defaultOption=''
 								disable={false}
 								tooltip='The type of analysis to run on this investment. Only standard bond valuation is currently supported.'
@@ -113,6 +116,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 									{
 										value: 'PensionSimulation',
 										label: 'Pension Simulation',
+										tooltip:'This is pension',
 									},
 								]}
 								defaultOption=''

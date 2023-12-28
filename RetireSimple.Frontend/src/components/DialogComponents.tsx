@@ -282,8 +282,8 @@ export const AddExpenseDialog = (props: AddExpenseDialogProps) => {
 			name='expenseType'
 			label='Expense Type'
 			options={[
-				{value: 'OneTime', label: 'One Time'},
-				{value: 'Recurring', label: 'Recurring'},
+				{value: 'OneTime', label: 'One Time', tooltip: 'OneTime'},
+				{value: 'Recurring', label: 'Recurring', tooltip: 'Recurring'},
 			]}
 			defaultOption='OneTime'
 			errorField={undefined}

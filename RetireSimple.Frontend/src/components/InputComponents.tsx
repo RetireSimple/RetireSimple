@@ -27,7 +27,7 @@ export interface FormTextFieldProps {
 export interface FormSelectFieldProps {
 	name: string;
 	label: string;
-	options: {value: string; label: string}[];
+	options: {value: string; label: string; tooltip: string}[];
 	defaultOption: string; //Assert it is in options for easy programming
 	control: Control;
 	errorField: any;
@@ -153,9 +153,14 @@ export const FormSelectField = (props: FormSelectFieldProps) => {
 						<InputLabel id={props.name}>{props.label}</InputLabel>
 						<Select {...field} label={props.name} disabled={props.disable}>
 							{props.options.map((option) => (
+								// <Tooltip title={option.tooltip}>
 								<MenuItem key={option.value} value={option.value}>
-									{option.label}
+									{/* {option.label} */}
+									{<Tooltip title={option.tooltip}>
+										{<div>{option.label}</div>}
+									</Tooltip>}
 								</MenuItem>
+								// </Tooltip>
 							))}
 						</Select>
 						<FormHelperText>{props.errorField?.message as string}</FormHelperText>

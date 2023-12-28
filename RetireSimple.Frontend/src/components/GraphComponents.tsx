@@ -136,6 +136,10 @@ export const VehicleModelGraph = (props: {vehicleId: number}) => {
 				setModelData(convertVehicleModelData(data));
 			})
 			.then(() => setLoading(false));
+		if(modelData) {
+			console.log(modelData.taxed);
+
+		}
 	};
 
 	return (

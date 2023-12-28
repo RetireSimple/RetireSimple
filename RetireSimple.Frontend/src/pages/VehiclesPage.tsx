@@ -4,7 +4,7 @@ import React from 'react';
 import {FormProvider, useForm, useFormState} from 'react-hook-form';
 import {FieldValues} from 'react-hook-form/dist/types';
 import {useFormAction, useLoaderData, useSubmit} from 'react-router-dom';
-import {ApiPresetData, Investment, Portfolio} from '../Interfaces';
+import {ApiPresetData, Investment, InvestmentModel, InvestmentVehicle, Portfolio} from '../Interfaces';
 import {updateInvestment} from '../api/InvestmentApi';
 import {AddInvestmentDialog, AddVehicleDialog, ConfirmDeleteDialog} from '../components/DialogComponents';
 import {InvestmentModelGraph} from '../components/GraphComponents';
@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import { PresetContext } from '../Layout';
 import { InvestmentComponent } from '../components/InvestmentComponent';
 import { getAnalysisPresets } from '../api/ApiCommon';
+import { VehicleComponent } from '../components/VehicleComponent';
   
 export function VehiclesPage() { 
 
@@ -49,11 +50,16 @@ export function VehiclesPage() {
 		setInvAddDialogOpen(true);
 	};
 
+	const openEditDialog = () => {
+		console.log("PRESS Vehicle FROM FUNC");
+		//setEdit(true);
+	};
 
 
 	return <div><PresetContext.Provider value={presetData}><h2>Vehicles</h2>
 		{/* {investments.map((investment: Investment) => (<h1> {investment.investmentName} </h1>))} */}
-		{vehicles.map((vehicle) => (<h1>{vehicle.investmentVehicleName}</h1>))}
+		{vehicles.map((vehicle: InvestmentVehicle) => 
+			(VehicleComponent(vehicle, () => {openEditDialog()})))}
 		<Button onClick={() => setVehicleAddDialogOpen(true)}>
 			<Icon baseClassName='material-icons'>add_circle</Icon>
 			<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
