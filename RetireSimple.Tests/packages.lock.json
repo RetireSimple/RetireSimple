@@ -1346,8 +1346,12 @@
         "dependencies": {
           "MathNet.Numerics": "[5.0.0, )",
           "Microsoft.EntityFrameworkCore": "[7.0.2, )",
-          "Microsoft.EntityFrameworkCore.Sqlite": "[7.0.2, )"
+          "Microsoft.EntityFrameworkCore.Sqlite": "[7.0.2, )",
+          "RetireSimple.NewEngine": "[1.0.0, )"
         }
+      },
+      "retiresimple.newengine": {
+        "type": "Project"
       }
     }
   }

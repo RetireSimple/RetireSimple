@@ -237,6 +237,9 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0",
           "System.Text.Encodings.Web": "7.0.0"
         }
+      },
+      "retiresimple.newengine": {
+        "type": "Project"
       }
     }
   }

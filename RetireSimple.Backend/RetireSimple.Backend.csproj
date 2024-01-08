@@ -29,6 +29,7 @@
 		<ProjectReference Include="..\RetireSimple.Frontend\RetireSimple.Frontend.esproj" Condition="'$(OS)' == 'Windows_NT'">
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 		</ProjectReference>
+		<ProjectReference Include="..\RetireSimple.NewEngine\RetireSimple.NewEngine.csproj" />
 	</ItemGroup>
 
 	<Target Name="CopyREADME" AfterTargets="Publish">

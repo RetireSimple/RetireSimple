@@ -56,4 +56,8 @@
 	<ItemGroup>
 	  <Content Include="logo.ico" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\RetireSimple.NewEngine\RetireSimple.NewEngine.csproj" />
+	</ItemGroup>
 </Project>

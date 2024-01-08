@@ -26,8 +26,6 @@ namespace RetireSimple.NewTests {
 
 			User user = new User(new UserInfo(30, 65, 1000000));
 
-			_401kGrowth growthModel = new _401kGrowth();
-
 			_401kInfo info = new _401kInfo(.1, 40000, 0, .07, .5, .06);
 
 			_401k _401K = new _401k(new NullTax(), 1000, 1, info);
