@@ -34,6 +34,8 @@ namespace RetireSimple.NewTests {
 
 			Projection projection = user.GenerateProjections();
 
+			user.saveToCSV(projection, "Test401kGrowth1");
+
 			projection.yearly_projections[34].Equals(756476.60);
 
 
@@ -53,6 +55,9 @@ namespace RetireSimple.NewTests {
 			user.AddInvestmentVehicle(_401K);
 
 			Projection projection = user.GenerateProjections();
+
+			user.saveToCSV(projection, "Test401kGrowth2");
+
 
 			projection.yearly_projections[34].Equals(1498389.20);
 
@@ -74,6 +79,8 @@ namespace RetireSimple.NewTests {
 
 			Projection projection = user.GenerateProjections();
 
+			user.saveToCSV(projection, "Test401kGrowth3");
+
 			projection.yearly_projections[34].Equals(2617434.99);
 
 		}
@@ -90,6 +97,8 @@ namespace RetireSimple.NewTests {
 			user.AddInvestmentVehicle(roth);
 
 			Projection projection = user.GenerateProjections();
+
+			user.saveToCSV(projection, "TestRothIraGrowth1");
 
 			projection.yearly_projections[34].Equals(744567.30);
 
@@ -109,6 +118,8 @@ namespace RetireSimple.NewTests {
 			user.AddInvestmentVehicle(roth);
 
 			Projection projection = user.GenerateProjections();
+
+			user.saveToCSV(projection, "TestRothIraGrowth2");
 
 			projection.yearly_projections[44].Equals(425487.03);
 

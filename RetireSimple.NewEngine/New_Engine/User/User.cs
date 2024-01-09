@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using static System.Net.Mime.MediaTypeNames;
+
 namespace RetireSimple.NewEngine.New_Engine.User {
 	public class User {
 
@@ -31,6 +33,23 @@ namespace RetireSimple.NewEngine.New_Engine.User {
 
 			return this.portfolioManager.Calculate(years);
 
+		}
+
+		public void saveToCSV(Projection proj, String test) {
+			//before your loop
+			var csv = new StringBuilder();
+
+			//in your loop
+			for(int i = 0; i < proj.yearly_projections.Count;i++) {
+				var x = (this.userInfo.age + i).ToString();
+				var y = proj.yearly_projections[i].ToString();
+				//Suggestion made by KyleMit
+				var newLine = x + "," + y;// string.Format("{x},{y}", x, y);
+				csv.AppendLine(newLine);
+			}
+
+			//after your loop
+			File.WriteAllText("C:\\Users\\wighths\\OneDrive - Rose-Hulman Institute of Technology\\Documents\\SeniorYear\\Senior Design\\RetireSimple-dev-fall\\RetireSimple.NewTests\\TestCSV\\" + test + ".csv", csv.ToString());
 		}
 
 
