@@ -18,6 +18,10 @@ export interface InvestmentModel {
 	lastUpdated: string; //treat as a date later?
 }
 
+export interface Projection {
+	values: number[];
+}
+
 export interface PortfolioModel {
 	portfolioModelId: number;
 	portfolioId: number;

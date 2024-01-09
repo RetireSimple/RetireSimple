@@ -14,10 +14,19 @@ import {convertDates} from '../api/ConvertUtils';
 import {ExpensesTable} from '../forms/ExpenseTable';
 import {useSnackbar} from 'notistack';
 import { Link } from 'react-router-dom'; 
+import { getTestData } from '../api/NewApiMapper';
   
+
+function doGetTestData(){
+	getTestData()
+}
+
 export function HelpPage() { 
 	return (<div>
 		<h1>Help</h1>
+		<Button onClick={doGetTestData}>
+			Test
+		</Button>
 		<Box sx={{padding: '2rem'}}>
 			<Typography variant='h6' sx={{flexGrow: 1, marginBottom: '0.5rem'}}>
 				Welcome to RetireSimple!
