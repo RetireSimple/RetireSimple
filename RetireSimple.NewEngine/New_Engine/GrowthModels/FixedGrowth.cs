@@ -28,7 +28,7 @@ namespace RetireSimple.NewEngine.New_Engine.GrowthModels {
 
 			}
 
-			return new Projection(values);
+			return new Projection(values, 0);
 
 		}
 	}

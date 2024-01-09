@@ -31,7 +31,7 @@ namespace RetireSimple.NewEngine.New_Engine.GrowthModels.RothIraGrowth {
 
 			}
 
-			return new Projection(values);
+			return new Projection(values, 0);
 
 
 		}

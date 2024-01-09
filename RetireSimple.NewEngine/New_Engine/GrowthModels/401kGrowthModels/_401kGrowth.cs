@@ -43,7 +43,7 @@ namespace RetireSimple.NewEngine.New_Engine.GrowthModels._401kGrowthModels {
 
 			}
 
-			return new Projection(values);
+			return new Projection(values, 0);
 		}
 
 
