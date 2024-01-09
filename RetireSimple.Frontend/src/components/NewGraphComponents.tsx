@@ -1,8 +1,4 @@
 import React from 'react';
-import {getInvestmentModel} from '../api/InvestmentApi';
-import {convertInvestmentModelData, convertVehicleModelData} from '../api/ApiMapper';
-import {InvestmentModel} from '../Interfaces';
-import {useNavigation} from 'react-router-dom';
 import {
 	Box,
 	Button,
@@ -26,16 +22,17 @@ import {
 	YAxis,
 } from 'recharts';
 import {getVehicleModel} from '../api/VehicleApi';
-import { getTestData } from '../api/NewApiMapper';
+import { getTestData, convertVehicleModelData } from '../api/NewApiMapper';
+import { Projection } from '../Interfaces';
 
 
-export const AvgGraph = (props: {modelData: any[]}) => {
+export const AvgGraph = (props: {modelData: Projection}) => {
 
     
 
 	return (
 		<ResponsiveContainer width={300} height={200}>
-			<LineChart data={props.modelData}>
+			<LineChart data={props.modelData.values}>
 				<XAxis dataKey='year'>
 					<Label value='Months' offset={-5} position={'bottom'} />
 				</XAxis>

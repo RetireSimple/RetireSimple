@@ -9,9 +9,13 @@ using System.Threading.Tasks;
 
 namespace RetireSimple.NewEngine.New_Engine.Financials.Expenses {
 	public abstract class Expense : Financial {
-		public Expense(ITax tax, int id ) : base(tax, id, FinCategories.EXPENSE) {
 
+		public double amount;
+		public int start;
+		public Expense(ITax tax, int id, double amount, int start) : base(tax, id, FinCategories.EXPENSE) {
 
+			this.amount = amount;
+			this.start = start;
 
 		}
 

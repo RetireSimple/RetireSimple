@@ -69,8 +69,6 @@ namespace RetireSimple.NewTests {
 
 			User user = new User(new UserInfo(30, 65, 1000000));
 
-			
-
 			_401kInfo info = new _401kInfo(.118, 54000, .017, .095, .517, .083);
 
 			_401k _401K = new _401k(new NullTax(), 1000, 1, info);
