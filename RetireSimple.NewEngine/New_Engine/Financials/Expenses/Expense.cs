@@ -12,7 +12,7 @@ namespace RetireSimple.NewEngine.New_Engine.Financials.Expenses {
 
 		public double amount;
 		public int start;
-		public Expense(ITax tax, int id, double amount, int start) : base(tax, id, FinCategories.EXPENSE) {
+		public Expense(int id, double amount, int start) : base(id, FinCategories.EXPENSE) {
 
 			this.amount = amount;
 			this.start = start;

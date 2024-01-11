@@ -7,12 +7,9 @@ namespace RetireSimple.NewEngine.New_Engine.Financials {
 
 		private int id;
 
-		private ITax tax;
-
 		public readonly FinCategories category;
 
-		public Financial(ITax tax, int id, FinCategories category) {
-			this.tax = tax;
+		public Financial(int id, FinCategories category) {
 			this.category = category;
 			this.id = id;
 

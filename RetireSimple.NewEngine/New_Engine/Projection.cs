@@ -31,23 +31,23 @@ namespace RetireSimple.Engine.New_Engine
 			for (int i = 0; i < count; i++) {
 
 				if(i >= this.start && i >= other_proj.start) {
-					list.Add(this.getNext() + other_proj.getNext());
+					list.Add(this.GetNext() + other_proj.GetNext());
 				}
 				else if(i >= this.start && i < other_proj.start) {
-					list.Add(this.getNext());
+					list.Add(this.GetNext());
 				}
 
 
 			}
-			this.resetCount();
-			other_proj.resetCount();
+			this.ResetCount();
+			other_proj.ResetCount();
 			return new Projection(list, 0);
 		}
 
     
 	
 
-		public double getNext() {
+		public double GetNext() {
 
 			if(this.current >= this.yearly_projections.Count){
 				return 0;
@@ -61,7 +61,7 @@ namespace RetireSimple.Engine.New_Engine
 
 		}
 
-		public void resetCount() {
+		public void ResetCount() {
 			this.current = 0;
 		}
 	

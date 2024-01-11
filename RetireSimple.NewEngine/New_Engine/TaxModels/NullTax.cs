@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RetireSimple.Engine.New_Engine;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +11,10 @@ namespace RetireSimple.NewEngine.New_Engine.TaxModels {
 
 		public NullTax() {
 
+		}
+
+		public Projection calculateTax(Projection projection) {
+			return projection;
 		}
 	}
 }
