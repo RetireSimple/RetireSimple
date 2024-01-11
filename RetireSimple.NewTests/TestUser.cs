@@ -28,7 +28,7 @@ namespace RetireSimple.NewTests {
 
 			_401kInfo info = new _401kInfo(.1, 40000, 0, .07, .5, .06);
 
-			_401k _401K = new _401k(new NullTax(), 1000, 1, info);
+			_401k _401K = new _401k(1000, 1, info);
 
 			user.AddInvestmentVehicle(_401K);
 
@@ -50,7 +50,7 @@ namespace RetireSimple.NewTests {
 
 			_401kInfo info = new _401kInfo(.076, 81000, .04, .04, 1, .06);
 
-			_401k _401K = new _401k(new NullTax(), 1000, 1, info);
+			_401k _401K = new _401k(1000, 1, info);
 
 			user.AddInvestmentVehicle(_401K);
 
@@ -71,7 +71,7 @@ namespace RetireSimple.NewTests {
 
 			_401kInfo info = new _401kInfo(.118, 54000, .017, .095, .517, .083);
 
-			_401k _401K = new _401k(new NullTax(), 1000, 1, info);
+			_401k _401K = new _401k(1000, 1, info);
 
 			user.AddInvestmentVehicle(_401K);
 
@@ -90,7 +90,7 @@ namespace RetireSimple.NewTests {
 
 			RothIraInfo info = new RothIraInfo(5000, .07);
 
-			RothIra roth = new RothIra(new NullTax(), 1, 0, info);
+			RothIra roth = new RothIra(1, 0, info);
 
 			user.AddInvestmentVehicle(roth);
 
@@ -111,7 +111,7 @@ namespace RetireSimple.NewTests {
 
 			RothIraInfo info = new RothIraInfo(2000, .06);
 
-			RothIra roth = new RothIra(new NullTax(), 1, 0, info);
+			RothIra roth = new RothIra(1, 0, info);
 
 			user.AddInvestmentVehicle(roth);
 

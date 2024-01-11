@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles._457b {
 	public class _457b : InvestmentVehicle {
-		public _457b(ITax tax, int id, float value, InvestmentVehicleInfo info) : base(tax, id, FinCategories.INVESTMENT_VEHICLE, value, new _457bGrowth() , info) {
+		public _457b(int id, float value, InvestmentVehicleInfo info) : base(id, FinCategories.INVESTMENT_VEHICLE, value, new _457bGrowth() , info) {
 		}
 	}
 }

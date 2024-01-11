@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles._401k {
 	public class _401k : InvestmentVehicle {
-		public _401k(ITax tax, float value, int id, InvestmentVehicleInfo info) : base(tax, id, FinCategories.INVESTMENT_VEHICLE, value, new _401kGrowth(), info) {
+		public _401k(float value, int id, InvestmentVehicleInfo info) : base(id, FinCategories.INVESTMENT_VEHICLE, value, new _401kGrowth(), info) {
 
 
 		}
