@@ -24,7 +24,7 @@ namespace RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles {
 
 		
 
-		public InvestmentVehicle(ITax tax, int id, FinCategories category, float value, IGrowthModel growthModel, InvestmentVehicleInfo info ) : base(tax, id, FinCategories.INVESTMENT_VEHICLE)
+		public InvestmentVehicle(int id, FinCategories category, float value, IGrowthModel growthModel, InvestmentVehicleInfo info ) : base(id, FinCategories.INVESTMENT_VEHICLE)
 		{
 			this.value = value;
 			this.growthModel = growthModel;
