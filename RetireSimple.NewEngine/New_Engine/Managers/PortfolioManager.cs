@@ -29,25 +29,6 @@ namespace RetireSimple.NewEngine.New_Engine.Managers {
 
 		}
 
-		public Boolean AddInvestment(int vehicleID, Investment investment) 
-		{
-
-			if(vehicleID < base.items.Count) 
-			{
-				InvestmentVehicle vehicle = (InvestmentVehicle)base.items[vehicleID];
-
-				vehicle.AddInvestment(investment);
-
-				return true;
-			} 
-			else
-			{
-				return false;
-
-			}
-
-		}
-
 		public override bool DoDelete(int id) {
 			base.items.RemoveAt(id);
 			return true;

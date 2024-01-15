@@ -34,7 +34,7 @@ namespace RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles {
 
 		}
 
-		public void setInfo(InvestmentVehicleInfo info) {
+		public void SetInfo(InvestmentVehicleInfo info) {
 			this.info = info;
 		}
 
@@ -43,10 +43,6 @@ namespace RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles {
 			return this.growthModel.GenerateProjection(this.value, years, this.info);
 		}
 
-		public void AddInvestment(Investment investment) 
-		{
-			this.investments.Add(investment);	
-		}
 
 
 	}
