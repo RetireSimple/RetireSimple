@@ -16,5 +16,9 @@ namespace RetireSimple.NewEngine.New_Engine.TaxModels {
 		public Projection calculateTax(Projection projection) {
 			return projection;
 		}
+
+		public double CalculateTax(double income) {
+			return income;
+		}
 	}
 }

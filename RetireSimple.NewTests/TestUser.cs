@@ -24,7 +24,7 @@ namespace RetireSimple.NewTests {
 		[TestMethod]
 		public void Test401kGrowth1() {
 
-			User user = new User(new UserInfo(30, 65, 1000000));
+			User user = new User(new UserInfo(30, 65, 1000000, UserTaxStatus.SINGLE));
 
 			_401kInfo info = new _401kInfo(.1, 40000, 0, .07, .5, .06);
 
@@ -34,9 +34,9 @@ namespace RetireSimple.NewTests {
 
 			Projection projection = user.GenerateProjections();
 
-			user.saveToCSV(projection, "Test401kGrowth1");
+			//user.saveToCSV(projection, "Test401kGrowth1");
 
-			projection.yearly_projections[34].Equals(756476.60);
+			Assert.AreEqual(729508.35, Math.Round(projection.yearly_projections[35],2));
 
 
 		}
@@ -44,11 +44,10 @@ namespace RetireSimple.NewTests {
 		[TestMethod]
 		public void Test401kGrowth2() {
 
-			User user = new User(new UserInfo(30, 65, 1000000));
+			User user = new User(new UserInfo(30, 65, 1000000, UserTaxStatus.SINGLE));
 
-			_401kGrowth growthModel = new _401kGrowth();
 
-			_401kInfo info = new _401kInfo(.076, 81000, .04, .04, 1, .06);
+			_401kInfo info = new _401kInfo(.08, 81000, .04, .04, 1, .06);
 
 			_401k _401K = new _401k(1000, 1, info);
 
@@ -56,10 +55,7 @@ namespace RetireSimple.NewTests {
 
 			Projection projection = user.GenerateProjections();
 
-			user.saveToCSV(projection, "Test401kGrowth2");
-
-
-			projection.yearly_projections[34].Equals(1498389.20);
+			Assert.AreEqual(1509910.24, Math.Round(projection.yearly_projections[35], 2));
 
 		}
 
@@ -67,7 +63,7 @@ namespace RetireSimple.NewTests {
 		[TestMethod]
 		public void Test401kGrowth3() {
 
-			User user = new User(new UserInfo(30, 65, 1000000));
+			User user = new User(new UserInfo(30, 65, 1000000, UserTaxStatus.SINGLE));
 
 			_401kInfo info = new _401kInfo(.118, 54000, .017, .095, .517, .083);
 
@@ -77,16 +73,18 @@ namespace RetireSimple.NewTests {
 
 			Projection projection = user.GenerateProjections();
 
-			user.saveToCSV(projection, "Test401kGrowth3");
+			//user.saveToCSV(projection, "Test401kGrowth3");
 
 			projection.yearly_projections[34].Equals(2617434.99);
 
-		}
+			Assert.AreEqual(2492183.79, Math.Round(projection.yearly_projections[35], 2));
 
+		}
+		//TODO
 		[TestMethod]
 		public void TestRothIraGrowth1() {
 
-			User user = new User(new UserInfo(30, 65, 1000000));
+			User user = new User(new UserInfo(30, 65, 1000000, UserTaxStatus.SINGLE));
 
 			RothIraInfo info = new RothIraInfo(5000, .07);
 
@@ -96,9 +94,9 @@ namespace RetireSimple.NewTests {
 
 			Projection projection = user.GenerateProjections();
 
-			user.saveToCSV(projection, "TestRothIraGrowth1");
+			//user.saveToCSV(projection, "TestRothIraGrowth1");
 
-			projection.yearly_projections[34].Equals(744567.30);
+			Assert.AreEqual(744567.30, Math.Round(projection.yearly_projections[34]));
 
 
 		}
@@ -107,7 +105,7 @@ namespace RetireSimple.NewTests {
 		public void TestRothIraGrowth2() {
 
 
-			User user = new User(new UserInfo(24, 68, 1000000));
+			User user = new User(new UserInfo(24, 68, 1000000, UserTaxStatus.SINGLE));
 
 			RothIraInfo info = new RothIraInfo(2000, .06);
 
@@ -117,9 +115,9 @@ namespace RetireSimple.NewTests {
 
 			Projection projection = user.GenerateProjections();
 
-			user.saveToCSV(projection, "TestRothIraGrowth2");
+			//user.saveToCSV(projection, "TestRothIraGrowth2");
 
-			projection.yearly_projections[44].Equals(425487.03);
+			Assert.AreEqual(423487.03, Math.Round(projection.yearly_projections[44], 2));
 
 		}
 

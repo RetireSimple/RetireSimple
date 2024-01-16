@@ -28,20 +28,25 @@ namespace RetireSimple.NewEngine.New_Engine.GrowthModels._401kGrowthModels {
 
 				//percent of salary contributions * salary (considering increase)
 				double personal_contribution = info.contributions * this.CalculateSalaryIncrease(info, i);
-
+			
 				//employer contributions
 				double employer_contribution = this.CalculateEmployerContributions(info, i);
 
+				double val = values[i] * (1 + info.rate);
+
+				double newVal = val + personal_contribution + employer_contribution;
+
 				//previous value + personal contribution + employer contributions
-				double newVal = values[i] + personal_contribution + employer_contribution;
+				//double newVal = values[i] + personal_contribution + employer_contribution;
 
 				//value above * (1 + the projected growth rate) 
-				double newVal_withGrowth = newVal * (1 + info.rate);
+				//double newVal_withGrowth = newVal * (1 + info.rate);
 
 				//add new value to list 
-				values.Add(newVal_withGrowth);
+				//values.Add(newVal_withGrowth);
 
-			}
+				values.Add(newVal);		
+				}
 
 			return new Projection(values, 0);
 		}

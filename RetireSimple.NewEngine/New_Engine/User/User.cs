@@ -1,6 +1,7 @@
 ﻿using RetireSimple.Engine.New_Engine;
 using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles;
 using RetireSimple.NewEngine.New_Engine.Managers;
+using RetireSimple.NewEngine.New_Engine.TaxModels;
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace RetireSimple.NewEngine.New_Engine.User {
 	public class User {
 
 
+		private ITax tax;
+
 		private UserInfo userInfo;
 
 		private Manager portfolioManager;
@@ -23,7 +26,13 @@ namespace RetireSimple.NewEngine.New_Engine.User {
 		
 			this.userInfo = userInfo;
 
+			this.tax = new NullTax();
+
 			this.portfolioManager = new PortfolioManager();
+		}
+
+		public void AddTax(ITax tax) {
+			this.tax = tax;
 		}
 
 
@@ -57,7 +66,11 @@ namespace RetireSimple.NewEngine.New_Engine.User {
 			this.portfolioManager.Add(vehicle);
 		}
 
+		public double ApplyTax(double income) {
 
+			return this.tax.CalculateTax(income);
+		
+		}
 	
 
 
