@@ -58,7 +58,7 @@ namespace RetireSimple.NewEngine.New_Engine.User {
 			}
 
 			//after your loop
-			File.WriteAllText("C:\\Users\\wighths\\OneDrive - Rose-Hulman Institute of Technology\\Documents\\SeniorYear\\Senior Design\\RetireSimple-dev-fall\\RetireSimple.NewTests\\TestCSV\\" + test + ".csv", csv.ToString());
+			File.WriteAllText("..\\..\\..\\TestCSV\\" + test + ".csv", csv.ToString());
 		}
 
 
