@@ -44,8 +44,6 @@ namespace RetireSimple.Backend.Controllers.NewEngine {
 
 			try {
 
-
-
 				UserInfo info = new UserInfo(Convert.ToInt16(body["Age"]), Convert.ToInt16(body["RetirementAge"]),Convert.ToInt32(body["RetirementGoal"]), UserInfo.StringToStatus(body["UserTaxStatus"]));
 
 				return Ok(this.newEngineMain.handleCreateUser(info));
@@ -54,9 +52,32 @@ namespace RetireSimple.Backend.Controllers.NewEngine {
 				return BadRequest();
 			}
 
+		}
 
+		[HttpPost]
+		[Route("UpdateUser")]
+		public ActionResult<Boolean> UpdateUser([FromBody] JsonDocument requestBody) {
+			var body = requestBody.Deserialize<OptionsDict>();
+
+			if(body == null) {
+				return BadRequest();
+			}
+
+			//TODO add in the error checking
+
+			try {
+
+				UserInfo info = new UserInfo(Convert.ToInt16(body["Age"]), Convert.ToInt16(body["RetirementAge"]), Convert.ToInt32(body["RetirementGoal"]), UserInfo.StringToStatus(body["UserTaxStatus"]));
+
+				return Ok(this.newEngineMain.handleUpdateUser(info));
+			} catch (ArgumentException) {
+				return BadRequest();
+			}
 
 		}
+
+
+
 
 
 
