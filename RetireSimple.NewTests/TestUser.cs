@@ -6,7 +6,7 @@ using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles.RothIra;
 using RetireSimple.NewEngine.New_Engine.GrowthModels;
 using RetireSimple.NewEngine.New_Engine.GrowthModels._401kGrowthModels;
 using RetireSimple.NewEngine.New_Engine.TaxModels;
-using RetireSimple.NewEngine.New_Engine.User;
+using RetireSimple.NewEngine.New_Engine.Users;
 
 using System;
 using System.Collections.Generic;
@@ -17,9 +17,6 @@ using System.Threading.Tasks;
 namespace RetireSimple.NewTests {
 	[TestClass]
 	public class TestUser {
-
-
-
 
 		[TestMethod]
 		public void Test401kGrowth1() {
@@ -101,6 +98,7 @@ namespace RetireSimple.NewTests {
 
 		}
 
+		//TODO
 		[TestMethod]
 		public void TestRothIraGrowth2() {
 

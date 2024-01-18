@@ -5,7 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RetireSimple.NewEngine.New_Engine.User {
+namespace RetireSimple.NewEngine.New_Engine.Users {
 	public class UserInfo {
 
 
@@ -23,6 +23,23 @@ namespace RetireSimple.NewEngine.New_Engine.User {
 			this.retirementAge = retirementAge;
 			this.retirementGoal = retirementGoal;
 			this.status = status;
+		}
+
+		public static UserTaxStatus StringToStatus(String status) {
+			if (status.Equals("SINGLE")) {
+				return UserTaxStatus.SINGLE;
+			}
+			else if (status.Equals("MARRIED_FILING_JOINTLY")) {
+				return UserTaxStatus.MARRIED_FILING_JOINTLY;
+			}
+			else if (status.Equals("MARRIED_FILING_SEPERATELY")) {
+				return UserTaxStatus.MARRIED_FILING_SEPERATELY;
+			}
+			else if (status.Equals("HEAD_OF_HOUSEHOLD")) {
+				return UserTaxStatus.HEAD_OF_HOUSEHOLD;
+			}
+			return UserTaxStatus.SINGLE;
+
 		}
 
 	}

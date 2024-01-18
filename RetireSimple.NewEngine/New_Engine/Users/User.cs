@@ -12,9 +12,8 @@ using System.Threading.Tasks;
 
 using static System.Net.Mime.MediaTypeNames;
 
-namespace RetireSimple.NewEngine.New_Engine.User {
+namespace RetireSimple.NewEngine.New_Engine.Users {
 	public class User {
-
 
 		private ITax tax;
 
@@ -33,6 +32,14 @@ namespace RetireSimple.NewEngine.New_Engine.User {
 
 		public void AddTax(ITax tax) {
 			this.tax = tax;
+		}
+
+		public void UpdateInfo(UserInfo userInfo) {
+			this.userInfo = userInfo;
+		}
+
+		public UserInfo GetInfo() {
+			return this.userInfo;
 		}
 
 

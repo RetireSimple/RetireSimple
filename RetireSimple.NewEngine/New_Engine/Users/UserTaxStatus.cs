@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RetireSimple.NewEngine.New_Engine.User {
+namespace RetireSimple.NewEngine.New_Engine.Users {
 	public enum UserTaxStatus {
 
 		SINGLE, 
