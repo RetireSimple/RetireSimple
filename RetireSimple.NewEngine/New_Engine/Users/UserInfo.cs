@@ -42,5 +42,9 @@ namespace RetireSimple.NewEngine.New_Engine.Users {
 
 		}
 
+		public String ToString() {
+			return "Age: " + this.age + ", Retirement Age: " + this.retirementAge + ", RetirementGoal: " + this.retirementGoal + ", Filing Status: " + this.status;
+		}
+
 	}
 }

@@ -30,6 +30,12 @@ namespace RetireSimple.NewEngine.New_Engine.Users {
 			this.portfolioManager = new PortfolioManager();
 		}
 
+		public User() {
+			this.userInfo = new UserInfo(30, 65, 0, UserTaxStatus.SINGLE);
+			this.tax = new NullTax();
+			this.portfolioManager = new PortfolioManager();
+		}
+	
 		public void AddTax(ITax tax) {
 			this.tax = tax;
 		}

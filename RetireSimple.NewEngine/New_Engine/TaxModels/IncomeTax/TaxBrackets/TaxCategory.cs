@@ -1,5 +1,5 @@
 ﻿using RetireSimple.NewEngine.New_Engine.TaxModels.TaxBrackets;
-using RetireSimple.NewEngine.New_Engine.User;
+using RetireSimple.NewEngine.New_Engine.Users;
 
 namespace RetireSimple.NewEngine.New_Engine.TaxModels.IncomeTax.TaxBrackets {
 	public class TaxCategory {
