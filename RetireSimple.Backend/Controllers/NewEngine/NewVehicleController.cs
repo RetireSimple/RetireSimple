@@ -7,12 +7,12 @@ using RetireSimple.Engine.New_Engine;
 using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles._401k;
 using RetireSimple.NewEngine.New_Engine.Financials.InvestmentVehicles.InvestmentVehicleInfos;
 using RetireSimple.NewEngine.New_Engine.TaxModels;
-using RetireSimple.NewEngine.New_Engine.User;
+using RetireSimple.NewEngine.New_Engine.Users;
 
 using System.Text.Json;
 
 
-namespace RetireSimple.Backend.Controllers {
+namespace RetireSimple.Backend.Controllers.NewEngine {
 
 	[Route("api/[controller]")]
 	[ApiController]
@@ -20,7 +20,7 @@ namespace RetireSimple.Backend.Controllers {
 	public class NewVehicleController : ControllerBase {
 
 		[HttpGet]
-		public ActionResult<String> TestingAPI() => Ok("API EndPoint is Working");
+		public ActionResult<string> TestingAPI() => Ok("API EndPoint is Working");
 
 		/*
         [HttpPost]
@@ -42,18 +42,18 @@ namespace RetireSimple.Backend.Controllers {
 
 
     }
-		*/
+		
 
 		[HttpGet]
 		[Route("Test")]
 
 		public ActionResult<Projection> getTestData() {
 
-			User user = new User(new UserInfo(30, 65, 1000000));
+			var user = new User(new UserInfo(30, 65, 1000000));
 
-			_401kInfo info = new _401kInfo(.1, 40000, 0, .07, .5, .06);
+			var info = new _401kInfo(.1, 40000, 0, .07, .5, .06);
 
-			_401k _401K = new _401k(new NullTax(), 1000, 1, info);
+			var _401K = new _401k(new NullTax(), 1000, 1, info);
 
 			user.AddInvestmentVehicle(_401K);
 
@@ -66,6 +66,9 @@ namespace RetireSimple.Backend.Controllers {
 
 	}
 
+		*/
+
+	}
 
 
 }

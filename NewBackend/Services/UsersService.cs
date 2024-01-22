@@ -2,9 +2,12 @@
 using MongoDB.Driver;
 using NewBackend.Models;
 
+using System.Runtime.CompilerServices;
+
 namespace NewBackend.Services {
 	public class UsersService {
 		private readonly IMongoCollection<Users> _usersCollection;
+	
 
 		public UsersService(
 			IOptions<RetireSimpleDatabaseSettings> RetireSimpleDatabaseSettings) {

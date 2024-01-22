@@ -3,12 +3,15 @@
 using NewBackend.Models;
 using NewBackend.Services;
 
+using RetireSimple.NewEngine.New_Engine.Users;
+
 namespace UserstoreApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class UsersController : ControllerBase {
 	private readonly UsersService _UsersService;
+	private static RetireSimple.NewEngine.New_Engine.NewEngineMain newEngineMain;
 
 	public UsersController(UsersService UsersService) =>
 		_UsersService = UsersService;
@@ -20,6 +23,8 @@ public class UsersController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> Post(Users newUsers) {
 		await _UsersService.CreateAsync(newUsers);
+
+		newEngineMain.HandleCreateUser(new UserInfo(newUsers.Age, newUsers.RetirementAge, newUsers.RetirementGoal, UserInfo.StringToStatus(newUsers.FilingStatus)));
 
 		return CreatedAtAction(nameof(Get), new { id = newUsers.Id }, newUsers);
 	}
@@ -35,6 +40,8 @@ public class UsersController : ControllerBase {
 		updatedUsers.Id = Users.Id;
 
 		await _UsersService.UpdateAsync(id, updatedUsers);
+
+		newEngineMain.HandleUpdateUser(new UserInfo(updatedUsers.Age, updatedUsers.RetirementAge, updatedUsers.RetirementGoal, UserInfo.StringToStatus(updatedUsers.FilingStatus)));
 
 		return NoContent();
 	}

@@ -7,8 +7,11 @@ using RetireSimple.Engine.New_Engine;
 using RetireSimple.NewEngine.New_Engine;
 using RetireSimple.NewEngine.New_Engine.Users;
 
+using System;
+using System.Text;
 using System.Text.Json;
 
+using static System.Net.Mime.MediaTypeNames;
 
 namespace RetireSimple.Backend.Controllers.NewEngine {
 
@@ -17,16 +20,16 @@ namespace RetireSimple.Backend.Controllers.NewEngine {
 
 	public class NewEngineController : ControllerBase {
 
-		private NewEngineMain newEngineMain;
+		private readonly NewEngineMain newEngineMain;
 
-		public NewEngineController() {
-			this.newEngineMain = new NewEngineMain();
+		public NewEngineController(NewEngineMain newEngineMain) {
+			this.newEngineMain = newEngineMain;
 		}
 
 		[HttpGet]
 		[Route("User")]
 		public ActionResult<UserInfo> GetUser() {
-			return Ok(this.newEngineMain.handleReadUser());
+			return Ok(this.newEngineMain.HandleReadUser());
 		}
 
 
@@ -45,8 +48,13 @@ namespace RetireSimple.Backend.Controllers.NewEngine {
 			try {
 
 				UserInfo info = new UserInfo(Convert.ToInt16(body["Age"]), Convert.ToInt16(body["RetirementAge"]),Convert.ToInt32(body["RetirementGoal"]), UserInfo.StringToStatus(body["UserTaxStatus"]));
+				//Console.WriteLine(info);
 
-				return Ok(this.newEngineMain.handleCreateUser(info));
+				var log = new StringBuilder();
+				log.Append(info.ToString());
+
+				System.IO.File.WriteAllText("..\\logs\\" + "log" + ".txt", log.ToString());
+				return Ok(this.newEngineMain.HandleCreateUser(info));
 			}
 			catch (ArgumentException) {
 				return BadRequest();
@@ -69,7 +77,7 @@ namespace RetireSimple.Backend.Controllers.NewEngine {
 
 				UserInfo info = new UserInfo(Convert.ToInt16(body["Age"]), Convert.ToInt16(body["RetirementAge"]), Convert.ToInt32(body["RetirementGoal"]), UserInfo.StringToStatus(body["UserTaxStatus"]));
 
-				return Ok(this.newEngineMain.handleUpdateUser(info));
+				return Ok(this.newEngineMain.HandleUpdateUser(info));
 			} catch (ArgumentException) {
 				return BadRequest();
 			}

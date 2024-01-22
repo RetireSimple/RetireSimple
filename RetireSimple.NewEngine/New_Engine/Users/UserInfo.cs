@@ -13,12 +13,12 @@ namespace RetireSimple.NewEngine.New_Engine.Users {
 
 		public int retirementAge;
 
-		public long retirementGoal;
+		public double retirementGoal;
 
 		public UserTaxStatus status;
 
 
-		public UserInfo(int age, int retirementAge, long retirementGoal, UserTaxStatus status ) {
+		public UserInfo(int age, int retirementAge, double retirementGoal, UserTaxStatus status ) {
 			this.age = age;
 			this.retirementAge = retirementAge;
 			this.retirementGoal = retirementGoal;
