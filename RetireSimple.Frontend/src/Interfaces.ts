@@ -2,7 +2,7 @@ export interface Investment {
 	investmentId: number;
 	investmentName: string;
 	investmentType: string;
-	analysisType?: string;
+	analysisType: string;
 	lastAnalysis?: string | null; //treat as date later?
 	portfolioId: number;
 	investmentData: {[key: string]: string};

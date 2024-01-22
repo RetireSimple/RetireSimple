@@ -5,14 +5,14 @@ import {Investment} from '../Interfaces';
 import { deleteInvestment } from '../api/InvestmentApi';
 import { InvestmentModelGraph } from './GraphComponents';
 
-export const InvestmentComponent = (investment: Investment, callback: Function) => {
+export const InvestmentComponent = (investment: Investment, openEditDialog: Function) => {
 //deleteInvestment
 
 	return <body style={{backgroundColor: '#DCDCDC', margin: '15px'}}>
 		<div style={{width: '900px', paddingLeft: '10px', paddingBottom: '10px', paddingRight: '0px'}}>
 			<span>
 				<h2> {investment.investmentName} 
-					<Button onClick={() => callback()}>
+					<Button onClick={() => openEditDialog(investment)}>
 						<Icon style={{color: 'black'}} baseClassName='material-icons'>edit_circle</Icon>
 						<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 							{/* Delete Investment */}

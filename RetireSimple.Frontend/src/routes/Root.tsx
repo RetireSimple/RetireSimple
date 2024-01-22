@@ -17,25 +17,25 @@ export const Root = () => {
 	React.useEffect(() => {
 		if (navigation.state === 'loading') {
 			setHasData(false);
+			
 		}
+		getAggregateModel()
+			.then((res) => {
+				setPortfolioData(convertPortfolioModelData(res.portfolioModel));
+				console.log(res.portfolioModel.portfolioModelId)
+				if(res.portfolioModel.portfolioModelId === -1) {
+					setNoInvestments(true);
+					setHasData(false);
+					setLoadIndicator(false);
+				} else{
+					setBreakdownData(createAggregateStackData(res.investmentModels));
+					setHasData(true);
+				}
+			})
+			.then(() => setLoadIndicator(false));
 	}, [navigation.state]);
 
-	getAggregateModel()
-		.then((res) => {
-			setPortfolioData(convertPortfolioModelData(res.portfolioModel));
-			console.log(res.portfolioModel.portfolioModelId)
-			if(res.portfolioModel.portfolioModelId === -1)
-			{
-				setNoInvestments(true);
-				setHasData(false);
-				setLoadIndicator(false);
-			}
-			else{
-				setBreakdownData(createAggregateStackData(res.investmentModels));
-				setHasData(true);
-			}
-		})
-		.then(() => setLoadIndicator(false));
+	
 
 	return (
 		

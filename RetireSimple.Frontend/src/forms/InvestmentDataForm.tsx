@@ -24,6 +24,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 	});
 	const {errors} = formContext.formState;
 
+	console.log(props.selectedInvestment?.investmentName);
 	//==============================================
 	//Field definitions (To reduce indent depth)
 	//==============================================
@@ -31,7 +32,8 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 		<FormTextField
 			name='investmentName'
 			label='Name'
-			//defaultValue={props.selectedInvestment ? props.selectedInvestment.investmentName : ''}
+			// defaultValue='default-testing'
+			defaultValue={props.selectedInvestment ? props.selectedInvestment.investmentName : ''}
 			control={formContext.control}
 			errorField={errors.investmentName}
 			tooltip='The name of this investment. Can be a personally identifiable name.'
@@ -44,7 +46,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 			label='Investment Type'
 			control={formContext.control}
 			errorField={errors.investmentType}
-			defaultOption='StockInvestment'
+			defaultOption={props.selectedInvestment ? props.selectedInvestment.investmentType : ''}
 			options={[
 				{value: 'StockInvestment', label: 'Stock', tooltip:'A stock investment is calculated as ...'},
 				{value: 'BondInvestment', label: 'Bond', tooltip:'This is a bond'},
@@ -61,6 +63,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 			case 'StockInvestment':
 				return (
 					<StockForm
+						defaultValues={props.selectedInvestment}
 						analysisTypeField={
 							<FormSelectField
 								name='analysisType'
@@ -79,7 +82,7 @@ export const InvestmentDataForm = (props: InvestmentDataFormProps) => {
 										tooltip:'This is binomial',
 									},
 								]}
-								defaultOption=''
+								defaultOption={props.selectedInvestment ? props.selectedInvestment.analysisType : ''}
 								disable={false}
 								tooltip='The type of analysis to run on this investment. Only Monte Carlo Simulations are currently supported.'
 							/>

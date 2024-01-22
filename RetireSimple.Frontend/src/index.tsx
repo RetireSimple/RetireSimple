@@ -23,6 +23,7 @@ import './index.css';
 import { HelpPage } from './pages/HelpPage';
 import { ExpensesPage } from './pages/ExpensesPage';
 import { EngineInfoPage } from './pages/EngineInfoPage';
+import { SettingsPage } from './pages/SettingsPage';
 
 /************************
  * Lazy Loaded Components
@@ -180,6 +181,12 @@ const router = createBrowserRouter(
 				path='AboutPage/'
 				element={
 					<AboutPage />
+				}
+			/>
+			<Route
+				path='Settings/'
+				element={
+					<SettingsPage />
 				}
 			/>
 			<Route

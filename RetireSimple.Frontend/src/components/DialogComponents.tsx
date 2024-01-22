@@ -102,6 +102,8 @@ export const EditInvestmentDialog = (props: EditInvestmentDialogProps) => {
 		shouldUnregister: true,
 		resolver: yupResolver(investmentFormSchema),
 	});
+	console.log("EDITING:");
+	console.log(props.investment);
 
 	const submit = useSubmit();
 	const addAction = useFormAction('/add');
@@ -140,7 +142,7 @@ export const EditInvestmentDialog = (props: EditInvestmentDialogProps) => {
 					{'Edit Investment'}
 				</DialogTitle>
 				<Box sx={{padding: '2rem'}}>
-					<InvestmentDataForm>
+					<InvestmentDataForm selectedInvestment={props.investment}>
 						<DialogActions>
 							<Button onClick={props.onClose}>Cancel</Button>
 							<Button onClick={formContext.handleSubmit(handleAdd)}>Save</Button>
@@ -272,8 +274,8 @@ export const AddExpenseDialog = (props: AddExpenseDialogProps) => {
 			control={formContext.control}
 			name='amount'
 			label='Expense Amount'
-			errorField={undefined}
-		/>
+			errorField={undefined} 
+			defaultValue={''}		/>
 	);
 
 	const expenseTypeField = (
@@ -306,8 +308,8 @@ export const AddExpenseDialog = (props: AddExpenseDialogProps) => {
 			control={formContext.control}
 			name='frequency'
 			label='Frequency (mos.)'
-			errorField={undefined}
-		/>
+			errorField={undefined} 
+			defaultValue={''}		/>
 	);
 
 	const startDateField = (

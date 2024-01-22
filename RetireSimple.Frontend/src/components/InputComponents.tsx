@@ -20,6 +20,7 @@ export interface FormTextFieldProps {
 	label: string;
 	control: Control;
 	errorField: any;
+	defaultValue: string;
 	tooltip?: string | React.ReactNode;
 	// decoration?: 'currency' | 'percent';
 }
@@ -49,7 +50,7 @@ export const FormTextField = (props: FormTextFieldProps) => {
 		<Controller
 			name={props.name}
 			control={props.control}
-			defaultValue={''}
+			defaultValue={props.defaultValue}
 			render={({field}) => (
 				<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
 					<TextField
@@ -71,7 +72,7 @@ export const FormTextFieldCurrency = (props: FormTextFieldProps) => {
 		<Controller
 			name={props.name}
 			control={props.control}
-			defaultValue={''}
+			defaultValue={props.defaultValue}
 			render={({field}) => (
 				<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
 					<TextField
@@ -96,7 +97,7 @@ export const FormTextFieldPercent = (props: FormTextFieldProps) => {
 		<Controller
 			name={props.name}
 			control={props.control}
-			defaultValue={''}
+			defaultValue={props.defaultValue}
 			render={({field}) => (
 				<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
 					<TextField
@@ -121,7 +122,7 @@ export const FormTextFieldMonthUnits = (props: FormTextFieldProps) => {
 		<Controller
 			name={props.name}
 			control={props.control}
-			defaultValue={''}
+			defaultValue={props.defaultValue}
 			render={({field}) => (
 				<Tooltip title={props.tooltip ?? ''} arrow describeChild placement='top'>
 					<TextField

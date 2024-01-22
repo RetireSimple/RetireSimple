@@ -195,6 +195,14 @@ export const Layout = () => {
 								<Icon baseClassName='material-icons'>info</Icon>
 							</IconButton>
 						</Tooltip> */}
+						<Tooltip title='Open the settings page'>
+							<IconButton
+								color='inherit'
+								href='/settings'>
+								{/* onClick={this.openSettings} */}
+								<Icon baseClassName='material-icons'>settings</Icon>
+							</IconButton>
+						</Tooltip>
 						<Tooltip title='Report Bug/Issue on GitHub'>
 							<IconButton
 								color='inherit'
