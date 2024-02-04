@@ -1,9 +1,11 @@
 import {Box, Typography} from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom'; 
+import SettingsNav from './SettingsNav';
   
 export function AboutPage() { 
 	return (<div>
+		<SettingsNav />
 		<h1>About RetireSimple</h1>
 		<Box sx={{padding: '2rem'}}>
 			<Typography variant='body1'>RetireSimple v1.3.0</Typography>

@@ -85,7 +85,7 @@ export const Layout = () => {
 						Expenses
 					</Typography>
 				</MenuItem>
-				<Divider />
+				{/* <Divider />
 				<MenuItem component={Link} to='/EngineInfoPage'>
 					<Icon baseClassName='material-icons'>info</Icon>
 					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
@@ -105,7 +105,7 @@ export const Layout = () => {
 					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 						Help
 					</Typography>
-				</MenuItem>
+				</MenuItem> */}
 				<Divider />
 				{/* <Divider />
 				<Divider />
@@ -166,7 +166,7 @@ export const Layout = () => {
 	let contents = (
 		<Paper
 			elevation={2}
-			sx={{marginX: '1rem', height: '90vh', width: '100%', overflow: 'auto'}}>
+			sx={{marginX: '1rem', height: '85vh', width: '100%', overflow: 'auto', position: 'sticky', top: '75px'}}>
 			{renderPageList}
 		</Paper>
 	);
@@ -174,7 +174,7 @@ export const Layout = () => {
 	return (
 		<div>
 			<PresetContext.Provider value={presetData}>
-				<AppBar position='static' sx={{padding: '1rem', maxHeight: '4rem'}}>
+				<AppBar position='sticky' sx={{padding: '1rem', maxHeight: '4rem'}}>
 					<Box sx={{display: 'flex'}}>
 						<img
 							src={logo}
@@ -212,7 +212,7 @@ export const Layout = () => {
 						</Tooltip>
 					</Box>
 				</AppBar>
-				<Box sx={{marginTop: '0.5rem', display: 'flex', flexDirection: 'row'}}>
+				<Box sx={{marginTop: '0.5rem', display: 'flex', flexDirection: 'row', position: 'sticky'}}>
 					<Box sx={{marginRight: '2rem'}}>{contents}</Box>
 					<Box
 						sx={{

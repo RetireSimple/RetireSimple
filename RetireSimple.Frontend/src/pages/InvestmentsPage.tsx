@@ -62,7 +62,7 @@ export const InvestmentsPage = () => {
 		{/* {investments.map((investment: Investment) => (<h1> {investment.investmentName} </h1>))} */}
 		{investments.map((investment: Investment) => 
 			(InvestmentComponent(investment, () => {openEditDialog(investment)})))}
-		<Button 
+		{/* <Button 
 			onClick={() => openAddInvDialog(-1)}
 
 		>
@@ -70,7 +70,7 @@ export const InvestmentsPage = () => {
 			<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 				Add Investment
 			</Typography>
-		</Button>
+		</Button> */}
 		<AddInvestmentDialog
 			open={invAddDialogOpen}
 			onClose={() => setInvAddDialogOpen(false)}

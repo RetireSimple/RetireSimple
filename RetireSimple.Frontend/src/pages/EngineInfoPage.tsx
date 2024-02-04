@@ -14,10 +14,12 @@ import {convertDates} from '../api/ConvertUtils';
 import {ExpensesTable} from '../forms/ExpenseTable';
 import {useSnackbar} from 'notistack';
 import { Link } from 'react-router-dom'; 
+import SettingsNav from './SettingsNav';
   
 export function EngineInfoPage() { 
 	return (<div>
-		<h1>Engine Info Page</h1>
+		<SettingsNav />
+		<h1>Engine Info</h1>
 		<Box sx={{paddingLeft: '2rem'}}>
 			<Typography variant='h4' sx={{flexGrow: 1, marginBottom: '0.5rem'}}>
 				Investments
