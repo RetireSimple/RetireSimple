@@ -49,7 +49,7 @@ const loadIndicator = (
 
 export const MinMaxAvgGraph = (props: {modelData: any[]}) => {
 	return (
-		<ResponsiveContainer width='100%' height={400}>
+		<ResponsiveContainer width={300} height={200}>
 			<LineChart data={props.modelData}>
 				<XAxis dataKey='year'>
 					<Label value='Months' offset={-5} position={'bottom'} />
@@ -84,6 +84,8 @@ export const InvestmentModelGraph = (props: {investmentId: number}) => {
 		}
 	}, [navigation.state]);
 
+	
+
 	const getModelData = () => {
 		setLoading(true);
 		getInvestmentModel(props.investmentId)
@@ -93,15 +95,20 @@ export const InvestmentModelGraph = (props: {investmentId: number}) => {
 			.then(() => setLoading(false));
 	};
 
+	if(!loading && modelData === undefined) {
+		getModelData();
+	}	
+
 	return (
 		<div>
-			{!loading && modelData === undefined && (
+						
+			{/* {!loading && modelData === undefined && (
 				<Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
 					<Button onClick={getModelData} disabled={modelData !== undefined}>
 						Get Model Data
 					</Button>
 				</Box>
-			)}
+			)} */}
 			{loading && loadIndicator}
 			{modelData ? <MinMaxAvgGraph modelData={modelData} /> : <div></div>}
 		</div>
@@ -129,6 +136,10 @@ export const VehicleModelGraph = (props: {vehicleId: number}) => {
 				setModelData(convertVehicleModelData(data));
 			})
 			.then(() => setLoading(false));
+		if(modelData) {
+			console.log(modelData.taxed);
+
+		}
 	};
 
 	return (
@@ -173,7 +184,7 @@ export const VehicleModelGraph = (props: {vehicleId: number}) => {
 	);
 };
 
-export const PortfolioBreakdownGraph = (props: {modelData: any[]}) => {
+export const PortfolioBreakdownGraph = (props: {modelData: any[], height: number}) => {
 	const breakdownAreas = React.useMemo(() => {
 		if (props.modelData.length === 0) return <></>;
 		return Object.keys(props.modelData[0])
@@ -200,7 +211,7 @@ export const PortfolioBreakdownGraph = (props: {modelData: any[]}) => {
 				flexDirection: 'column',
 			}}>
 			<Typography variant='h6'>Portfolio Breakdown (Average Model Projections)</Typography>
-			<ResponsiveContainer width='100%' height={'45%'} minHeight={400} minWidth={1200}>
+			<ResponsiveContainer width='100%' minHeight={props.height} minWidth={1200}>
 				<AreaChart data={props.modelData}>
 					<XAxis dataKey='month'>
 						<Label value='Months' offset={-5} position={'bottom'} />
@@ -222,11 +233,11 @@ export const PortfolioBreakdownGraph = (props: {modelData: any[]}) => {
 	);
 };
 
-export const PortfolioAggregateGraph = (props: {modelData: any[]}) => {
+export const PortfolioAggregateGraph = (props: {modelData: any[], height: number}) => {
 	return (
 		<Box sx={{display: 'flex', flexDirection: 'column', width: '100%', height: '50%'}}>
 			<Typography variant='h6'>Portfolio Model</Typography>
-			<ResponsiveContainer width='100%' height={'45%'} minHeight={400} minWidth={1200}>
+			<ResponsiveContainer width='100%'  minHeight={props.height} minWidth={1200}>
 				<LineChart data={props.modelData}>
 					<XAxis dataKey='year'>
 						<Label value='Months' offset={-5} position={'bottom'} />

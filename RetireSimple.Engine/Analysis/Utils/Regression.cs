@@ -37,6 +37,7 @@ namespace RetireSimple.Engine.Analysis.Utils {
 
 			var model = new InvestmentModel();
 			var initialPrice = BasePrice;
+			//Will the potential growth always mirror the potenial risk
 			var u = 1 + ExpectedGrowth;
 			var d = 1 - ExpectedGrowth;
 

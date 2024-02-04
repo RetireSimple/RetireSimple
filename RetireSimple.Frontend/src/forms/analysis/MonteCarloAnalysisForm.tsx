@@ -9,7 +9,12 @@ import {
 	FormTextFieldMonthUnits,
 } from '../../components/InputComponents';
 
-export const MonteCarloAnalysisForm = () => {
+export interface MonteCarloProps {
+	analysisLength: string;
+	analysisPreset: string;
+}
+
+export const MonteCarloAnalysisForm = (props: MonteCarloProps) => {
 	const formContext = useFormContext();
 	const {errors} = formContext.formState;
 	const presets = React.useContext(PresetContext)?.['MonteCarlo'];
@@ -48,8 +53,8 @@ export const MonteCarloAnalysisForm = () => {
 			label='Analysis Length'
 			control={formContext.control}
 			errorField={errors.analysisLength}
-			tooltip='The number of months from today to run the analysis for.'
-		/>
+			tooltip='The number of months from today to run the analysis for.' 
+			defaultValue={props.analysisLength}		/>
 	);
 
 	const analysisPresetField = (
@@ -60,7 +65,7 @@ export const MonteCarloAnalysisForm = () => {
 			errorField={errors.analysis_analysisPreset}
 			tooltip='A preset to use for the analysis.'
 			options={presetOptions}
-			defaultOption={''}
+			defaultOption={props.analysisPreset}
 			disable={false}
 		/>
 	);
@@ -71,18 +76,15 @@ export const MonteCarloAnalysisForm = () => {
 			label='Simulation Count'
 			control={formContext.control}
 			errorField={errors.analysis_simCount}
-			tooltip={
-				<>
-					<Typography variant='inherit'>
-						The number of Monte Carlo simulations to run.
-					</Typography>
-					<Typography variant='inherit'>
-						Higher numbers are more likely to determine a stable trend with a higher
-						resolution, but may take longer to run.
-					</Typography>
-				</>
-			}
-		/>
+			tooltip={<>
+				<Typography variant='inherit'>
+					The number of Monte Carlo simulations to run.
+				</Typography>
+				<Typography variant='inherit'>
+					Higher numbers are more likely to determine a stable trend with a higher
+					resolution, but may take longer to run.
+				</Typography>
+			</>} defaultValue={''}		/>
 	);
 
 	const randomVariableTypeField = (
@@ -102,8 +104,8 @@ export const MonteCarloAnalysisForm = () => {
 				</>
 			}
 			options={[
-				{label: 'Normal', value: 'Normal'},
-				{label: 'Log Normal', value: 'LogNormal'},
+				{label: 'Normal', value: 'Normal', tooltip: 'Normal'},
+				{label: 'Log Normal', value: 'LogNormal', tooltip: 'Log Normal'},
 			]}
 			defaultOption={'Normal'}
 			disable={false}
@@ -116,20 +118,17 @@ export const MonteCarloAnalysisForm = () => {
 			label='Mu'
 			control={formContext.control}
 			errorField={errors.analysis_randomVariableMu}
-			tooltip={
-				<>
-					<Typography variant='inherit'>
-						The mean parameter of the random variable.
-					</Typography>
-					<Typography variant='inherit'>
-						Can be considered the average increase in stock price per month.
-					</Typography>
-					<Typography variant='inherit'>
-						This is the statistical analogue of a stock's Alpha value.
-					</Typography>
-				</>
-			}
-		/>
+			tooltip={<>
+				<Typography variant='inherit'>
+					The mean parameter of the random variable.
+				</Typography>
+				<Typography variant='inherit'>
+					Can be considered the average increase in stock price per month.
+				</Typography>
+				<Typography variant='inherit'>
+					This is the statistical analogue of a stock's Alpha value.
+				</Typography>
+			</>} defaultValue={''}		/>
 	);
 
 	const randomVariableSigmaField = (
@@ -138,20 +137,17 @@ export const MonteCarloAnalysisForm = () => {
 			label='Sigma'
 			control={formContext.control}
 			errorField={errors.analysis_randomVariableSigma}
-			tooltip={
-				<>
-					<Typography variant='inherit'>
-						The standard deviation parameter of the random variable.
-					</Typography>
-					<Typography variant='inherit'>
-						Can be considered the volatility of the stock price.
-					</Typography>
-					<Typography variant='inherit'>
-						This is the statistical analogue of a stock's Beta value.
-					</Typography>
-				</>
-			}
-		/>
+			tooltip={<>
+				<Typography variant='inherit'>
+					The standard deviation parameter of the random variable.
+				</Typography>
+				<Typography variant='inherit'>
+					Can be considered the volatility of the stock price.
+				</Typography>
+				<Typography variant='inherit'>
+					This is the statistical analogue of a stock's Beta value.
+				</Typography>
+			</>} defaultValue={''}		/>
 	);
 
 	const randomVariableScaleFactorField = (
@@ -160,21 +156,18 @@ export const MonteCarloAnalysisForm = () => {
 			label='Scale Factor'
 			control={formContext.control}
 			errorField={errors.analysis_randomVariableScaleFactor}
-			tooltip={
-				<>
-					<Typography variant='inherit'>
-						The scale factor of random variable observations.
-					</Typography>
-					<Typography variant='inherit'>
-						Default is 1, and means that random variable observations are not scaled.
-					</Typography>
-					<Typography variant='inherit'>
-						Useful when Mu is 0 and Sigma is 1, and you want to assert that stock price
-						walks are distributed by the random variable.
-					</Typography>
-				</>
-			}
-		/>
+			tooltip={<>
+				<Typography variant='inherit'>
+					The scale factor of random variable observations.
+				</Typography>
+				<Typography variant='inherit'>
+					Default is 1, and means that random variable observations are not scaled.
+				</Typography>
+				<Typography variant='inherit'>
+					Useful when Mu is 0 and Sigma is 1, and you want to assert that stock price
+					walks are distributed by the random variable.
+				</Typography>
+			</>} defaultValue={''}		/>
 	);
 
 	const getPresetValue = (field: string) => {

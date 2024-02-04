@@ -29,6 +29,12 @@ export const Layout = () => {
 	const portfolio = useLoaderData() as Portfolio;
 	const {investments, investmentVehicles: vehicles} = portfolio;
 
+	
+
+	// console.log("Portfolio in layout");
+	console.log("Portfolio:" + portfolio.portfolioModel.portfolioModelId);
+	console.log("Investments:" + investments);
+
 	const [presetData, setPresetData] = React.useState<ApiPresetData | undefined>(undefined);
 	const [invAddDialogOpen, setInvAddDialogOpen] = React.useState(false);
 	const [vehicleAddDialogOpen, setVehicleAddDialogOpen] = React.useState(false);
@@ -49,7 +55,7 @@ export const Layout = () => {
 		setInvAddDialogOpen(true);
 	};
 
-	const renderInvestmentsTable = (
+	const renderPageList = (
 		<Box sx={{width: '100%', alignSelf: 'start'}}>
 			<List>
 				<MenuItem component={Link} to='/'>
@@ -59,33 +65,47 @@ export const Layout = () => {
 					</Typography>
 				</MenuItem>
 				<Divider />
-				<MenuItem component={Link} to='/'>
+				<MenuItem component={Link} to='/InvestmentPage'>
 					<Icon baseClassName='material-icons'>show_chart</Icon>
 					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 						Investments
 					</Typography>
 				</MenuItem>
 				<Divider />
-				<MenuItem component={Link} to='/'>
+				<MenuItem component={Link} to='/VehiclesPage'>
 					<Icon baseClassName='material-icons'>stacked_line_chart</Icon>
 					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 						Vehicles
 					</Typography>
 				</MenuItem>
 				<Divider />
-				<MenuItem component={Link} onClick={() => setAboutOpen(true)} to='/'>
+				<MenuItem component={Link} to='/ExpensesPage'>
+					<Icon baseClassName='material-icons'>paid</Icon>
+					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+						Expenses
+					</Typography>
+				</MenuItem>
+				{/* <Divider />
+				<MenuItem component={Link} to='/EngineInfoPage'>
+					<Icon baseClassName='material-icons'>info</Icon>
+					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
+						Engine Info
+					</Typography>
+				</MenuItem>
+				<Divider />
+				<MenuItem component={Link} to='/AboutPage'>
 					<Icon baseClassName='material-icons'>info</Icon>
 					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 						About
 					</Typography>
 				</MenuItem>
 				<Divider />
-				<MenuItem component={Link} onClick={() => setHelpOpen(true)} to='/'>
+				<MenuItem component={Link} to='/HelpPage'>
 					<Icon baseClassName='material-icons'>help</Icon>
 					<Typography variant='body1' component='div' sx={{marginLeft: '10px'}}>
 						Help
 					</Typography>
-				</MenuItem>
+				</MenuItem> */}
 				<Divider />
 				{/* <Divider />
 				<Divider />
@@ -146,15 +166,15 @@ export const Layout = () => {
 	let contents = (
 		<Paper
 			elevation={2}
-			sx={{marginX: '1rem', height: '90vh', width: '100%', overflow: 'auto'}}>
-			{renderInvestmentsTable}
+			sx={{marginX: '1rem', height: '85vh', width: '100%', overflow: 'auto', position: 'sticky', top: '75px'}}>
+			{renderPageList}
 		</Paper>
 	);
 
 	return (
 		<div>
 			<PresetContext.Provider value={presetData}>
-				<AppBar position='static' sx={{padding: '1rem', maxHeight: '4rem'}}>
+				<AppBar position='sticky' sx={{padding: '1rem', maxHeight: '4rem'}}>
 					<Box sx={{display: 'flex'}}>
 						<img
 							src={logo}
@@ -175,6 +195,14 @@ export const Layout = () => {
 								<Icon baseClassName='material-icons'>info</Icon>
 							</IconButton>
 						</Tooltip> */}
+						<Tooltip title='Open the settings page'>
+							<IconButton
+								color='inherit'
+								href='/settings'>
+								{/* onClick={this.openSettings} */}
+								<Icon baseClassName='material-icons'>settings</Icon>
+							</IconButton>
+						</Tooltip>
 						<Tooltip title='Report Bug/Issue on GitHub'>
 							<IconButton
 								color='inherit'
@@ -184,7 +212,7 @@ export const Layout = () => {
 						</Tooltip>
 					</Box>
 				</AppBar>
-				<Box sx={{marginTop: '0.5rem', display: 'flex', flexDirection: 'row'}}>
+				<Box sx={{marginTop: '0.5rem', display: 'flex', flexDirection: 'row', position: 'sticky'}}>
 					<Box sx={{marginRight: '2rem'}}>{contents}</Box>
 					<Box
 						sx={{

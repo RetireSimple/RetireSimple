@@ -19,6 +19,7 @@ namespace RetireSimple.Engine.Analysis {
 			var offset = GetStartingIterationOffset(pensionStart);
 			var pensionValue = 0M;
 			var pensionData = new List<decimal>();
+			
 			for (int i = 0; i < monthsToSimulate; i++) {
 				pensionValue += pensionAmt * (1 - expectedTaxRate);
 				if (i != 0 && i % 12 == 0) {

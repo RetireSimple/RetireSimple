@@ -15,11 +15,18 @@ import {
 	FormTextField,
 } from './InputComponents';
 import {enqueueSnackbar, useSnackbar} from 'notistack';
+import { Investment } from '../Interfaces';
 
 export interface AddInvestmentDialogProps {
 	open: boolean;
 	onClose: () => void;
 	vehicleTarget: number;
+}
+
+export interface EditInvestmentDialogProps {
+	open: boolean;
+	onClose: () => void;
+	investment: Investment;
 }
 
 export interface AddVehicleDialogProps {
@@ -48,7 +55,6 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 	const handleAdd = (data: FieldValues) => {
 		const requestData: {[key: string]: string} = {};
 
-		console.log('clicked');
 
 		Object.entries(data)
 			.map(([key, value]) => [key, value.toString()])
@@ -82,6 +88,64 @@ export const AddInvestmentDialog = (props: AddInvestmentDialogProps) => {
 						<DialogActions>
 							<Button onClick={props.onClose}>Cancel</Button>
 							<Button onClick={formContext.handleSubmit(handleAdd)}>Add</Button>
+						</DialogActions>
+					</InvestmentDataForm>
+				</Box>
+			</Dialog>
+		</FormProvider>
+	);
+};
+
+
+export const EditInvestmentDialog = (props: EditInvestmentDialogProps) => {
+	const formContext = useForm({
+		shouldUnregister: true,
+		resolver: yupResolver(investmentFormSchema),
+	});
+	console.log("EDITING:");
+	console.log(props.investment);
+
+	const submit = useSubmit();
+	const addAction = useFormAction('/add');
+	const {enqueueSnackbar} = useSnackbar();
+
+	const handleAdd = (data: FieldValues) => {
+		const requestData: {[key: string]: string} = {};
+
+
+		Object.entries(data)
+			.map(([key, value]) => [key, value.toString()])
+			.forEach(([key, value]) => (requestData[key] = value));
+
+		//Check if we have known date fields, and convert them to yyyy-MM-dd
+		convertDates(requestData);
+
+		//TODO: will need to make an edit investment method
+		addInvestment(requestData)
+			.then((investmentId) => {
+				// if (props.vehicleTarget > -1) {
+				// 	addInvestmentToVehicle(props.vehicleTarget, Number.parseInt(investmentId));
+				// } //Add investment to vehicle
+				enqueueSnackbar('Investment added successfully.', {variant: 'success'});
+				props.onClose();
+				submit(null, {method: 'post', action: addAction});
+			})
+			.catch((error) => {
+				enqueueSnackbar(`Failed to add investment: ${error.message}`, {variant: 'error'});
+			});
+	};
+
+	return (
+		<FormProvider {...formContext}>
+			<Dialog open={props.open} maxWidth='md'>
+				<DialogTitle>
+					{'Edit Investment'}
+				</DialogTitle>
+				<Box sx={{padding: '2rem'}}>
+					<InvestmentDataForm selectedInvestment={props.investment}>
+						<DialogActions>
+							<Button onClick={props.onClose}>Cancel</Button>
+							<Button onClick={formContext.handleSubmit(handleAdd)}>Save</Button>
 						</DialogActions>
 					</InvestmentDataForm>
 				</Box>
@@ -210,8 +274,8 @@ export const AddExpenseDialog = (props: AddExpenseDialogProps) => {
 			control={formContext.control}
 			name='amount'
 			label='Expense Amount'
-			errorField={undefined}
-		/>
+			errorField={undefined} 
+			defaultValue={''}		/>
 	);
 
 	const expenseTypeField = (
@@ -220,8 +284,8 @@ export const AddExpenseDialog = (props: AddExpenseDialogProps) => {
 			name='expenseType'
 			label='Expense Type'
 			options={[
-				{value: 'OneTime', label: 'One Time'},
-				{value: 'Recurring', label: 'Recurring'},
+				{value: 'OneTime', label: 'One Time', tooltip: 'OneTime'},
+				{value: 'Recurring', label: 'Recurring', tooltip: 'Recurring'},
 			]}
 			defaultOption='OneTime'
 			errorField={undefined}
@@ -244,8 +308,8 @@ export const AddExpenseDialog = (props: AddExpenseDialogProps) => {
 			control={formContext.control}
 			name='frequency'
 			label='Frequency (mos.)'
-			errorField={undefined}
-		/>
+			errorField={undefined} 
+			defaultValue={''}		/>
 	);
 
 	const startDateField = (

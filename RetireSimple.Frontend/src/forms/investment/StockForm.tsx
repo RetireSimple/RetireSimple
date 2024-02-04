@@ -30,7 +30,10 @@ export const StockForm = (props: StockFormProps) => {
 	const analysisSubForm = React.useCallback(() => {
 		switch (analysisType) {
 			case 'MonteCarlo':
-				return <MonteCarloAnalysisForm />;
+				return <MonteCarloAnalysisForm 
+					analysisLength={props.defaultValues?.analysisOptionsOverrides.analysisLength} 
+					analysisPreset={props.defaultValues?.analysisOptionsOverrides.analysisPreset} 
+				/>;
 			case 'BinomialRegression':
 				return <BinomialRegressionAnalysisForm />;
 			default:
@@ -53,15 +56,12 @@ export const StockForm = (props: StockFormProps) => {
 			label='Ticker'
 			control={formContext.control}
 			errorField={errors.stockTicker}
-			tooltip={
-				<>
-					<Typography variant='inherit'>The ticker symbol for this stock.</Typography>
-					<Typography variant='inherit'>
-						This is primarily used as another identifier for the stock.
-					</Typography>
-				</>
-			}
-		/>
+			tooltip={<>
+				<Typography variant='inherit'>The ticker symbol for this stock.</Typography>
+				<Typography variant='inherit'>
+					This is primarily used as another identifier for the stock.
+				</Typography>
+			</>} defaultValue={props.defaultValues?.investmentData.stockTicker}		/>
 	);
 
 	const stockPriceField = (
@@ -70,16 +70,13 @@ export const StockForm = (props: StockFormProps) => {
 			label='Price'
 			control={formContext.control}
 			errorField={errors.stockPrice}
-			tooltip={
-				<>
-					<Typography variant='inherit'>The current price of the stock.</Typography>
-					<Typography variant='inherit'>
-						This does not have to reflect current prices and thus can be changed for
-						hypothetical scenarios.
-					</Typography>
-				</>
-			}
-		/>
+			tooltip={<>
+				<Typography variant='inherit'>The current price of the stock.</Typography>
+				<Typography variant='inherit'>
+					This does not have to reflect current prices and thus can be changed for
+					hypothetical scenarios.
+				</Typography>
+			</>} defaultValue={props.defaultValues?.investmentData.stockPrice}		/>
 	);
 
 	const stockQuantityField = (
@@ -88,15 +85,12 @@ export const StockForm = (props: StockFormProps) => {
 			label='Quantity'
 			control={formContext.control}
 			errorField={errors.stockQuantity}
-			tooltip={
-				<>
-					<Typography variant='inherit'>
-						The number of shares of this stock that you own.
-					</Typography>
-					<Typography variant='inherit'>Can be fractional.</Typography>
-				</>
-			}
-		/>
+			tooltip={<>
+				<Typography variant='inherit'>
+					The number of shares of this stock that you own.
+				</Typography>
+				<Typography variant='inherit'>Can be fractional.</Typography>
+			</>} defaultValue={props.defaultValues?.investmentData.stockQuantity}		/>
 	);
 
 	const stockPurchaseDateField = (
@@ -105,7 +99,7 @@ export const StockForm = (props: StockFormProps) => {
 			label='Purchase Date'
 			control={formContext.control}
 			errorField={errors.stockPurchaseDate}
-			defaultValue={props.defaultValues?.stockPurchaseDate}
+			defaultValue={props.defaultValues?.investmentData.stockPurchaseDate}
 			tooltip={
 				<>
 					<Typography variant='inherit'>
@@ -125,14 +119,12 @@ export const StockForm = (props: StockFormProps) => {
 			label='Dividend Amount'
 			control={formContext.control}
 			errorField={errors.stockDividendPercent}
-			tooltip={
-				<>
-					<Typography variant='inherit'>
-						The dividend percentage of this stock.
-					</Typography>
-				</>
-			}
-		/>
+			tooltip={<>
+				<Typography variant='inherit'>
+					The dividend percentage of this stock.
+				</Typography>
+			</>} 
+			defaultValue={props.defaultValues?.investmentData.stockDividendPercent}		/>
 	);
 
 	const stockDividendDistributionIntervalField = (
@@ -146,7 +138,7 @@ export const StockForm = (props: StockFormProps) => {
 				{value: 'Quarter', label: 'Quarterly'},
 				{value: 'Annual', label: 'Annual'},
 			]}
-			defaultOption='Quarter'
+			defaultOption={props.defaultValues?.investmentData.stockDividendDistributionInterval}
 			disable={false}
 			tooltip='The interval at which dividends are paid out.'
 		/>
@@ -163,7 +155,7 @@ export const StockForm = (props: StockFormProps) => {
 				{value: 'Cash', label: 'Cash'},
 				{value: 'DRIP', label: 'DRIP'},
 			]}
-			defaultOption='Stock'
+			defaultOption={props.defaultValues?.investmentData.stockDividendDistributionMethod}
 			disable={false}
 			tooltip={
 				<>
@@ -185,7 +177,7 @@ export const StockForm = (props: StockFormProps) => {
 			label='First Payment Date'
 			control={formContext.control}
 			errorField={errors.stockDividendFirstPaymentDate}
-			defaultValue={props.defaultValues?.stockDividendFirstPaymentDate ?? ''}
+			defaultValue={props.defaultValues?.investmentData.stockDividendFirstPaymentDate ?? ''}
 			tooltip={
 				<>
 					<Typography variant='inherit'>
